@@ -37,9 +37,10 @@ class TestAuthService:
         mock_auth_repo: AsyncMock,
     ) -> None:
         fake_user = MagicMock()
-        fake_user.id = 1
+        fake_user.id_usuario = 1
         fake_user.email = "user@test.com"
-        fake_user.role = "cliente"
+        fake_user.rol = MagicMock()
+        fake_user.rol.nombre.value = "CLIENTE"
         fake_user.password_hash = hash_password("CorrectPass1!")
         mock_auth_repo.get_by_email.return_value = fake_user
 
@@ -54,9 +55,10 @@ class TestAuthService:
         mock_auth_repo: AsyncMock,
     ) -> None:
         fake_user = MagicMock()
-        fake_user.id = 1
+        fake_user.id_usuario = 1
         fake_user.email = "user@test.com"
-        fake_user.role = "cliente"
+        fake_user.rol = MagicMock()
+        fake_user.rol.nombre.value = "CLIENTE"
         fake_user.password_hash = hash_password("Correct1!")
         mock_auth_repo.get_by_email.return_value = fake_user
 
@@ -82,5 +84,98 @@ class TestAuthService:
                     last_name="Pérez",
                     email="existing@test.com",
                     password="ValidPass1!",
-                )
+                ),
+                background_tasks=MagicMock(),
             )
+
+    async def test_register_success_client_sends_email(
+        self,
+        service: AuthService,
+        mock_auth_repo: AsyncMock,
+    ) -> None:
+        from app.infrastructure.database.models.usuarios import Rol
+        from app.infrastructure.database.models.enums import TipoRolEnum
+
+        mock_auth_repo.email_exists.return_value = False
+
+        # Mock role query inside register
+        mock_rol = MagicMock(spec=Rol)
+        mock_rol.id_rol = 2
+        mock_rol.nombre = TipoRolEnum.CLIENTE
+
+        # Mock the session execute for the select statement
+        mock_execute_result = MagicMock()
+        mock_execute_result.scalar_one_or_none.return_value = mock_rol
+        mock_auth_repo._session.execute = AsyncMock(return_value=mock_execute_result)
+
+        # Mock repository create
+        def mock_create(u):
+            u.id_usuario = 1
+            return u
+        mock_auth_repo.create = AsyncMock(side_effect=mock_create)
+
+        bg_tasks = MagicMock()
+
+        result = await service.register(
+            RegisterRequest(
+                first_name="Juan",
+                last_name="Pérez",
+                email="juan@gmail.com",
+                password="ValidPass1!",
+            ),
+            background_tasks=bg_tasks,
+        )
+
+        assert result.email == "juan@gmail.com"
+        assert bg_tasks.add_task.called
+
+    async def test_verify_email_success(
+        self,
+        service: AuthService,
+        mock_auth_repo: AsyncMock,
+    ) -> None:
+        from app.core.security import create_verification_token
+
+        token = create_verification_token("123")
+
+        fake_user = MagicMock()
+        fake_user.id_usuario = 123
+        fake_user.estado = False
+
+        mock_auth_repo.get_by_id = AsyncMock(return_value=fake_user)
+        mock_auth_repo.update = AsyncMock(return_value=fake_user)
+
+        await service.verify_email(token)
+
+        assert fake_user.estado is True
+        assert mock_auth_repo.update.called
+
+    async def test_get_me_success(
+        self,
+        service: AuthService,
+        mock_auth_repo: AsyncMock,
+    ) -> None:
+        fake_user = MagicMock()
+        fake_user.id_usuario = 123
+        fake_user.nombres = "Juan"
+        fake_user.apellidos = "Pérez"
+        fake_user.email = "juan@gmail.com"
+
+        mock_auth_repo.get_by_id = AsyncMock(return_value=fake_user)
+
+        user = await service.get_me(123)
+
+        assert user == fake_user
+        mock_auth_repo.get_by_id.assert_called_once_with(123)
+
+    async def test_get_me_not_found_raises(
+        self,
+        service: AuthService,
+        mock_auth_repo: AsyncMock,
+    ) -> None:
+        mock_auth_repo.get_by_id = AsyncMock(return_value=None)
+
+        from app.core.exceptions import NotFoundError
+        with pytest.raises(NotFoundError):
+            await service.get_me(123)
+

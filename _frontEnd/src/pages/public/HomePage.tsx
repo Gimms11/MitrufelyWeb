@@ -42,7 +42,7 @@ export default function HomePage() {
   const [selectedTrufa, setSelectedTrufa] = useState<Trufa | null>(null)
   const [trufaQuantity, setTrufaQuantity] = useState(1)
   const [cartCount,     setCartCount]     = useState(0)
-  const [favorites,     setFavorites]     = useState<number[]>([])
+  const [favorites]                       = useState<number[]>([])
   const [userMenuOpen,  setUserMenuOpen]  = useState(false)
 
   const catalogRef = useRef<HTMLElement>(null)

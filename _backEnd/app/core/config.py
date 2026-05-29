@@ -4,10 +4,14 @@ Pydantic Settings v2 with full type safety and validation
 """
 
 from functools import lru_cache
+from pathlib import Path
 from typing import Literal
 
-from pydantic import AnyUrl, Field, field_validator
+from pydantic import Field, SecretStr, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 
 class Settings(BaseSettings):
@@ -17,7 +21,7 @@ class Settings(BaseSettings):
     """
 
     model_config = SettingsConfigDict(
-        env_file=".env",
+        env_file=BASE_DIR / ".env",
         env_file_encoding="utf-8",
         case_sensitive=False,
         extra="ignore",
@@ -29,6 +33,8 @@ class Settings(BaseSettings):
     DEBUG: bool = False
     APP_VERSION: str = "1.0.0"
     API_V1_PREFIX: str = "/api/v1"
+    ADMIN_EMAIL_DOMAIN: str = "mitrufely.com"
+    FRONTEND_URL: str = "http://localhost:5173"
 
     # ── Server ───────────────────────────────────────────────────────────────
     HOST: str = "0.0.0.0"
@@ -76,14 +82,31 @@ class Settings(BaseSettings):
     # ── Render Deployment ─────────────────────────────────────────────────────
     RENDER_EXTERNAL_URL: str | None = None
 
+    # ── Email / SMTP (Gmail) ──────────────────────────────────────────────────
+    SMTP_HOST: str = "smtp.gmail.com"
+    SMTP_PORT: int = 587
+    SMTP_USER: str = ""
+    SMTP_PASSWORD: SecretStr = SecretStr("")  # Nunca se serializa en texto plano
+    SMTP_FROM: str = ""
+
     # ── Validators ────────────────────────────────────────────────────────────
     @field_validator("ALLOWED_ORIGINS", "ALLOWED_METHODS", "ALLOWED_HEADERS", mode="before")
     @classmethod
     def parse_list_from_string(cls, value: str | list) -> list[str]:
         if isinstance(value, str):
-            # Strip surrounding quotes that may come from .env files
-            value = value.strip('"\'')
-            return [item.strip() for item in value.split(",") if item.strip()]
+            value = value.strip()
+            # If it's a JSON array representation
+            if value.startswith("[") and value.endswith("]"):
+                import json
+                try:
+                    parsed = json.loads(value)
+                    if isinstance(parsed, list):
+                        return [str(item).strip() for item in parsed]
+                except json.JSONDecodeError:
+                    pass
+            # Fallback: strip outer quotes and square brackets, then split by comma
+            value = value.strip('"\'[]')
+            return [item.strip().strip('"\'') for item in value.split(",") if item.strip()]
         if isinstance(value, list):
             # Already a list — flatten if nested (pydantic-settings v2 edge case)
             result: list[str] = []

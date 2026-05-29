@@ -53,5 +53,12 @@ export const authApi = {
   getMe: async (): Promise<UserMeResponse> => {
     const { data } = await api.get<UserMeResponse>('/auth/me')
     return data
+  },
+
+  verify: async (token: string): Promise<{ message: string }> => {
+    const { data } = await api.get<{ message: string }>('/auth/verify', {
+      params: { token },
+    })
+    return data
   }
 }

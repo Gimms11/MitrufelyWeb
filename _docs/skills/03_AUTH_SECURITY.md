@@ -15,12 +15,12 @@ CREATE TABLE roles (id_rol serial PRIMARY KEY, nombre tipo_rol_enum UNIQUE NOT N
 ### En Python (`app/core/constants.py`)
 ```python
 class UserRole(StrEnum):
-    ADMIN = "administrador"
-    CLIENT = "cliente"
+    ADMIN = "ADMIN"
+    CLIENT = "CLIENTE"
 
 # ⚠️ PENDIENTE: Agregar CAJERO y ALMACEN cuando se implementen sus módulos
-# UserRole.CASHIER = "cajero"
-# UserRole.WAREHOUSE = "almacen"
+# UserRole.CASHIER = "CAJERO"
+# UserRole.WAREHOUSE = "ALMACEN"
 ```
 
 ### Matriz de Permisos (`ROLE_PERMISSIONS`)
@@ -199,32 +199,64 @@ Body: { email, password }
 AuthService.login()
     ├── repo.get_by_email(email)        → UsuarioModel | None
     ├── verify_password(plain, hash)    → bool
-    ├── if not user.estado → raise UnauthorizedError
-    ├── create_access_token(sub=user_id, role=role_name)
+    ├── if not user.estado → raise UnauthorizedError ("Cuenta no verificada")
+    ├── create_access_token(sub=user_id, role=role_name, extra={"email"})
     └── create_refresh_token(sub=user_id)
                 ↓
-Response: { access_token, refresh_token, token_type: "bearer" }
+Response: { access_token, refresh_token, token_type: "bearer", expires_in: 3600 }
 ```
 
 ---
 
-## 7. Flujo de Refresco de Token
+## 7. Flujo de Registro Transaccional Dinámico y Verificación de Email
+
+### Workflow de Registro (`POST /api/v1/auth/register`)
+1. **Detección de Rol por Dominio**: El backend comprueba si el correo pertenece al dominio administrador especial configurado (`settings.ADMIN_EMAIL_DOMAIN`, por defecto `@mitrufely.com`).
+   * **Es Admin**: Se le asigna rol `ADMIN` y `estado = True` (activado inmediatamente, **no** requiere correo).
+   * **Es Cliente**: Se le asigna rol `CLIENTE`, `estado = False` (requiere verificación) y se crea atómicamente en la misma transacción su perfil extendido en la tabla `clientes`.
+2. **Generación de Token de Verificación**: Para los clientes se crea un JWT de corta duración (24 horas) con `"type": "verification"`.
+3. **Envío de Correo Asíncrono**: Se programa una `BackgroundTask` que ejecuta en un hilo secundario (`ThreadPoolExecutor`) el envío de un correo HTML responsivo de alta fidelidad con el link de verificación:
+   `http://localhost:8000/api/v1/auth/verify?token=<token>`
 
 ```
-POST /api/v1/auth/refresh
-Body: { refresh_token }
+POST /api/v1/auth/register
+Body: { first_name, last_name, email, password, phone }
                 ↓
-decode_token(refresh_token)
-    ├── Verificar type == "refresh"
-    ├── Extraer sub (user_id)
-    └── create_access_token(sub, role)
-                ↓
-Response: { access_token }
+AuthService.register()
+    ├── Valida duplicados de email
+    ├── Comprueba dominio especial (ej: @mitrufely.com)
+    │     ├── Sí (ADMIN): estado=True, rol="ADMIN"
+    │     └── No (CLIENTE): estado=False, rol="CLIENTE", crea Cliente en DB (Transaccional)
+    ├── Si es CLIENTE:
+    │     ├── Genera token de verificación (JWT 24h, type="verification")
+    │     └── BackgroundTask -> EmailService.send_verification_email()
+    └── Retorna: { user_id, email, message: "Cuenta creada exitosamente" }
 ```
+
+### Workflow de Verificación (`GET /api/v1/auth/verify?token=...`)
+1. El cliente hace clic en el enlace del correo.
+2. El endpoint `/auth/verify` recibe el token, lo decodifica y verifica que `type == "verification"`.
+3. Se actualiza el `estado` del usuario a `True` en la base de datos, permitiéndole iniciar sesión a partir de ese momento.
 
 ---
 
-## 8. Relación en la Base de Datos
+## 8. Flujo de Logout y Lista de Bloqueo en Redis
+
+Para garantizar la invalidación real de los JWTs antes de su fecha de expiración natural, se implementa una **Lista de Bloqueo (Blocklist)** en Redis:
+
+1. **Cerrar Sesión (`POST /api/v1/auth/logout`)**:
+   * El cliente envía su JWT en los headers de autorización.
+   * El backend calcula el tiempo de expiración restante del token:
+     `remaining_ttl = exp - current_timestamp`
+   * Si el token sigue vigente, se registra en Redis una clave con formato `token_blocklist:{token}` y se le asigna ese `remaining_ttl` como TTL.
+2. **Validación en Endpoints Protegidos (`get_current_user`)**:
+   * Cada petición autenticada es interceptada por la dependencia.
+   * Se comprueba si el token actual existe en la base de datos en caché de Redis.
+   * Si existe, se rechaza la petición de inmediato con una excepción `401 Unauthorized ("Token revocado (sesión cerrada)")`.
+
+---
+
+## 9. Relación en la Base de Datos
 
 ```
 usuarios
@@ -235,13 +267,15 @@ clientes (extensión de usuarios para tipo CLIENTE)
   └── id_usuario → usuarios.id_usuario (UNIQUE, 1-a-1)
 ```
 
-**Al hacer login**, el servicio de auth debe hacer JOIN con `roles` para obtener el nombre del rol y embeber en el JWT.
+Al hacer login, el servicio de auth hace JOIN con `roles` para obtener el nombre real del rol y embeberlo en el JWT.
 
 ---
 
-## 9. Seguridad de Contraseñas
+## 10. Seguridad de Contraseñas y Tokens
 
-- Hash: `bcrypt` via `passlib.CryptContext`
-- **NUNCA** almacenar ni loggear passwords en texto plano
-- Al registrar: `hash_password(request.password)` antes de insertar en DB
-- Al login: `verify_password(request.password, user.password_hash)`
+- **Contraseñas**: Hasheadas usando `bcrypt` (vía `passlib`).
+- **Verificación en 2 pasos de Gmail**: El backend se comunica con los servidores de Gmail usando el puerto seguro `587` (STARTTLS) utilizando una **Contraseña de Aplicación de 16 caracteres** configurada en `.env` bajo `SMTP_PASSWORD`.
+- **Expiración de Tokens**:
+  * **Access Token**: 60 minutos (`ACCESS_TOKEN_EXPIRE_MINUTES`).
+  * **Refresh Token**: 30 días (`REFRESH_TOKEN_EXPIRE_DAYS`).
+  * **Verification Token**: 24 horas (JWT local seguro).

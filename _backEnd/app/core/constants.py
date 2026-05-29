@@ -7,8 +7,8 @@ from enum import StrEnum
 
 
 class UserRole(StrEnum):
-    ADMIN = "administrador"
-    CLIENT = "cliente"
+    ADMIN = "ADMIN"
+    CLIENT = "CLIENTE"
 
 
 class Permission(StrEnum):

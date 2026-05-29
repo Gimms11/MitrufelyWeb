@@ -25,6 +25,20 @@ def add_app_context(
     return event_dict
 
 
+def safe_add_logger_name(
+    logger: WrappedLogger,
+    method_name: str,
+    event_dict: EventDict,
+) -> EventDict:
+    """Safely inject logger name, handling None loggers from stdlib."""
+    if logger is not None and hasattr(logger, "name"):
+        event_dict["logger"] = logger.name
+    elif "logger" not in event_dict:
+        # Fallback for stdlib logs processed by ProcessorFormatter
+        event_dict["logger"] = "root"
+    return event_dict
+
+
 def configure_logging() -> None:
     """
     Configure structlog and stdlib logging.
@@ -36,7 +50,7 @@ def configure_logging() -> None:
         structlog.contextvars.merge_contextvars,
         add_app_context,
         structlog.stdlib.add_log_level,
-        structlog.stdlib.add_logger_name,
+        safe_add_logger_name,
         structlog.processors.TimeStamper(fmt="iso"),
         structlog.processors.StackInfoRenderer(),
     ]

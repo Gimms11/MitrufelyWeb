@@ -14,7 +14,7 @@ import type { Pack } from '../types'
 interface PackCardProps {
   pack: Pack
   /** Callback opcional para notificar al padre (ej. incrementar cartCount) */
-  onAddToCart?: (packId: number) => void
+  onAddToCart?: ((packId: number) => void) | undefined
 }
 
 // ─── Componente ───────────────────────────────────────────────────────────

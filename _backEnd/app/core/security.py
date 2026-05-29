@@ -67,6 +67,15 @@ def create_refresh_token(subject: str) -> str:
     return jwt.encode(payload, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
 
 
+def create_verification_token(subject: str) -> str:
+    payload = _build_payload(
+        subject=subject,
+        extra={"type": "verification"},
+        expires_delta=timedelta(hours=24),  # Verification token lasts 24 hours
+    )
+    return jwt.encode(payload, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
+
+
 def decode_token(token: str) -> dict[str, Any]:
     try:
         payload: dict[str, Any] = jwt.decode(

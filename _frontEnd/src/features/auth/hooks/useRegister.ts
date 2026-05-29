@@ -9,7 +9,10 @@ export function useRegister() {
   return useMutation({
     mutationFn: (payload: RegisterPayload) => authApi.register(payload),
     onSuccess: (data) => {
-      toast.success(data.message || '¡Cuenta creada exitosamente!')
+      toast.success(
+        '¡Registro exitoso! Te hemos enviado un enlace de verificación a tu correo. Por favor, activa tu cuenta antes de iniciar sesión.',
+        { duration: 8000 }
+      )
       navigate('/login')
     },
     onError: (error: any) => {

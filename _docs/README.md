@@ -57,3 +57,73 @@ Cuando le pidas a la IA que implemente algo, adjunta el skill relevante al conte
 ```
 
 La IA leerá el índice para entender el ecosistema y el skill específico para los detalles técnicos del dominio.
+
+---
+
+## 🔒 Contratos de Autenticación y Seguridad (Para el Frontend)
+
+Hemos actualizado la arquitectura de seguridad y autenticación. A continuación se presentan los contratos de API y flujos exactos que debe consumir el **Frontend**:
+
+### 1. Registro (`POST /api/v1/auth/register`)
+Crea un nuevo usuario en la base de datos de forma segura.
+* **Payload (JSON):**
+  ```json
+  {
+    "first_name": "Nombre",
+    "last_name": "Apellido",
+    "email": "cliente@correo.com",
+    "password": "Password123",
+    "phone": "+51999999999"
+  }
+  ```
+  *(La contraseña requiere al menos 1 mayúscula y 1 número).*
+* **Respuesta Exitosa (201 Created):**
+  ```json
+  {
+    "user_id": 12,
+    "email": "cliente@correo.com",
+    "message": "Cuenta creada exitosamente"
+  }
+  ```
+* **Lógica de negocio:**
+  * Si el correo termina en `@mitrufely.com` (dominio administrador especial), se le asigna rol `ADMIN` y `estado = True` (activado inmediatamente).
+  * Si es cualquier otro correo, se crea con rol `CLIENTE`, `estado = False` y se le envía un correo HTML interactivo con el link de verificación de cuenta.
+
+### 2. Verificación de Cuenta (`GET /api/v1/auth/verify`)
+Activa la cuenta del cliente para permitirle hacer login.
+* **Query Params:** `?token=<jwt_verification_token>`
+* **Respuesta Exitosa (200 OK):**
+  ```json
+  {
+    "message": "Cuenta verificada exitosamente. Ya puedes iniciar sesión."
+  }
+  ```
+
+### 3. Iniciar Sesión (`POST /api/v1/auth/login`)
+Autentica al usuario y devuelve los tokens JWT de sesión.
+* **Payload (JSON):**
+  ```json
+  {
+    "email": "cliente@correo.com",
+    "password": "Password123"
+  }
+  ```
+* **Respuesta Exitosa (200 OK):**
+  ```json
+  {
+    "access_token": "eyJhbGciOi...",
+    "refresh_token": "eyJhbGciOi...",
+    "token_type": "bearer",
+    "expires_in": 3600
+  }
+  ```
+  *(Si el usuario tiene `estado = False`, el backend responderá con `401 Unauthorized` indicando que debe verificar su cuenta vía correo electrónico).*
+
+### 4. Cerrar Sesión (`POST /api/v1/auth/logout`)
+Invalida el JWT de manera real e inmediata mediante la lista de bloqueo (blocklist) de Redis.
+* **Headers:** `Authorization: Bearer <access_token>`
+* **Respuesta Exitosa:** `204 No Content`
+* **Lógica de negocio:** El backend calcula el tiempo de vida restante del token (`exp - now`) y lo añade a Redis con ese TTL. Cualquier petición posterior con ese token será rechazada con `401 Unauthorized`.
+
+Para más detalles, consulta el skill específico: 👉 **[03_AUTH_SECURITY.md](./skills/03_AUTH_SECURITY.md)**.
+

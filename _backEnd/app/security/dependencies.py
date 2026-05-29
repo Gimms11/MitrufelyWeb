@@ -21,10 +21,12 @@ _bearer_scheme = HTTPBearer(auto_error=False)
 class CurrentUser:
     """Value object representing the authenticated user extracted from JWT."""
 
-    def __init__(self, user_id: int, email: str, role: UserRole) -> None:
+    def __init__(self, user_id: int, email: str, role: UserRole, token: str = "", exp: int = 0) -> None:
         self.user_id = user_id
         self.email = email
         self.role = role
+        self.token = token
+        self.exp = exp
 
     def has_permission(self, permission: Permission) -> bool:
         return permission in ROLE_PERMISSIONS.get(self.role, set())
@@ -50,11 +52,20 @@ async def get_current_user(
     if not credentials:
         raise UnauthorizedError("Token de autenticación requerido")
 
-    payload = decode_token(credentials.credentials)
+    token_str = credentials.credentials
+
+    # Validar si el token está bloqueado en Redis (logout)
+    from app.infrastructure.cache.redis_client import redis_client
+    blocklist_key = f"token_blocklist:{token_str}"
+    if await redis_client.exists(blocklist_key):
+        raise UnauthorizedError("Token revocado (sesión cerrada)")
+
+    payload = decode_token(token_str)
 
     user_id = payload.get("sub")
     role_str = payload.get("role")
     email = payload.get("email", "")
+    exp = payload.get("exp", 0)
 
     if not user_id or not role_str:
         raise UnauthorizedError("Token malformado")
@@ -64,7 +75,7 @@ async def get_current_user(
     except ValueError:
         raise UnauthorizedError(f"Rol desconocido: {role_str}")
 
-    return CurrentUser(user_id=int(user_id), email=email, role=role)
+    return CurrentUser(user_id=int(user_id), email=email, role=role, token=token_str, exp=exp)
 
 
 # ── Pre-built Role Dependencies ───────────────────────────────────────────────

@@ -97,13 +97,14 @@ class PaginatedResponse(BaseModel, Generic[T]):
 ## 3. Mapa de Endpoints por Módulo
 
 ### Auth (`/api/v1/auth`)
-| Método | Ruta | Roles | Body / Query |
-|---|---|---|---|
-| `POST` | `/login` | Público | `{ email, password }` |
-| `POST` | `/register` | Público | `{ nombres, apellidos, email, password }` |
-| `POST` | `/refresh` | Público | `{ refresh_token }` |
-| `POST` | `/logout` | Autenticado | — |
-| `GET` | `/me` | Autenticado | — |
+| Método | Ruta | Roles | Body / Query / Headers | Descripción |
+|---|---|---|---|---|
+| `POST` | `/login` | Público | `{ "email": "...", "password": "..." }` | Inicia sesión, retorna JWTs. |
+| `POST` | `/register` | Público | `{ "first_name": "...", "last_name": "...", "email": "...", "password": "...", "phone": "..." }` | Crea usuario. Si es CLIENTE envía email. |
+| `POST` | `/refresh` | Público | `{ "refresh_token": "..." }` | Renueva el token de acceso JWT. |
+| `GET` | `/verify` | Público | Query: `?token=<jwt_verification_token>` | Verifica y activa la cuenta del cliente. |
+| `POST` | `/logout` | Autenticado | Header: `Authorization: Bearer <token>` | Cierra sesión e invalida el JWT en Redis. |
+| `GET` | `/me` | Autenticado | Header: `Authorization: Bearer <token>` | Obtiene información del usuario actual. |
 
 ### Users (`/api/v1/users`)
 | Método | Ruta | Roles | Descripción |

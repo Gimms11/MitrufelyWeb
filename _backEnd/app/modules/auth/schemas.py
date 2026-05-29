@@ -43,3 +43,25 @@ class RegisterResponse(BaseModel):
     user_id: int
     email: str
     message: str = "Cuenta creada exitosamente"
+
+
+class RolResponse(BaseModel):
+    id_rol: int
+    nombre: str
+
+    class Config:
+        from_attributes = True
+
+
+class UserMeResponse(BaseModel):
+    id_usuario: int
+    nombres: str
+    apellidos: str
+    email: str
+    telefono: str | None
+    estado: bool
+    rol: RolResponse
+
+    class Config:
+        from_attributes = True
+

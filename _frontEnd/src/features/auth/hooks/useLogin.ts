@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import { useNavigate, useLocation } from 'react-router'
 import { toast } from 'sonner'
@@ -40,6 +41,11 @@ export function useLogin() {
   const setUser = useAuthStore((s) => s.setUser)
 
   const from = (location.state as any)?.from?.pathname || '/'
+  const fromRef = useRef(from)
+
+  useEffect(() => {
+    fromRef.current = from
+  }, [from])
 
   return useMutation({
     mutationFn: (credentials: LoginCredentials) => authApi.login(credentials),
@@ -63,7 +69,7 @@ export function useLogin() {
 
       setUser(user, data.access_token, data.refresh_token)
       toast.success('¡Sesión iniciada correctamente!')
-      navigate(from, { replace: true })
+      navigate(fromRef.current, { replace: true })
     },
     onError: (error: any) => {
       const message = error.response?.data?.error?.message || 'Credenciales incorrectas o error de conexión.'

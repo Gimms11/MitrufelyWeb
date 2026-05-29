@@ -5,8 +5,9 @@ import type { Permission } from '@/types/roles'
 import { PERMISSIONS } from '@/types/roles'
 
 // ─── Lazy imports ────────────────────────────────────────────────────────────
-const LoginPage    = lazy(() => import('@/pages/public/LoginPage'))
-const RegisterPage = lazy(() => import('@/pages/public/RegisterPage'))
+const LoginPage    = lazy(() => import('@/features/auth/pages/LoginPage'))
+const RegisterPage = lazy(() => import('@/features/auth/pages/RegisterPage'))
+const VerifyPage   = lazy(() => import('@/features/auth/pages/VerifyPage'))
 const HomePage     = lazy(() => import('@/pages/public/HomePage'))
 const DashboardPage = lazy(() => import('@/features/dashboard/pages/DashboardPage'))
 const InventoryPage = lazy(() => import('@/features/inventory/pages/InventoryPage'))
@@ -114,6 +115,9 @@ export function AppRouter() {
 
         {/* Ruta principal pública: HomePage */}
         <Route path="/" element={<HomePage />} />
+
+        {/* Ruta de verificación pública */}
+        <Route path="/verify" element={<VerifyPage />} />
 
         {/* 404 */}
         <Route path="*" element={<NotFoundPage />} />

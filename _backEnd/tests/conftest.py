@@ -40,13 +40,13 @@ async def client() -> AsyncGenerator[AsyncClient, None]:
 @pytest.fixture
 def admin_token() -> str:
     from app.core.security import create_access_token
-    return create_access_token(subject="1", role="administrador", extra={"email": "admin@test.com"})
+    return create_access_token(subject="1", role="ADMIN", extra={"email": "admin@mitrufely.com"})
 
 
 @pytest.fixture
 def client_token() -> str:
     from app.core.security import create_access_token
-    return create_access_token(subject="2", role="cliente", extra={"email": "cliente@test.com"})
+    return create_access_token(subject="2", role="CLIENTE", extra={"email": "cliente@test.com"})
 
 
 @pytest.fixture
