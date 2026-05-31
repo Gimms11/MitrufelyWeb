@@ -25,7 +25,7 @@ export function PackCard({ pack, onAddToCart }: PackCardProps) {
   const handleAdd = () => {
     setAdded(true)
     toast.success(`Pack "${pack.nombre}" agregado al carrito 🛍️`)
-    onAddToCart?.(pack.id)
+    onAddToCart?.(pack.id_paquete)
     setTimeout(() => setAdded(false), 2000)
   }
 
@@ -33,7 +33,7 @@ export function PackCard({ pack, onAddToCart }: PackCardProps) {
     <div className="relative w-full max-w-[300px] h-[400px] overflow-hidden rounded-[24px] shadow-lg group mx-auto">
       {/* ── Imagen de Fondo ── */}
       <img
-        src={pack.imagenUrl}
+        src={pack.imagen_url || 'https://images.unsplash.com/photo-1513534894444-24c9190c3741?auto=format&fit=crop&q=80&w=600'}
         alt={pack.nombre}
         className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
         onError={(e) => {
@@ -52,7 +52,7 @@ export function PackCard({ pack, onAddToCart }: PackCardProps) {
 
         {/* Precio y Puntos */}
         <div className="flex items-center gap-1 text-[13px] font-bold text-[#2a1115] mb-2.5">
-          <span>(S/. {pack.precio.toFixed(2)} | +{pack.puntos.toLocaleString()}</span>
+          <span>(S/. {Number(pack.precio).toFixed(2)} | +{Math.floor(Number(pack.precio) * 100).toLocaleString()}</span>
           <Star className="h-3.5 w-3.5 fill-[#ff7a45] text-[#ff7a45] -mt-0.5" />
           <span>)</span>
         </div>

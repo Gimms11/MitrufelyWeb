@@ -7,7 +7,7 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Literal
 
-from pydantic import Field, SecretStr, field_validator
+from pydantic import Field, SecretStr, field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -89,6 +89,21 @@ class Settings(BaseSettings):
     SMTP_PASSWORD: SecretStr = SecretStr("")  # Nunca se serializa en texto plano
     SMTP_FROM: str = ""
 
+    # ── Google OAuth ──────────────────────────────────────────────────
+    # Obtener en: https://console.cloud.google.com/ → APIs & Services → Credentials
+    GOOGLE_CLIENT_ID: str = Field("", description="Google OAuth 2.0 Client ID")
+
+    # ── Cloudinary ────────────────────────────────────────────────────────────
+    CLOUDINARY_CLOUD_NAME: str | None = Field(None, description="Cloudinary Cloud Name")
+    CLOUDINARY_API_KEY: str | None = Field(None, description="Cloudinary API Key")
+    CLOUDINARY_API_SECRET: str | None = Field(None, description="Cloudinary API Secret")
+
+    # ── Rate Limiting (Login) ─────────────────────────────────────────
+    # Máximo de intentos fallidos de inicio de sesión por IP antes de bloquear
+    LOGIN_RATE_LIMIT_ATTEMPTS: int = Field(5, description="Max failed login attempts per window")
+    # Ventana de tiempo en segundos para el rate limit (default: 60 seg)
+    LOGIN_RATE_LIMIT_WINDOW_SECONDS: int = Field(60, description="Rate limit window in seconds")
+
     # ── Validators ────────────────────────────────────────────────────────────
     @field_validator("ALLOWED_ORIGINS", "ALLOWED_METHODS", "ALLOWED_HEADERS", mode="before")
     @classmethod
@@ -117,6 +132,13 @@ class Settings(BaseSettings):
                     result.append(str(item).strip())
             return result
         return list(value)
+
+    @model_validator(mode="after")
+    def validate_cloudinary_in_production(self) -> "Settings":
+        if self.APP_ENV == "production":
+            if not all([self.CLOUDINARY_CLOUD_NAME, self.CLOUDINARY_API_KEY, self.CLOUDINARY_API_SECRET]):
+                raise ValueError("Las credenciales de Cloudinary (CLOUD_NAME, API_KEY, API_SECRET) son obligatorias en producción.")
+        return self
 
     @property
     def is_production(self) -> bool:

@@ -1,7 +1,7 @@
-# SKILL: M06 — Recompensas SweetCoins (Mytrufely)
+# SKILL: M06 — Recompensas CriptoTrufas (Mytrufely)
 
 > **ID**: `SK-SQL-06`  
-> **Módulo SQL**: `M06_recompensas_sweetcoins.sql`  
+> **Módulo SQL**: `M06_recompensas_CriptoTrufas.sql`  
 > **Skill Secundario de Apoyo**: [`SK-SQL-00_convenciones.md`](./SK-SQL-00_convenciones.md)  
 > **Depende de**: `SK-SQL-01`, `SK-SQL-02`, `SK-SQL-03`, `SK-SQL-04`, `SK-SQL-05`  
 > **Es dependencia de**: _(módulo final — sin dependientes SQL)_
@@ -10,7 +10,7 @@
 
 ## Propósito
 
-Implementa el **programa de fidelización por puntos SweetCoins** de Mytrufely. El saldo de puntos de cada cliente es la **suma de todos los registros** en `movimientos_puntos` (ledger contable). No existe un campo de saldo directo — siempre se calcula.
+Implementa el **programa de fidelización por puntos CriptoTrufas** de Mytrufely. El saldo de puntos de cada cliente es la **suma de todos los registros** en `movimientos_puntos` (ledger contable). No existe un campo de saldo directo — siempre se calcula.
 
 ---
 
@@ -118,7 +118,7 @@ Activado cuando `estado` cambia a `'ANULADO'`:
 ```
 "Implementa el endpoint de canje de puntos por cupón. Contexto:
 @_docs/sql_modules/SK-SQL-00_convenciones.md
-@_docs/sql_modules/SK-SQL-06_recompensas_sweetcoins.md
+@_docs/sql_modules/SK-SQL-06_recompensas_CriptoTrufas.md
 @_docs/sql_modules/SK-SQL-04_cupones.md
-@_docs/skills/06_SWEETCOINS.md"
+@_docs/skills/06_CriptoTrufas.md"
 ```

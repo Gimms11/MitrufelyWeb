@@ -68,9 +68,7 @@ CREATE TYPE estado_pago_enum AS ENUM (
 );
 
 CREATE TYPE tipo_pago_enum AS ENUM (
-  'EFECTIVO',
-  'YAPE',
-  'TRANSFERENCIA'
+  'TARJETA'
 );
 
 CREATE TYPE estado_transaccion_enum AS ENUM (
@@ -105,14 +103,16 @@ CREATE TABLE roles (
 );
 
 CREATE TABLE usuarios (
-  id_usuario serial PRIMARY KEY,
-  id_rol int NOT NULL,
-  nombres varchar(100) NOT NULL,
-  apellidos varchar(100) NOT NULL,
-  email varchar(150) UNIQUE NOT NULL,
-  password_hash varchar(255) NOT NULL,
-  telefono varchar(20),
-  estado boolean NOT NULL DEFAULT true
+  id_usuario    serial PRIMARY KEY,
+  id_rol        int          NOT NULL,
+  nombres       varchar(100) NOT NULL,
+  apellidos     varchar(100) NOT NULL,
+  email         varchar(150) UNIQUE NOT NULL,
+  password_hash varchar(255),
+  telefono      varchar(20),
+  estado        boolean      NOT NULL DEFAULT true,
+  auth_provider varchar(20)  NOT NULL DEFAULT 'local',
+  google_sub    varchar(255)
 );
 
 CREATE TABLE clientes (
@@ -147,11 +147,33 @@ CREATE TABLE productos (
   id_categoria int,
   nombre varchar(150) NOT NULL,
   descripcion text,
+  ingredientes text,
+  alergenos varchar(255),
+  peso_gramos numeric(10,2) CHECK (peso_gramos > 0),
   precio numeric(10,2) NOT NULL CHECK (precio >= 0),
   stock_actual int NOT NULL DEFAULT 0 CHECK (stock_actual >= 0),
   stock_minimo int NOT NULL DEFAULT 0 CHECK (stock_minimo >= 0),
   imagen_url varchar(255),
   estado boolean NOT NULL DEFAULT true
+);
+
+CREATE TABLE paquetes (
+  id_paquete serial PRIMARY KEY,
+  nombre varchar(150) UNIQUE NOT NULL,
+  slug varchar(150) UNIQUE NOT NULL,
+  descripcion text,
+  imagen_url varchar(255),
+  estado boolean NOT NULL DEFAULT true,
+  fecha_creacion timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  fecha_actualizacion timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE paquete_productos (
+  id_paquete_producto serial PRIMARY KEY,
+  id_paquete int NOT NULL,
+  id_producto int NOT NULL,
+  cantidad int NOT NULL CHECK (cantidad > 0),
+  UNIQUE(id_paquete, id_producto)
 );
 
 CREATE TABLE lotes (
@@ -220,6 +242,8 @@ CREATE TABLE ventas (
   subtotal_productos numeric(10,2) NOT NULL DEFAULT 0 CHECK (subtotal_productos >= 0),
   costo_envio numeric(10,2) NOT NULL DEFAULT 0 CHECK (costo_envio >= 0),
   monto_descuento_cupon numeric(10,2) NOT NULL DEFAULT 0 CHECK (monto_descuento_cupon >= 0),
+  base_imponible numeric(10,2) NOT NULL DEFAULT 0 CHECK (base_imponible >= 0),
+  igv numeric(10,2) NOT NULL DEFAULT 0 CHECK (igv >= 0),
   total numeric(10,2) NOT NULL CHECK (total >= 0),
   puntos_ganados int NOT NULL DEFAULT 0 CHECK (puntos_ganados >= 0),
   fecha_venta timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -240,6 +264,16 @@ CREATE TABLE detalles_venta (
   cantidad int NOT NULL CHECK (cantidad > 0),
   precio_unitario numeric(10,2) NOT NULL CHECK (precio_unitario >= 0),
   subtotal numeric(10,2) NOT NULL CHECK (subtotal >= 0)
+);
+
+CREATE TABLE venta_paquetes (
+  id_venta_paquete serial PRIMARY KEY,
+  id_venta int NOT NULL,
+  id_paquete int NOT NULL,
+  cantidad int NOT NULL CHECK (cantidad > 0),
+  nombre_paquete_snapshot varchar(150) NOT NULL,
+  composicion_snapshot_json jsonb NOT NULL,
+  fecha_registro timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE detalle_venta_lotes (
@@ -308,6 +342,7 @@ CREATE TABLE movimientos_puntos (
 -- ==========================================================
 
 CREATE INDEX ON usuarios (id_rol);
+CREATE UNIQUE INDEX uq_usuarios_google_sub ON usuarios (google_sub) WHERE google_sub IS NOT NULL;
 
 CREATE INDEX ON datos_fiscales (id_usuario);
 CREATE INDEX ON datos_fiscales (numero_documento);

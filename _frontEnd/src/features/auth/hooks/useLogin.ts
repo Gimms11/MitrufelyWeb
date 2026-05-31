@@ -5,8 +5,22 @@ import { toast } from 'sonner'
 import { authApi } from '../api/auth.api'
 import { useAuthStore } from '@/app/store'
 import type { LoginCredentials } from '@/types/auth'
+import type { AxiosError } from 'axios'
 
-export function decodeJwt(token: string): any {
+export interface DecodedToken {
+  sub: string
+  role: string
+  email?: string
+  nombres?: string
+  apellidos?: string
+  extra?: {
+    email?: string
+    nombres?: string
+    apellidos?: string
+  }
+}
+
+export function decodeJwt(token: string): DecodedToken | null {
   try {
     const parts = token.split('.')
     if (parts.length < 2) return null
@@ -40,7 +54,7 @@ export function useLogin() {
   const location = useLocation()
   const setUser = useAuthStore((s) => s.setUser)
 
-  const from = (location.state as any)?.from?.pathname || '/'
+  const from = (location.state as { from?: { pathname: string } })?.from?.pathname || '/'
   const fromRef = useRef(from)
 
   useEffect(() => {
@@ -57,10 +71,17 @@ export function useLogin() {
       }
 
       // Estructuramos el usuario extrayendo datos del JWT
+      const emailVal = decoded.email || decoded.extra?.email || ''
+      const nombresVal = decoded.nombres || decoded.extra?.nombres
+      const apellidosVal = decoded.apellidos || decoded.extra?.apellidos
+      const fallbackName = emailVal ? (emailVal.split('@')[0] || 'Usuario') : 'Usuario'
+
       const user = {
         id: decoded.sub,
-        email: decoded.extra?.email || '',
-        name: decoded.extra?.email ? decoded.extra.email.split('@')[0] : 'Usuario',
+        email: emailVal,
+        name: nombresVal
+          ? `${nombresVal} ${apellidosVal || ''}`.trim()
+          : fallbackName,
         role: mapRole(decoded.role),
         sweetCoinsBalance: 1000, // puntos iniciales para la UI
         createdAt: new Date().toISOString(),
@@ -71,8 +92,8 @@ export function useLogin() {
       toast.success('¡Sesión iniciada correctamente!')
       navigate(fromRef.current, { replace: true })
     },
-    onError: (error: any) => {
-      const message = error.response?.data?.error?.message || 'Credenciales incorrectas o error de conexión.'
+    onError: (error: unknown) => {
+      const message = (error as AxiosError<{ error?: { message?: string } }>)?.response?.data?.error?.message || 'Credenciales incorrectas o error de conexión.'
       toast.error(message)
     },
   })

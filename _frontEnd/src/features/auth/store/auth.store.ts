@@ -9,6 +9,7 @@ interface AuthState {
   isAuthenticated: boolean
   isLoading: boolean
   refreshToken: string | null
+  accessToken: string | null
 }
 
 interface AuthActions {
@@ -29,6 +30,7 @@ export const useAuthStore = create<AuthStore>()(
       isAuthenticated: false,
       isLoading: false,
       refreshToken: null,
+      accessToken: null,
 
       // ─── Actions ───────────────────────────────────────────────────────────
       setUser: (user, accessToken, refreshToken) => {
@@ -37,6 +39,7 @@ export const useAuthStore = create<AuthStore>()(
           state.user = user
           state.isAuthenticated = true
           state.isLoading = false
+          state.accessToken = accessToken
           if (refreshToken) {
             state.refreshToken = refreshToken
           }
@@ -64,6 +67,7 @@ export const useAuthStore = create<AuthStore>()(
           state.isAuthenticated = false
           state.isLoading = false
           state.refreshToken = null
+          state.accessToken = null
         })
       },
 
@@ -76,11 +80,12 @@ export const useAuthStore = create<AuthStore>()(
     {
       name: 'mitrufely-auth',
       storage: createJSONStorage(() => sessionStorage),
-      // Persistimos datos de usuario e identidad y el refresh_token
+      // Persistimos datos de usuario e identidad, access_token y refresh_token
       partialize: (state) => ({
         user: state.user,
         isAuthenticated: state.isAuthenticated,
         refreshToken: state.refreshToken,
+        accessToken: state.accessToken,
       }),
     },
   ),
@@ -91,3 +96,17 @@ export const useAuthStore = create<AuthStore>()(
 registerLogoutCallback(() => {
   useAuthStore.getState().logout()
 })
+
+// Sincronizar el token con Axios inmediatamente al cargar el módulo si ya existe en sessionStorage
+try {
+  const persisted = sessionStorage.getItem('mitrufely-auth')
+  if (persisted) {
+    const parsed = JSON.parse(persisted)
+    if (parsed?.state?.accessToken) {
+      setAccessToken(parsed.state.accessToken)
+    }
+  }
+} catch {
+  // Ignorar errores de parseo o SSR
+}
+

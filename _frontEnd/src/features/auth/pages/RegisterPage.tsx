@@ -23,7 +23,7 @@ const registerSchema = z
       .transform((val) => (val === '' ? undefined : val))
       .optional()
       .refine(
-        (val) => !val || /^\+?[\d\s\-]{7,20}$/.test(val),
+        (val) => !val || /^\+?[\d\s-]{7,20}$/.test(val),
         'El teléfono debe tener entre 7 y 20 dígitos y formato válido (+51...)',
       ),
     password: z

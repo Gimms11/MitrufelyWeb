@@ -42,6 +42,8 @@ from app.infrastructure.database.models.catalogo import (  # noqa: F401
     Categoria,
     Lote,
     MovimientoStock,
+    Paquete,
+    PaqueteProducto,
     Producto,
 )
 
@@ -59,6 +61,7 @@ from app.infrastructure.database.models.ventas import (  # noqa: F401
     HistorialEstadosVenta,
     MetodoPago,
     Venta,
+    VentaPaquete,
 )
 
 # ── Recompensas / SweetCoins (M06) ────────────────────────────────────────────
@@ -93,6 +96,8 @@ __all__ = [
     "Producto",
     "Lote",
     "MovimientoStock",
+    "Paquete",
+    "PaqueteProducto",
     # M04
     "CuponMaestro",
     "CuponCliente",
@@ -103,6 +108,7 @@ __all__ = [
     "DetalleVentaLotes",
     "MetodoPago",
     "Documento",
+    "VentaPaquete",
     # M06
     "ConfiguracionRecompensas",
     "MovimientoPuntos",

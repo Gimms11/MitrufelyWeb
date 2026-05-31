@@ -23,7 +23,7 @@ from sqlalchemy import (
     String,
     func,
 )
-from sqlalchemy.dialects.postgresql import ENUM as PG_ENUM
+from sqlalchemy.dialects.postgresql import ENUM as PG_ENUM, JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.infrastructure.database.base import Base
@@ -114,6 +114,9 @@ class Venta(Base):
     )
     detalles: Mapped[list["DetalleVenta"]] = relationship(
         "DetalleVenta", back_populates="venta", lazy="select"
+    )
+    paquetes_vendidos: Mapped[list["VentaPaquete"]] = relationship(
+        "VentaPaquete", back_populates="venta", lazy="select"
     )
     metodos_pago: Mapped[list["MetodoPago"]] = relationship(
         "MetodoPago", back_populates="venta", lazy="select"
@@ -209,6 +212,43 @@ class DetalleVenta(Base):
     detalle_lotes: Mapped[list["DetalleVentaLotes"]] = relationship(
         "DetalleVentaLotes", back_populates="detalle", lazy="select"
     )
+
+# ── VentaPaquete ──────────────────────────────────────────────────────────────
+
+class VentaPaquete(Base):
+    """
+    Trazabilidad comercial: Registro de los paquetes comprados en esta venta,
+    antes de ser expandidos a productos individuales en detalles_venta.
+    Tabla: venta_paquetes | M05_ventas_pagos.sql
+    """
+    __tablename__ = "venta_paquetes"
+
+    id_venta_paquete: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    id_venta: Mapped[int] = mapped_column(
+        Integer,
+        ForeignKey("ventas.id_venta", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
+    id_paquete: Mapped[int] = mapped_column(
+        Integer,
+        ForeignKey("paquetes.id_paquete", ondelete="RESTRICT"),
+        nullable=False,
+        index=True,
+    )
+    cantidad: Mapped[int] = mapped_column(Integer, nullable=False)
+    nombre_paquete_snapshot: Mapped[str] = mapped_column(String(150), nullable=False)
+    composicion_snapshot_json: Mapped[dict] = mapped_column(JSONB, nullable=False)
+    fecha_registro: Mapped[datetime] = mapped_column(
+        DateTime, nullable=False, server_default=func.now()
+    )
+
+    # ── Relaciones ─────────────────────────────────────────────────────────
+    venta: Mapped["Venta"] = relationship(
+        "Venta", back_populates="paquetes_vendidos", lazy="select"
+    )
+    # Se recomienda no mapear relacion directa con Paquete si se va a usar Soft Delete,
+    # pero a nivel ORM SQLAlchemy lo soportaría asumiendo FK.
 
 
 # ── DetalleVentaLotes ─────────────────────────────────────────────────────────

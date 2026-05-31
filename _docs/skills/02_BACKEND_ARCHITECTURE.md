@@ -81,7 +81,7 @@ app/
 │   ├── inventory/
 │   ├── orders/
 │   ├── cart/
-│   ├── sweetcoins/
+│   ├── CriptoTrufas/
 │   ├── reports/
 │   └── dashboard/
 ├── routers/
@@ -209,7 +209,7 @@ Jerarquía en `app/core/exceptions.py`:
 | `ConflictError` | 409 | `CONFLICT` |
 | `DuplicateResourceError` | 409 | `DUPLICATE_RESOURCE` |
 | `InsufficientStockError` | 422 | `INSUFFICIENT_STOCK` |
-| `InsufficientSweetCoinsError` | 422 | `INSUFFICIENT_SWEETCOINS` |
+| `InsufficientCriptoTrufasError` | 422 | `INSUFFICIENT_CriptoTrufas` |
 | `DatabaseError` | 500 | `DATABASE_ERROR` |
 | `ExternalServiceError` | 503 | `EXTERNAL_SERVICE_ERROR` |
 
@@ -234,8 +234,8 @@ settings.SECRET_KEY
 settings.API_V1_PREFIX       # "/api/v1"
 settings.ACCESS_TOKEN_EXPIRE_MINUTES  # 60
 settings.REFRESH_TOKEN_EXPIRE_DAYS    # 30
-settings.SWEETCOINS_CONVERSION_RATE   # 10
-settings.SWEETCOINS_EXPIRY_DAYS       # 365
+settings.CriptoTrufas_CONVERSION_RATE   # 10
+settings.CriptoTrufas_EXPIRY_DAYS       # 365
 ```
 
 ---

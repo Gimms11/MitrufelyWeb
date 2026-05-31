@@ -26,7 +26,7 @@ Define el **sistema de cupones de descuento** de Mytrufely. Hay dos niveles:
 | `nombre`               | `varchar(100)` | NOT NULL                                   |
 | `descripcion`          | `text`         | nullable                                   |
 | `porcentaje_descuento` | `numeric(5,2)` | NOT NULL, CHECK (> 0 AND <= 100)           |
-| `costo_puntos`         | `int`          | nullable (si es canjeable con SweetCoins)  |
+| `costo_puntos`         | `int`          | nullable (si es canjeable con CriptoTrufas)  |
 | `dias_vigencia`        | `int`          | NOT NULL, CHECK > 0                        |
 | `estado`               | `boolean`      | DEFAULT true                               |
 
@@ -92,9 +92,9 @@ Mantiene coherencia entre `fecha_uso`, `fecha_expiracion` y `estado`:
 ## Cómo Usar Este Skill con la IA
 
 ```
-"Implementa el flujo de canje de cupón con SweetCoins. Contexto:
+"Implementa el flujo de canje de cupón con CriptoTrufas. Contexto:
 @_docs/sql_modules/SK-SQL-00_convenciones.md
 @_docs/sql_modules/SK-SQL-04_cupones.md
-@_docs/sql_modules/SK-SQL-06_recompensas_sweetcoins.md
-@_docs/skills/06_SWEETCOINS.md"
+@_docs/sql_modules/SK-SQL-06_recompensas_CriptoTrufas.md
+@_docs/skills/06_CriptoTrufas.md"
 ```

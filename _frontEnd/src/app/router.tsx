@@ -3,14 +3,17 @@ import { Suspense, lazy } from 'react'
 import { useAuthStore } from '@/app/store'
 import type { Permission } from '@/types/roles'
 import { PERMISSIONS } from '@/types/roles'
+import AdminLayout from '@/components/layout/AdminLayout'
 
 // ─── Lazy imports ────────────────────────────────────────────────────────────
 const LoginPage    = lazy(() => import('@/features/auth/pages/LoginPage'))
 const RegisterPage = lazy(() => import('@/features/auth/pages/RegisterPage'))
 const VerifyPage   = lazy(() => import('@/features/auth/pages/VerifyPage'))
+const AuthCallbackPage = lazy(() => import('@/features/auth/pages/AuthCallbackPage'))
 const HomePage     = lazy(() => import('@/pages/public/HomePage'))
 const DashboardPage = lazy(() => import('@/features/dashboard/pages/DashboardPage'))
 const InventoryPage = lazy(() => import('@/features/inventory/pages/InventoryPage'))
+const CatalogAdminPage = lazy(() => import('@/features/products/pages/CatalogAdminPage'))
 const OrdersPage = lazy(() => import('@/features/orders/pages/OrdersPage'))
 const ReportsPage = lazy(() => import('@/features/reports/pages/ReportsPage'))
 const CriptoTrufasPage = lazy(() => import('@/features/sweetcoins/pages/SweetCoinsPage'))
@@ -86,30 +89,34 @@ export function AppRouter() {
         <Route element={<GuestOnly />}>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/auth/callback" element={<AuthCallbackPage />} />
         </Route>
 
         {/* Rutas protegidas — requieren autenticación */}
         <Route element={<RequireAuth />}>
-          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route element={<AdminLayout />}>
+            <Route path="/dashboard" element={<DashboardPage />} />
 
-          {/* Solo ADMIN y MANAGER */}
-          <Route element={<RequirePermission permission="VIEW_INVENTORY" />}>
-            <Route path="/inventory" element={<InventoryPage />} />
-          </Route>
+            {/* Solo ADMIN y MANAGER */}
+            <Route element={<RequirePermission permission="VIEW_INVENTORY" />}>
+              <Route path="/inventory" element={<InventoryPage />} />
+              <Route path="/catalog" element={<CatalogAdminPage />} />
+            </Route>
 
-          {/* ADMIN, MANAGER y CASHIER */}
-          <Route element={<RequirePermission permission="VIEW_ORDERS" />}>
-            <Route path="/orders" element={<OrdersPage />} />
-          </Route>
+            {/* ADMIN, MANAGER y CASHIER */}
+            <Route element={<RequirePermission permission="VIEW_ORDERS" />}>
+              <Route path="/orders" element={<OrdersPage />} />
+            </Route>
 
-          {/* Solo ADMIN y MANAGER */}
-          <Route element={<RequirePermission permission="VIEW_REPORTS" />}>
-            <Route path="/reports" element={<ReportsPage />} />
-          </Route>
+            {/* Solo ADMIN y MANAGER */}
+            <Route element={<RequirePermission permission="VIEW_REPORTS" />}>
+              <Route path="/reports" element={<ReportsPage />} />
+            </Route>
 
-          {/* ADMIN, MANAGER y CUSTOMER */}
-          <Route element={<RequirePermission permission="VIEW_SWEETCOINS" />}>
-            <Route path="/sweetcoins" element={<CriptoTrufasPage />} />
+            {/* ADMIN, MANAGER y CUSTOMER */}
+            <Route element={<RequirePermission permission="VIEW_SWEETCOINS" />}>
+              <Route path="/sweetcoins" element={<CriptoTrufasPage />} />
+            </Route>
           </Route>
         </Route>
 

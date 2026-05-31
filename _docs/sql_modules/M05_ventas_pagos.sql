@@ -20,6 +20,8 @@ CREATE TABLE ventas (
   subtotal_productos    numeric(10,2)   NOT NULL DEFAULT 0 CHECK (subtotal_productos >= 0),
   costo_envio           numeric(10,2)   NOT NULL DEFAULT 0 CHECK (costo_envio >= 0),
   monto_descuento_cupon numeric(10,2)   NOT NULL DEFAULT 0 CHECK (monto_descuento_cupon >= 0),
+  base_imponible        numeric(10,2)   NOT NULL DEFAULT 0 CHECK (base_imponible >= 0),
+  igv                   numeric(10,2)   NOT NULL DEFAULT 0 CHECK (igv >= 0),
   total                 numeric(10,2)   NOT NULL CHECK (total >= 0),
   puntos_ganados        int             NOT NULL DEFAULT 0 CHECK (puntos_ganados >= 0),
   fecha_venta           timestamp       NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -40,6 +42,16 @@ CREATE TABLE detalles_venta (
   cantidad       int           NOT NULL CHECK (cantidad > 0),
   precio_unitario numeric(10,2) NOT NULL CHECK (precio_unitario >= 0),
   subtotal       numeric(10,2) NOT NULL CHECK (subtotal >= 0)
+);
+
+CREATE TABLE venta_paquetes (
+  id_venta_paquete serial PRIMARY KEY,
+  id_venta int NOT NULL,
+  id_paquete int NOT NULL,
+  cantidad int NOT NULL CHECK (cantidad > 0),
+  nombre_paquete_snapshot varchar(150) NOT NULL,
+  composicion_snapshot_json jsonb NOT NULL,
+  fecha_registro timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Asociación entre una línea de venta y los lotes físicos consumidos (FEFO)
@@ -253,6 +265,15 @@ ALTER TABLE historial_estados_venta
 
 ALTER TABLE detalles_venta
   ADD FOREIGN KEY (id_venta)   REFERENCES ventas   (id_venta)   ON DELETE CASCADE;
+
+ALTER TABLE detalles_venta
+  ADD FOREIGN KEY (id_producto) REFERENCES productos (id_producto) ON DELETE RESTRICT;
+
+ALTER TABLE venta_paquetes
+  ADD FOREIGN KEY (id_venta) REFERENCES ventas (id_venta) ON DELETE CASCADE;
+
+ALTER TABLE venta_paquetes
+  ADD FOREIGN KEY (id_paquete) REFERENCES paquetes (id_paquete) ON DELETE RESTRICT;
 
 ALTER TABLE detalles_venta
   ADD FOREIGN KEY (id_producto) REFERENCES productos (id_producto) ON DELETE RESTRICT;

@@ -4,6 +4,11 @@
 -- Propósito: Gestión de identidad, autenticación y perfiles
 --            de usuario (clientes, admins, cajeros, almacén).
 -- Depende de: M01_enums_tipos.sql
+--
+-- ACTUALIZACIÓN: Soporte para autenticación con Google OAuth2
+--   - password_hash ahora es nullable (usuarios de Google no tienen contraseña local)
+--   - Columna auth_provider: 'local' | 'google'
+--   - Columna google_sub: ID único del usuario en Google (sub del ID Token)
 -- ==========================================================
 
 -- ── TABLAS ─────────────────────────────────────────────────
@@ -19,9 +24,14 @@ CREATE TABLE usuarios (
   nombres       varchar(100) NOT NULL,
   apellidos     varchar(100) NOT NULL,
   email         varchar(150) UNIQUE NOT NULL,
-  password_hash varchar(255) NOT NULL,
+  -- Nullable: usuarios de Google no tienen contraseña local
+  password_hash varchar(255),
   telefono      varchar(20),
-  estado        boolean      NOT NULL DEFAULT true
+  estado        boolean      NOT NULL DEFAULT true,
+  -- Proveedor de autenticación: 'local' (email+pass) o 'google' (OAuth2)
+  auth_provider varchar(20)  NOT NULL DEFAULT 'local',
+  -- ID único del usuario en Google (sub del ID Token de Google)
+  google_sub    varchar(255)
 );
 
 CREATE TABLE clientes (
@@ -46,6 +56,11 @@ CREATE TABLE datos_fiscales (
 CREATE INDEX ON usuarios       (id_rol);
 CREATE INDEX ON datos_fiscales (id_usuario);
 CREATE INDEX ON datos_fiscales (numero_documento);
+
+-- Índice parcial único en google_sub (solo para filas donde no sea NULL)
+CREATE UNIQUE INDEX uq_usuarios_google_sub
+  ON usuarios (google_sub)
+  WHERE google_sub IS NOT NULL;
 
 -- ── RESTRICCIÓN ÚNICA PARCIAL ──────────────────────────────
 -- Solo puede haber un dato fiscal predeterminado por usuario

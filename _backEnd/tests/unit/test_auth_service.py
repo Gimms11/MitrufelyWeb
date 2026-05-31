@@ -17,7 +17,10 @@ class TestAuthService:
 
     @pytest.fixture
     def service(self, mock_auth_repo: AsyncMock) -> AuthService:
-        return AuthService(repository=mock_auth_repo)
+        mock_redis = AsyncMock()
+        mock_redis.exists = AsyncMock(return_value=0)
+        mock_redis.setex = AsyncMock(return_value=True)
+        return AuthService(repository=mock_auth_repo, redis=mock_redis)
 
     async def test_login_invalid_credentials_raises(
         self,
@@ -57,6 +60,10 @@ class TestAuthService:
         fake_user = MagicMock()
         fake_user.id_usuario = 1
         fake_user.email = "user@test.com"
+        fake_user.nombres = "Juan"
+        fake_user.apellidos = "Pérez"
+        fake_user.estado = True  # cuenta activa
+        fake_user.auth_provider = "local"
         fake_user.rol = MagicMock()
         fake_user.rol.nombre.value = "CLIENTE"
         fake_user.password_hash = hash_password("Correct1!")

@@ -22,11 +22,14 @@ Están diseñados para ser pasados a la IA como contexto de referencia antes de 
 | [`03_AUTH_SECURITY.md`](./03_AUTH_SECURITY.md)                 | Autenticación y RBAC                      | JWT, roles, dependencias de seguridad, permisos          |
 | [`04_CHECKOUT_FLOW.md`](./04_CHECKOUT_FLOW.md)                 | Flujo de Venta Transaccional              | Carrito → Checkout → Pago → Lotes FEFO → Puntos          |
 | [`05_INVENTORY_STOCK.md`](./05_INVENTORY_STOCK.md)             | Inventario y Lotes                        | Gestión de lotes, Kardex, FEFO, expiración, stock        |
-| [`06_SWEETCOINS.md`](./06_SWEETCOINS.md)                       | SweetCoins (Fidelización)                 | Cupones, puntos, canjes, configuración de recompensas    |
+| [`06_CriptoTrufas.md`](./06_CriptoTrufas.md)                       | CriptoTrufas (Fidelización)                 | Cupones, puntos, canjes, configuración de recompensas    |
 | [`07_FRONTEND_ARCHITECTURE.md`](./07_FRONTEND_ARCHITECTURE.md) | Arquitectura React 19 + Vite              | Estado híbrido, routing, componentes, Tailwind v4        |
 | [`08_API_CONTRACTS.md`](./08_API_CONTRACTS.md)                 | Contratos de API                          | Envelopes de respuesta, paginación, códigos de error     |
 | [`09_BACKGROUND_TASKS.md`](./09_BACKGROUND_TASKS.md)           | Celery / Workers                          | Tareas asíncronas, PDF, notificaciones, expiración batch |
 | [`10_TESTING.md`](./10_TESTING.md)                             | Testing Strategy                          | Unit, Integration, E2E con pytest + httpx                |
+| [`11_ANALYTICS_BI.md`](./11_ANALYTICS_BI.md)                   | Módulo de Analítica e Inteligencia (BI)   | Gráficos, KPIs, Reportes PDF WeasyPrint y Excel asíncrono |
+| [`12_STORAGE_MEDIA.md`](./12_STORAGE_MEDIA.md)                 | Almacenamiento y Multimedia (Cloudinary)  | Subida y optimización de imágenes con Pillow e integridad |
+| [`13_PRODUCTS_CATALOG_CRUD.md`](./13_PRODUCTS_CATALOG_CRUD.md) | Catálogo de Productos                     | Patrones avanzados de CRUD, disponibilidad, auto-slug    |
 
 ---
 
@@ -65,11 +68,30 @@ Están diseñados para ser pasados a la IA como contexto de referencia antes de 
 app/modules/
 ├── auth/          # Login, registro, tokens
 ├── users/         # Perfil, datos fiscales
-├── products/      # Catálogo, categorías
+├── products/      # Catálogo, categorías, paquetes comerciales ← [Fase 2]
 ├── inventory/     # Lotes, Kardex, stock
-├── orders/        # Ventas, detalles, estados
+├── orders/        # Ventas, detalles, estados, checkout con expansión de paquetes ← [Fase 2]
 ├── cart/          # Carrito efímero (Redis)
-├── sweetcoins/    # Puntos, cupones, canjes
+├── CriptoTrufas/  # Puntos, cupones, canjes
 ├── reports/       # PDF, Excel, documentos
 └── dashboard/     # Métricas, KPIs
 ```
+
+---
+
+## Documentación de Fases Implementadas
+
+| Fase | Documento | Estado |
+|------|-----------|--------|
+| Fase 2 — Catálogo y Paquetes | [`_docs/fases/fase2_catalogo.md`](../fases/fase2_catalogo.md) | ✅ Implementado |
+
+---
+
+## Skills Relacionadas por Módulo
+
+| Módulo | Skills a Leer |
+|--------|---------------|
+| `products/` (paquetes) | `04_CHECKOUT_FLOW.md` § Expansión + `08_API_CONTRACTS.md` § Packages + `12_STORAGE_MEDIA.md` |
+| `orders/` (checkout) | `04_CHECKOUT_FLOW.md` (completo) + `05_INVENTORY_STOCK.md` |
+| `storage/` | `12_STORAGE_MEDIA.md` (subida, Pillow, rollback transaccional) |
+| `tests/` | `10_TESTING.md` (conftest real, NullPool, Redis mock) |

@@ -25,16 +25,25 @@ export interface Trufa {
   badge?: string
 }
 
+export interface PaqueteProducto {
+  id_paquete_producto: number
+  id_paquete: number
+  id_producto: number
+  cantidad: number
+}
+
 export interface Pack {
-  id: number
+  id_paquete: number
   nombre: string
-  precio: number
-  /** CriptoTrufas (puntos) que se ganan al comprar el pack */
-  puntos: number
-  descripcion: string
-  imagenUrl: string
-  /** Número de piezas artesanales incluidas */
-  piezas: number
+  slug: string
+  descripcion: string | null
+  imagen_url: string | null
+  estado: boolean
+  fecha_creacion: string
+  fecha_actualizacion: string
+  productos: PaqueteProducto[]
+  disponible: boolean
+  precio: number // decimal devuelto por el backend
 }
 
 // ─── UI — Tabs del catálogo ────────────────────────────────────────────────
@@ -43,3 +52,34 @@ export interface TabItem {
   readonly key: TrufaCategoria
   readonly label: string
 }
+
+// ─── Modelos del Backend para Administración (CRUD) ─────────────────────────
+
+export interface Producto {
+  id_producto: number
+  id_categoria: number | null
+  nombre: string
+  descripcion: string | null
+  ingredientes: string | null
+  alergenos: string | null
+  peso_gramos: number | null
+  precio: number
+  stock_minimo: number
+  stock_actual: number
+  imagen_url: string | null
+  cloudinary_public_id: string | null
+  estado: boolean
+  disponible: boolean
+  slug: string
+  fecha_creacion: string
+  fecha_actualizacion: string
+}
+
+export interface PaginatedResponse<T> {
+  items: T[]
+  page: number
+  size: number
+  total: number
+  pages: number
+}
+

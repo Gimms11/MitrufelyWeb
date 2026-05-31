@@ -18,7 +18,7 @@ CREATE TABLE cupones_maestro (
   descripcion         text,
   porcentaje_descuento numeric(5,2) NOT NULL
     CHECK (porcentaje_descuento > 0 AND porcentaje_descuento <= 100),
-  costo_puntos        int,           -- coste en SweetCoins para adquirirlo
+  costo_puntos        int,           -- coste en CriptoTrufas para adquirirlo
   dias_vigencia       int           NOT NULL CHECK (dias_vigencia > 0),
   estado              boolean       NOT NULL DEFAULT true
 );

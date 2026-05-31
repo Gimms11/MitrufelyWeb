@@ -1,6 +1,6 @@
 """
 Mifrufely Web — Database Enum Definitions
-Maps all 13 PostgreSQL ENUM types (M01_enums_tipos.sql) to Python Enum classes.
+Maps all PostgreSQL ENUM types + simple string enums to Python Enum classes.
 
 These classes mirror the physical ENUMs already created in NeonDB.
 Using str-mixins ensures seamless JSON serialization via Pydantic and ORJSONResponse.
@@ -15,6 +15,12 @@ class TipoRolEnum(str, enum.Enum):
     CLIENTE = "CLIENTE"
     CAJERO = "CAJERO"
     ALMACEN = "ALMACEN"
+
+
+class AuthProviderEnum(str, enum.Enum):
+    """Proveedor de autenticación del usuario. Columna: usuarios.auth_provider."""
+    LOCAL = "local"
+    GOOGLE = "google"
 
 
 class TipoDocumentoFiscalEnum(str, enum.Enum):
@@ -77,9 +83,7 @@ class EstadoPagoEnum(str, enum.Enum):
 
 class TipoPagoEnum(str, enum.Enum):
     """Método/tipo de pago registrado. Tabla: metodos_pago."""
-    EFECTIVO = "EFECTIVO"
-    YAPE = "YAPE"
-    TRANSFERENCIA = "TRANSFERENCIA"
+    TARJETA = "TARJETA"
 
 
 class EstadoTransaccionEnum(str, enum.Enum):

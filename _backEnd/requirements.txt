@@ -57,6 +57,7 @@ ujson==5.10.0
 tenacity==9.1.2
 python-slugify==8.0.4
 Pillow==11.2.1
+cloudinary==1.41.0
 
 # --- MONITORING ---
 prometheus-fastapi-instrumentator==7.1.0

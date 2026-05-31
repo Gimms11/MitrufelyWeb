@@ -3,6 +3,7 @@ import { useSearchParams, Link } from 'react-router'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useVerifyAccount } from '../hooks/useVerifyAccount'
 import { Loader2, CheckCircle2, XCircle, Sparkles, ArrowRight } from 'lucide-react'
+import type { AxiosError } from 'axios'
 
 export default function VerifyPage() {
   const [searchParams] = useSearchParams()
@@ -29,7 +30,7 @@ export default function VerifyPage() {
   }, [token, verifyAccount])
 
   // Obtener el mensaje de error de la API si existe
-  const apiErrorMessage = (error as any)?.response?.data?.error?.message || 'El enlace de verificación es inválido o ha expirado.'
+  const apiErrorMessage = (error as AxiosError<{ error?: { message?: string } }>)?.response?.data?.error?.message || 'El enlace de verificación es inválido o ha expirado.'
 
   // Animaciones Framer Motion con tipado estricto
   const cardVariants = {

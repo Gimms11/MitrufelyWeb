@@ -32,15 +32,47 @@ Gestiona el **catálogo de productos** y el **inventario físico** de Mytrufely.
 | `id_categoria` | `int`          | FK → `categorias` RESTRICT   |
 | `nombre`       | `varchar(150)` | NOT NULL                     |
 | `descripcion`  | `text`         | nullable                     |
+| `ingredientes` | `text`         | nullable                     |
+| `alergenos`    | `varchar(255)` | nullable                     |
+| `peso_gramos`  | `numeric(10,2)`| CHECK > 0                    |
 | `precio`       | `numeric(10,2)`| NOT NULL, CHECK >= 0         |
 | `stock_actual` | `int`          | DEFAULT 0, CHECK >= 0        |
 | `stock_minimo` | `int`          | DEFAULT 0, CHECK >= 0        |
 | `imagen_url`   | `varchar(255)` | nullable                     |
 | `estado`       | `boolean`      | DEFAULT true                 |
 
-> ⚠️ `stock_actual` es un **cache operativo**. El stock real se reconstruye sumando `movimientos_stock`. Ambos deben ser coherentes (el trigger `tg_lotes_post_insert` los sincroniza).
+> ⚠️ `stock_actual` es un **cache operativo**. El stock real se reconstruye sumando `movimientos_stock`.
 
 ---
+
+### `paquetes` (Agrupadores Comerciales)
+| Columna               | Tipo           | Restricciones |
+|-----------------------|----------------|---------------|
+| `id_paquete`          | `serial`       | PK            |
+| `nombre`              | `varchar(150)` | UNIQUE        |
+| `slug`                | `varchar(150)` | UNIQUE        |
+| `descripcion`         | `text`         | nullable      |
+| `imagen_url`          | `varchar(255)` | nullable      |
+| `estado`              | `boolean`      | DEFAULT true (Soft Delete) |
+| `fecha_creacion`      | `timestamp`    | DEFAULT NOW() |
+| `fecha_actualizacion` | `timestamp`    | DEFAULT NOW() |
+
+> ⚠️ **Regla Crítica:** Los paquetes **NO** poseen stock propio, lotes, FEFO ni Kardex. Son configuraciones comerciales. Su **disponibilidad es dinámica**: si un producto hijo se queda sin stock o inactivo, el paquete se oculta.
+
+---
+
+### `paquete_productos` (Receta del Paquete)
+| Columna               | Tipo  | Restricciones |
+|-----------------------|-------|---------------|
+| `id_paquete_producto` | `serial`| PK            |
+| `id_paquete`          | `int` | FK → `paquetes` CASCADE |
+| `id_producto`         | `int` | FK → `productos` RESTRICT |
+| `cantidad`            | `int` | CHECK > 0     |
+
+> ⚠️ **Composición:**
+> - Un paquete debe contener **mínimo 2 productos distintos**.
+> - UNIQUE(`id_paquete`, `id_producto`) evita repetir la misma trufa en líneas separadas.
+> - Solo admite productos con `estado = true`.
 
 ### `lotes`
 | Columna              | Tipo               | Restricciones                  |

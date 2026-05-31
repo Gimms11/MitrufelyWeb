@@ -75,9 +75,7 @@ CREATE TYPE estado_pago_enum AS ENUM (
 
 -- Método/tipo de pago registrado
 CREATE TYPE tipo_pago_enum AS ENUM (
-  'EFECTIVO',
-  'YAPE',
-  'TRANSFERENCIA'
+  'TARJETA'
 );
 
 -- Estado de procesamiento de una transacción de pago
@@ -95,7 +93,7 @@ CREATE TYPE tipo_documento_venta_enum AS ENUM (
   'REPORTE'
 );
 
--- Tipo de movimiento en el saldo de puntos SweetCoins
+-- Tipo de movimiento en el saldo de puntos CriptoTrufas
 CREATE TYPE tipo_movimiento_puntos_enum AS ENUM (
   'ACUMULACION_VENTA',
   'COMPRA_CUPON',
