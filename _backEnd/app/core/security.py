@@ -5,6 +5,7 @@ JWT creation/validation + Password hashing
 
 from datetime import datetime, timedelta, timezone
 from typing import Any
+import uuid
 
 import structlog
 from jose import JWTError, jwt
@@ -59,9 +60,11 @@ def create_access_token(
 
 
 def create_refresh_token(subject: str) -> str:
+    """Creates a single-use refresh token with a unique JTI (JWT ID) for rotation tracking."""
+    jti = str(uuid.uuid4())
     payload = _build_payload(
         subject=subject,
-        extra={"type": "refresh"},
+        extra={"type": "refresh", "jti": jti},
         expires_delta=timedelta(days=settings.REFRESH_TOKEN_EXPIRE_DAYS),
     )
     return jwt.encode(payload, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
@@ -71,7 +74,7 @@ def create_verification_token(subject: str) -> str:
     payload = _build_payload(
         subject=subject,
         extra={"type": "verification"},
-        expires_delta=timedelta(hours=24),  # Verification token lasts 24 hours
+        expires_delta=timedelta(hours=2),  # Verification token expires in 2 hours (security)
     )
     return jwt.encode(payload, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
 

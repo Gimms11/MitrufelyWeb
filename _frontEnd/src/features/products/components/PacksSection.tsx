@@ -6,7 +6,7 @@
  */
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { PackCard } from './PackCard'
-import { PACKS_MOCK } from '../api/mockData'
+import { usePackages } from '../hooks/usePackages'
 
 // ─── Props ────────────────────────────────────────────────────────────────
 
@@ -18,6 +18,8 @@ interface PacksSectionProps {
 // ─── Componente ───────────────────────────────────────────────────────────
 
 export function PacksSection({ onPackAdded }: PacksSectionProps) {
+  const { data: packs, isLoading, isError } = usePackages()
+
   return (
     <section
       id="puntos"
@@ -54,9 +56,27 @@ export function PacksSection({ onPackAdded }: PacksSectionProps) {
           </button>
 
           {/* Grid: 1 col móvil / 2 tablet / 3 desktop */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-            {PACKS_MOCK.map((pack) => (
-              <PackCard key={pack.id} pack={pack} onAddToCart={onPackAdded} />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 min-h-[400px]">
+            {isLoading && (
+              <div className="col-span-full flex justify-center items-center">
+                <span className="text-[#5c0f1b] font-bold">Cargando paquetes especiales...</span>
+              </div>
+            )}
+            
+            {isError && (
+              <div className="col-span-full flex justify-center items-center">
+                <span className="text-red-600 font-bold">Ocurrió un error al cargar los paquetes.</span>
+              </div>
+            )}
+
+            {!isLoading && !isError && packs?.length === 0 && (
+              <div className="col-span-full flex justify-center items-center">
+                <span className="text-gray-500 font-medium">Por el momento no hay paquetes disponibles.</span>
+              </div>
+            )}
+
+            {!isLoading && !isError && packs?.map((pack) => (
+              <PackCard key={pack.id_paquete} pack={pack} onAddToCart={onPackAdded} />
             ))}
           </div>
 

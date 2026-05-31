@@ -3,7 +3,7 @@ Mifrufely Web — Auth Schemas (Pydantic v2)
 Request/Response contracts for authentication endpoints
 """
 
-from pydantic import BaseModel, EmailStr, Field, field_validator
+from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_validator
 
 
 class LoginRequest(BaseModel):
@@ -45,12 +45,20 @@ class RegisterResponse(BaseModel):
     message: str = "Cuenta creada exitosamente"
 
 
+class GoogleLoginRequest(BaseModel):
+    """Payload enviado por el frontend tras el flujo de Google Sign-In."""
+
+    id_token: str = Field(
+        ...,
+        description="ID Token JWT devuelto por Google Identity Services en el frontend.",
+    )
+
+
 class RolResponse(BaseModel):
     id_rol: int
     nombre: str
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class UserMeResponse(BaseModel):
@@ -60,8 +68,7 @@ class UserMeResponse(BaseModel):
     email: str
     telefono: str | None
     estado: bool
+    auth_provider: str
     rol: RolResponse
 
-    class Config:
-        from_attributes = True
-
+    model_config = ConfigDict(from_attributes=True)

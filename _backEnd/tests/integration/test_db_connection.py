@@ -30,17 +30,18 @@ from app.infrastructure.database.models import (
 
 # ── Session-scoped Engine to prevent event loop issues ────────────────────────
 
-@pytest_asyncio.fixture(scope="session")
+@pytest_asyncio.fixture
 async def engine() -> AsyncGenerator[AsyncEngine, None]:
     """
-    Session-scoped engine using NullPool so each session gets a fresh
-    connection, preventing asyncpg 'operation in progress' conflicts.
+    Function-scoped engine using NullPool.
+    Recreated per test to avoid 'Event loop is closed' conflicts with pytest-asyncio.
+    NullPool has no persistent connections so there is no performance overhead.
     """
     eng = create_async_engine(
         _async_url,
         echo=False,
         connect_args=_connect_args,
-        poolclass=NullPool,  # Each connection is created and closed per use
+        poolclass=NullPool,
     )
     yield eng
     await eng.dispose()

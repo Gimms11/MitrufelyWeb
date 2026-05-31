@@ -128,6 +128,15 @@ class PaginatedResponse(BaseModel, Generic[T]):
 | `PUT` | `/{id}` | ADMIN | Actualizar producto |
 | `DELETE` | `/{id}` | ADMIN | Desactivar producto |
 
+### Packages (`/api/v1/packages`)
+| Método | Ruta | Roles | Descripción |
+|---|---|---|---|
+| `GET` | `/` | Público | Lista paginada. Filtra dinámicamente según stock (solo devuelve `disponible: true`) |
+| `GET` | `/{id}` | Público | Detalle del paquete (retorna `{ ..., "disponible": true/false }` evaluado dinámicamente) |
+| `POST` | `/` | ADMIN | Crear paquete (validando mínimo 2 productos distintos) |
+| `PUT` | `/{id}` | ADMIN | Actualizar paquete |
+| `DELETE` | `/{id}` | ADMIN | Soft delete del paquete |
+
 ### Inventory (`/api/v1/inventory`)
 | Método | Ruta | Roles | Descripción |
 |---|---|---|---|
@@ -137,7 +146,7 @@ class PaginatedResponse(BaseModel, Generic[T]):
 | `POST` | `/adjustments` | ADMIN/ALMACEN | Ajuste manual de stock |
 | `GET` | `/stock-reconciliation` | ADMIN | Conciliación cache vs Kardex |
 
-### Orders (`/api/v1/orders`)
+### Ventas (`/api/v1/ventas`)
 | Método | Ruta | Roles | Descripción |
 |---|---|---|---|
 | `GET` | `/` | ADMIN/CAJERO | Todas las ventas |
@@ -148,7 +157,7 @@ class PaginatedResponse(BaseModel, Generic[T]):
 | `POST` | `/{id}/cancel` | ADMIN/CAJERO | Anular venta |
 | `GET` | `/{id}/document` | Autenticado | Descargar PDF |
 
-### SweetCoins (`/api/v1/sweet-coins`)
+### CriptoTrufas (`/api/v1/criptotrufas`)
 | Método | Ruta | Roles | Descripción |
 |---|---|---|---|
 | `GET` | `/balance` | CLIENTE | Saldo actual |
@@ -185,7 +194,7 @@ class PaginatedResponse(BaseModel, Generic[T]):
 | 409 | `DUPLICATE_RESOURCE` | Ya existe (email, documento) |
 | 422 | `BUSINESS_RULE_ERROR` | Regla de negocio violada |
 | 422 | `INSUFFICIENT_STOCK` | Stock insuficiente |
-| 422 | `INSUFFICIENT_SWEETCOINS` | SweetCoins insuficientes |
+| 422 | `INSUFFICIENT_CRIPTOTRUFAS` | CriptoTrufas insuficientes |
 | 500 | `INTERNAL_ERROR` | Error no esperado |
 | 503 | `EXTERNAL_SERVICE_ERROR` | Pasarela de pago caída |
 
@@ -195,7 +204,7 @@ class PaginatedResponse(BaseModel, Generic[T]):
 
 ```
 GET /api/v1/products?page=1&page_size=20&categoria=3&estado=true&q=torta
-GET /api/v1/orders?page=1&page_size=20&estado=PENDIENTE&from=2025-01-01&to=2025-12-31
+GET /api/v1/ventas?page=1&page_size=20&estado=PENDIENTE&from=2025-01-01&to=2025-12-31
 GET /api/v1/inventory/lots?page=1&page_size=20&estado_lote=VIGENTE&id_producto=5
 ```
 

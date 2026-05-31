@@ -65,7 +65,7 @@ celery_app.conf.update(
         },
         # Expirar cupones vencidos cada hora
         "expire-coupons-hourly": {
-            "task": "sweetcoins.expire_coupons",
+            "task": "CriptoTrufas.expire_coupons",
             "schedule": crontab(minute=0),
         },
         # Agregaciones analíticas diarias a las 3:00 AM
@@ -159,7 +159,7 @@ async def _run_expire_lots():
 ### 4.3 Expiración de Cupones
 
 ```python
-@celery_app.task(name="sweetcoins.expire_coupons")
+@celery_app.task(name="CriptoTrufas.expire_coupons")
 def expire_coupons():
     count = asyncio.run(_run_expire_coupons())
     return {"expired_coupons": count}

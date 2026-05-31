@@ -18,7 +18,7 @@ SK-SQL-00_convenciones.md     ← Skill SECUNDARIO (apoyo transversal)
 ├── SK-SQL-03_catalogo_inventario.md    → M03_catalogo_inventario.sql
 ├── SK-SQL-04_cupones.md                → M04_cupones.sql
 ├── SK-SQL-05_ventas_pagos.md           → M05_ventas_pagos.sql
-└── SK-SQL-06_recompensas_sweetcoins.md → M06_recompensas_sweetcoins.sql
+└── SK-SQL-06_recompensas_CriptoTrufas.md → M06_recompensas_CriptoTrufas.sql
 ```
 
 ---
@@ -31,7 +31,7 @@ M01_enums_tipos
             └── M03_catalogo_inventario
                     └── M04_cupones
                             └── M05_ventas_pagos
-                                    └── M06_recompensas_sweetcoins
+                                    └── M06_recompensas_CriptoTrufas
 ```
 
 > Ejecutar siempre en este orden. Cada módulo depende de todos los anteriores.
@@ -47,7 +47,7 @@ M01_enums_tipos
 | M03  | `M03_catalogo_inventario.sql`    | `SK-SQL-03_catalogo_inventario.md`       | categorias, productos, lotes, movimientos_stock, vw_stock |
 | M04  | `M04_cupones.sql`                | `SK-SQL-04_cupones.md`                   | cupones_maestro, cupones_cliente, trigger normalización |
 | M05  | `M05_ventas_pagos.sql`           | `SK-SQL-05_ventas_pagos.md`              | ventas, detalles, detalle_lotes, metodos_pago, documentos |
-| M06  | `M06_recompensas_sweetcoins.sql` | `SK-SQL-06_recompensas_sweetcoins.md`    | configuracion_recompensas, movimientos_puntos, triggers |
+| M06  | `M06_recompensas_CriptoTrufas.sql` | `SK-SQL-06_recompensas_CriptoTrufas.md`    | configuracion_recompensas, movimientos_puntos, triggers |
 | M07  | `M07_install_master.sql`         | _(referencia de instalación)_            | Script orquestador del orden de ejecución              |
 
 ---
@@ -89,12 +89,12 @@ M01_enums_tipos
 @_docs/skills/04_CHECKOUT_FLOW.md
 ```
 
-### Implementar SweetCoins / puntos:
+### Implementar CriptoTrufas / puntos:
 ```
 @_docs/sql_modules/SK-SQL-00_convenciones.md
-@_docs/sql_modules/SK-SQL-06_recompensas_sweetcoins.md
+@_docs/sql_modules/SK-SQL-06_recompensas_CriptoTrufas.md
 @_docs/sql_modules/SK-SQL-04_cupones.md
-@_docs/skills/06_SWEETCOINS.md
+@_docs/skills/06_CriptoTrufas.md
 ```
 
 ### Inventario y lotes:

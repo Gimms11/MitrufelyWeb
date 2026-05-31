@@ -12,27 +12,29 @@ CREATE TYPE tipo_rol_enum AS ENUM ('ADMIN', 'CLIENTE', 'CAJERO', 'ALMACEN');
 CREATE TABLE roles (id_rol serial PRIMARY KEY, nombre tipo_rol_enum UNIQUE NOT NULL);
 ```
 
-### En Python (`app/core/constants.py`)
+### En Python (`app/infrastructure/database/models/enums.py` e `infrastructure/database/models/usuarios.py`)
 ```python
-class UserRole(StrEnum):
+class TipoRolEnum(str, enum.Enum):
     ADMIN = "ADMIN"
-    CLIENT = "CLIENTE"
+    CLIENTE = "CLIENTE"
+    CAJERO = "CAJERO"
+    ALMACEN = "ALMACEN"
 
-# ⚠️ PENDIENTE: Agregar CAJERO y ALMACEN cuando se implementen sus módulos
-# UserRole.CASHIER = "CAJERO"
-# UserRole.WAREHOUSE = "ALMACEN"
+class AuthProviderEnum(str, enum.Enum):
+    LOCAL = "local"
+    GOOGLE = "google"
 ```
 
 ### Matriz de Permisos (`ROLE_PERMISSIONS`)
 ```python
-ROLE_PERMISSIONS: dict[UserRole, set[Permission]] = {
-    UserRole.ADMIN: set(Permission),  # Todos los permisos
-    UserRole.CLIENT: {
+ROLE_PERMISSIONS: dict[TipoRolEnum, set[Permission]] = {
+    TipoRolEnum.ADMIN: set(Permission),  # Todos los permisos
+    TipoRolEnum.CLIENTE: {
         Permission.PRODUCT_READ,
         Permission.ORDER_READ_OWN,
         Permission.ORDER_CREATE,
         Permission.USER_READ_OWN,
-        Permission.SWEETCOINS_READ,
+        Permission.CriptoTrufas_READ,
     },
 }
 ```
@@ -54,8 +56,8 @@ USER_READ_OWN, USER_READ_ALL, USER_UPDATE
 # Reportes y Dashboard
 REPORT_GENERATE, DASHBOARD_READ
 
-# SweetCoins
-SWEETCOINS_READ, SWEETCOINS_ADJUST
+# CriptoTrufas
+CriptoTrufas_READ, CriptoTrufas_ADJUST
 ```
 
 ---
@@ -68,25 +70,30 @@ SWEETCOINS_READ, SWEETCOINS_ADJUST
 | Clave | `settings.SECRET_KEY` (min 32 chars, en `.env`) |
 | Access Token TTL | `settings.ACCESS_TOKEN_EXPIRE_MINUTES` (60 min) |
 | Refresh Token TTL | `settings.REFRESH_TOKEN_EXPIRE_DAYS` (30 días) |
+| Verification Token TTL | 2 horas (reducido de 24h por seguridad) |
 
 ### Payload del Access Token
-```python
+```json
 {
-    "sub": str(user.id_usuario),   # Subject = user ID
-    "role": "ADMIN",               # Rol del usuario
+    "sub": "12",                     // Subject = user ID (id_usuario)
+    "role": "CLIENTE",               // Rol del usuario
     "type": "access",
-    "iat": datetime,
-    "exp": datetime,
+    "email": "cliente@correo.com",   // Email en raíz del payload
+    "nombres": "Pedro",              // Nombre real de Gmail o local
+    "apellidos": "Pérez",            // Apellido real de Gmail o local
+    "iat": 1782012900,
+    "exp": 1782016500
 }
 ```
 
-### Payload del Refresh Token
-```python
+### Payload del Refresh Token (con JTI único)
+```json
 {
-    "sub": str(user.id_usuario),
+    "sub": "12",
     "type": "refresh",
-    "iat": datetime,
-    "exp": datetime,
+    "jti": "550e8400-e29b-41d4-a716-446655440000", // UUID único por token
+    "iat": 1782012900,
+    "exp": 1782022900
 }
 ```
 
@@ -101,7 +108,8 @@ verify_password(plain: str, hashed: str) -> bool
 
 # Creación de tokens
 create_access_token(subject: str, role: str, extra: dict | None) -> str
-create_refresh_token(subject: str) -> str
+create_refresh_token(subject: str) -> str  # Genera JTI único
+create_verification_token(subject: str) -> str  # TTL de 2 horas
 
 # Validación de token (lanza InvalidTokenError si falla)
 decode_token(token: str) -> dict[str, Any]
@@ -110,8 +118,6 @@ decode_token(token: str) -> dict[str, Any]
 ---
 
 ## 4. Dependencias FastAPI (`app/security/dependencies.py`)
-
-### Patrón estándar para dependencias de seguridad:
 
 ```python
 from typing import Annotated
@@ -123,100 +129,63 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/auth/login")
 async def get_current_user(
     token: Annotated[str, Depends(oauth2_scheme)],
     session: Annotated[AsyncSession, Depends(get_db)],
-) -> UsuarioModel:
-    """Valida JWT y retorna el usuario activo."""
+    redis: Annotated[Redis, Depends(get_redis)],
+) -> Usuario:
+    """Valida JWT y retorna el usuario activo, rechazando tokens en blocklist."""
+    # Comprobar token blocklist en Redis
+    blocklist_key = f"token_blocklist:{token}"
+    if await redis.exists(blocklist_key):
+        raise UnauthorizedError("Token revocado (sesión cerrada)")
+
     payload = decode_token(token)
     if payload.get("type") != "access":
         raise InvalidTokenError()
     user_id = int(payload["sub"])
-    # Consultar usuario en DB...
-    if not user or not user.estado:
-        raise UnauthorizedError("Usuario inactivo o no encontrado")
-    return user
-
-
-async def get_current_active_admin(
-    current_user: Annotated[UsuarioModel, Depends(get_current_user)],
-) -> UsuarioModel:
-    """Verifica rol ADMIN."""
-    if current_user.rol.nombre != "ADMIN":
-        raise InsufficientRoleError()
-    return current_user
-
-
-def require_permissions(*permissions: Permission):
-    """Factory de dependencia para permisos granulares."""
-    async def _check(
-        current_user: Annotated[UsuarioModel, Depends(get_current_user)],
-    ) -> UsuarioModel:
-        user_role = UserRole(current_user.rol.nombre)
-        allowed = ROLE_PERMISSIONS.get(user_role, set())
-        if not all(p in allowed for p in permissions):
-            raise InsufficientRoleError()
-        return current_user
-    return _check
-```
-
----
-
-## 5. Uso en Routers
-
-```python
-# Endpoint solo autenticado
-@router.get("/me", response_model=UserResponse)
-async def get_me(
-    current_user: Annotated[UsuarioModel, Depends(get_current_user)],
-) -> UserResponse:
-    return UserResponse.model_validate(current_user)
-
-
-# Endpoint solo ADMIN
-@router.delete("/{user_id}")
-async def delete_user(
-    user_id: int,
-    _: Annotated[UsuarioModel, Depends(get_current_active_admin)],
-    service: Annotated[UserService, Depends(get_user_service)],
-) -> MessageResponse:
-    await service.delete(user_id)
-    return MessageResponse(message="Usuario eliminado")
-
-
-# Endpoint con permiso específico
-@router.post("/adjust")
-async def adjust_stock(
-    _: Annotated[UsuarioModel, Depends(require_permissions(Permission.INVENTORY_WRITE))],
     ...
 ```
 
 ---
 
-## 6. Flujo de Autenticación (Login)
+## 5. Google OAuth 2.0 y Validación Segura (`/auth/google`)
 
-```
-POST /api/v1/auth/login
-Body: { email, password }
-                ↓
-AuthService.login()
-    ├── repo.get_by_email(email)        → UsuarioModel | None
-    ├── verify_password(plain, hash)    → bool
-    ├── if not user.estado → raise UnauthorizedError ("Cuenta no verificada")
-    ├── create_access_token(sub=user_id, role=role_name, extra={"email"})
-    └── create_refresh_token(sub=user_id)
-                ↓
-Response: { access_token, refresh_token, token_type: "bearer", expires_in: 3600 }
-```
+El inicio de sesión y registro automático de Google se gestiona validando el `id_token` obtenido por el frontend:
+
+1. **Validación de Token con Google (`_verify_google_token`)**:
+   * Envía el token al endpoint seguro de Google: `https://oauth2.googleapis.com/tokeninfo?id_token={token}`.
+   * **Validación Obligatoria de Audiencia (`aud`):** Falla instantáneamente si `settings.GOOGLE_CLIENT_ID` está vacío en el servidor, o si la audiencia recibida no coincide con la configurada, protegiendo al backend de ataques de confusión de token de aplicaciones externas.
+   * Verifica que `email_verified` sea `True`.
+
+2. **Lógica de Autenticación / Registro**:
+   * **Usuario no existe**: Lo registra automáticamente con `estado = True` (activado inmediatamente, ya validado por Google) y `auth_provider = 'google'`. El campo `password_hash` queda `NULL`. Se crea atómicamente el perfil del `Cliente`.
+   * **Usuario existe (local)**: Si el usuario existe pero no tenía vinculado Google, actualiza `google_sub` y asocia la cuenta si el correo electrónico coincide, activando la cuenta si estaba pendiente.
+   * **Emisión de Tokens**: Emite `access_token` (con nombres/apellidos reales de la cuenta de Gmail) y `refresh_token` con JTI único.
 
 ---
 
-## 7. Flujo de Registro Transaccional Dinámico y Verificación de Email
+## 6. Rotación de Refresh Tokens (RTR) y Replay Attacks
 
-### Workflow de Registro (`POST /api/v1/auth/register`)
-1. **Detección de Rol por Dominio**: El backend comprueba si el correo pertenece al dominio administrador especial configurado (`settings.ADMIN_EMAIL_DOMAIN`, por defecto `@mitrufely.com`).
-   * **Es Admin**: Se le asigna rol `ADMIN` y `estado = True` (activado inmediatamente, **no** requiere correo).
-   * **Es Cliente**: Se le asigna rol `CLIENTE`, `estado = False` (requiere verificación) y se crea atómicamente en la misma transacción su perfil extendido en la tabla `clientes`.
-2. **Generación de Token de Verificación**: Para los clientes se crea un JWT de corta duración (24 horas) con `"type": "verification"`.
-3. **Envío de Correo Asíncrono**: Se programa una `BackgroundTask` que ejecuta en un hilo secundario (`ThreadPoolExecutor`) el envío de un correo HTML responsivo de alta fidelidad con el link de verificación:
-   `http://localhost:8000/api/v1/auth/verify?token=<token>`
+Para prevenir la interceptación y el uso indefinido de refresh tokens:
+
+1. Cada `refresh_token` contiene una clave única `"jti"` (UUID).
+2. Cuando el endpoint `/auth/refresh` recibe un refresh token:
+   * Extrae el `jti` y comprueba en Redis si existe la clave `rt_used:{jti}`.
+   * **Si ya existe:** Significa que el token se está reusando (intento de Replay Attack). El backend deniega la renovación y lanza `InvalidTokenError` de forma inmediata.
+   * **Si es la primera vez:** Se registra el `jti` en Redis con la clave `rt_used:{jti}` y expiración igual al TTL restante del token (`exp - now`).
+3. El backend devuelve un **nuevo access_token** y un **nuevo refresh_token** con un `jti` fresco (Rotación).
+
+---
+
+## 7. Control de Tasa (Rate Limiting) en `/auth/login`
+
+Para evitar ataques de fuerza bruta y denegación de servicio (DoS) por la carga de CPU de `bcrypt`:
+
+- Se implementa un limitador por IP de forma distribuida en Redis.
+- Por defecto, permite un máximo de **5 intentos** de login en un periodo de **60 segundos** (`settings.LOGIN_RATE_LIMIT_ATTEMPTS` y `settings.LOGIN_RATE_LIMIT_WINDOW_SECONDS`).
+- Al exceder el límite, el backend responde con **HTTP 429 Too Many Requests** y un JSON estructurado con los segundos restantes de bloqueo. El frontend muestra el mensaje dinámicamente mediante notificaciones Toast.
+
+---
+
+## 8. Flujo de Registro Tradicional y Verificación
 
 ```
 POST /api/v1/auth/register
@@ -224,58 +193,14 @@ Body: { first_name, last_name, email, password, phone }
                 ↓
 AuthService.register()
     ├── Valida duplicados de email
-    ├── Comprueba dominio especial (ej: @mitrufely.com)
+    ├── Comprueba dominio administrador especial (@mitrufely.com)
     │     ├── Sí (ADMIN): estado=True, rol="ADMIN"
     │     └── No (CLIENTE): estado=False, rol="CLIENTE", crea Cliente en DB (Transaccional)
     ├── Si es CLIENTE:
-    │     ├── Genera token de verificación (JWT 24h, type="verification")
+    │     ├── Genera token de verificación (JWT con TTL de 2 horas, type="verification")
     │     └── BackgroundTask -> EmailService.send_verification_email()
     └── Retorna: { user_id, email, message: "Cuenta creada exitosamente" }
 ```
-
-### Workflow de Verificación (`GET /api/v1/auth/verify?token=...`)
-1. El cliente hace clic en el enlace del correo.
-2. El endpoint `/auth/verify` recibe el token, lo decodifica y verifica que `type == "verification"`.
-3. Se actualiza el `estado` del usuario a `True` en la base de datos, permitiéndole iniciar sesión a partir de ese momento.
-
----
-
-## 8. Flujo de Logout y Lista de Bloqueo en Redis
-
-Para garantizar la invalidación real de los JWTs antes de su fecha de expiración natural, se implementa una **Lista de Bloqueo (Blocklist)** en Redis:
-
-1. **Cerrar Sesión (`POST /api/v1/auth/logout`)**:
-   * El cliente envía su JWT en los headers de autorización.
-   * El backend calcula el tiempo de expiración restante del token:
-     `remaining_ttl = exp - current_timestamp`
-   * Si el token sigue vigente, se registra en Redis una clave con formato `token_blocklist:{token}` y se le asigna ese `remaining_ttl` como TTL.
-2. **Validación en Endpoints Protegidos (`get_current_user`)**:
-   * Cada petición autenticada es interceptada por la dependencia.
-   * Se comprueba si el token actual existe en la base de datos en caché de Redis.
-   * Si existe, se rechaza la petición de inmediato con una excepción `401 Unauthorized ("Token revocado (sesión cerrada)")`.
-
----
-
-## 9. Relación en la Base de Datos
-
-```
-usuarios
-  └── id_rol → roles.id_rol
-               └── nombre: tipo_rol_enum ('ADMIN'|'CLIENTE'|'CAJERO'|'ALMACEN')
-
-clientes (extensión de usuarios para tipo CLIENTE)
-  └── id_usuario → usuarios.id_usuario (UNIQUE, 1-a-1)
-```
-
-Al hacer login, el servicio de auth hace JOIN con `roles` para obtener el nombre real del rol y embeberlo en el JWT.
-
----
-
-## 10. Seguridad de Contraseñas y Tokens
-
-- **Contraseñas**: Hasheadas usando `bcrypt` (vía `passlib`).
-- **Verificación en 2 pasos de Gmail**: El backend se comunica con los servidores de Gmail usando el puerto seguro `587` (STARTTLS) utilizando una **Contraseña de Aplicación de 16 caracteres** configurada en `.env` bajo `SMTP_PASSWORD`.
-- **Expiración de Tokens**:
   * **Access Token**: 60 minutos (`ACCESS_TOKEN_EXPIRE_MINUTES`).
   * **Refresh Token**: 30 días (`REFRESH_TOKEN_EXPIRE_DAYS`).
   * **Verification Token**: 24 horas (JWT local seguro).

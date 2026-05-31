@@ -4,7 +4,7 @@
 > **Módulo SQL**: `M05_ventas_pagos.sql`  
 > **Skill Secundario de Apoyo**: [`SK-SQL-00_convenciones.md`](./SK-SQL-00_convenciones.md)  
 > **Depende de**: `SK-SQL-01`, `SK-SQL-02`, `SK-SQL-03`, `SK-SQL-04`  
-> **Es dependencia de**: `SK-SQL-06` (SweetCoins referencian `ventas`)
+> **Es dependencia de**: `SK-SQL-06` (CriptoTrufas referencian `ventas`)
 
 ---
 
@@ -34,7 +34,9 @@ Cubre el **ciclo de vida completo de una venta** en Mytrufely:
 | `subtotal_productos`     | `numeric(10,2)`    | Suma de líneas sin descuentos       |
 | `costo_envio`            | `numeric(10,2)`    | DEFAULT 0                           |
 | `monto_descuento_cupon`  | `numeric(10,2)`    | Descuento aplicado por cupón        |
-| `total`                  | `numeric(10,2)`    | `subtotal + envio - descuento`      |
+| `base_imponible`         | `numeric(10,2)`    | Valor antes de impuestos            |
+| `igv`                    | `numeric(10,2)`    | Impuesto General a las Ventas       |
+| `total`                  | `numeric(10,2)`    | `base_imponible + igv`              |
 | `puntos_ganados`         | `int`              | Llenado automáticamente al pagar    |
 | `fecha_venta`            | `timestamp`        | DEFAULT NOW()                       |
 
@@ -67,6 +69,22 @@ Registro inmutable de cada cambio de `estado` en la venta.
 
 ---
 
+### `venta_paquetes` (Trazabilidad Comercial de Combos)
+| Columna                     | Tipo           | Descripción |
+|-----------------------------|----------------|-------------|
+| `id_venta_paquete`          | `serial`       | PK |
+| `id_venta`                  | `int`          | FK → `ventas` CASCADE |
+| `id_paquete`                | `int`          | FK → `paquetes` RESTRICT |
+| `cantidad`                  | `int`          | CHECK > 0 |
+| `precio_paquete`            | `numeric(10,2)`| Precio cobrado |
+| `nombre_paquete_snapshot`   | `varchar(150)` | Snapshot histórico del nombre |
+| `composicion_snapshot_json` | `jsonb`        | Snapshot histórico de qué incluía |
+| `fecha_registro`            | `timestamp`    | DEFAULT NOW() |
+
+> **Flujo de Expansión Automática:** Cuando se vende un paquete, el backend guarda un registro aquí y **expande** el paquete insertando sus productos físicos equivalentes en `detalles_venta`. FEFO y Kardex no saben que existen paquetes; operan solo sobre `detalles_venta`.
+
+---
+
 ### `detalle_venta_lotes`
 Traza qué lotes físicos se consumieron por cada línea de venta (FEFO).
 | Columna           | Tipo  | Descripción                         |
@@ -83,7 +101,7 @@ Traza qué lotes físicos se consumieron por cada línea de venta (FEFO).
 |-----------------------|-------------------------|------------------------------|
 | `id_pago`             | `serial`                | PK                           |
 | `id_venta`            | `int`                   | FK → `ventas` CASCADE        |
-| `tipo_pago`           | `tipo_pago_enum`        | EFECTIVO / YAPE / TRANSFERENCIA |
+| `tipo_pago`           | `tipo_pago_enum`        | TARJETA                         |
 | `monto`               | `numeric(10,2)`         | CHECK > 0                    |
 | `codigo_transaccion`  | `varchar(100)`          | nullable (ref de pasarela)   |
 | `proveedor`           | `varchar(50)`           | nullable                     |
@@ -124,6 +142,17 @@ Bloquean UPDATE y DELETE en tablas de detalle. Solo se puede revertir anulando l
 CREATE UNIQUE INDEX uq_documento_serie_correlativo
   ON documentos (tipo_documento, numero_serie, numero_correlativo);
 ```
+
+## Reglas de Transacción y Rollback
+Toda venta (incluyendo la compra de paquetes) debe ejecutarse en una **única transacción SQL** desde el backend:
+1. Validar disponibilidad de stock (o componentes de paquete).
+2. Insertar `ventas`.
+3. Insertar `venta_paquetes` (y tomar snapshots).
+4. Expandir paquetes e insertar en `detalles_venta`.
+5. Ejecutar FEFO (vía triggers).
+6. Registrar Kardex.
+7. Confirmar transacción (`COMMIT`).
+Si cualquier paso falla (ej. FEFO detecta stock insuficiente o error de pago), ocurre un **`ROLLBACK TOTAL`**.
 
 ---
 

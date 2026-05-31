@@ -18,7 +18,7 @@ Cliente                 Backend (FastAPI)              PostgreSQL (Triggers)
   │                           │── INSERT detalles_venta ─────────▶│ ←tg_detalles_venta_asignar_lotes
   │                           │   (por cada item del carrito)   │  (FEFO + stock + kardex)
   │                           │── UPDATE ventas.estado_pago ─────▶│ ←tg_ventas_otorgar_puntos
-  │                           │   = 'PAGADO'                     │  (SweetCoins + cupón USADO)
+  │                           │   = 'PAGADO'                     │  (CriptoTrufas + cupón USADO)
   │                           │── [Celery] generar PDF ───────────▶│
   │◀──200 OK, venta_id────────│                               │
 ```
@@ -30,14 +30,15 @@ Cliente                 Backend (FastAPI)              PostgreSQL (Triggers)
 | Tabla | Rol en el Flujo |
 |---|---|
 | `ventas` | Cabecera del pedido. Estado y totales. |
-| `detalles_venta` | Una fila por producto. **Inmutable** tras insert. |
+| `detalles_venta` | Una fila por producto. **Inmutable** tras insert. Incluye componentes de paquetes expandidos. |
 | `detalle_venta_lotes` | Traza física: qué lote → qué detalle. Gestionado por trigger. |
-| `metodos_pago` | Registro del pago. Puede haber varios por venta. |
+| `metodos_pago` | Registro del pago. Solo `TARJETA`. |
+| `venta_paquetes` | Trazabilidad comercial: snapshot del paquete vendido (nombre + composición JSON). |
 | `lotes` | Reducido automáticamente por trigger FEFO. |
 | `productos` | `stock_actual` cache actualizado por trigger. |
 | `movimientos_stock` | Kardex. Insertado automáticamente por trigger. |
 | `cupones_cliente` | Estado cambia a `'USADO'` por trigger. |
-| `movimientos_puntos` | Acumulación de SweetCoins. Insertado por trigger. |
+| `movimientos_puntos` | Acumulación de CriptoTrufas. Insertado por trigger. |
 | `documentos` | Boleta/Factura. Creado por tarea Celery. |
 | `historial_estados_venta` | Auditoría de estados. Gestionado por trigger. |
 
@@ -117,18 +118,59 @@ async def checkout(self, request: CheckoutRequest, cliente_id: int) -> VentaResp
             raise InsufficientStockError(str(e))
 
         # 3d. Confirmar pago → tg_ventas_otorgar_puntos se dispara aquí
-        # Asigna SweetCoins y marca cupón como USADO
+        # Asigna CriptoTrufas y marca cupón como USADO
         await self._order_repo.update(venta.id_venta, {
             "estado_pago": "PAGADO",
             "estado": "PAGADO",
         })
 ```
 
-### Paso 4: Dispatch de Tareas Asíncronas
+### Paso 3b: Expandir Paquetes (Fase 2)
 ```python
-    # Fuera de la transacción DB, después del commit
-    generate_pdf_task.delay(venta_id=venta.id_venta)
-    # Notificación por email/WhatsApp (futuro)
+    # Los paquetes NO tienen stock ni lotes propios.
+    # Se expanden en sus componentes y se insertan en detalles_venta.
+    for item in request.paquetes:
+        paquete = await self.paquete_repo.get_by_id(item.id_paquete)
+        if not paquete or not paquete.estado:
+            raise HTTPException(400, "Paquete no existe o no está activo")
+
+        composicion_snapshot = []
+        for pp in paquete.productos:
+            if not pp.producto.estado or pp.producto.stock_actual < (pp.cantidad * item.cantidad):
+                raise HTTPException(400, f"Stock insuficiente para '{pp.producto.nombre}'")
+
+            venta.detalles.append(DetalleVenta(
+                id_producto=pp.id_producto,
+                cantidad=pp.cantidad * item.cantidad,
+                precio_unitario=pp.producto.precio,
+                subtotal=pp.producto.precio * pp.cantidad * item.cantidad,
+            ))
+            composicion_snapshot.append({
+                "id_producto": pp.id_producto,
+                "nombre": pp.producto.nombre,
+                "cantidad_por_paquete": pp.cantidad,
+                "precio_unitario": str(pp.producto.precio),
+            })
+
+        # Trazabilidad comercial — snapshot inmutable
+        venta.paquetes_vendidos.append(VentaPaquete(
+            id_paquete=paquete.id_paquete,
+            cantidad=item.cantidad,
+            nombre_paquete_snapshot=paquete.nombre,
+            composicion_snapshot_json=composicion_snapshot,
+        ))
+```
+
+**⚠️ FEFO y Kardex operan solo sobre `detalles_venta`. Los triggers de NeonDB no saben ni les importa si el detalle vino de un producto individual o de la expansión de un paquete.**
+
+### Paso 4: Guardar y Hacer Commit
+```python
+    venta_creada = await self.repo.create_venta_transactional(venta)
+    await self.session.commit()
+    # En este momento se ejecutan los triggers:
+    # tg_detalles_venta_asignar_lotes → FEFO
+    # tg_movimientos_stock → Kardex
+    # tg_ventas_historial → Auditoría
 ```
 
 ---
@@ -148,7 +190,7 @@ async def anular_venta(self, venta_id: int, actor_id: int) -> VentaResponse:
     # El trigger tg_ventas_anular hace TODO lo demás:
     # - Revierte stock a lotes
     # - Libera cupón
-    # - Contra-asienta SweetCoins con AJUSTE_ADMIN
+    # - Contra-asienta CriptoTrufas con AJUSTE_ADMIN
     await self._order_repo.update(venta_id, {"estado": "ANULADO"})
 ```
 
@@ -174,19 +216,25 @@ PENDIENTE ──pagado──▶ PAGADO ──entregado──▶ ENTREGADO
 
 ## 6. Esquemas Pydantic de Referencia
 
-### Request
+### Request (implementación real — Fase 2)
 ```python
-class CheckoutItemRequest(BaseModel):
+class ItemProducto(BaseModel):
     id_producto: int
-    cantidad: int = Field(gt=0)
-    precio_unitario: Decimal = Field(ge=0)
+    cantidad: int = Field(..., gt=0)
 
-class CheckoutRequest(BaseModel):
-    items: list[CheckoutItemRequest] = Field(min_length=1)
+class ItemPaquete(BaseModel):
+    id_paquete: int
+    cantidad: int = Field(..., gt=0)
+
+class VentaRequest(BaseModel):
+    productos: list[ItemProducto] = []     # Productos individuales
+    paquetes: list[ItemPaquete] = []       # Paquetes comerciales (se expanden)
+    tipo_pago: TipoPagoEnum                # Solo TARJETA
     id_cupon_cliente: int | None = None
-    costo_envio: Decimal = Field(ge=0, default=Decimal("0"))
-    tipo_pago: TipoPagoEnum
-    codigo_transaccion: str | None = None
+    origen_venta: OrigenVentaEnum = OrigenVentaEnum.WEB
+
+    def has_items(self) -> bool:
+        return bool(self.productos or self.paquetes)
 ```
 
 ### Response
@@ -209,9 +257,10 @@ class VentaResponse(BaseModel):
 |---|---|
 | `EstadoVentaEnum` | `PENDIENTE`, `PAGADO`, `ENTREGADO`, `ANULADO` |
 | `EstadoPagoEnum` | `PENDIENTE`, `PAGADO` |
-| `TipoPagoEnum` | `EFECTIVO`, `YAPE`, `TRANSFERENCIA` |
+| `TipoPagoEnum` | `TARJETA` *(único método activo — EFECTIVO/YAPE/TRANSFERENCIA deprecados)* |
 | `EstadoTransaccionEnum` | `PENDIENTE`, `APROBADO`, `RECHAZADO`, `ANULADO` |
 | `TipoDocumentoVentaEnum` | `BOLETA`, `FACTURA`, `REPORTE` |
+| `OrigenVentaEnum` | `WEB`, `APP`, `PRESENCIAL` |
 
 ---
 

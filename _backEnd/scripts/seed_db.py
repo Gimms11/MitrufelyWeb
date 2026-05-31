@@ -42,6 +42,29 @@ async def seed_roles(session: AsyncSession) -> None:
     print("✓ roles: seeded 4 base roles (ADMIN, CLIENTE, CAJERO, ALMACEN).")
 
 
+async def seed_categorias(session: AsyncSession) -> None:
+    """Insert standard categories if none exist."""
+    result = await session.execute(text("SELECT COUNT(*) FROM categorias"))
+    count = result.scalar()
+
+    if count and count > 0:
+        print(f"✓ categorias: already has {count} row(s), skipping.")
+        return
+
+    await session.execute(text("""
+        INSERT INTO categorias (id_categoria, nombre, descripcion) VALUES
+            (1, 'Best Sellers', 'Nuestras trufas más vendidas y aclamadas'),
+            (2, 'Nuevos Sabores', 'Sabores de temporada e innovaciones trufísticas'),
+            (3, 'Promociones', 'Packs y combinaciones con descuentos especiales')
+        ON CONFLICT (id_categoria) DO UPDATE 
+        SET nombre = EXCLUDED.nombre, descripcion = EXCLUDED.descripcion
+    """))
+    # Adjust postgres sequence to ensure auto-increment starts correctly after manual insertions
+    await session.execute(text("SELECT setval('categorias_id_categoria_seq', COALESCE((SELECT MAX(id_categoria)+1 FROM categorias), 1), false)"))
+    await session.commit()
+    print("✓ categorias: seeded 3 standard categories (Best Sellers, Nuevos Sabores, Promociones).")
+
+
 async def seed_configuracion_recompensas(session: AsyncSession) -> None:
     """Insert a default rewards configuration if none exists."""
     result = await session.execute(text("SELECT COUNT(*) FROM configuracion_recompensas WHERE estado = true"))
@@ -72,6 +95,7 @@ async def main() -> None:
 
     async with session_factory() as session:
         await seed_roles(session)
+        await seed_categorias(session)
         await seed_configuracion_recompensas(session)
 
     await database_engine.dispose()
@@ -80,3 +104,4 @@ async def main() -> None:
 
 if __name__ == "__main__":
     asyncio.run(main())
+

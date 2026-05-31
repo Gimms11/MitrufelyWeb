@@ -12,7 +12,7 @@
 --   3. M03_catalogo_inventario.sql  → Categorías, productos, lotes, Kardex
 --   4. M04_cupones.sql              → Cupones maestro y de cliente
 --   5. M05_ventas_pagos.sql         → Ventas, detalles, pagos, documentos
---   6. M06_recompensas_sweetcoins.sql → SweetCoins, puntos, reversiones
+--   6. M06_recompensas_criptotrufas.sql → CriptoTrufas, puntos, reversiones
 --
 -- Para ejecutar desde psql:
 --   \i M01_enums_tipos.sql
@@ -20,7 +20,7 @@
 --   \i M03_catalogo_inventario.sql
 --   \i M04_cupones.sql
 --   \i M05_ventas_pagos.sql
---   \i M06_recompensas_sweetcoins.sql
+--   \i M06_recompensas_criptotrufas.sql
 --
 -- O desde terminal (bash / PowerShell):
 --   $files = @(
@@ -29,7 +29,7 @@
 --     "M03_catalogo_inventario.sql",
 --     "M04_cupones.sql",
 --     "M05_ventas_pagos.sql",
---     "M06_recompensas_sweetcoins.sql"
+--     "M06_recompensas_criptotrufas.sql"
 --   )
 --   foreach ($f in $files) { psql -U postgres -d mytrufely -f $f }
 --

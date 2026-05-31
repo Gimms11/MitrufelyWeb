@@ -15,13 +15,16 @@ from typing import TYPE_CHECKING
 
 from sqlalchemy import (
     Boolean,
+    CheckConstraint,
     DateTime,
     ForeignKey,
+    Index,
     Integer,
     Numeric,
     String,
     Text,
     func,
+    text,
 )
 from sqlalchemy.dialects.postgresql import ENUM as PG_ENUM
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -75,6 +78,11 @@ class Producto(Base):
     is the Kardex (movimientos_stock). Updated by triggers in NeonDB.
     """
     __tablename__ = "productos"
+    __table_args__ = (
+        CheckConstraint("precio > 0", name="chk_productos_precio_positivo"),
+        CheckConstraint("peso_gramos > 0", name="chk_productos_peso_positivo"),
+        Index("uq_producto_activo_nombre", "nombre", unique=True, postgresql_where=text("estado = true")),
+    )
 
     id_producto: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     id_categoria: Mapped[int | None] = mapped_column(
@@ -84,12 +92,23 @@ class Producto(Base):
         index=True,
     )
     nombre: Mapped[str] = mapped_column(String(150), nullable=False)
+    slug: Mapped[str] = mapped_column(String(150), unique=True, nullable=False)
     descripcion: Mapped[str | None] = mapped_column(Text, nullable=True)
+    ingredientes: Mapped[str | None] = mapped_column(Text, nullable=True)
+    alergenos: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    peso_gramos: Mapped[Decimal | None] = mapped_column(Numeric(10, 2), nullable=True)
     precio: Mapped[Decimal] = mapped_column(Numeric(10, 2), nullable=False)
     stock_actual: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     stock_minimo: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     imagen_url: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    cloudinary_public_id: Mapped[str | None] = mapped_column(String(255), nullable=True)
     estado: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True, index=True)
+    fecha_creacion: Mapped[datetime] = mapped_column(
+        DateTime, nullable=False, server_default=func.now()
+    )
+    fecha_actualizacion: Mapped[datetime] = mapped_column(
+        DateTime, nullable=False, server_default=func.now(), onupdate=func.now()
+    )
 
     # ── Relaciones ─────────────────────────────────────────────────────────
     categoria: Mapped["Categoria | None"] = relationship(
@@ -103,6 +122,71 @@ class Producto(Base):
     )
     detalles_venta: Mapped[list["DetalleVenta"]] = relationship(
         "DetalleVenta", back_populates="producto", lazy="select"
+    )
+    paquetes_incluidos: Mapped[list["PaqueteProducto"]] = relationship(
+        "PaqueteProducto", back_populates="producto", lazy="select"
+    )
+
+# ── Paquete ───────────────────────────────────────────────────────────────────
+
+class Paquete(Base):
+    """
+    Agrupación comercial de productos (Combo / Caja).
+    Tabla: paquetes | M03_catalogo_inventario.sql
+    """
+    __tablename__ = "paquetes"
+
+    id_paquete: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    nombre: Mapped[str] = mapped_column(String(150), unique=True, nullable=False)
+    slug: Mapped[str] = mapped_column(String(150), unique=True, nullable=False)
+    descripcion: Mapped[str | None] = mapped_column(Text, nullable=True)
+    imagen_url: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    cloudinary_public_id: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    estado: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+    fecha_creacion: Mapped[datetime] = mapped_column(
+        DateTime, nullable=False, server_default=func.now()
+    )
+    fecha_actualizacion: Mapped[datetime] = mapped_column(
+        DateTime, nullable=False, server_default=func.now(), onupdate=func.now()
+    )
+
+    # ── Relaciones ─────────────────────────────────────────────────────────
+    productos: Mapped[list["PaqueteProducto"]] = relationship(
+        "PaqueteProducto", back_populates="paquete", lazy="selectin", cascade="all, delete-orphan"
+    )
+
+
+# ── PaqueteProducto ───────────────────────────────────────────────────────────
+
+class PaqueteProducto(Base):
+    """
+    Receta (productos y cantidades) que conforman un paquete fijo.
+    Tabla: paquete_productos | M03_catalogo_inventario.sql
+    """
+    __tablename__ = "paquete_productos"
+    __table_args__ = (
+        CheckConstraint("cantidad >= 1", name="chk_paquete_productos_cantidad_minima"),
+    )
+
+    id_paquete_producto: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    id_paquete: Mapped[int] = mapped_column(
+        Integer,
+        ForeignKey("paquetes.id_paquete", ondelete="CASCADE"),
+        nullable=False,
+    )
+    id_producto: Mapped[int] = mapped_column(
+        Integer,
+        ForeignKey("productos.id_producto", ondelete="RESTRICT"),
+        nullable=False,
+    )
+    cantidad: Mapped[int] = mapped_column(Integer, nullable=False)
+
+    # ── Relaciones ─────────────────────────────────────────────────────────
+    paquete: Mapped["Paquete"] = relationship(
+        "Paquete", back_populates="productos", lazy="select"
+    )
+    producto: Mapped["Producto"] = relationship(
+        "Producto", back_populates="paquetes_incluidos", lazy="selectin"
     )
 
 

@@ -65,7 +65,7 @@ M01_enums_tipos.sql            (sin dependencias)
         └── M03_catalogo_inventario.sql
               └── M04_cupones.sql
                     └── M05_ventas_pagos.sql
-                          └── M06_recompensas_sweetcoins.sql
+                          └── M06_recompensas_CriptoTrufas.sql
 ```
 
 ---

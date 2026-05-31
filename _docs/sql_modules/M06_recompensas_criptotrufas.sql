@@ -1,7 +1,7 @@
 -- ==========================================================
--- MÓDULO 06: RECOMPENSAS — SWEETCOINS (MYTRUFELY)
+-- MÓDULO 06: RECOMPENSAS — CriptoTrufas (MYTRUFELY)
 -- Motor: PostgreSQL
--- Propósito: Sistema de fidelización por puntos (SweetCoins).
+-- Propósito: Sistema de fidelización por puntos (CriptoTrufas).
 --            Incluye configuración de tasa de conversión,
 --            historial de movimientos de puntos y triggers de
 --            validación, acumulación (al pagar) y reversión

@@ -28,6 +28,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.infrastructure.database.base import Base
 from app.infrastructure.database.models.enums import (
+    AuthProviderEnum,
     TipoDocumentoFiscalEnum,
     TipoRolEnum,
 )
@@ -82,9 +83,16 @@ class Usuario(Base):
     nombres: Mapped[str] = mapped_column(String(100), nullable=False)
     apellidos: Mapped[str] = mapped_column(String(100), nullable=False)
     email: Mapped[str] = mapped_column(String(150), nullable=False, unique=True)
-    password_hash: Mapped[str] = mapped_column(String(255), nullable=False)
+    # nullable=True: usuarios autenticados con Google no tienen contraseña local
+    password_hash: Mapped[str | None] = mapped_column(String(255), nullable=True)
     telefono: Mapped[str | None] = mapped_column(String(20), nullable=True)
     estado: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+    # Proveedor de autenticación: 'local' (email+pass) o 'google' (OAuth2)
+    auth_provider: Mapped[str] = mapped_column(
+        String(20), nullable=False, default=AuthProviderEnum.LOCAL.value
+    )
+    # ID único del usuario en Google (sub del ID Token). Solo present en cuentas Google.
+    google_sub: Mapped[str | None] = mapped_column(String(255), nullable=True, unique=True)
 
     # ── Relaciones ─────────────────────────────────────────────────────────
     rol: Mapped["Rol"] = relationship("Rol", back_populates="usuarios", lazy="select")

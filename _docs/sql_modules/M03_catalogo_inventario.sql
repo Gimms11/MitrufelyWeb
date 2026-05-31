@@ -19,11 +19,33 @@ CREATE TABLE productos (
   id_categoria int,
   nombre       varchar(150) NOT NULL,
   descripcion  text,
+  ingredientes text,
+  alergenos    varchar(255),
+  peso_gramos  numeric(10,2) CHECK (peso_gramos > 0),
   precio       numeric(10,2) NOT NULL CHECK (precio >= 0),
   stock_actual int          NOT NULL DEFAULT 0 CHECK (stock_actual >= 0),
   stock_minimo int          NOT NULL DEFAULT 0 CHECK (stock_minimo >= 0),
   imagen_url   varchar(255),
   estado       boolean      NOT NULL DEFAULT true
+);
+
+CREATE TABLE paquetes (
+  id_paquete serial PRIMARY KEY,
+  nombre varchar(150) UNIQUE NOT NULL,
+  slug varchar(150) UNIQUE NOT NULL,
+  descripcion text,
+  imagen_url varchar(255),
+  estado boolean NOT NULL DEFAULT true,
+  fecha_creacion timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  fecha_actualizacion timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE paquete_productos (
+  id_paquete_producto serial PRIMARY KEY,
+  id_paquete int NOT NULL,
+  id_producto int NOT NULL,
+  cantidad int NOT NULL CHECK (cantidad > 0),
+  UNIQUE(id_paquete, id_producto)
 );
 
 CREATE TABLE lotes (
@@ -210,6 +232,14 @@ $$;
 ALTER TABLE productos
   ADD FOREIGN KEY (id_categoria)
   REFERENCES categorias (id_categoria) ON DELETE RESTRICT;
+
+ALTER TABLE paquete_productos
+  ADD FOREIGN KEY (id_paquete)
+  REFERENCES paquetes (id_paquete) ON DELETE CASCADE;
+
+ALTER TABLE paquete_productos
+  ADD FOREIGN KEY (id_producto)
+  REFERENCES productos (id_producto) ON DELETE RESTRICT;
 
 ALTER TABLE lotes
   ADD FOREIGN KEY (id_producto)

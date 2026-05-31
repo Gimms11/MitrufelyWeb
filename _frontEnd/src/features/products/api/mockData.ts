@@ -143,7 +143,7 @@ export const TRUFAS_MOCK: readonly Trufa[] = [
 
 // ─── Packs ────────────────────────────────────────────────────────────────
 
-export const PACKS_MOCK: readonly Pack[] = [
+export const PACKS_MOCK = [
   {
     id: 1,
     nombre: 'Detalle Especial',
@@ -174,7 +174,7 @@ export const PACKS_MOCK: readonly Pack[] = [
       'Nuestra obra maestra. 16 trufas premium elaboradas con ingredientes exóticos de lujo, cacao orgánico selecto y finos detalles decorativos.',
     imagenUrl: '/pack_premium.png',
   },
-] as const
+] as unknown as readonly Pack[]
 
 // ─── Tabs ─────────────────────────────────────────────────────────────────
 

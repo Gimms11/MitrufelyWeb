@@ -70,7 +70,7 @@ Todos estos tipos deben mapearse en Python como `enum.StrEnum` o `enum.Enum` y d
 | `documentos` | Boleta/Factura. `numero_serie`, `numero_correlativo`. `url_archivo` al PDF. |
 | `logs_sistema` | Log de auditoría de acciones de usuario. |
 
-### 3.5 Recompensas (SweetCoins)
+### 3.5 Recompensas (CriptoTrufas)
 | Tabla | Descripción clave |
 |---|---|
 | `configuracion_recompensas` | Solo una activa (`estado = true`). `tasa_conversion` define puntos por S/. |

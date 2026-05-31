@@ -28,13 +28,13 @@ _docs/
     ├── SK-SQL-03_catalogo_inventario.md # Skill M03 — Catálogo/Kardex
     ├── SK-SQL-04_cupones.md       # Skill M04 — Cupones
     ├── SK-SQL-05_ventas_pagos.md  # Skill M05 — Ventas/Pagos
-    ├── SK-SQL-06_recompensas_sweetcoins.md # Skill M06 — SweetCoins
+    ├── SK-SQL-06_recompensas_CriptoTrufas.md # Skill M06 — CriptoTrufas
     ├── M01_enums_tipos.sql
     ├── M02_usuarios_roles.sql
     ├── M03_catalogo_inventario.sql
     ├── M04_cupones.sql
     ├── M05_ventas_pagos.sql
-    ├── M06_recompensas_sweetcoins.sql
+    ├── M06_recompensas_CriptoTrufas.sql
     └── M07_install_master.sql     # Orden de ejecución
 ```
 

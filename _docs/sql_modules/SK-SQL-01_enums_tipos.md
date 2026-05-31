@@ -27,7 +27,7 @@ Define todos los **tipos enumerados (`ENUM`)** del sistema Mytrufely. Los ENUMs 
 | `origen_venta_enum`            | `WEB`                                                                             | `ventas.origen_venta`                    |
 | `estado_venta_enum`            | `PENDIENTE`, `PAGADO`, `ENTREGADO`, `ANULADO`                                     | `ventas.estado`, `historial_estados_venta.estado` |
 | `estado_pago_enum`             | `PENDIENTE`, `PAGADO`                                                             | `ventas.estado_pago`                     |
-| `tipo_pago_enum`               | `EFECTIVO`, `YAPE`, `TRANSFERENCIA`                                               | `metodos_pago.tipo_pago`                 |
+| `tipo_pago_enum`               | `TARJETA`                                                                         | `metodos_pago.tipo_pago`                 |
 | `estado_transaccion_enum`      | `PENDIENTE`, `APROBADO`, `RECHAZADO`, `ANULADO`                                   | `metodos_pago.estado_transaccion`        |
 | `tipo_documento_venta_enum`    | `BOLETA`, `FACTURA`, `REPORTE`                                                    | `documentos.tipo_documento`              |
 | `tipo_movimiento_puntos_enum`  | `ACUMULACION_VENTA`, `COMPRA_CUPON`, `PAGO_JUEGO`, `PREMIO_JUEGO`, `EXPIRACION`, `AJUSTE_ADMIN` | `movimientos_puntos.tipo_movimiento` |

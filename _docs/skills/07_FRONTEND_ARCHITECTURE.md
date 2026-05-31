@@ -46,7 +46,7 @@ _frontEnd/src/
 │   │   ├── CartPage.tsx
 │   │   ├── CheckoutPage.tsx
 │   │   ├── OrdersPage.tsx
-│   │   └── SweetCoinsPage.tsx
+│   │   └── CriptoTrufasPage.tsx
 │   └── admin/                   # Rol: ADMIN / CAJERO / ALMACEN
 │       ├── DashboardPage.tsx
 │       ├── InventoryPage.tsx
@@ -69,7 +69,7 @@ _frontEnd/src/
 │   │   ├── api/                 # ordersApi.ts
 │   │   └── components/
 │   ├── inventory/
-│   ├── sweetcoins/
+│   ├── CriptoTrufas/
 │   └── dashboard/
 ├── shared/
 │   ├── components/              # UI genérica reusable
@@ -143,7 +143,7 @@ export const useCartStore = create<CartStore>()(
 
 **Cuándo usar React Query:**
 - Catálogo de productos (caché, refetch automático)
-- Saldo de SweetCoins
+- Saldo de CriptoTrufas
 - Lista de órdenes del cliente
 - Inventario y Kardex (admin)
 - Cualquier dato que viene del backend
@@ -164,7 +164,7 @@ const checkoutMutation = useMutation({
   mutationFn: ordersApi.checkout,
   onSuccess: (data) => {
     // Invalidar saldo, órdenes y stock tras compra exitosa
-    queryClient.invalidateQueries({ queryKey: ["sweetcoins", "balance"] });
+    queryClient.invalidateQueries({ queryKey: ["CriptoTrufas", "balance"] });
     queryClient.invalidateQueries({ queryKey: ["orders"] });
     queryClient.invalidateQueries({ queryKey: ["products"] }); // stock puede haber cambiado
     useCartStore.getState().clearCart();
@@ -241,7 +241,7 @@ export const router = createBrowserRouter([
       { path: "cart", element: <CartPage /> },
       { path: "checkout", element: <CheckoutPage /> },
       { path: "orders", element: <OrdersPage /> },
-      { path: "sweet-coins", element: <SweetCoinsPage /> },
+      { path: "sweet-coins", element: <CriptoTrufasPage /> },
     ],
   },
   {

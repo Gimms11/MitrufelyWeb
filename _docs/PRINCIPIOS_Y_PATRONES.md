@@ -81,7 +81,7 @@ _backEnd/
 │   │   ├── orders/                 # Transacciones de venta y facturación
 │   │   ├── inventory/              # Gestión de lotes FEFO y Kardex
 │   │   ├── cart/                   # Carritos efímeros persistidos en Redis
-│   │   ├── sweetcoins/             # Puntos acumulados de fidelidad
+│   │   ├── CriptoTrufas/             # Puntos acumulados de fidelidad
 │   │   ├── reports/                # Generación de reportes dinámicos
 │   │   └── users/                  # Perfiles y datos de facturación fiscal
 │   └── routers/
@@ -102,7 +102,7 @@ _frontEnd/src/
 │       └── index.tsx               # Contenedores globales de React (Query, Toast, etc.)
 ├── pages/                          # Capa de presentación (Páginas completas)
 │   ├── public/                     # Sin autenticación (Home, Login, Registro)
-│   ├── client/                     # Entorno exclusivo de clientes (Catálogo, Checkout, SweetCoins)
+│   ├── client/                     # Entorno exclusivo de clientes (Catálogo, Checkout, CriptoTrufas)
 │   └── admin/                      # Entorno administrativo (Dashboard, Inventario FEFO, Ventas)
 ├── features/                       # Lógica de dominio del lado del cliente (Co-localizada)
 │   ├── auth/
@@ -112,7 +112,7 @@ _frontEnd/src/
 │   ├── products/                   # Productos, catálogo, filtros de búsqueda
 │   ├── cart/                       # Carrito de compras reactivo (estado Zustand persistido)
 │   ├── inventory/                  # Formularios Kardex, control de stock y vencimiento
-│   └── sweetcoins/                 # Saldo de puntos y canje de cupones
+│   └── CriptoTrufas/                 # Saldo de puntos y canje de cupones
 ├── shared/                         # Elementos compartidos globales e independientes de negocio
 │   ├── components/
 │   │   ├── ui/                     # Botones primitivos, inputs con validaciones, modales, etc.
@@ -175,7 +175,7 @@ graph LR
   * **En el Frontend:** Las interfaces gráficas en **React 19** que procesan ese JSON y crean el DOM dinámico para el usuario.
 * **El Controlador (Controller):**
   * Implementado en la capa de **Services** (`app/modules/*/service.py`).
-  * Recibe payloads validados en el enrutador, comprueba las reglas de negocio (ej. validez de stock, políticas fiscales, cálculo de SweetCoins), modifica el estado de los modelos y le encarga el almacenamiento físico al repositorio.
+  * Recibe payloads validados en el enrutador, comprueba las reglas de negocio (ej. validez de stock, políticas fiscales, cálculo de CriptoTrufas), modifica el estado de los modelos y le encarga el almacenamiento físico al repositorio.
 
 ---
 
@@ -228,14 +228,14 @@ async def domain_exception_handler(request: Request, exc: MifrufelyBaseError) ->
     )
 ```
 
-  * **Extensión Abierta:** Si un nuevo módulo requiere un control de error específico (por ejemplo, saldo insuficiente deSweetCoins), solo debemos declarar la nueva clase heredando de la base. El middleware la gestionará automáticamente **sin modificar una sola línea de código** del enrutador central de excepciones:
+  * **Extensión Abierta:** Si un nuevo módulo requiere un control de error específico (por ejemplo, saldo insuficiente deCriptoTrufas), solo debemos declarar la nueva clase heredando de la base. El middleware la gestionará automáticamente **sin modificar una sola línea de código** del enrutador central de excepciones:
 
 ```python
 # app/core/exceptions.py (Abierto a extensiones)
-class InsufficientSweetCoinsError(MifrufelyBaseError):
+class InsufficientCriptoTrufasError(MifrufelyBaseError):
     status_code = HTTPStatus.UNPROCESSABLE_ENTITY
-    error_code = "INSUFFICIENT_SWEETCOINS"
-    message = "SweetCoins insuficientes para realizar esta transacción"
+    error_code = "INSUFFICIENT_CriptoTrufas"
+    message = "CriptoTrufas insuficientes para realizar esta transacción"
 ```
 
 ---
