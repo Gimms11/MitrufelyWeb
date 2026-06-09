@@ -69,12 +69,12 @@ app/modules/
 ├── auth/          # Login, registro, tokens
 ├── users/         # Perfil, datos fiscales
 ├── products/      # Catálogo, categorías, paquetes comerciales ← [Fase 2]
-├── inventory/     # Lotes, Kardex, stock
-├── orders/        # Ventas, detalles, estados, checkout con expansión de paquetes ← [Fase 2]
-├── cart/          # Carrito efímero (Redis)
-├── CriptoTrufas/  # Puntos, cupones, canjes
-├── reports/       # PDF, Excel, documentos
-└── dashboard/     # Métricas, KPIs
+├── inventory/     # Lotes, Kardex, stock                  ← [Fase 3]
+├── orders/        # Ventas, checkout, detalles, estados    ← [Fase 4]
+├── cart/          # Carrito persistente en Redis           ← [Fase 4]
+├── CriptoTrufas/  # Puntos, cupones, canjes               ← [Fase 5 pendiente]
+├── reports/       # PDF, Excel, documentos                ← [Fase 6 pendiente]
+└── dashboard/     # Métricas, KPIs                        ← [Fase 6 pendiente]
 ```
 
 ---
@@ -83,7 +83,10 @@ app/modules/
 
 | Fase | Documento | Estado |
 |------|-----------|--------|
+| Fase 1 — Autenticación | [`_docs/fases/fase1_autenticacion.md`](../fases/fase1_autenticacion.md) | ✅ Implementado |
 | Fase 2 — Catálogo y Paquetes | [`_docs/fases/fase2_catalogo.md`](../fases/fase2_catalogo.md) | ✅ Implementado |
+| Fase 3 — Inventario FEFO | [`_docs/fases/fase3_inventario_fefo.md`](../fases/fase3_inventario_fefo.md) | ✅ Implementado |
+| Fase 4 — Carrito y Checkout | [`_docs/fases/fase4_checkout_ventas.md`](../fases/fase4_checkout_ventas.md) | ✅ Implementado |
 
 ---
 

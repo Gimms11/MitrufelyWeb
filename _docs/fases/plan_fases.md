@@ -8,9 +8,9 @@ Este plan de desarrollo traza el camino detallado y formal desde el estado actua
 
 ```mermaid
 graph TD
-    F1[Fase 1: Autenticación & Seguridad] -->|Completado| F2[Fase 2: Catálogo & Categorías]
-    F2 --> F3[Fase 3: Inventario & Control FEFO]
-    F3 --> F4[Fase 4: Carrito & Checkout Transaccional]
+    F1[Fase 1: Autenticación & Seguridad] -->|✅ Completado| F2[Fase 2: Catálogo & Categorías]
+    F2 -->|✅ Completado| F3[Fase 3: Inventario & Control FEFO]
+    F3 -->|✅ Completado| F4[Fase 4: Carrito & Checkout Transaccional]
     F4 --> F5[Fase 5: Recompensas CriptoTrufas]
     F5 --> F6[Fase 6: Dashboard, Reportes PDF/Excel]
     F6 --> F7[Fase 7: Pruebas, Optimización & Despliegue]
@@ -46,19 +46,23 @@ graph TD
   * Pantalla de inventario y Kardex reservada exclusivamente para administradores.
   * **Alertas Visuales de Vencimiento Configurable:** El sistema evaluará los días restantes de vida de cada lote. Por defecto, si faltan **3 días** o menos para la fecha de vencimiento (`days_until_expiration <= threshold` usando `date-fns`), el lote se coloreará en ámbar/rojo pastel en el panel de control de inventario para alertar al operario.
 
-### 🔹 Fase 4: Carrito de Compras y Flujo de Checkout Transaccional
-* **Objetivo:** Permitir a los clientes armar su pedido, realizar el pago y descontar stock garantizando la integridad de datos bajo concurrencia.
+### 🔹 Fase 4: Carrito de Compras y Flujo de Checkout Transaccional ✅ IMPLEMENTADO
+* **Objetivo:** Permitir a los clientes armar su pedido, realizar el checkout y descontar stock garantizando la integridad de datos bajo concurrencia.
+* **Alcance universitario:** Sin pasarelas de pago reales (Culqi, Izipay, MercadoPago). La venta se crea como PENDIENTE/PENDIENTE y un admin la marca como PAGADA para pruebas.
 * **Backend (`FastAPI`):**
-  * Persistencia del carrito de compras en caché usando `redis` para máxima concurrencia y velocidad.
-  * **Flujo Transaccional sin Reserva Temporal (Integridad de Concurrencia):**
-    * *El Reto:* No hay bloqueo temporal del stock en el carrito. Múltiples clientes pueden iniciar el pago del último producto remanente simultáneamente.
-    * *Mitigación de Condiciones de Carrera (Race Conditions):* Al ejecutar la venta, el backend abre una transacción de base de datos PostgreSQL e implementa **Bloqueo Pesimista (Pessimistic Locking)** mediante la sentencia `SELECT ... FOR UPDATE` sobre los registros de `lotes` y `productos` a descontar.
-    * Esto obliga a que la segunda petición concurrente de pago se bloquee y espere a que la primera finalice. Al reanudarse la segunda, detectará que el stock disponible es `0` y responderá inmediatamente con `409 Conflict (Stock Insuficiente)` **antes** de procesar cobros externos, evitando la sobreventa de productos y rollbacks con pagos ya cobrados.
-  * Generación y registro de venta, comprobante fiscal (Boleta o Factura) y detalle de lotes asignados por FEFO.
+  * Persistencia del carrito de compras en Redis (`cart:{user_id}`, TTL 7 días, sliding expiration).
+  * **Flujo Transaccional con Gobernanza en PostgreSQL:**
+    * Validaciones pre-transaccionales sin lock (fast-fail).
+    * Transacción única con `async with session.begin()`.
+    * **Integridad de Concurrencia:** Los triggers de PostgreSQL usan `SELECT ... FOR UPDATE` sobre `productos` y `lotes` para serializar accesos concurrentes y prevenir overselling.
+    * Expansión de paquetes en `detalles_venta` (FEFO opera solo sobre productos físicos).
+    * Cálculo de `base_imponible` e `igv` (18%) en backend.
+    * Generación automática de `Documento` (BOLETA) en la misma transacción.
+    * `PUT /ventas/{id}/pagar` (ADMIN) marca venta como PAGADA → dispara `tg_ventas_otorgar_puntos`.
+  * Expiración automática de ventas pendientes: Celery cada 5 minutos (`expire_pending`).
 * **Frontend (`React + TypeScript`):**
-  * Drawer de carrito flotante con actualizaciones asíncronas de cantidades.
-  * Pasarela de Checkout paso a paso interactiva (pasos: Datos envío → Facturación / Tipo de comprobante → Resumen e Integración de Pago).
-  * Uso de componentes primitivos de Radix UI (`@radix-ui/react-dialog` y `@radix-ui/react-tabs`) para garantizar una navegación de teclado accesible y diseño responsive.
+  * Pendiente de implementación.
+* **Estado:** ✅ Backend completo con 50 tests (unit + E2E + integration).
 
 ### 🔹 Fase 5: Sistema de Fidelización CriptoTrufas y Cuponería
 * **Objetivo:** Gamificar la pastelería mediante la moneda interna virtual del proyecto (CriptoTrufas), otorgando puntos por compras e incentivando canjes por cupones de descuento.

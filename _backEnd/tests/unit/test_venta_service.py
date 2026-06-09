@@ -1,32 +1,43 @@
 """
-Mifrufely Web — VentaService Unit Tests
+Mifrufely Web — VentaService Unit Tests (Fase 4)
 Tests checkout business logic in isolation (no real DB/NeonDB).
 
 Validates:
-  - Empty cart raises HTTP 400.
+  - Empty cart raises BusinessRuleError.
   - Single product purchase: calculates subtotal, creates DetalleVenta.
   - Single package purchase: expands components, creates trazabilidad.
   - Mixed cart (product + package): aggregates totals correctly.
-  - Product not found raises HTTP 404.
-  - Inactive product raises HTTP 400.
-  - Insufficient stock (product) raises HTTP 400.
-  - Insufficient stock (package component) raises HTTP 400.
-  - Non-existent package raises HTTP 400.
-  - IGV is calculated correctly (18%).
+  - Product not found raises NotFoundError.
+  - Inactive product raises BusinessRuleError.
+  - Insufficient stock (product) raises InsufficientStockError.
+  - Insufficient stock (package component) raises InsufficientStockError.
+  - Non-existent package raises BusinessRuleError.
+  - IGV and base_imponible are calculated correctly.
+  - Documento is created inside the transaction.
+  - MetodoPago is created with PENDIENTE state.
 """
 
 from decimal import Decimal
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import AsyncMock, MagicMock
 
 import pytest
-from fastapi import HTTPException
 
-from app.infrastructure.database.models.enums import OrigenVentaEnum, TipoPagoEnum
+from app.core.exceptions import (
+    BusinessRuleError,
+    InsufficientStockError,
+    NotFoundError,
+)
+from app.infrastructure.database.models.enums import (
+    OrigenVentaEnum,
+    TipoDocumentoVentaEnum,
+    TipoPagoEnum,
+)
 from app.modules.orders.schemas import ItemPaquete, ItemProducto, VentaRequest
 from app.modules.orders.service import VentaService
 
 
 # ── Helpers ────────────────────────────────────────────────────────────────────
+
 
 def make_producto_db(
     id_producto: int = 1,
@@ -68,25 +79,8 @@ def make_paquete_db(
     return pkg
 
 
-def make_venta_creada(
-    id_venta: int = 1,
-    total: str = "0.00",
-) -> MagicMock:
-    """Mock de la Venta persistida que retorna el repositorio."""
-    venta = MagicMock()
-    venta.id_venta = id_venta
-    venta.id_cliente = 1
-    venta.estado = MagicMock()
-    venta.estado.value = "PENDIENTE"
-    venta.estado_pago = MagicMock()
-    venta.estado_pago.value = "PENDIENTE"
-    venta.total = Decimal(total)
-    venta.puntos_ganados = 0
-    venta.fecha_venta = MagicMock()
-    return venta
-
-
 # ── Fixtures ───────────────────────────────────────────────────────────────────
+
 
 @pytest.fixture
 def mock_venta_repo() -> AsyncMock:
@@ -105,9 +99,35 @@ def mock_paquete_repo() -> AsyncMock:
 @pytest.fixture
 def mock_session() -> AsyncMock:
     session = AsyncMock()
-    session.commit = AsyncMock()
-    session.rollback = AsyncMock()
+    session.add = MagicMock()
+    session.flush = AsyncMock()
+    session.refresh = AsyncMock()
+
+    class _Transaction:
+        async def __aenter__(self):
+            return None
+
+        async def __aexit__(self, *args):
+            return None
+
+    session.begin = MagicMock(return_value=_Transaction())
     return session
+
+
+from datetime import datetime, timezone
+
+
+def _apply_venta_defaults(obj):
+    """Simula defaults del ORM/DB en objetos mockeados tras flush."""
+    if hasattr(obj, "puntos_ganados") and not isinstance(getattr(obj, "puntos_ganados", None), int):
+        object.__setattr__(obj, "puntos_ganados", 0)
+    if hasattr(obj, "fecha_venta") and not isinstance(getattr(obj, "fecha_venta", None), datetime):
+        object.__setattr__(obj, "fecha_venta", datetime.now(timezone.utc))
+    if hasattr(obj, "id_venta") and obj.id_venta is None:
+        object.__setattr__(obj, "id_venta", 1)
+
+    async def __aexit__(self, *args):
+        return None
 
 
 @pytest.fixture
@@ -125,28 +145,27 @@ def service(
 
 # ── Tests ──────────────────────────────────────────────────────────────────────
 
+
 @pytest.mark.unit
 class TestVentaServiceCheckout:
-
     # ── Validaciones de entrada ────────────────────────────────────────────────
 
-    async def test_carrito_vacio_lanza_400(self, service: VentaService) -> None:
-        """Un carrito sin ítems debe levantar HTTP 400."""
+    async def test_carrito_vacio_lanza_error(self, service: VentaService) -> None:
         dto = VentaRequest(
             productos=[],
             paquetes=[],
             tipo_pago=TipoPagoEnum.TARJETA,
         )
-        with pytest.raises(HTTPException) as exc_info:
+        with pytest.raises(BusinessRuleError) as exc_info:
             await service.create_checkout(id_cliente=1, dto=dto)
-        assert exc_info.value.status_code == 400
+        assert exc_info.value.status_code == 422
+        assert "contener al menos" in exc_info.value.message.lower()
 
     async def test_producto_no_encontrado_lanza_404(
         self,
         service: VentaService,
         mock_session: AsyncMock,
     ) -> None:
-        """Un producto inexistente debe levantar HTTP 404."""
         mock_result = MagicMock()
         mock_result.scalar_one_or_none.return_value = None
         mock_session.execute = AsyncMock(return_value=mock_result)
@@ -156,16 +175,15 @@ class TestVentaServiceCheckout:
             paquetes=[],
             tipo_pago=TipoPagoEnum.TARJETA,
         )
-        with pytest.raises(HTTPException) as exc_info:
+        with pytest.raises(NotFoundError) as exc_info:
             await service.create_checkout(id_cliente=1, dto=dto)
         assert exc_info.value.status_code == 404
 
-    async def test_producto_inactivo_lanza_400(
+    async def test_producto_inactivo_lanza_error(
         self,
         service: VentaService,
         mock_session: AsyncMock,
     ) -> None:
-        """Un producto inactivo debe levantar HTTP 400."""
         prod = make_producto_db(estado=False)
         mock_result = MagicMock()
         mock_result.scalar_one_or_none.return_value = prod
@@ -176,40 +194,38 @@ class TestVentaServiceCheckout:
             paquetes=[],
             tipo_pago=TipoPagoEnum.TARJETA,
         )
-        with pytest.raises(HTTPException) as exc_info:
+        with pytest.raises(BusinessRuleError) as exc_info:
             await service.create_checkout(id_cliente=1, dto=dto)
-        assert exc_info.value.status_code == 400
-        assert "disponible" in exc_info.value.detail.lower()
+        assert exc_info.value.status_code == 422
+        assert "disponible" in exc_info.value.message.lower()
 
-    async def test_stock_insuficiente_producto_lanza_400(
+    async def test_stock_insuficiente_producto_lanza_error(
         self,
         service: VentaService,
         mock_session: AsyncMock,
     ) -> None:
-        """Stock insuficiente en producto individual debe levantar HTTP 400."""
         prod = make_producto_db(stock_actual=2)
         mock_result = MagicMock()
         mock_result.scalar_one_or_none.return_value = prod
         mock_session.execute = AsyncMock(return_value=mock_result)
 
         dto = VentaRequest(
-            productos=[ItemProducto(id_producto=1, cantidad=5)],  # pide 5, hay 2
+            productos=[ItemProducto(id_producto=1, cantidad=5)],
             paquetes=[],
             tipo_pago=TipoPagoEnum.TARJETA,
         )
-        with pytest.raises(HTTPException) as exc_info:
+        with pytest.raises(InsufficientStockError) as exc_info:
             await service.create_checkout(id_cliente=1, dto=dto)
-        assert exc_info.value.status_code == 400
-        assert "stock" in exc_info.value.detail.lower()
+        assert exc_info.value.status_code == 422
+        assert "stock" in exc_info.value.message.lower()
 
     # ── Paquetes ───────────────────────────────────────────────────────────────
 
-    async def test_paquete_inexistente_lanza_400(
+    async def test_paquete_inexistente_lanza_error(
         self,
         service: VentaService,
         mock_paquete_repo: AsyncMock,
     ) -> None:
-        """Paquete que no existe en la BD debe levantar HTTP 400."""
         mock_paquete_repo.get_by_id.return_value = None
 
         dto = VentaRequest(
@@ -217,20 +233,17 @@ class TestVentaServiceCheckout:
             paquetes=[ItemPaquete(id_paquete=999, cantidad=1)],
             tipo_pago=TipoPagoEnum.TARJETA,
         )
-        with pytest.raises(HTTPException) as exc_info:
+        with pytest.raises(BusinessRuleError) as exc_info:
             await service.create_checkout(id_cliente=1, dto=dto)
-        assert exc_info.value.status_code == 400
+        assert exc_info.value.status_code == 422
 
-    async def test_stock_insuficiente_componente_paquete_lanza_400(
+    async def test_stock_insuficiente_componente_paquete_lanza_error(
         self,
         service: VentaService,
         mock_paquete_repo: AsyncMock,
     ) -> None:
-        """Un componente del paquete sin stock debe levantar HTTP 400."""
         prod_sin_stock = make_producto_db(stock_actual=0)
-        paquete = make_paquete_db(
-            componentes=[make_paquete_producto(prod_sin_stock, cantidad=1)]
-        )
+        paquete = make_paquete_db(componentes=[make_paquete_producto(prod_sin_stock, cantidad=1)])
         mock_paquete_repo.get_by_id.return_value = paquete
 
         dto = VentaRequest(
@@ -238,37 +251,33 @@ class TestVentaServiceCheckout:
             paquetes=[ItemPaquete(id_paquete=1, cantidad=1)],
             tipo_pago=TipoPagoEnum.TARJETA,
         )
-        with pytest.raises(HTTPException) as exc_info:
+        with pytest.raises(InsufficientStockError) as exc_info:
             await service.create_checkout(id_cliente=1, dto=dto)
-        assert exc_info.value.status_code == 400
-        assert "stock insuficiente" in exc_info.value.detail.lower()
+        assert exc_info.value.status_code == 422
+        assert "stock insuficiente" in exc_info.value.message.lower()
 
-    # ── Cálculos de totales ────────────────────────────────────────────────────
+    # ── Cálculos de totales e IGV ─────────────────────────────────────────────
 
-    async def test_igv_calculado_correctamente(
+    async def test_igv_y_base_imponible_calculados(
         self,
         service: VentaService,
         mock_session: AsyncMock,
-        mock_venta_repo: AsyncMock,
     ) -> None:
-        """
-        El precio del catálogo incluye IGV.
-        El servicio debe: total = subtotal = precio × cantidad.
-        No se almacenan igv/base_imponible en el ORM (se calculan al emitir documento).
-        """
         prod = make_producto_db(precio="118.00", stock_actual=5)
         mock_result = MagicMock()
         mock_result.scalar_one_or_none.return_value = prod
         mock_session.execute = AsyncMock(return_value=mock_result)
 
-        venta_creada = make_venta_creada(total="118.00")
         captured: list = []
+        session_add_calls: list = []
 
-        async def capture_venta(v):  # type: ignore
-            captured.append(v)
-            return venta_creada
+        mock_session.add.side_effect = lambda obj: session_add_calls.append(obj)
 
-        mock_venta_repo.create_venta_transactional.side_effect = capture_venta
+        async def flush_apply():
+            for obj in session_add_calls:
+                _apply_venta_defaults(obj)
+
+        mock_session.flush.side_effect = flush_apply
 
         dto = VentaRequest(
             productos=[ItemProducto(id_producto=1, cantidad=1)],
@@ -278,41 +287,43 @@ class TestVentaServiceCheckout:
 
         await service.create_checkout(id_cliente=1, dto=dto)
 
-        assert len(captured) == 1
-        venta_interna = captured[0]
+        venta_obj = None
+        for obj in session_add_calls:
+            if type(obj).__name__ == "Venta":
+                venta_obj = obj
+                break
 
-        # El subtotal y total deben ser iguales al precio × cantidad
-        assert venta_interna.subtotal_productos == Decimal("118.00")
-        assert venta_interna.total == Decimal("118.00")
-        # Debe haberse generado 1 línea de detalle
-        assert len(venta_interna.detalles) == 1
+        assert venta_obj is not None
+        assert venta_obj.subtotal_productos == Decimal("118.00")
+        assert venta_obj.total == Decimal("118.00")
+        assert venta_obj.base_imponible == Decimal("100.00")
+        assert venta_obj.igv == Decimal("18.00")
+        assert len(venta_obj.detalles) == 1
 
     async def test_paquete_acumula_precio_en_total(
         self,
         service: VentaService,
         mock_paquete_repo: AsyncMock,
-        mock_venta_repo: AsyncMock,
         mock_session: AsyncMock,
     ) -> None:
-        """El precio de los componentes del paquete debe acumularse en el subtotal."""
         prod1 = make_producto_db(id_producto=1, precio="25.00", stock_actual=10)
         prod2 = make_producto_db(id_producto=2, precio="10.00", stock_actual=10)
         paquete = make_paquete_db(
             componentes=[
-                make_paquete_producto(prod1, cantidad=2),  # 2 × 25 = 50
-                make_paquete_producto(prod2, cantidad=1),  # 1 × 10 = 10
+                make_paquete_producto(prod1, cantidad=2),
+                make_paquete_producto(prod2, cantidad=1),
             ]
         )
         mock_paquete_repo.get_by_id.return_value = paquete
 
-        venta_creada = make_venta_creada(total="60.00")
-        captured: list = []
+        session_add_calls: list = []
+        mock_session.add.side_effect = lambda obj: session_add_calls.append(obj)
 
-        async def capture_venta(v):  # type: ignore
-            captured.append(v)
-            return venta_creada
+        async def flush_apply():
+            for obj in session_add_calls:
+                _apply_venta_defaults(obj)
 
-        mock_venta_repo.create_venta_transactional.side_effect = capture_venta
+        mock_session.flush.side_effect = flush_apply
 
         dto = VentaRequest(
             productos=[],
@@ -322,52 +333,247 @@ class TestVentaServiceCheckout:
 
         await service.create_checkout(id_cliente=1, dto=dto)
 
-        venta_interna = captured[0]
-        assert venta_interna.total == Decimal("60.00")
-        # 3 componentes en total expandidos a detalles_venta
-        assert len(venta_interna.detalles) == 2  # prod1 y prod2
+        venta_obj = None
+        for obj in session_add_calls:
+            if type(obj).__name__ == "Venta":
+                venta_obj = obj
+                break
+
+        assert venta_obj is not None
+        assert venta_obj.total == Decimal("60.00")
+        assert len(venta_obj.detalles) == 2
 
     async def test_checkout_mixto_producto_y_paquete(
         self,
         service: VentaService,
         mock_session: AsyncMock,
         mock_paquete_repo: AsyncMock,
-        mock_venta_repo: AsyncMock,
     ) -> None:
-        """Carrito mixto (producto + paquete) debe sumar totales correctamente."""
         prod_individual = make_producto_db(id_producto=10, precio="15.00", stock_actual=5)
         prod_en_paquete = make_producto_db(id_producto=20, precio="10.00", stock_actual=5)
 
-        paquete = make_paquete_db(
-            componentes=[make_paquete_producto(prod_en_paquete, cantidad=1)]
-        )
+        paquete = make_paquete_db(componentes=[make_paquete_producto(prod_en_paquete, cantidad=1)])
         mock_paquete_repo.get_by_id.return_value = paquete
 
         mock_result = MagicMock()
         mock_result.scalar_one_or_none.return_value = prod_individual
         mock_session.execute = AsyncMock(return_value=mock_result)
 
-        venta_creada = make_venta_creada(total="25.00")
-        captured: list = []
+        session_add_calls: list = []
+        mock_session.add.side_effect = lambda obj: session_add_calls.append(obj)
 
-        async def capture_venta(v):  # type: ignore
-            captured.append(v)
-            return venta_creada
+        async def flush_apply():
+            for obj in session_add_calls:
+                _apply_venta_defaults(obj)
 
-        mock_venta_repo.create_venta_transactional.side_effect = capture_venta
+        mock_session.flush.side_effect = flush_apply
 
         dto = VentaRequest(
-            productos=[ItemProducto(id_producto=10, cantidad=1)],   # 15.00
-            paquetes=[ItemPaquete(id_paquete=1, cantidad=1)],        # 10.00
+            productos=[ItemProducto(id_producto=10, cantidad=1)],
+            paquetes=[ItemPaquete(id_paquete=1, cantidad=1)],
             tipo_pago=TipoPagoEnum.TARJETA,
         )
 
         await service.create_checkout(id_cliente=1, dto=dto)
 
-        venta_interna = captured[0]
-        # Total = 15 (producto) + 10 (componente del paquete) = 25
-        assert venta_interna.total == Decimal("25.00")
-        # 2 líneas en detalles_venta: producto individual + componente del paquete
-        assert len(venta_interna.detalles) == 2
-        # 1 entrada en trazabilidad de paquetes
-        assert len(venta_interna.paquetes_vendidos) == 1
+        venta_obj = None
+        for obj in session_add_calls:
+            if type(obj).__name__ == "Venta":
+                venta_obj = obj
+                break
+
+        assert venta_obj is not None
+        assert venta_obj.total == Decimal("25.00")
+        assert len(venta_obj.detalles) == 2
+        assert len(venta_obj.paquetes_vendidos) == 1
+
+    # ── Documento y MetodoPago ────────────────────────────────────────────────
+
+    async def test_crea_documento_boleta_en_checkout(
+        self,
+        service: VentaService,
+        mock_session: AsyncMock,
+    ) -> None:
+        prod = make_producto_db(precio="50.00", stock_actual=5)
+        mock_result = MagicMock()
+        mock_result.scalar_one_or_none.return_value = prod
+        mock_session.execute = AsyncMock(return_value=mock_result)
+
+        session_add_calls: list = []
+        mock_session.add.side_effect = lambda obj: session_add_calls.append(obj)
+
+        async def flush_apply():
+            for obj in session_add_calls:
+                _apply_venta_defaults(obj)
+
+        mock_session.flush.side_effect = flush_apply
+
+        dto = VentaRequest(
+            productos=[ItemProducto(id_producto=1, cantidad=1)],
+            paquetes=[],
+            tipo_pago=TipoPagoEnum.TARJETA,
+        )
+
+        await service.create_checkout(
+            id_cliente=1,
+            dto=dto,
+            tipo_documento=TipoDocumentoVentaEnum.BOLETA,
+        )
+
+        documentos = [o for o in session_add_calls if type(o).__name__ == "Documento"]
+        assert len(documentos) == 1
+        assert documentos[0].tipo_documento == TipoDocumentoVentaEnum.BOLETA
+        assert documentos[0].id_venta == 1
+
+    async def test_crea_metodo_pago_pendiente(
+        self,
+        service: VentaService,
+        mock_session: AsyncMock,
+    ) -> None:
+        prod = make_producto_db(precio="30.00", stock_actual=3)
+        mock_result = MagicMock()
+        mock_result.scalar_one_or_none.return_value = prod
+        mock_session.execute = AsyncMock(return_value=mock_result)
+
+        session_add_calls: list = []
+        mock_session.add.side_effect = lambda obj: session_add_calls.append(obj)
+
+        async def flush_apply():
+            for obj in session_add_calls:
+                _apply_venta_defaults(obj)
+
+        mock_session.flush.side_effect = flush_apply
+
+        dto = VentaRequest(
+            productos=[ItemProducto(id_producto=1, cantidad=1)],
+            paquetes=[],
+            tipo_pago=TipoPagoEnum.TARJETA,
+        )
+
+        await service.create_checkout(id_cliente=1, dto=dto)
+
+        venta_obj = None
+        for obj in session_add_calls:
+            if type(obj).__name__ == "Venta":
+                venta_obj = obj
+                break
+
+        assert venta_obj is not None
+        pagos = venta_obj.metodos_pago
+        assert len(pagos) == 1
+        assert pagos[0].tipo_pago == TipoPagoEnum.TARJETA
+        assert pagos[0].monto == Decimal("30.00")
+        assert pagos[0].estado_transaccion == "PENDIENTE"
+
+
+@pytest.mark.unit
+class TestVentaServiceConfirmarPago:
+    async def test_confirmar_pago_venta_no_encontrada(
+        self,
+        service: VentaService,
+        mock_session: AsyncMock,
+    ) -> None:
+        mock_result = MagicMock()
+        mock_result.scalar_one_or_none.return_value = None
+        mock_session.execute = AsyncMock(return_value=mock_result)
+
+        with pytest.raises(NotFoundError):
+            await service.confirmar_pago(id_venta=999)
+
+    async def test_confirmar_pago_venta_anulada(
+        self,
+        service: VentaService,
+        mock_session: AsyncMock,
+    ) -> None:
+        venta = MagicMock()
+        venta.id_venta = 1
+        venta.estado = MagicMock()
+        venta.estado.value = "ANULADO"
+        venta.estado_pago = MagicMock()
+        venta.estado_pago.value = "PENDIENTE"
+
+        mock_result = MagicMock()
+        mock_result.scalar_one_or_none.return_value = venta
+        mock_session.execute = AsyncMock(return_value=mock_result)
+
+        with pytest.raises(BusinessRuleError) as exc_info:
+            await service.confirmar_pago(id_venta=1)
+        assert "anulada" in exc_info.value.message.lower()
+
+    async def test_confirmar_pago_ya_pagada(
+        self,
+        service: VentaService,
+        mock_session: AsyncMock,
+    ) -> None:
+        from app.infrastructure.database.models.enums import EstadoPagoEnum
+
+        venta = MagicMock()
+        venta.id_venta = 1
+        venta.estado = MagicMock()
+        venta.estado.value = "PENDIENTE"
+        venta.estado_pago = EstadoPagoEnum.PAGADO
+
+        mock_result = MagicMock()
+        mock_result.scalar_one_or_none.return_value = venta
+        mock_session.execute = AsyncMock(return_value=mock_result)
+
+        with pytest.raises(BusinessRuleError) as exc_info:
+            await service.confirmar_pago(id_venta=1)
+        assert "ya está pagada" in exc_info.value.message.lower()
+
+    async def test_confirmar_pago_exitoso(
+        self,
+        service: VentaService,
+        mock_session: AsyncMock,
+    ) -> None:
+        from app.infrastructure.database.models.enums import (
+            EstadoPagoEnum,
+            EstadoVentaEnum,
+        )
+
+        venta = MagicMock()
+        venta.id_venta = 1
+        venta.id_cliente = 1
+        venta.estado = EstadoVentaEnum.PENDIENTE
+        venta.estado_pago = EstadoPagoEnum.PENDIENTE
+        venta.total = Decimal("50.00")
+        venta.puntos_ganados = 5
+        venta.fecha_venta = MagicMock()
+
+        pago_mock = MagicMock()
+        pago_mock.estado_transaccion = "PENDIENTE"
+
+        mock_result_venta = MagicMock()
+        mock_result_venta.scalar_one_or_none.return_value = venta
+        mock_result_pago = MagicMock()
+        mock_result_pago.scalar_one_or_none.return_value = pago_mock
+
+        mock_session.execute = AsyncMock(side_effect=[mock_result_venta, mock_result_pago])
+
+        result = await service.confirmar_pago(id_venta=1)
+
+        assert result.estado_pago == "PAGADO"
+        assert pago_mock.estado_transaccion == "APROBADO"
+
+
+@pytest.mark.unit
+class TestVentaServiceConsultas:
+    async def test_get_by_id_no_encontrada(
+        self,
+        service: VentaService,
+        mock_venta_repo: AsyncMock,
+    ) -> None:
+        mock_venta_repo.get_by_id.return_value = None
+
+        with pytest.raises(NotFoundError):
+            await service.get_by_id(999)
+
+    async def test_get_by_cliente_vacio(
+        self,
+        service: VentaService,
+        mock_venta_repo: AsyncMock,
+    ) -> None:
+        mock_venta_repo.find_by_cliente.return_value = []
+
+        result = await service.get_by_cliente(id_cliente=1)
+        assert result == []
