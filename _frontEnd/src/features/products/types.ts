@@ -73,6 +73,15 @@ export interface Producto {
   slug: string
   fecha_creacion: string
   fecha_actualizacion: string
+  // ── Campos extendidos para la vista de detalle ──────────────────────────
+  /** Nombre legible de la categoría (ej. "Trufa Clásica") */
+  categoria_nombre?: string | undefined
+  /** Rating promedio del producto (1-5) */
+  rating?: number | undefined
+  /** Instrucciones de almacenamiento (temperatura, humedad, etc.) */
+  consideraciones_almacenamiento?: string | undefined
+  /** Días de vida útil desde fabricación */
+  tiempo_vida_dias?: number | undefined
 }
 
 export interface PaginatedResponse<T> {

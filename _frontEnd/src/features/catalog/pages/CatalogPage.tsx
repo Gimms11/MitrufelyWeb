@@ -30,6 +30,7 @@ import { ProductModal }   from '../components/ProductModal'
 // ── Store y datos ──────────────────────────────────────────────────────────────
 import { MOCK_PRODUCTS }  from '@/mocks/mockProducts'
 import { useCatalogStore, CATEGORY_FILTER_MAP } from '@/stores/catalog.store'
+import { useCartStore, selectItemCount } from '@/stores/cart.store'
 import type { Producto }  from '@/features/products/types'
 
 // ─── Mapas de keywords para filtros semánticos ─────────────────────────────────
@@ -55,8 +56,10 @@ export default function CatalogPage() {
 
   // ── Estado de UI (idéntico patrón al de HomePage) ─────────────────────────
   const [searchQuery,  setSearchQuery]  = useState('')
-  const [cartCount,    setCartCount]    = useState(0)
   const [userMenuOpen, setUserMenuOpen] = useState(false)
+
+  // Contador del carrito desde el store global
+  const cartCount = useCartStore(selectItemCount)
 
   // Forzar fondo claro (igual que HomePage)
   useEffect(() => {
@@ -175,9 +178,6 @@ export default function CatalogPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 px-4 py-1.5 rounded-full mb-5">
-            <span className="text-[#ff7a45] text-sm font-black">🍫 Catálogo Completo</span>
-          </div>
           <h1
             className="text-white font-black mb-3"
             style={{
@@ -201,12 +201,12 @@ export default function CatalogPage() {
             ].map(({ valor, label }) => (
               <div key={label} className="text-center">
                 <span
-                  className="block text-2xl font-black text-white"
+                  className="block text-2xl font-black text-accent"
                   style={{ fontFamily: "'Outfit', sans-serif" }}
                 >
                   {valor}
                 </span>
-                <span className="text-xs font-semibold text-white/50 uppercase tracking-wider">
+                <span className="text-xs font-semibold text-accent uppercase tracking-wider">
                   {label}
                 </span>
               </div>

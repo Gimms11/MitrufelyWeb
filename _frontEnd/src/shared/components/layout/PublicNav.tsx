@@ -12,6 +12,7 @@ export function PublicNav() {
   const location = useLocation()
   const isCatalog = location.pathname === '/catalogo'
   const isHome    = location.pathname === '/'
+  const isPuntos  = location.pathname === '/puntos'
 
   return (
     <nav className="bg-[#faf8f5] py-2.5 px-4 border-b border-[#5c0f1b]/8">
@@ -53,13 +54,17 @@ export function PublicNav() {
         </a>
 
         {/* Tus puntos */}
-        <a
-          href="#puntos"
-          className="flex items-center gap-2 text-lg font-bold text-[#5c0f1b]/70 hover:text-[#ff7a45] transition-colors py-0.5 border-b-2 border-transparent hover:border-[#ff7a45]"
+        <Link
+          to="/puntos"
+          className={`flex items-center gap-2 text-lg font-bold transition-colors py-0.5 border-b-2 ${
+            isPuntos
+              ? 'text-[#5c0f1b] border-[#5c0f1b]'
+              : 'text-[#5c0f1b]/70 border-transparent hover:text-[#ff7a45] hover:border-[#ff7a45]'
+          }`}
         >
           <Award className="h-5 w-5" strokeWidth={2.5} />
           <span>Tus puntos</span>
-        </a>
+        </Link>
       </div>
     </nav>
   )

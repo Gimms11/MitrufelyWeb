@@ -106,7 +106,7 @@ export function PublicHeader({
           {/* Carrito */}
           <button
             id="hp-cart-btn"
-            onClick={() => toast.info('Carrito disponible próximamente.')}
+            onClick={() => navigate('/carrito')}
             className="relative p-2 text-white/80 hover:text-white transition-colors"
             aria-label="Carrito"
           >

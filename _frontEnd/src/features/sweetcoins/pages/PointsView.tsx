@@ -1,0 +1,367 @@
+/**
+ * PointsView.tsx — Vista principal de Tus Puntos (CriptoTrufas).
+ *
+ * Estructura:
+ *   - PublicHeader + PublicNav + PublicFooter (layout compartido)
+ *   - Hero: saldo actual en grande + historial
+ *   - Mis Cupones: carrusel horizontal de CouponCard
+ *   - Layout 2 columnas: Zona de Recompensas (izq) + Arcade Ruleta (der)
+ *
+ * Integraciones:
+ *   - useCriptoTrufaStore para estado global
+ *   - useCartStore(selectItemCount) para badge del header
+ *   - useAuthStore para datos del usuario en el header
+ */
+
+import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router'
+import { motion, AnimatePresence } from 'framer-motion'
+import {
+  Star,
+  ChevronRight,
+  ChevronLeft,
+  TrendingUp,
+  TrendingDown,
+  Clock,
+  Gift,
+  TicketCheck,
+} from 'lucide-react'
+import { toast } from 'sonner'
+
+// ── Layout ─────────────────────────────────────────────────────────────────────
+import { PublicHeader } from '@/shared/components/layout/PublicHeader'
+import { PublicNav    } from '@/shared/components/layout/PublicNav'
+import { PublicFooter } from '@/shared/components/layout/PublicFooter'
+
+// ── Stores ─────────────────────────────────────────────────────────────────────
+import { useAuthStore } from '@/app/store'
+import { useCartStore, selectItemCount } from '@/stores/cart.store'
+import { useCriptoTrufaStore } from '@/stores/criptotrufa.store'
+
+// ── Componentes propios ────────────────────────────────────────────────────────
+import { CouponCard   } from '../components/CouponCard'
+import { RewardCard   } from '../components/RewardCard'
+import { ArcadeSection} from '../components/ArcadeSection'
+
+// ─── Helper fecha ─────────────────────────────────────────────────────────────
+function formatDate(iso: string) {
+  return new Intl.DateTimeFormat('es-PE', {
+    day: '2-digit', month: 'short', year: 'numeric',
+    hour: '2-digit', minute: '2-digit',
+  }).format(new Date(iso))
+}
+
+// ─── Vista ────────────────────────────────────────────────────────────────────
+
+export default function PointsView() {
+  const navigate = useNavigate()
+
+  // Stores
+  const { user, isAuthenticated, logout } = useAuthStore()
+  const cartCount       = useCartStore(selectItemCount)
+  const saldoActual     = useCriptoTrufaStore((s) => s.saldoActual)
+  const cuponesCliente  = useCriptoTrufaStore((s) => s.cuponesCliente)
+  const cuponesMaestro  = useCriptoTrufaStore((s) => s.cuponesMaestro)
+  const historial       = useCriptoTrufaStore((s) => s.historialMovimientos)
+  const canjearCupon    = useCriptoTrufaStore((s) => s.canjearCupon)
+
+  // UI local
+  const [searchQuery,   setSearchQuery]  = useState('')
+  const [userMenuOpen,  setUserMenuOpen] = useState(false)
+  const [carouselIdx,   setCarouselIdx]  = useState(0)
+  const [historialOpen, setHistorialOpen] = useState(false)
+
+  // Fondo claro
+  useEffect(() => {
+    const prev = document.body.style.backgroundColor
+    document.body.style.backgroundColor = '#faf8f5'
+    return () => { document.body.style.backgroundColor = prev }
+  }, [])
+
+  const handleSearch = (e: React.FormEvent) => { e.preventDefault() }
+  const handleLogout = () => { logout(); setUserMenuOpen(false); toast.success('Sesión cerrada.') }
+
+  // Canje con feedback
+  const handleCanjear = (id_cupon: number) => {
+    const result = canjearCupon(id_cupon)
+    if (result.success) {
+      toast.success(result.message)
+    } else {
+      toast.error(result.message)
+    }
+  }
+
+  // Carrusel de cupones
+  const VISIBLE = 3
+  const maxIdx  = Math.max(0, cuponesCliente.length - VISIBLE)
+  const canPrev = carouselIdx > 0
+  const canNext = carouselIdx < maxIdx
+  const visibleCupones = cuponesCliente.slice(carouselIdx, carouselIdx + VISIBLE)
+
+  return (
+    <div className="min-h-screen bg-[#faf8f5] text-[#2a1115] font-sans antialiased">
+
+      {/* ── Header ── */}
+      <PublicHeader
+        cartCount={cartCount}
+        favoriteCount={0}
+        coinsBalance={isAuthenticated && user ? user.sweetCoinsBalance : null}
+        userName={isAuthenticated && user ? user.name : null}
+        userMenuOpen={userMenuOpen}
+        onUserMenuToggle={() => setUserMenuOpen((o) => !o)}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        onSearchSubmit={handleSearch}
+        onLogout={handleLogout}
+      />
+      <PublicNav />
+
+      <main className="max-w-7xl mx-auto px-4 md:px-8 py-8 space-y-10">
+
+        {/* ══════════════════════════════════════════════════════════════════════
+            HERO — Saldo actual
+        ══════════════════════════════════════════════════════════════════════ */}
+        <section>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="relative overflow-hidden rounded-[32px] bg-gradient-to-br from-[#5c0f1b] via-[#7a1525] to-[#8a1a2e] shadow-[0_8px_40px_rgba(92,15,27,0.25)] p-8 md:p-12"
+          >
+            {/* Decoración de fondo */}
+            <div className="absolute inset-0 pointer-events-none overflow-hidden">
+              <div className="absolute -top-20 -right-20 h-64 w-64 rounded-full bg-white/5" />
+              <div className="absolute -bottom-16 -left-16 h-48 w-48 rounded-full bg-white/4" />
+              <div className="absolute top-1/2 right-1/4 h-3 w-3 rounded-full bg-[#ff7a45]/30" />
+              <div className="absolute top-1/3 right-1/3 h-2 w-2 rounded-full bg-white/20" />
+            </div>
+
+            <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
+              <div>
+                <div className="flex items-center gap-2 mb-3">
+                  <Star className="h-5 w-5 text-[#ff7a45]" fill="#ff7a45" />
+                  <span className="text-white/70 text-sm font-bold uppercase tracking-widest">
+                    Tus CriptoTrufas
+                  </span>
+                </div>
+                <div
+                  className="text-white font-black leading-none mb-2"
+                  style={{ fontFamily: "'Outfit', sans-serif", fontSize: 'clamp(3rem, 8vw, 5.5rem)' }}
+                >
+                  {saldoActual.toLocaleString()}
+                </div>
+                <p className="text-white/50 text-sm font-semibold">
+                  Puntos de fidelización acumulados
+                </p>
+              </div>
+
+              {/* Mini-estadísticas */}
+              <div className="flex gap-4 flex-wrap">
+                <div className="bg-white/10 backdrop-blur-sm rounded-2xl px-5 py-4 text-center min-w-[100px]">
+                  <p className="text-white/50 text-[10px] font-black uppercase tracking-widest mb-1">Cupones</p>
+                  <p className="text-white font-black text-2xl" style={{ fontFamily: "'Outfit', sans-serif" }}>
+                    {cuponesCliente.filter((c) => c.estado === 'DISPONIBLE').length}
+                  </p>
+                  <p className="text-white/40 text-[10px] font-semibold">disponibles</p>
+                </div>
+                <div className="bg-white/10 backdrop-blur-sm rounded-2xl px-5 py-4 text-center min-w-[100px]">
+                  <p className="text-white/50 text-[10px] font-black uppercase tracking-widest mb-1">Canjeables</p>
+                  <p className="text-white font-black text-2xl" style={{ fontFamily: "'Outfit', sans-serif" }}>
+                    {cuponesMaestro.filter((r) => r.costo_puntos !== null && saldoActual >= (r.costo_puntos ?? 0)).length}
+                  </p>
+                  <p className="text-white/40 text-[10px] font-semibold">recompensas</p>
+                </div>
+
+                {/* Botón historial */}
+                <button
+                  id="puntos-historial-btn"
+                  onClick={() => setHistorialOpen((o) => !o)}
+                  className="bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-2xl px-5 py-4 text-center min-w-[100px] transition-all cursor-pointer border-none"
+                >
+                  <p className="text-white/50 text-[10px] font-black uppercase tracking-widest mb-1">Historial</p>
+                  <p className="text-white font-black text-2xl" style={{ fontFamily: "'Outfit', sans-serif" }}>
+                    {historial.length}
+                  </p>
+                  <p className="text-white/40 text-[10px] font-semibold">movimientos</p>
+                </button>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* ── Historial desplegable ── */}
+          <AnimatePresence>
+            {historialOpen && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.3 }}
+                className="overflow-hidden"
+              >
+                <div className="bg-white rounded-[22px] border border-[#5c0f1b]/10 mt-4 p-5 shadow-sm">
+                  <h3
+                    className="font-black text-[#2a1115] text-sm uppercase tracking-widest mb-4"
+                    style={{ fontFamily: "'Outfit', sans-serif" }}
+                  >
+                    Historial de movimientos
+                  </h3>
+                  <div className="space-y-2 max-h-64 overflow-y-auto pr-1">
+                    {historial.map((mov) => (
+                      <div
+                        key={mov.id_movimiento_punto}
+                        className="flex items-center gap-3 p-3 rounded-xl bg-[#faf8f5] border border-[#5c0f1b]/6"
+                      >
+                        <div
+                          className={`h-8 w-8 rounded-xl flex items-center justify-center shrink-0 ${
+                            mov.cantidad > 0
+                              ? 'bg-emerald-50 text-emerald-600'
+                              : 'bg-red-50 text-red-500'
+                          }`}
+                        >
+                          {mov.cantidad > 0
+                            ? <TrendingUp className="h-4 w-4" />
+                            : <TrendingDown className="h-4 w-4" />}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs font-black text-[#2a1115] truncate">
+                            {mov.justificacion ?? mov.tipo_movimiento.replace(/_/g, ' ')}
+                          </p>
+                          <div className="flex items-center gap-1.5 text-[10px] text-[#2a1115]/40 font-semibold mt-0.5">
+                            <Clock className="h-3 w-3" />
+                            {formatDate(mov.fecha_movimiento)}
+                          </div>
+                        </div>
+                        <span
+                          className={`text-sm font-black shrink-0 ${
+                            mov.cantidad > 0 ? 'text-emerald-600' : 'text-red-500'
+                          }`}
+                        >
+                          {mov.cantidad > 0 ? '+' : ''}{mov.cantidad.toLocaleString()}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </section>
+
+        {/* ══════════════════════════════════════════════════════════════════════
+            MIS CUPONES DISPONIBLES
+        ══════════════════════════════════════════════════════════════════════ */}
+        <section>
+          <div className="flex items-center justify-between mb-5">
+            <div className="flex items-center gap-2">
+              <TicketCheck className="h-5 w-5 text-[#5c0f1b]" />
+              <h2
+                className="font-black text-[#2a1115] text-xl"
+                style={{ fontFamily: "'Outfit', sans-serif" }}
+              >
+                Mis Cupones
+              </h2>
+              {cuponesCliente.length > 0 && (
+                <span className="bg-[#5c0f1b] text-white text-xs font-black px-2.5 py-0.5 rounded-full">
+                  {cuponesCliente.length}
+                </span>
+              )}
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setCarouselIdx((i) => Math.max(0, i - 1))}
+                disabled={!canPrev}
+                className="h-8 w-8 rounded-full border border-[#5c0f1b]/15 flex items-center justify-center text-[#5c0f1b] hover:bg-[#5c0f1b]/6 transition-all disabled:opacity-30 cursor-pointer disabled:cursor-default"
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </button>
+              <button
+                onClick={() => setCarouselIdx((i) => Math.min(maxIdx, i + 1))}
+                disabled={!canNext}
+                className="h-8 w-8 rounded-full border border-[#5c0f1b]/15 flex items-center justify-center text-[#5c0f1b] hover:bg-[#5c0f1b]/6 transition-all disabled:opacity-30 cursor-pointer disabled:cursor-default"
+              >
+                <ChevronRight className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
+
+          {cuponesCliente.length === 0 ? (
+            <div className="bg-white rounded-[22px] border border-[#5c0f1b]/10 p-10 text-center">
+              <TicketCheck className="h-12 w-12 text-[#5c0f1b]/15 mx-auto mb-3" />
+              <p className="font-black text-[#2a1115]/40 text-sm">Aún no tienes cupones.</p>
+              <p className="text-xs text-[#2a1115]/30 font-semibold mt-1">
+                Canjea tus CriptoTrufas en la Zona de Recompensas.
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              <AnimatePresence mode="popLayout">
+                {visibleCupones.map((c, i) => (
+                  <CouponCard key={c.id_cupon_cliente} coupon={c} index={i} />
+                ))}
+              </AnimatePresence>
+            </div>
+          )}
+        </section>
+
+        {/* ══════════════════════════════════════════════════════════════════════
+            ZONA DE RECOMPENSAS + ARCADE (2 columnas)
+        ══════════════════════════════════════════════════════════════════════ */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+          {/* ── Zona de Recompensas (ocupa 2/3) ── */}
+          <section className="lg:col-span-2">
+            <div className="flex items-center gap-2 mb-5">
+              <Gift className="h-5 w-5 text-[#5c0f1b]" />
+              <h2
+                className="font-black text-[#2a1115] text-xl"
+                style={{ fontFamily: "'Outfit', sans-serif" }}
+              >
+                Zona de Recompensas
+              </h2>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {cuponesMaestro.map((r, i) => (
+                <RewardCard
+                  key={r.id_cupon}
+                  reward={r}
+                  saldoActual={saldoActual}
+                  onCanjear={handleCanjear}
+                  index={i}
+                />
+              ))}
+            </div>
+          </section>
+
+          {/* ── Arcade / Ruleta Dulce (1/3) ── */}
+          <section className="lg:col-span-1">
+            <div className="flex items-center gap-2 mb-5">
+              <span className="text-xl">🎰</span>
+              <h2
+                className="font-black text-[#2a1115] text-xl"
+                style={{ fontFamily: "'Outfit', sans-serif" }}
+              >
+                Arcade
+              </h2>
+            </div>
+            <ArcadeSection />
+          </section>
+        </div>
+
+        {/* ── Nota informativa ── */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6 }}
+          className="bg-[#5c0f1b]/4 border border-[#5c0f1b]/10 rounded-2xl px-6 py-4 text-center"
+        >
+          <p className="text-xs font-semibold text-[#2a1115]/50 leading-relaxed">
+            🍫 Las CriptoTrufas se acumulan automáticamente al completar tus compras.
+            Los cupones son de uso único. Consulta términos y condiciones en nuestra tienda.
+          </p>
+        </motion.div>
+      </main>
+
+      <PublicFooter />
+    </div>
+  )
+}

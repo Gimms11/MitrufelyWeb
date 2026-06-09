@@ -11,13 +11,17 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, Plus, Minus, ShoppingCart, AlertTriangle, Package, ShoppingBag } from 'lucide-react'
+import { X, Plus, Minus, ShoppingCart, AlertTriangle, Package, ShoppingBag, ExternalLink } from 'lucide-react'
 import { toast } from 'sonner'
+import { Link, useNavigate } from 'react-router'
 import { cn } from '@/lib/utils'
 import { useCatalogStore } from '@/stores/catalog.store'
+import { useCartStore } from '@/stores/cart.store'
 
 export function ProductModal() {
+  const navigate = useNavigate()
   const { modal, closeModal } = useCatalogStore()
+  const addToCart = useCartStore((s) => s.addToCart)
   const { isOpen, selectedProduct } = modal
   const [quantity, setQuantity] = useState(1)
 
@@ -42,7 +46,18 @@ export function ProductModal() {
 
   const handleAddToCart = () => {
     if (!selectedProduct) return
-    toast.success(`${quantity}× ${selectedProduct.nombre} agregado al carrito 🛍️`)
+    addToCart(selectedProduct, quantity)
+    toast.success(
+      <span>
+        {quantity}× <strong>{selectedProduct.nombre}</strong> agregado al carrito 🛍️{' '}
+        <button
+          onClick={() => navigate('/carrito')}
+          style={{ textDecoration: 'underline', fontWeight: 700, cursor: 'pointer', background: 'none', border: 'none', color: 'inherit', padding: 0 }}
+        >
+          Ver carrito
+        </button>
+      </span>
+    )
     closeModal()
     setQuantity(1)
   }
@@ -223,6 +238,17 @@ export function ProductModal() {
                   <ShoppingCart className="h-5 w-5" />
                   {selectedProduct.disponible ? 'Agregar al carrito' : 'No disponible'}
                 </button>
+
+                {/* Link a vista de detalle completo */}
+                <Link
+                  id="catalogo-modal-detail-link"
+                  to={`/producto/${selectedProduct.slug}`}
+                  onClick={() => { closeModal(); setQuantity(1) }}
+                  className="mt-3 w-full inline-flex items-center justify-center gap-2 py-3 rounded-full border-2 border-[#5c0f1b]/20 text-[#5c0f1b] font-bold text-sm hover:border-[#5c0f1b]/40 hover:bg-[#5c0f1b]/4 transition-all text-center"
+                >
+                  <ExternalLink className="h-4 w-4" />
+                  Ver detalle completo
+                </Link>
               </div>
             </div>
           </motion.div>
