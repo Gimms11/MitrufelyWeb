@@ -169,7 +169,7 @@ export function CatalogSidebar({ resultCount }: { resultCount: number }) {
       </div>
 
       {/* ── Toggle Solo disponibles ── */}
-      <div className="flex items-center justify-between py-3.5 border-b border-[#5c0f1b]/8">
+      <div className="flex items-center justify-between py-3.5  border-[#5c0f1b]/8">
         <span className="text-sm font-bold text-[#2a1115]">Solo disponibles</span>
         <button
           role="switch"
@@ -190,7 +190,7 @@ export function CatalogSidebar({ resultCount }: { resultCount: number }) {
       </div>
 
       {/* ── Acordeones ── */}
-      <div className="mt-2 bg-white rounded-2xl px-4 shadow-sm border border-[#5c0f1b]/6">
+      <div className="mt-2 bg-white rounded-2xl px-4 shadow-sm  border-[#5c0f1b]/6">
 
         <Accordion title="Ingrediente Principal">
           {INGREDIENTS.map((ing) => (

@@ -4,14 +4,14 @@
  * Diseño consistente con TrufaCard.tsx de la HomePage:
  *   - rounded-[28px], aspect-square, sombra suave tipo Mitrufely
  *   - Badge de stock/disponibilidad
- *   - Botón "Ver más" rounded-full borgoña
+ *   - Botón "Ver más" navega directo a /producto/:slug (sin modal emergente)
  *   - Animación framer-motion (layout + hover)
  */
 
 import { motion } from 'framer-motion'
 import { ShoppingBag } from 'lucide-react'
+import { Link } from 'react-router'
 import type { Producto } from '@/features/products/types'
-import { useCatalogStore } from '@/stores/catalog.store'
 
 interface ProductCardProps {
   product: Producto
@@ -24,8 +24,6 @@ function normalizeName(name: string): string {
 }
 
 export function ProductCard({ product }: ProductCardProps) {
-  const openModal = useCatalogStore((s) => s.openModal)
-
   const { nombre, precio, imagen_url, disponible, stock_actual, estado } = product
   const isAvailable = disponible && estado && stock_actual > 0
   const isLowStock = isAvailable && stock_actual <= 10
@@ -91,20 +89,20 @@ export function ProductCard({ product }: ProductCardProps) {
           </p>
         </div>
 
-        {/* Botón Ver más */}
-        <button
-          onClick={() => openModal(product)}
-          disabled={!isAvailable}
+        {/* Botón Ver más → navega DIRECTAMENTE a /producto/:slug */}
+        <Link
+          to={`/producto/${product.slug}`}
           id={`catalogo-ver-mas-${product.id_producto}`}
-          className={`w-full inline-flex items-center justify-center font-black rounded-full py-2.5 text-sm transition-all active:scale-95 cursor-pointer border-none ${
+          aria-label={`Ver detalles de ${nombre}`}
+          className={`w-full inline-flex items-center justify-center font-black rounded-full py-2.5 text-sm transition-all active:scale-95 ${
             isAvailable
               ? 'bg-[#5c0f1b] text-white hover:bg-[#7a1525]'
-              : 'bg-stone-100 text-stone-400 cursor-not-allowed'
+              : 'bg-stone-100 text-stone-400 pointer-events-none'
           }`}
-          aria-label={`Ver detalles de ${nombre}`}
+          tabIndex={isAvailable ? 0 : -1}
         >
           Ver más
-        </button>
+        </Link>
       </div>
     </motion.div>
   )

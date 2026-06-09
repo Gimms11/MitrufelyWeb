@@ -19,6 +19,8 @@ const OrdersPage = lazy(() => import('@/features/orders/pages/OrdersPage'))
 const ReportsPage = lazy(() => import('@/features/reports/pages/ReportsPage'))
 const CriptoTrufasPage = lazy(() => import('@/features/sweetcoins/pages/SweetCoinsPage'))
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'))
+const CartPage = lazy(() => import('@/features/cart/pages/CartPage'))
+const ProductDetailView = lazy(() => import('@/features/products/pages/ProductDetailView'))
 
 // ─── Loading fallback ─────────────────────────────────────────────────────────
 function PageLoader() {
@@ -124,6 +126,9 @@ export function AppRouter() {
         {/* Rutas públicas */}
         <Route path="/" element={<HomePage />} />
         <Route path="/catalogo" element={<CatalogPage />} />
+        <Route path="/carrito" element={<CartPage />} />
+        <Route path="/producto/:slug" element={<ProductDetailView />} />
+        <Route path="/puntos" element={<CriptoTrufasPage />} />
 
         {/* Ruta de verificación pública */}
         <Route path="/verify" element={<VerifyPage />} />
