@@ -74,16 +74,15 @@ app/
 │   │   └── base.py                  # AbstractRepository[Model, PK] (ABC)
 │   └── services/
 │       └── base.py                  # AbstractService[...] (ABC)
-├── modules/                         # Feature modules (vertical slices)
-│   ├── auth/
-│   ├── users/
-│   ├── products/
-│   ├── inventory/
-│   ├── orders/
-│   ├── cart/
-│   ├── CriptoTrufas/
-│   ├── reports/
-│   └── dashboard/
+  ├── modules/                         # Feature modules (vertical slices)
+  │   ├── auth/                        ✅ [Fase 1]
+  │   ├── products/                    ✅ [Fase 2]
+  │   ├── inventory/                   ✅ [Fase 3]
+  │   ├── orders/                      ✅ [Fase 4]
+  │   ├── cart/                        ✅ [Fase 4]
+  │   ├── CriptoTrufas/                ⬜ [Fase 5 pendiente]
+  │   ├── reports/                     ⬜ [Fase 6 pendiente]
+  │   └── dashboard/                   ⬜ [Fase 6 pendiente]
 ├── routers/
 │   └── __init__.py                  # api_router aggregator (include_router x módulo)
 └── shared/
@@ -148,7 +147,7 @@ class ProductService:
 ### `repository.py`
 - **Interfaz abstracta** (ABC) que extiende `AbstractRepository`.
 - Define los métodos de acceso a datos del dominio.
-- La implementación concreta va en `infrastructure/database/repositories/<nombre>.py`.
+- La implementación concreta va en `modules/<nombre>/repository_impl.py`.
 
 ```python
 class AbstractProductRepository(AbstractRepository):
@@ -281,4 +280,4 @@ application.include_router(api_router, prefix=settings.API_V1_PREFIX)
 - [ ] `dependencies.py` conecta repo concreto → service
 - [ ] Router registrado en `app/routers/__init__.py`
 - [ ] `tests/unit/test_<nombre>_service.py` creado
-- [ ] `SQLAlchemy<Nombre>Repository` en `infrastructure/database/repositories/`
+- [ ] `<Nombre>RepositoryImpl` en `modules/<nombre>/repository_impl.py`

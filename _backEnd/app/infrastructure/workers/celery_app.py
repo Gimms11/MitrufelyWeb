@@ -21,6 +21,7 @@ celery_app = Celery(
         "app.infrastructure.workers.tasks.notifications",
         "app.infrastructure.workers.tasks.analytics",
         "app.infrastructure.workers.tasks.inventory",
+        "app.infrastructure.workers.tasks.ventas",
     ],
 )
 
@@ -41,7 +42,11 @@ celery_app.conf.update(
         },
         "expire-lots-daily": {
             "task": "app.infrastructure.workers.tasks.inventory.expire_lots",
-            "schedule": 86400.0,  # Diariamente a las 02:00 UTC (ajustar con crontab si se requiere)
+            "schedule": 86400.0,
+        },
+        "expire-pending-ventas": {
+            "task": "app.infrastructure.workers.tasks.ventas.expire_pending",
+            "schedule": 300.0,  # Cada 5 minutos
         },
     },
 )

@@ -40,9 +40,6 @@ class VentaRepositoryImpl(IVentaRepository):
     async def create_venta_transactional(self, venta: Venta) -> Venta:
         self._session.add(venta)
         await self._session.flush()
-        # SQLAlchemy handles the transaction boundary at the session level.
-        # The caller (Service) must call session.commit() for this to persist,
-        # otherwise it will rollback on exception.
         return venta
 
     async def update(self, entity: Venta) -> Venta:
@@ -57,3 +54,16 @@ class VentaRepositoryImpl(IVentaRepository):
         stmt = select(Venta.id_venta).where(Venta.id_venta == pk)
         result = await self._session.execute(stmt)
         return result.scalars().first() is not None
+
+    async def find_by_cliente(
+        self, id_cliente: int, *, limit: int = 100, offset: int = 0
+    ) -> List[Venta]:
+        stmt = (
+            select(Venta)
+            .where(Venta.id_cliente == id_cliente)
+            .order_by(Venta.fecha_venta.desc())
+            .limit(limit)
+            .offset(offset)
+        )
+        result = await self._session.execute(stmt)
+        return list(result.scalars().all())

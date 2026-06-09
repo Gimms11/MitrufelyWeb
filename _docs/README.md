@@ -129,6 +129,34 @@ Para más detalles, consulta el skill específico: 👉 **[03_AUTH_SECURITY.md](
 
 ---
 
+## 🛒 Módulo de Carrito, Checkout y Ventas (Fase 4)
+
+Se ha implementado el backend completo para el flujo de compra: carrito persistente en Redis, checkout transaccional con integridad FEFO, generación automática de comprobantes y expiración de ventas pendientes.
+
+### 🛍️ Carrito en Redis
+* **Persistencia:** `cart:{user_id}` en formato JSON, TTL de 7 días con sliding expiration.
+* **Endpoints:** CRUD completo (`GET /cart`, `POST /cart/items`, `PUT /cart/items/{id}`, `DELETE /cart/items/{id}`, `DELETE /cart`).
+
+### 💳 Checkout Transaccional
+* **Checkout directo:** `POST /api/v1/ventas/checkout` — acepta productos y paquetes explícitos.
+* **Checkout desde carrito:** `POST /api/v1/ventas/checkout/cart` — lee carrito de Redis, crea venta, vacía carrito.
+* **Transacción única:** `async with session.begin()` con rollback automático.
+* **FEFO automático:** El trigger `tg_detalles_venta_asignar_lotes` ejecuta `FOR UPDATE` sobre lotes y productos para integridad bajo concurrencia.
+* **Documento automático:** Cada checkout genera un `Documento` (BOLETA) en la misma transacción.
+* **Sin pasarelas de pago reales:** Alcance universitario. La venta se crea como `PENDIENTE`/`PENDIENTE`. Un admin puede marcarla como `PAGADA` vía `PUT /ventas/{id}/pagar` para pruebas.
+* **Puntos automáticos:** Al marcar como `PAGADA`, el trigger `tg_ventas_otorgar_puntos` acumula CriptoTrufas.
+
+### ⏱️ Expiración Automática
+* **Celery beat cada 5 minutos:** Anula ventas con más de 15 minutos en estado `PENDIENTE`/`PENDIENTE`.
+* **Reversión automática:** El trigger `tg_ventas_anular` restaura stock y libera cupones.
+
+### 🧪 Pruebas
+* 50 tests implementados (12 unit CartService, 18 unit VentaService, 8 E2E Cart API, 7 E2E Checkout API, 4 integration Checkout Flow).
+
+Para más detalles, consulta la documentación técnica: 👉 **[fase4_checkout_ventas.md](./fases/fase4_checkout_ventas.md)**.
+
+---
+
 ## 📦 Módulo de Inventario y Control de Lotes FEFO (Fase 3)
 
 Se ha implementado el backend completo para la gestión física e inventario de trufas. Dado que son productos perecederos, el sistema utiliza un estricto despacho **FEFO (First Expired, First Out)** a través de triggers de base de datos.

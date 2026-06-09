@@ -45,6 +45,7 @@ if TYPE_CHECKING:
 
 # ── Venta ─────────────────────────────────────────────────────────────────────
 
+
 class Venta(Base):
     """
     Cabecera de una orden de venta.
@@ -55,6 +56,7 @@ class Venta(Base):
       - tg_ventas_otorgar_puntos: Grants SweetCoins when estado_pago → PAGADO.
       - tg_ventas_anular: Reverts stock, coupon and points when estado → ANULADO.
     """
+
     __tablename__ = "ventas"
 
     id_venta: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
@@ -96,6 +98,10 @@ class Venta(Base):
     monto_descuento_cupon: Mapped[Decimal] = mapped_column(
         Numeric(10, 2), nullable=False, default=Decimal("0")
     )
+    base_imponible: Mapped[Decimal] = mapped_column(
+        Numeric(10, 2), nullable=False, default=Decimal("0")
+    )
+    igv: Mapped[Decimal] = mapped_column(Numeric(10, 2), nullable=False, default=Decimal("0"))
     total: Mapped[Decimal] = mapped_column(Numeric(10, 2), nullable=False)
     puntos_ganados: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     fecha_venta: Mapped[datetime] = mapped_column(
@@ -103,9 +109,7 @@ class Venta(Base):
     )
 
     # ── Relaciones ─────────────────────────────────────────────────────────
-    cliente: Mapped["Cliente"] = relationship(
-        "Cliente", back_populates="ventas", lazy="select"
-    )
+    cliente: Mapped["Cliente"] = relationship("Cliente", back_populates="ventas", lazy="select")
     cupon_cliente: Mapped["CuponCliente | None"] = relationship(
         "CuponCliente", back_populates="ventas", lazy="select"
     )
@@ -134,6 +138,7 @@ class Venta(Base):
 
 # ── HistorialEstadosVenta ─────────────────────────────────────────────────────
 
+
 class HistorialEstadosVenta(Base):
     """
     Registro histórico de cambios de estado de una venta.
@@ -141,6 +146,7 @@ class HistorialEstadosVenta(Base):
 
     NOTE: Populated automatically by trigger tg_ventas_historial in NeonDB.
     """
+
     __tablename__ = "historial_estados_venta"
 
     id_historial: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
@@ -173,6 +179,7 @@ class HistorialEstadosVenta(Base):
 
 # ── DetalleVenta ──────────────────────────────────────────────────────────────
 
+
 class DetalleVenta(Base):
     """
     Línea de detalle de una venta (producto, cantidad, precio).
@@ -183,6 +190,7 @@ class DetalleVenta(Base):
         stock deduction and Kardex entry are handled by this trigger.
       - tg_detalles_venta_bloquear_update/delete: These rows are immutable once created.
     """
+
     __tablename__ = "detalles_venta"
 
     id_detalle: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
@@ -203,9 +211,7 @@ class DetalleVenta(Base):
     subtotal: Mapped[Decimal] = mapped_column(Numeric(10, 2), nullable=False)
 
     # ── Relaciones ─────────────────────────────────────────────────────────
-    venta: Mapped["Venta"] = relationship(
-        "Venta", back_populates="detalles", lazy="select"
-    )
+    venta: Mapped["Venta"] = relationship("Venta", back_populates="detalles", lazy="select")
     producto: Mapped["Producto"] = relationship(
         "Producto", back_populates="detalles_venta", lazy="select"
     )
@@ -213,7 +219,9 @@ class DetalleVenta(Base):
         "DetalleVentaLotes", back_populates="detalle", lazy="select"
     )
 
+
 # ── VentaPaquete ──────────────────────────────────────────────────────────────
+
 
 class VentaPaquete(Base):
     """
@@ -221,6 +229,7 @@ class VentaPaquete(Base):
     antes de ser expandidos a productos individuales en detalles_venta.
     Tabla: venta_paquetes | M05_ventas_pagos.sql
     """
+
     __tablename__ = "venta_paquetes"
 
     id_venta_paquete: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
@@ -253,6 +262,7 @@ class VentaPaquete(Base):
 
 # ── DetalleVentaLotes ─────────────────────────────────────────────────────────
 
+
 class DetalleVentaLotes(Base):
     """
     Asociación entre una línea de venta y los lotes físicos FEFO consumidos.
@@ -261,6 +271,7 @@ class DetalleVentaLotes(Base):
     NOTE: Populated automatically by trigger tg_detalles_venta_asignar_lotes.
     Rows are immutable once created (blocked by tg_detalle_venta_lotes_bloquear_*).
     """
+
     __tablename__ = "detalle_venta_lotes"
 
     id_detalle_lote: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
@@ -282,18 +293,18 @@ class DetalleVentaLotes(Base):
     detalle: Mapped["DetalleVenta"] = relationship(
         "DetalleVenta", back_populates="detalle_lotes", lazy="select"
     )
-    lote: Mapped["Lote"] = relationship(
-        "Lote", back_populates="detalle_venta_lotes", lazy="select"
-    )
+    lote: Mapped["Lote"] = relationship("Lote", back_populates="detalle_venta_lotes", lazy="select")
 
 
 # ── MetodoPago ────────────────────────────────────────────────────────────────
+
 
 class MetodoPago(Base):
     """
     Registro de un pago asociado a una venta.
     Tabla: metodos_pago | M05_ventas_pagos.sql
     """
+
     __tablename__ = "metodos_pago"
 
     id_pago: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
@@ -319,18 +330,18 @@ class MetodoPago(Base):
     )
 
     # ── Relaciones ─────────────────────────────────────────────────────────
-    venta: Mapped["Venta"] = relationship(
-        "Venta", back_populates="metodos_pago", lazy="select"
-    )
+    venta: Mapped["Venta"] = relationship("Venta", back_populates="metodos_pago", lazy="select")
 
 
 # ── Documento ─────────────────────────────────────────────────────────────────
+
 
 class Documento(Base):
     """
     Documentos fiscales (boleta/factura/reporte) asociados a una venta.
     Tabla: documentos | M05_ventas_pagos.sql
     """
+
     __tablename__ = "documentos"
 
     id_documento: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
@@ -351,6 +362,4 @@ class Documento(Base):
     )
 
     # ── Relaciones ─────────────────────────────────────────────────────────
-    venta: Mapped["Venta"] = relationship(
-        "Venta", back_populates="documentos", lazy="select"
-    )
+    venta: Mapped["Venta"] = relationship("Venta", back_populates="documentos", lazy="select")

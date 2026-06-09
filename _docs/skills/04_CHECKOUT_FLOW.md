@@ -1,26 +1,40 @@
-# SKILL 04 — Flujo de Venta Transaccional (Checkout)
+# SKILL 04 — Flujo de Venta Transaccional (Checkout) — ACTUALIZADO FASE 4
 
-> **CUÁNDO USAR:** Antes de implementar el módulo `orders`, el checkout, o cualquier proceso que involucre venta + pago + lotes + puntos.
+> **CUÁNDO USAR:** Antes de implementar el módulo `orders`, el checkout, o cualquier proceso que involucre venta + lotes + puntos.
+> **Última actualización:** 2026-06-09 — Refleja implementación real post-Fase 4.
 
 ---
 
-## 1. Visión General del Flujo
+## 1. Visión General del Flujo (REAL)
 
 ```
 Cliente                 Backend (FastAPI)              PostgreSQL (Triggers)
   │                           │                               │
-  ├─POST /checkout────────────▶│                               │
-  │  { carrito, cupon, pago } │                               │
-  │                           │── Validar items y stock ──────▶│
-  │                           │── Validar cupón (si aplica) ──▶│
-  │                           │── INSERT ventas ───────────────▶│ ←tg_ventas_historial
-  │                           │── INSERT metodos_pago ──────────▶│
-  │                           │── INSERT detalles_venta ─────────▶│ ←tg_detalles_venta_asignar_lotes
-  │                           │   (por cada item del carrito)   │  (FEFO + stock + kardex)
-  │                           │── UPDATE ventas.estado_pago ─────▶│ ←tg_ventas_otorgar_puntos
-  │                           │   = 'PAGADO'                     │  (CriptoTrufas + cupón USADO)
-  │                           │── [Celery] generar PDF ───────────▶│
-  │◀──200 OK, venta_id────────│                               │
+  ├─POST /ventas/checkout──────▶│                               │
+  │  { productos, paquetes }   │                               │
+  │                           │── Pre-validar items y stock ───▶│  (sin lock, fast-fail)
+  │                           │── Expandir paquetes            │
+  │                           │── Calcular totales + IGV       │
+  │                           │                               │
+  │                           │── async with session.begin():  │
+  │                           │   ├─ session.add(venta)        │
+  │                           │   ├─ flush()                   │  ←tg_ventas_historial
+  │                           │   │                            │  ←tg_detalles_venta_asignar_lotes
+  │                           │   │                            │    (FEFO + FOR UPDATE + Kardex)
+  │                           │   └─ session.add(Documento)    │
+  │                           │                               │
+  │◀──201 VentaResponse───────│                               │
+  │                           │                               │
+  │  [POST /ventas/{id}/pagar] (ADMIN, manual)                │
+  │                           │── async with session.begin():  │
+  │                           │   ├─ venta.estado_pago=PAGADO  │  ←tg_ventas_otorgar_puntos
+  │                           │   └─ pago.estado=APROBADO      │    (CriptoTrufas + cupón USADO)
+```
+
+**Flujo alternativo — Checkout desde carrito Redis:**
+```
+Cliente → POST /ventas/checkout/cart
+  → CartService.get_cart(user_id)  →  transformar a VentaRequest  →  create_checkout()  →  clear_cart()
 ```
 
 ---
@@ -29,170 +43,141 @@ Cliente                 Backend (FastAPI)              PostgreSQL (Triggers)
 
 | Tabla | Rol en el Flujo |
 |---|---|
-| `ventas` | Cabecera del pedido. Estado y totales. |
+| `ventas` | Cabecera del pedido. Se crea como `estado=PENDIENTE, estado_pago=PENDIENTE`. |
 | `detalles_venta` | Una fila por producto. **Inmutable** tras insert. Incluye componentes de paquetes expandidos. |
 | `detalle_venta_lotes` | Traza física: qué lote → qué detalle. Gestionado por trigger. |
-| `metodos_pago` | Registro del pago. Solo `TARJETA`. |
-| `venta_paquetes` | Trazabilidad comercial: snapshot del paquete vendido (nombre + composición JSON). |
-| `lotes` | Reducido automáticamente por trigger FEFO. |
+| `metodos_pago` | Registro del pago. `estado_transaccion=PENDIENTE` al crear. Solo `TARJETA`. |
+| `venta_paquetes` | Trazabilidad comercial: snapshot del paquete vendido (nombre + composición JSONB). |
+| `lotes` | Reducido automáticamente por trigger FEFO con `FOR UPDATE`. |
 | `productos` | `stock_actual` cache actualizado por trigger. |
 | `movimientos_stock` | Kardex. Insertado automáticamente por trigger. |
 | `cupones_cliente` | Estado cambia a `'USADO'` por trigger. |
-| `movimientos_puntos` | Acumulación de CriptoTrufas. Insertado por trigger. |
-| `documentos` | Boleta/Factura. Creado por tarea Celery. |
+| `movimientos_puntos` | Acumulación de CriptoTrufas. Insertado por trigger al pagar. |
+| `documentos` | Boleta/Factura. Creado en la misma transacción del checkout. |
 | `historial_estados_venta` | Auditoría de estados. Gestionado por trigger. |
 
 ---
 
-## 3. Pasos de Implementación en el Service
+## 3. Pasos de Implementación en el Service (REAL)
 
-### Paso 1: Validaciones Pre-Transaccionales
+### Paso 1: Validaciones Pre-Transaccionales (sin lock)
 ```python
-async def checkout(self, request: CheckoutRequest, cliente_id: int) -> VentaResponse:
-    # 1a. Verificar que todos los productos existen y están activos
-    for item in request.items:
-        product = await self._product_repo.get_by_id(item.id_producto)
-        if not product or not product.estado:
-            raise NotFoundError(f"Producto {item.id_producto} no disponible")
-        if product.stock_actual < item.cantidad:
+async def create_checkout(self, id_cliente: int, dto: VentaRequest,
+                          tipo_documento=TipoDocumentoVentaEnum.BOLETA) -> VentaResponse:
+    # 1a. Carrito vacío
+    if not dto.has_items():
+        raise BusinessRuleError("La orden debe contener al menos un producto o paquete.")
+
+    # 1b. Validar productos individuales
+    for item in dto.productos or []:
+        producto = await self.session.execute(select(Producto).where(...))
+        if not producto:
+            raise NotFoundError(f"Producto {item.id_producto} no encontrado.")
+        if not producto.estado:
+            raise BusinessRuleError(f"Producto '{producto.nombre}' no disponible.")
+        if producto.stock_actual < item.cantidad:
             raise InsufficientStockError(...)
 
-    # 1b. Validar cupón (si aplica)
-    cupon = None
-    if request.id_cupon_cliente:
-        cupon = await self._cupon_repo.get_by_id(request.id_cupon_cliente)
-        if cupon.id_cliente != cliente_id:
-            raise ForbiddenError("Cupón no pertenece al cliente")
-        if cupon.estado != "DISPONIBLE":
-            raise BusinessRuleError("Cupón no disponible")
-        # La fecha_expiracion es validada por el trigger tg_cupones_cliente_normalizar
-```
-
-### Paso 2: Calcular Totales
-```python
-    subtotal = sum(item.precio_unitario * item.cantidad for item in request.items)
-    descuento = Decimal("0")
-    if cupon:
-        descuento = (subtotal * cupon.cupon_maestro.porcentaje_descuento / 100).quantize(Decimal("0.01"))
-    total = subtotal + request.costo_envio - descuento
-```
-
-### Paso 3: Crear la Venta (Transacción DB)
-```python
-    async with self._session.begin():
-        # 3a. INSERT ventas → tg_ventas_historial se dispara automáticamente
-        venta = await self._order_repo.create({
-            "id_cliente": cliente_id,
-            "id_cupon_cliente": request.id_cupon_cliente,
-            "origen_venta": "WEB",
-            "estado": "PENDIENTE",
-            "estado_pago": "PENDIENTE",
-            "subtotal_productos": subtotal,
-            "costo_envio": request.costo_envio,
-            "monto_descuento_cupon": descuento,
-            "total": total,
-        })
-
-        # 3b. INSERT metodos_pago
-        await self._pago_repo.create({
-            "id_venta": venta.id_venta,
-            "tipo_pago": request.tipo_pago,
-            "monto": total,
-            "codigo_transaccion": request.codigo_transaccion,
-            "estado_transaccion": "APROBADO",  # después de confirmar con pasarela
-        })
-
-        # 3c. INSERT detalles_venta (uno por item)
-        # ⚠️ El trigger tg_detalles_venta_asignar_lotes se dispara aquí
-        # Puede lanzar RAISE EXCEPTION si hay stock insuficiente
-        try:
-            for item in request.items:
-                await self._detalle_repo.create({
-                    "id_venta": venta.id_venta,
-                    "id_producto": item.id_producto,
-                    "cantidad": item.cantidad,
-                    "precio_unitario": item.precio_unitario,
-                    "subtotal": item.precio_unitario * item.cantidad,
-                })
-        except asyncpg.exceptions.RaiseException as e:
-            raise InsufficientStockError(str(e))
-
-        # 3d. Confirmar pago → tg_ventas_otorgar_puntos se dispara aquí
-        # Asigna CriptoTrufas y marca cupón como USADO
-        await self._order_repo.update(venta.id_venta, {
-            "estado_pago": "PAGADO",
-            "estado": "PAGADO",
-        })
-```
-
-### Paso 3b: Expandir Paquetes (Fase 2)
-```python
-    # Los paquetes NO tienen stock ni lotes propios.
-    # Se expanden en sus componentes y se insertan en detalles_venta.
-    for item in request.paquetes:
-        paquete = await self.paquete_repo.get_by_id(item.id_paquete)
-        if not paquete or not paquete.estado:
-            raise HTTPException(400, "Paquete no existe o no está activo")
-
-        composicion_snapshot = []
-        for pp in paquete.productos:
+    # 1c. Validar paquetes (expansión)
+    for item in dto.paquetes or []:
+        paquete_db = await self.paquete_repo.get_by_id(item.id_paquete)
+        if not paquete_db or not paquete_db.estado:
+            raise BusinessRuleError(f"Paquete no existe o no está activo.")
+        for pp in paquete_db.productos:
             if not pp.producto.estado or pp.producto.stock_actual < (pp.cantidad * item.cantidad):
-                raise HTTPException(400, f"Stock insuficiente para '{pp.producto.nombre}'")
+                raise InsufficientStockError(...)
+```
 
-            venta.detalles.append(DetalleVenta(
-                id_producto=pp.id_producto,
-                cantidad=pp.cantidad * item.cantidad,
-                precio_unitario=pp.producto.precio,
-                subtotal=pp.producto.precio * pp.cantidad * item.cantidad,
+### Paso 2: Calcular Totales e IGV
+```python
+    # 2a. Acumular subtotal de productos y paquetes expandidos
+    subtotal = Decimal("0.0")
+    # ... sumatoria de productos individuales + componentes de paquetes
+
+    # 2b. Calcular base imponible e IGV (18%)
+    base_imponible = (subtotal / Decimal("1.18")).quantize(Decimal("0.01"))
+    igv = (subtotal - base_imponible).quantize(Decimal("0.01"))
+
+    nueva_venta.subtotal_productos = subtotal
+    nueva_venta.base_imponible = base_imponible
+    nueva_venta.igv = igv
+    nueva_venta.total = subtotal
+
+    # 2c. MetodoPago PENDIENTE (sin pasarela de pago real)
+    nueva_venta.metodos_pago.append(MetodoPago(
+        tipo_pago=dto.tipo_pago,
+        monto=subtotal,
+        estado_transaccion="PENDIENTE",
+    ))
+```
+
+### Paso 3: Transacción DB (única, atómica)
+```python
+    try:
+        async with self.session.begin():
+            # 3a. INSERT ventas → tg_ventas_historial se dispara automáticamente
+            self.session.add(nueva_venta)
+            await self.session.flush()
+            # En el flush se disparan los triggers:
+            # tg_detalles_venta_asignar_lotes → FEFO + FOR UPDATE + Kardex
+            # tg_ventas_historial → auditoría de estado
+
+            # 3b. INSERT documento (boleta preliminar)
+            self.session.add(Documento(
+                id_venta=nueva_venta.id_venta,
+                tipo_documento=tipo_documento,
             ))
-            composicion_snapshot.append({
-                "id_producto": pp.id_producto,
-                "nombre": pp.producto.nombre,
-                "cantidad_por_paquete": pp.cantidad,
-                "precio_unitario": str(pp.producto.precio),
-            })
 
-        # Trazabilidad comercial — snapshot inmutable
-        venta.paquetes_vendidos.append(VentaPaquete(
-            id_paquete=paquete.id_paquete,
-            cantidad=item.cantidad,
-            nombre_paquete_snapshot=paquete.nombre,
-            composicion_snapshot_json=composicion_snapshot,
-        ))
+    except DBAPIError as exc:
+        error_msg = str(exc.orig) if exc.orig else str(exc)
+        if "Stock insuficiente" in error_msg:
+            raise InsufficientStockError(error_msg) from exc
+        raise DatabaseError(error_msg) from exc
+    except Exception as exc:
+        raise DatabaseError("Error inesperado al procesar el checkout.") from exc
 ```
 
 **⚠️ FEFO y Kardex operan solo sobre `detalles_venta`. Los triggers de NeonDB no saben ni les importa si el detalle vino de un producto individual o de la expansión de un paquete.**
 
-### Paso 4: Guardar y Hacer Commit
+### Paso 4: Confirmación de Pago (ADMIN, manual)
 ```python
-    venta_creada = await self.repo.create_venta_transactional(venta)
-    await self.session.commit()
-    # En este momento se ejecutan los triggers:
-    # tg_detalles_venta_asignar_lotes → FEFO
-    # tg_movimientos_stock → Kardex
-    # tg_ventas_historial → Auditoría
+async def confirmar_pago(self, id_venta: int) -> VentaResponse:
+    venta = await self.session.execute(select(Venta).where(Venta.id_venta == id_venta))
+    if not venta:
+        raise NotFoundError(...)
+    if venta.estado.value == "ANULADO":
+        raise BusinessRuleError("No se puede pagar una venta anulada.")
+    if venta.estado_pago == EstadoPagoEnum.PAGADO:
+        raise BusinessRuleError("La venta ya está pagada.")
+
+    async with self.session.begin():
+        venta.estado_pago = EstadoPagoEnum.PAGADO
+        pago = await self.session.execute(select(MetodoPago).where(...))
+        if pago:
+            pago.estado_transaccion = EstadoTransaccionEnum.APROBADO
+        await self.session.flush()
+        # tg_ventas_otorgar_puntos se dispara → acumula CriptoTrufas
+        # tg_ventas_historial → audita cambio de estado
 ```
+
+**IMPORTANTE:** El pago NO ocurre en el checkout. La venta se crea PENDIENTE/PENDIENTE. Un admin (profesor para pruebas) la marca como PAGADA manualmente vía `PUT /ventas/{id}/pagar`.
 
 ---
 
 ## 4. Anulación de Venta
 
-### Flujo de Anulación
+### Flujo de Anulación (automático por Celery o manual por admin)
 ```python
-async def anular_venta(self, venta_id: int, actor_id: int) -> VentaResponse:
-    venta = await self._order_repo.get_by_id(venta_id)
-    if venta is None:
-        raise NotFoundError(...)
-    if venta.estado == "ANULADO":
-        raise BusinessRuleError("Venta ya está anulada")
-
-    # Solo UPDATE estado = 'ANULADO'
-    # El trigger tg_ventas_anular hace TODO lo demás:
-    # - Revierte stock a lotes
-    # - Libera cupón
-    # - Contra-asienta CriptoTrufas con AJUSTE_ADMIN
-    await self._order_repo.update(venta_id, {"estado": "ANULADO"})
+# Celery: expire_pending task
+UPDATE ventas SET estado = 'ANULADO'
+WHERE estado = 'PENDIENTE' AND estado_pago = 'PENDIENTE'
+  AND fecha_venta < NOW() - INTERVAL '15 minutes'
 ```
+
+**El trigger `tg_ventas_anular` hace TODO lo demás:**
+- Revierte stock a lotes
+- Libera cupón
+- Contra-asienta CriptoTrufas con `AJUSTE_ADMIN`
 
 **⚠️ NUNCA intentar revertir stock o puntos manualmente al anular. El trigger lo hace.**
 
@@ -201,40 +186,39 @@ async def anular_venta(self, venta_id: int, actor_id: int) -> VentaResponse:
 ## 5. Estados de la Venta y Transiciones Válidas
 
 ```
-PENDIENTE ──pagado──▶ PAGADO ──entregado──▶ ENTREGADO
-    │                    │
-    └──anulado───────────┴──anulado──▶ ANULADO
+PENDIENTE ──pagar (ADMIN)──► estado_pago=PAGADO ──► tg_ventas_otorgar_puntos
+    │
+    └──anular (Celery/ADMIN)──► ANULADO ──► tg_ventas_anular
 ```
 
 | Transición | Quién la ejecuta |
 |---|---|
-| `PENDIENTE` → `PAGADO` | Service: `UPDATE ventas.estado_pago = 'PAGADO'` |
-| `PAGADO` → `ENTREGADO` | Solo ADMIN |
-| Cualquier → `ANULADO` | Solo ADMIN |
+| `estado_pago: PENDIENTE → PAGADO` | ADMIN vía `PUT /ventas/{id}/pagar` |
+| `estado: PENDIENTE → ANULADO` | Celery `expire_pending` (automático, cada 5 min) |
 
 ---
 
-## 6. Esquemas Pydantic de Referencia
+## 6. Esquemas Pydantic de Referencia (REAL)
 
-### Request (implementación real — Fase 2)
+### Request (implementación real)
 ```python
 class ItemProducto(BaseModel):
-    id_producto: int
+    id_producto: int = Field(..., gt=0)
     cantidad: int = Field(..., gt=0)
 
 class ItemPaquete(BaseModel):
-    id_paquete: int
+    id_paquete: int = Field(..., gt=0)
     cantidad: int = Field(..., gt=0)
 
 class VentaRequest(BaseModel):
-    productos: list[ItemProducto] = []     # Productos individuales
-    paquetes: list[ItemPaquete] = []       # Paquetes comerciales (se expanden)
-    tipo_pago: TipoPagoEnum                # Solo TARJETA
-    id_cupon_cliente: int | None = None
     origen_venta: OrigenVentaEnum = OrigenVentaEnum.WEB
+    id_cupon_cliente: int | None = None
+    productos: list[ItemProducto] | None = []
+    paquetes: list[ItemPaquete] | None = []
+    tipo_pago: TipoPagoEnum = TipoPagoEnum.TARJETA
 
     def has_items(self) -> bool:
-        return bool(self.productos or self.paquetes)
+        return len(self.productos or []) > 0 or len(self.paquetes or []) > 0
 ```
 
 ### Response
@@ -242,8 +226,9 @@ class VentaRequest(BaseModel):
 class VentaResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     id_venta: int
-    estado: EstadoVentaEnum
-    estado_pago: EstadoPagoEnum
+    id_cliente: int
+    estado: str
+    estado_pago: str
     total: Decimal
     puntos_ganados: int
     fecha_venta: datetime
@@ -251,7 +236,7 @@ class VentaResponse(BaseModel):
 
 ---
 
-## 7. ENUMs Relevantes (ver Skill 01)
+## 7. ENUMs Relevantes
 
 | Python Enum | Valores |
 |---|---|
@@ -260,13 +245,42 @@ class VentaResponse(BaseModel):
 | `TipoPagoEnum` | `TARJETA` *(único método activo — EFECTIVO/YAPE/TRANSFERENCIA deprecados)* |
 | `EstadoTransaccionEnum` | `PENDIENTE`, `APROBADO`, `RECHAZADO`, `ANULADO` |
 | `TipoDocumentoVentaEnum` | `BOLETA`, `FACTURA`, `REPORTE` |
-| `OrigenVentaEnum` | `WEB`, `APP`, `PRESENCIAL` |
+| `OrigenVentaEnum` | `WEB` *(único valor activo)* |
+
+> **Nota:** `OrigenVentaEnum` solo tiene `WEB` en la implementación actual. `APP` y `PRESENCIAL` no están implementados.
 
 ---
 
 ## 8. Consideraciones de Concurrencia
 
-- Los triggers usan `SELECT ... FOR UPDATE` internamente sobre `lotes` y `productos`.
+- Los triggers usan `SELECT ... FOR UPDATE` internamente sobre `productos` y `lotes` (ver `M12_correcion_triggers_ventas.sql`).
 - No es necesario hacer lock explícito desde el backend.
-- Si dos checkouts simultáneos compiten por el mismo stock, uno fallará con `RAISE EXCEPTION` → traducir a `InsufficientStockError`.
-- La transacción de checkout debe ser una sola `async with session.begin()` para garantizar rollback completo en caso de error.
+- Las pre-validaciones de stock son lecturas sin lock (fast-fail). La integridad real la garantiza el `FOR UPDATE` en el trigger.
+- Si dos checkouts simultáneos compiten por el mismo stock, uno fallará con `RAISE EXCEPTION` → el backend captura `DBAPIError` y mapea a `InsufficientStockError`.
+- La transacción de checkout usa `async with self.session.begin()` para garantizar rollback completo en caso de error.
+- El doble commit (service + DI `get_db_session`) es inofensivo: el segundo commit sobre una sesión ya commiteada es no-op en SQLAlchemy.
+
+---
+
+## 9. Cart Endpoints (Fase 4)
+
+| Método | Ruta | Descripción |
+|--------|------|-------------|
+| `GET` | `/api/v1/cart` | Obtener carrito desde Redis |
+| `POST` | `/api/v1/cart/items` | Agregar producto o paquete |
+| `PUT` | `/api/v1/cart/items/{id}` | Actualizar cantidad |
+| `DELETE` | `/api/v1/cart/items/{id}` | Eliminar item |
+| `DELETE` | `/api/v1/cart` | Vaciar carrito |
+
+---
+
+## 10. Restricciones de Alcance (Universitario)
+
+| Restricción | Detalle |
+|-------------|---------|
+| Sin pasarelas de pago reales | No Culqi, Izipay, MercadoPago |
+| Sin procesamiento monetario externo | No webhooks de pago, no cobros con tarjeta |
+| Pago manual por ADMIN | `PUT /ventas/{id}/pagar` marca como PAGADA |
+| Sin PDF de comprobante | `url_archivo` en `None`. Pendiente Fase 6. |
+| Sin numeración de documentos | `numero_serie`/`numero_correlativo` en `None` |
+| Sin aplicación de descuento por cupón | `monto_descuento_cupon` queda en 0 |
