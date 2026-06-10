@@ -5,10 +5,11 @@
  * Recibe todo el estado necesario via props — no se conecta directamente al store
  * para mantenerse testeable y desacoplado.
  */
-import { Search, Star, User, ShoppingCart, Heart, LogOut } from 'lucide-react'
+import { Search, Star, User, ShoppingCart, Heart, LogOut, LayoutDashboard } from 'lucide-react'
 import { Link, useNavigate } from 'react-router'
 import { motion, AnimatePresence } from 'framer-motion'
 import { toast } from 'sonner'
+import { useAuthStore } from '@/app/store'
 
 // ─── Props ────────────────────────────────────────────────────────────────
 
@@ -47,6 +48,7 @@ export function PublicHeader({
 }: PublicHeaderProps) {
   const navigate = useNavigate()
   const isAuthenticated = userName !== null
+  const { user } = useAuthStore()
 
   return (
     <header className="bg-gradient-to-r from-[#5c0f1b] to-[#7a1525] sticky top-0 z-50 shadow-lg">
@@ -118,6 +120,19 @@ export function PublicHeader({
             )}
           </button>
 
+          {/* Dashboard button for admin/staff users */}
+          {isAuthenticated && user && user.role !== 'customer' && (
+            <button
+              id="hp-dashboard-btn"
+              onClick={() => navigate('/dashboard')}
+              className="flex h-9 items-center gap-2 px-3.5 rounded-full bg-white/15 text-white hover:bg-white/25 border border-white/25 transition-colors text-sm font-black shadow-md hover:scale-[1.02] active:scale-[0.98]"
+              title="Panel de Administración"
+            >
+              <LayoutDashboard className="h-4 w-4" />
+              <span className="hidden sm:inline">Dashboard</span>
+            </button>
+          )}
+
           {/* Usuario */}
           <div className="relative">
             {isAuthenticated ? (
@@ -142,6 +157,18 @@ export function PublicHeader({
                         <p className="text-xs text-[#2a1115]/50 font-semibold">Sesión activa</p>
                         <p className="text-sm font-black text-[#5c0f1b] truncate">{userName}</p>
                       </div>
+                      {user && user.role !== 'customer' && (
+                        <button
+                          onClick={() => {
+                            navigate('/dashboard')
+                            onUserMenuToggle()
+                          }}
+                          className="w-full flex items-center gap-2.5 px-4 py-3 text-sm font-bold text-[#5c0f1b] hover:bg-[#5c0f1b]/5 transition-colors border-b border-[#5c0f1b]/8"
+                        >
+                          <LayoutDashboard className="h-4 w-4 text-[#ff7a45]" />
+                          Panel de Administración
+                        </button>
+                      )}
                       <button
                         onClick={() => navigate('/mi-cuenta/pedidos')}
                         className="w-full flex items-center gap-2.5 px-4 py-3 text-sm font-bold text-[#5c0f1b] hover:bg-[#5c0f1b]/5 transition-colors"

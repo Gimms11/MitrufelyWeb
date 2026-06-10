@@ -45,6 +45,22 @@ export const useConfirmEntregaMutation = () => {
   return useMutation({
     mutationFn: (id: number) => ordersApi.confirmarEntrega(id),
     onSuccess: (data) => {
+      // Update list caches
+      queryClient.setQueriesData({ queryKey: ['orders'] }, (old: any) => {
+        if (!old) return old
+        if (Array.isArray(old)) {
+          return old.map((order: any) =>
+            order.id_venta === data.id_venta
+              ? { ...order, estado: data.estado, estado_pago: data.estado_pago }
+              : order
+          )
+        }
+        return old
+      })
+
+      // Update detail cache
+      queryClient.setQueryData(['orders', 'detail', data.id_venta], data)
+
       queryClient.invalidateQueries({ queryKey: ['orders'] })
       queryClient.invalidateQueries({ queryKey: ['orders', 'detail', data.id_venta] })
       queryClient.invalidateQueries({ queryKey: ['admin-products'] })

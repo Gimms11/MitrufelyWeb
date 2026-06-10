@@ -31,6 +31,8 @@ from app.infrastructure.database.models.enums import (
     OrigenVentaEnum,
     TipoDocumentoVentaEnum,
     TipoPagoEnum,
+    EstadoPagoEnum,
+    EstadoVentaEnum,
 )
 from app.modules.orders.schemas import ItemPaquete, ItemProducto, VentaRequest
 from app.modules.orders.service import VentaService
@@ -79,6 +81,34 @@ def make_paquete_db(
     return pkg
 
 
+def make_venta_mock(
+    id_venta: int = 1,
+    id_cliente: int = 1,
+    estado: EstadoVentaEnum = EstadoVentaEnum.PENDIENTE,
+    estado_pago: EstadoPagoEnum = EstadoPagoEnum.PENDIENTE,
+    total: str = "50.00",
+    puntos_ganados: int = 5,
+) -> MagicMock:
+    venta = MagicMock()
+    venta.id_venta = id_venta
+    venta.id_cliente = id_cliente
+    venta.estado = estado
+    venta.estado_pago = estado_pago
+    venta.total = Decimal(total)
+    venta.puntos_ganados = puntos_ganados
+    venta.fecha_venta = None
+    venta.subtotal_productos = None
+    venta.costo_envio = None
+    venta.monto_descuento_cupon = None
+    venta.base_imponible = None
+    venta.igv = None
+    venta.detalles = None
+    venta.paquetes_vendidos = None
+    venta.metodos_pago = []
+    venta.documentos = None
+    return venta
+
+
 # ── Fixtures ───────────────────────────────────────────────────────────────────
 
 
@@ -103,6 +133,10 @@ def mock_session() -> AsyncMock:
     session.flush = AsyncMock()
     session.refresh = AsyncMock()
 
+    mock_result = MagicMock()
+    mock_result.scalar_one_or_none.return_value = None
+    session.execute = AsyncMock(return_value=mock_result)
+
     class _Transaction:
         async def __aenter__(self):
             return None
@@ -125,9 +159,8 @@ def _apply_venta_defaults(obj):
         object.__setattr__(obj, "fecha_venta", datetime.now(timezone.utc))
     if hasattr(obj, "id_venta") and obj.id_venta is None:
         object.__setattr__(obj, "id_venta", 1)
-
-    async def __aexit__(self, *args):
-        return None
+    if hasattr(obj, "id_cliente") and obj.id_cliente is None:
+        object.__setattr__(obj, "id_cliente", 1)
 
 
 @pytest.fixture
@@ -425,7 +458,7 @@ class TestVentaServiceCheckout:
         assert documentos[0].tipo_documento == TipoDocumentoVentaEnum.BOLETA
         assert documentos[0].id_venta == 1
 
-    async def test_crea_metodo_pago_pendiente(
+    async def test_crea_metodo_pago_tarjeta_aprobado(
         self,
         service: VentaService,
         mock_session: AsyncMock,
@@ -463,7 +496,7 @@ class TestVentaServiceCheckout:
         assert len(pagos) == 1
         assert pagos[0].tipo_pago == TipoPagoEnum.TARJETA
         assert pagos[0].monto == Decimal("30.00")
-        assert pagos[0].estado_transaccion == "PENDIENTE"
+        assert pagos[0].estado_transaccion == "APROBADO"
 
 
 @pytest.mark.unit
@@ -485,12 +518,7 @@ class TestVentaServiceConfirmarPago:
         service: VentaService,
         mock_session: AsyncMock,
     ) -> None:
-        venta = MagicMock()
-        venta.id_venta = 1
-        venta.estado = MagicMock()
-        venta.estado.value = "ANULADO"
-        venta.estado_pago = MagicMock()
-        venta.estado_pago.value = "PENDIENTE"
+        venta = make_venta_mock(estado=EstadoVentaEnum.ANULADO)
 
         mock_result = MagicMock()
         mock_result.scalar_one_or_none.return_value = venta
@@ -500,18 +528,12 @@ class TestVentaServiceConfirmarPago:
             await service.confirmar_pago(id_venta=1)
         assert "anulada" in exc_info.value.message.lower()
 
-    async def test_confirmar_pago_ya_pagada(
+    async def test_confirmar_pago_ya_entregada(
         self,
         service: VentaService,
         mock_session: AsyncMock,
     ) -> None:
-        from app.infrastructure.database.models.enums import EstadoPagoEnum
-
-        venta = MagicMock()
-        venta.id_venta = 1
-        venta.estado = MagicMock()
-        venta.estado.value = "PENDIENTE"
-        venta.estado_pago = EstadoPagoEnum.PAGADO
+        venta = make_venta_mock(estado=EstadoVentaEnum.ENTREGADO)
 
         mock_result = MagicMock()
         mock_result.scalar_one_or_none.return_value = venta
@@ -519,39 +541,32 @@ class TestVentaServiceConfirmarPago:
 
         with pytest.raises(BusinessRuleError) as exc_info:
             await service.confirmar_pago(id_venta=1)
-        assert "ya está pagada" in exc_info.value.message.lower()
+        assert "entregada" in exc_info.value.message.lower()
 
     async def test_confirmar_pago_exitoso(
         self,
         service: VentaService,
         mock_session: AsyncMock,
     ) -> None:
-        from app.infrastructure.database.models.enums import (
-            EstadoPagoEnum,
-            EstadoVentaEnum,
-        )
-
-        venta = MagicMock()
-        venta.id_venta = 1
-        venta.id_cliente = 1
-        venta.estado = EstadoVentaEnum.PENDIENTE
-        venta.estado_pago = EstadoPagoEnum.PENDIENTE
-        venta.total = Decimal("50.00")
-        venta.puntos_ganados = 5
-        venta.fecha_venta = MagicMock()
-
         pago_mock = MagicMock()
+        pago_mock.tipo_pago = "TARJETA"
+        pago_mock.monto = Decimal("50.00")
         pago_mock.estado_transaccion = "PENDIENTE"
+        pago_mock.codigo_transaccion = None
+        pago_mock.proveedor = None
+        pago_mock.fecha_pago = None
+
+        venta = make_venta_mock(estado=EstadoVentaEnum.PENDIENTE, estado_pago=EstadoPagoEnum.PENDIENTE)
+        venta.metodos_pago = [pago_mock]
 
         mock_result_venta = MagicMock()
         mock_result_venta.scalar_one_or_none.return_value = venta
-        mock_result_pago = MagicMock()
-        mock_result_pago.scalar_one_or_none.return_value = pago_mock
 
-        mock_session.execute = AsyncMock(side_effect=[mock_result_venta, mock_result_pago])
+        mock_session.execute = AsyncMock(return_value=mock_result_venta)
 
         result = await service.confirmar_pago(id_venta=1)
 
+        assert result.estado == "ENTREGADO"
         assert result.estado_pago == "PAGADO"
         assert pago_mock.estado_transaccion == "APROBADO"
 

@@ -152,7 +152,7 @@ export default function OrdersPage() {
         header: 'Acciones',
         cell: ({ row }) => {
           const order = row.original
-          const canEntregar = order.estado === 'PENDIENTE'
+          const canEntregar = order.estado === 'PENDIENTE' || order.estado === 'PAGADO'
 
           return (
             <div className="flex items-center gap-2">

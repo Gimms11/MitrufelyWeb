@@ -16,6 +16,7 @@ import {
   Sparkles,
   ChevronLeft,
   ChevronRight,
+  Home,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { toast } from 'sonner'
@@ -170,6 +171,21 @@ export default function AdminLayout() {
           })}
         </nav>
 
+        {/* Atajo a Página Principal */}
+        <div className="px-4 py-2 bg-white flex flex-col items-stretch">
+          <Link
+            to="/"
+            className={cn(
+              'flex items-center rounded-xl text-sm font-extrabold transition-all group relative decoration-none bg-gradient-to-r from-[#ff7a45] to-[#ff9e7d] text-white shadow-md shadow-[#ff7a45]/20 hover:from-[#ff8e5c] hover:to-[#ffae8f] hover:scale-[1.02] active:scale-[0.98]',
+              collapsed ? 'justify-center p-3' : 'gap-3.5 px-4 py-3'
+            )}
+            title="Ir a Página Principal"
+          >
+            <Home className="h-5 w-5 transition-transform group-hover:scale-110" />
+            {!collapsed && <span>Página Principal</span>}
+          </Link>
+        </div>
+
         {/* Info del Usuario Logueado & Collapse / Logout */}
         <div className="p-4 border-t border-[#5c0f1b]/10 bg-stone-50/50 flex flex-col gap-3">
           {!collapsed && (
@@ -259,6 +275,19 @@ export default function AdminLayout() {
               )
             })}
           </nav>
+
+          {/* Atajo a Página Principal */}
+          <div className="px-4 py-2 bg-white flex flex-col items-stretch">
+            <Link
+              to="/"
+              onClick={() => setMobileOpen(false)}
+              className="flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-extrabold transition-all group decoration-none bg-gradient-to-r from-[#ff7a45] to-[#ff9e7d] text-white shadow-md shadow-[#ff7a45]/20 hover:from-[#ff8e5c] hover:to-[#ffae8f] hover:scale-[1.02] active:scale-[0.98]"
+              title="Ir a Página Principal"
+            >
+              <Home className="h-5 w-5 transition-transform group-hover:scale-110" />
+              <span>Página Principal</span>
+            </Link>
+          </div>
 
           {/* Info Usuario & Logout */}
           <div className="p-4 border-t border-[#5c0f1b]/10 bg-stone-50/50 flex flex-col gap-3">

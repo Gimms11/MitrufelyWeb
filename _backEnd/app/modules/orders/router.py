@@ -15,6 +15,7 @@ from app.modules.orders.schemas import (
     VentaRequest,
     VentaResponse,
 )
+from app.core.constants import Permission
 from app.modules.orders.service import VentaService
 from app.security.dependencies import AdminUser, AuthUser
 
@@ -103,7 +104,7 @@ async def confirmar_pago(
     "",
     response_model=list[VentaResponse],
     status_code=status.HTTP_200_OK,
-    summary="Listar ventas del cliente autenticado",
+    summary="Listar ventas del cliente autenticado o todas si es administrador",
 )
 async def list_ventas(
     current_user: AuthUser,
@@ -111,6 +112,8 @@ async def list_ventas(
     limit: int = Query(20, ge=1, le=100),
     offset: int = Query(0, ge=0),
 ) -> list[VentaResponse]:
+    if current_user.has_permission(Permission.ORDER_READ_ALL):
+        return await service.get_all(limit=limit, offset=offset)
     return await service.get_by_usuario(id_usuario=current_user.user_id, limit=limit, offset=offset)
 
 

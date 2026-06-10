@@ -60,7 +60,15 @@ const ALLERGEN_MODES: { key: AllergenMode; label: string }[] = [
 
 // ─── Componente Principal ──────────────────────────────────────────────────────
 
-export function CatalogSidebar({ resultCount, maxPrice }: { resultCount: number; maxPrice: number }) {
+export function CatalogSidebar({
+  resultCount,
+  maxPrice,
+  isLoading = false,
+}: {
+  resultCount: number
+  maxPrice: number
+  isLoading?: boolean
+}) {
   const {
     filters,
     sortBy,
@@ -97,12 +105,16 @@ export function CatalogSidebar({ resultCount, maxPrice }: { resultCount: number;
       </div>
 
       {/* ── Contador ── */}
-      <div className="bg-gradient-to-br from-[#5c0f1b] to-[#7a1525] rounded-2xl px-5 py-4 mb-6 text-center shadow-md shadow-[#5c0f1b]/20">
-        <span className="text-3xl font-black text-white block" style={{ fontFamily: "'Outfit', sans-serif" }}>
-          {resultCount}
-        </span>
+      <div className="bg-gradient-to-br from-[#5c0f1b] to-[#7a1525] rounded-2xl px-5 py-4 mb-6 text-center shadow-md shadow-[#5c0f1b]/20 flex flex-col items-center justify-center min-h-[84px]">
+        {isLoading ? (
+          <span className="inline-block h-9 w-16 bg-white/20 rounded animate-pulse my-0.5" />
+        ) : (
+          <span className="text-3xl font-black text-white block" style={{ fontFamily: "'Outfit', sans-serif" }}>
+            {resultCount}
+          </span>
+        )}
         <p className="text-xs font-semibold text-white/70 mt-0.5">
-          {resultCount === 1 ? 'trufa encontrada' : 'trufas encontradas'}
+          {isLoading ? 'buscando delicias...' : resultCount === 1 ? 'trufa encontrada' : 'trufas encontradas'}
         </p>
       </div>
 

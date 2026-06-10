@@ -30,6 +30,7 @@ Están diseñados para ser pasados a la IA como contexto de referencia antes de 
 | [`11_ANALYTICS_BI.md`](./11_ANALYTICS_BI.md)                   | Módulo de Analítica e Inteligencia (BI)   | Gráficos, KPIs, Reportes PDF WeasyPrint y Excel asíncrono |
 | [`12_STORAGE_MEDIA.md`](./12_STORAGE_MEDIA.md)                 | Almacenamiento y Multimedia (Cloudinary)  | Subida y optimización de imágenes con Pillow e integridad |
 | [`13_PRODUCTS_CATALOG_CRUD.md`](./13_PRODUCTS_CATALOG_CRUD.md) | Catálogo de Productos                     | Patrones avanzados de CRUD, disponibilidad, auto-slug    |
+| [`14_REACT_QUERY_LOADERS.md`](./14_REACT_QUERY_LOADERS.md)     | Loaders y Transiciones de Estado          | Manejo de loaders, isPlaceholderData, transiciones UX    |
 
 ---
 
@@ -99,3 +100,4 @@ app/modules/
 | `orders/` (checkout) | `04_CHECKOUT_FLOW.md` (completo) + `05_INVENTORY_STOCK.md` |
 | `storage/` | `12_STORAGE_MEDIA.md` (subida, Pillow, rollback transaccional) |
 | `tests/` | `10_TESTING.md` (conftest real, NullPool, Redis mock) |
+| `frontend/` (loaders) | `07_FRONTEND_ARCHITECTURE.md` + `14_REACT_QUERY_LOADERS.md` |
