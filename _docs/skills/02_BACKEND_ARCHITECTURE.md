@@ -76,6 +76,7 @@ app/
 │       └── base.py                  # AbstractService[...] (ABC)
   ├── modules/                         # Feature modules (vertical slices)
   │   ├── auth/                        ✅ [Fase 1]
+  │   ├── categories/                  ✅ [Fase 2 — M13]
   │   ├── products/                    ✅ [Fase 2]
   │   ├── inventory/                   ✅ [Fase 3]
   │   ├── orders/                      ✅ [Fase 4]

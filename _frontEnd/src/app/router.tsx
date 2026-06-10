@@ -16,11 +16,15 @@ const InventoryPage = lazy(() => import('@/features/inventory/pages/InventoryPag
 const CatalogAdminPage = lazy(() => import('@/features/products/pages/CatalogAdminPage'))
 const CatalogPage = lazy(() => import('@/features/catalog/pages/CatalogPage'))
 const OrdersPage = lazy(() => import('@/features/orders/pages/OrdersPage'))
+const OrderDetailPage = lazy(() => import('@/features/orders/pages/OrderDetailPage'))
 const ReportsPage = lazy(() => import('@/features/reports/pages/ReportsPage'))
 const CriptoTrufasPage = lazy(() => import('@/features/sweetcoins/pages/SweetCoinsPage'))
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'))
 const CartPage = lazy(() => import('@/features/cart/pages/CartPage'))
 const ProductDetailView = lazy(() => import('@/features/products/pages/ProductDetailView'))
+const PackDetailView = lazy(() => import('@/features/products/pages/PackDetailView'))
+const CustomerOrdersPage = lazy(() => import('@/features/orders/pages/CustomerOrdersPage'))
+const CustomerOrderDetailPage = lazy(() => import('@/features/orders/pages/CustomerOrderDetailPage'))
 
 // ─── Loading fallback ─────────────────────────────────────────────────────────
 function PageLoader() {
@@ -109,6 +113,7 @@ export function AppRouter() {
             {/* ADMIN, MANAGER y CASHIER */}
             <Route element={<RequirePermission permission="VIEW_ORDERS" />}>
               <Route path="/orders" element={<OrdersPage />} />
+              <Route path="/orders/:id" element={<OrderDetailPage />} />
             </Route>
 
             {/* Solo ADMIN y MANAGER */}
@@ -128,7 +133,14 @@ export function AppRouter() {
         <Route path="/catalogo" element={<CatalogPage />} />
         <Route path="/carrito" element={<CartPage />} />
         <Route path="/producto/:slug" element={<ProductDetailView />} />
+        <Route path="/pack/:slug" element={<PackDetailView />} />
         <Route path="/puntos" element={<CriptoTrufasPage />} />
+
+        {/* Mi Cuenta - Rutas protegidas para cliente */}
+        <Route element={<RequireAuth />}>
+          <Route path="/mi-cuenta/pedidos" element={<CustomerOrdersPage />} />
+          <Route path="/mi-cuenta/pedidos/:id" element={<CustomerOrderDetailPage />} />
+        </Route>
 
         {/* Ruta de verificación pública */}
         <Route path="/verify" element={<VerifyPage />} />

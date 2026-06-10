@@ -20,4 +20,9 @@ export const packagesApi = {
     const { data } = await api.get<Pack>(`/packages/${id}`)
     return data
   },
+
+  getBySlug: async (slug: string): Promise<Pack> => {
+    const { data } = await api.get<Pack>(`/packages/slug/${slug}`)
+    return data
+  },
 }

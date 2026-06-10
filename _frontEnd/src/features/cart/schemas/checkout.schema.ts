@@ -1,94 +1,100 @@
 /**
- * checkout.schema.ts — Esquema Zod para el formulario de pago.
+ * checkout.schema.ts — Esquemas Zod para el flujo de checkout.
  *
- * Validaciones:
- *   - Datos personales: nombre, apellidos, teléfono, correo
- *   - Documento: DNI (8 dígitos) o RUC (11 dígitos)
- *   - Envío: dirección, referencia
- *   - Pago: método seleccionado
- *   - RazónSocial: requerida solo si el tipo de documento es RUC
+ *   - fiscalSchema: datos fiscales (DNI/RUC)
+ *   - tarjetaSchema: simulación de pasarela de pago
  */
 
 import { z } from 'zod'
 
-export type TipoDocumento = 'DNI' | 'RUC'
-export type MetodoPago   = 'tarjeta' | 'billetera' | 'efectivo'
+// ── Luhn Algorithm ────────────────────────────────────────────────────────────
 
-export const checkoutSchema = z
+function luhnCheck(cardNumber: string): boolean {
+  const digits = cardNumber.replace(/\D/g, '')
+  if (digits.length < 13 || digits.length > 19) return false
+  let sum = 0
+  let alternate = false
+  for (let i = digits.length - 1; i >= 0; i--) {
+    let n = parseInt(digits[i]!, 10)
+    if (alternate) {
+      n *= 2
+      if (n > 9) n -= 9
+    }
+    sum += n
+    alternate = !alternate
+  }
+  return sum % 10 === 0
+}
+
+// ── Fiscal ────────────────────────────────────────────────────────────────────
+
+export type TipoDocumentoFiscal = 'DNI' | 'RUC'
+
+export const fiscalSchema = z
   .object({
-    // ── Datos personales ─────────────────────────────────────────────────
-    nombres: z
+    tipo_documento: z.enum(['DNI', 'RUC'], { required_error: 'Selecciona un tipo de documento.' }),
+    numero_documento: z
       .string()
-      .min(2, 'El nombre debe tener al menos 2 caracteres.')
-      .max(80, 'El nombre es demasiado largo.')
-      .regex(/^[A-Za-záéíóúÁÉÍÓÚñÑ\s]+$/, 'Solo se permiten letras y espacios.'),
-
-    apellidos: z
-      .string()
-      .min(2, 'Los apellidos deben tener al menos 2 caracteres.')
-      .max(100, 'Los apellidos son demasiado largos.')
-      .regex(/^[A-Za-záéíóúÁÉÍÓÚñÑ\s]+$/, 'Solo se permiten letras y espacios.'),
-
-    telefono: z
-      .string()
-      .regex(/^\+?[\d\s\-()]{7,15}$/, 'Ingresa un teléfono válido (7–15 dígitos).'),
-
-    correo: z
-      .string()
-      .email('Ingresa un correo electrónico válido.'),
-
-    // ── Documento ────────────────────────────────────────────────────────
-    tipoDocumento: z.enum(['DNI', 'RUC'], {
-      required_error: 'Selecciona un tipo de documento.',
-    }),
-
-    numeroDocumento: z
-      .string()
-      .min(8, 'El número de documento debe tener al menos 8 dígitos.')
-      .max(11, 'El número de documento no puede superar los 11 dígitos.')
+      .min(8, 'Mínimo 8 dígitos.')
+      .max(20, 'Máximo 20 dígitos.')
       .regex(/^\d+$/, 'Solo se permiten números.'),
-
-    razonSocial: z.string().optional(),
-
-    // ── Envío ────────────────────────────────────────────────────────────
-    direccion: z
-      .string()
-      .min(5, 'La dirección debe tener al menos 5 caracteres.')
-      .max(200, 'La dirección es demasiado larga.'),
-
-    referencia: z
-      .string()
-      .min(3, 'La referencia debe tener al menos 3 caracteres.')
-      .max(150, 'La referencia es demasiado larga.'),
-
-    // ── Método de pago ───────────────────────────────────────────────────
-    metodoPago: z.enum(['tarjeta', 'billetera', 'efectivo'], {
-      required_error: 'Selecciona un método de pago.',
-    }),
+    razon_social: z.string().optional(),
+    direccion_fiscal: z.string().min(5, 'Mínimo 5 caracteres.').max(255),
   })
-  // Validación cruzada: RUC requiere Razón Social
   .superRefine((data, ctx) => {
-    if (data.tipoDocumento === 'DNI' && data.numeroDocumento.length !== 8) {
+    if (data.tipo_documento === 'DNI' && data.numero_documento.length !== 8) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        path: ['numeroDocumento'],
+        path: ['numero_documento'],
         message: 'El DNI debe tener exactamente 8 dígitos.',
       })
     }
-    if (data.tipoDocumento === 'RUC' && data.numeroDocumento.length !== 11) {
+    if (data.tipo_documento === 'RUC' && data.numero_documento.length !== 11) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        path: ['numeroDocumento'],
+        path: ['numero_documento'],
         message: 'El RUC debe tener exactamente 11 dígitos.',
       })
     }
-    if (data.tipoDocumento === 'RUC' && !data.razonSocial?.trim()) {
+    if (data.tipo_documento === 'RUC' && (!data.razon_social || !data.razon_social.trim())) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        path: ['razonSocial'],
-        message: 'La razón social es requerida para RUC.',
+        path: ['razon_social'],
+        message: 'La razón social es obligatoria para RUC.',
       })
     }
   })
 
-export type CheckoutFormData = z.infer<typeof checkoutSchema>
+export type FiscalFormData = z.infer<typeof fiscalSchema>
+
+// ── Tarjeta ───────────────────────────────────────────────────────────────────
+
+export const tarjetaSchema = z.object({
+  numero_tarjeta: z
+    .string()
+    .min(16, 'El número de tarjeta debe tener al menos 16 dígitos.')
+    .refine((val) => luhnCheck((val ?? '').replace(/\s/g, '')), 'Número de tarjeta inválido (falló Luhn).'),
+  expiracion: z
+    .string()
+    .regex(/^(0[1-9]|1[0-2])\/(\d{2})$/, 'Formato inválido. Usa MM/AA.')
+    .refine((val) => {
+      const [mm, aa] = val.split('/')
+      const now = new Date()
+      const currentMonth = now.getMonth() + 1
+      const currentYear = now.getFullYear() % 100
+      const expMonth = parseInt(mm!, 10)
+      const expYear = parseInt(aa!, 10)
+      return expYear > currentYear || (expYear === currentYear && expMonth >= currentMonth)
+    }, 'La tarjeta está vencida.'),
+  cvv: z
+    .string()
+    .length(3, 'El CVV debe tener 3 dígitos.')
+    .regex(/^\d{3}$/, 'Solo números.'),
+  titular: z
+    .string()
+    .min(3, 'Ingresa el nombre del titular.')
+    .max(100)
+    .regex(/^[A-Za-záéíóúÁÉÍÓÚñÑ\s]+$/, 'Solo se permiten letras y espacios.'),
+})
+
+export type TarjetaFormData = z.infer<typeof tarjetaSchema>

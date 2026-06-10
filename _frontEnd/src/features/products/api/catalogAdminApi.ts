@@ -23,6 +23,14 @@ export const catalogAdminApi = {
   },
 
   /**
+   * Listar productos activos con filtros para clientes
+   */
+  listActiveProducts: async (params: ListProductsParams = {}): Promise<PaginatedResponse<Producto>> => {
+    const { data } = await api.get<PaginatedResponse<Producto>>('/products/', { params })
+    return data
+  },
+
+  /**
    * Obtener detalle de un producto por ID
    */
   getProduct: async (id: number): Promise<Producto> => {

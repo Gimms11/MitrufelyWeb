@@ -40,6 +40,7 @@ logger = structlog.get_logger(__name__)
 
 # ── Google Token Verification ─────────────────────────────────────────────────
 
+
 async def _verify_google_token(id_token: str, client_id: str) -> dict:
     """
     Valida el ID Token de Google contra el endpoint público de tokeninfo.
@@ -94,6 +95,7 @@ async def _verify_google_token(id_token: str, client_id: str) -> dict:
 
 
 # ── Auth Service ──────────────────────────────────────────────────────────────
+
 
 class AuthService:
     """
@@ -219,9 +221,7 @@ class AuthService:
             email=saved_user.email,
         )
 
-    async def login_or_register_with_google(
-        self, payload: GoogleLoginRequest
-    ) -> TokenResponse:
+    async def login_or_register_with_google(self, payload: GoogleLoginRequest) -> TokenResponse:
         """
         Flujo de autenticación con Google OAuth2.
 
@@ -278,18 +278,16 @@ class AuthService:
             rol_db = result.scalar_one_or_none()
 
             if rol_db is None:
-                raise NotFoundError(
-                    "El rol CLIENTE no está inicializado en la base de datos."
-                )
+                raise NotFoundError("El rol CLIENTE no está inicializado en la base de datos.")
 
             user = Usuario(
                 id_rol=rol_db.id_rol,
                 nombres=first_name,
                 apellidos=last_name,
                 email=email,
-                password_hash=None,   # Sin contraseña local — autenticación vía Google
+                password_hash=None,  # Sin contraseña local — autenticación vía Google
                 telefono=None,
-                estado=True,           # Google ya verificó el correo del usuario
+                estado=True,  # Google ya verificó el correo del usuario
                 auth_provider=AuthProviderEnum.GOOGLE.value,
                 google_sub=google_sub,
             )
@@ -415,4 +413,99 @@ class AuthService:
         user = await self._repo.get_by_id(user_id)
         if not user:
             raise NotFoundError("Usuario no encontrado")
+        return user
+
+    async def get_datos_fiscales(self, user_id: int):
+        """
+        Obtiene los datos fiscales predeterminados del usuario.
+        Retorna None si no tiene ninguno.
+        """
+        from app.infrastructure.database.models.usuarios import DatosFiscales
+        from sqlalchemy import select
+        from sqlalchemy.orm import selectinload
+
+        user = await self._repo.get_by_id(user_id)
+        if not user:
+            raise NotFoundError("Usuario no encontrado")
+
+        stmt = select(DatosFiscales).where(
+            DatosFiscales.id_usuario == user_id,
+            DatosFiscales.es_predeterminado == True,
+        )
+        result = await self._repo._session.execute(stmt)
+        return result.scalar_one_or_none()
+
+    async def upsert_datos_fiscales(self, user_id: int, data):
+        """
+        Crea o actualiza los datos fiscales del usuario.
+        Marca el registro como predeterminado.
+        """
+        from app.infrastructure.database.models.usuarios import DatosFiscales
+        from sqlalchemy import select, update
+
+        user = await self._repo.get_by_id(user_id)
+        if not user:
+            raise NotFoundError("Usuario no encontrado")
+
+        # Buscar si ya existe un registro predeterminado
+        stmt = select(DatosFiscales).where(
+            DatosFiscales.id_usuario == user_id,
+            DatosFiscales.es_predeterminado == True,
+        )
+        result = await self._repo._session.execute(stmt)
+        existing = result.scalar_one_or_none()
+
+        if existing:
+            existing.tipo_documento = data.tipo_documento
+            existing.numero_documento = data.numero_documento
+            existing.razon_social = data.razon_social
+            existing.direccion_fiscal = data.direccion_fiscal
+            await self._repo._session.flush()
+            await self._repo._session.refresh(existing)
+            return existing
+        else:
+            nuevo = DatosFiscales(
+                id_usuario=user_id,
+                tipo_documento=data.tipo_documento,
+                numero_documento=data.numero_documento,
+                razon_social=data.razon_social,
+                direccion_fiscal=data.direccion_fiscal,
+                es_predeterminado=True,
+            )
+            self._repo._session.add(nuevo)
+            await self._repo._session.flush()
+            await self._repo._session.refresh(nuevo)
+            return nuevo
+
+    async def update_me(self, user_id: int, data):
+        """
+        Actualiza teléfono, dirección y referencia del usuario autenticado.
+        """
+        from sqlalchemy import select
+        from app.infrastructure.database.models.usuarios import Cliente
+
+        user = await self._repo.get_by_id(user_id)
+        if not user:
+            raise NotFoundError("Usuario no encontrado")
+
+        if data.telefono is not None:
+            user.telefono = data.telefono
+
+        # Buscar o crear cliente
+        stmt = select(Cliente).where(Cliente.id_usuario == user_id)
+        result = await self._repo._session.execute(stmt)
+        cliente = result.scalar_one_or_none()
+
+        if not cliente:
+            cliente = Cliente(id_usuario=user_id)
+            self._repo._session.add(cliente)
+
+        if data.direccion is not None:
+            cliente.direccion = data.direccion
+        if data.referencia is not None:
+            cliente.referencia = data.referencia
+        if data.telefono is not None:
+            cliente.telefono = data.telefono
+
+        await self._repo._session.flush()
         return user

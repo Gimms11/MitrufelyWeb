@@ -118,12 +118,23 @@ class PaginatedResponse(BaseModel, Generic[T]):
 | `GET` | `/` | ADMIN | Listar usuarios |
 | `PUT` | `/{id}/status` | ADMIN | Activar/desactivar |
 
+### Categorías (`/api/v1/categorias`) [NUEVO — M13]
+
+| Método | Ruta | Roles | Descripción |
+|---|---|---|---|
+| `GET` | `/` | Público | Lista paginada de categorías activas (`estado=True`). Query: `?search=&page=&size=`. |
+| `GET` | `/admin` | ADMIN | Lista paginada de todas las categorías (sin filtro de estado). |
+| `GET` | `/{id}` | Público | Detalle de una categoría por ID. |
+| `POST` | `/` | ADMIN | Crear categoría. Body JSON: `{ "nombre": "...", "descripcion": "...", "estado": true }`. Auto-slug con python-slugify. 409 si nombre duplicado. |
+| `PUT` | `/{id}` | ADMIN | Actualizar categoría. Body JSON: `{ "nombre"?: "...", "descripcion"?: "...", "estado"?: bool }`. Regenera slug si cambia nombre. |
+| `DELETE` | `/{id}` | ADMIN | Soft delete (`estado=False`). 422 si tiene productos o cupones asociados. |
+
 ### Products (`/api/v1/products`)
 | Método | Ruta | Roles | Descripción |
 |---|---|---|---|
 | `GET` | `/` | Público | Catálogo paginado con filtros |
+| `GET` | `/admin` | ADMIN | Catálogo sin filtros automáticos |
 | `GET` | `/{id}` | Público | Detalle de producto |
-| `GET` | `/categories` | Público | Categorías activas |
 | `POST` | `/` | ADMIN | Crear producto |
 | `PUT` | `/{id}` | ADMIN | Actualizar producto |
 | `DELETE` | `/{id}` | ADMIN | Desactivar producto |

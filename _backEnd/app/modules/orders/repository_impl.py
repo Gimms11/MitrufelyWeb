@@ -4,7 +4,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
-from app.infrastructure.database.models.ventas import Venta
+from app.infrastructure.database.models.ventas import Venta, DetalleVenta
 from app.modules.orders.repository import IVentaRepository
 
 
@@ -18,9 +18,10 @@ class VentaRepositoryImpl(IVentaRepository):
         stmt = (
             select(Venta)
             .options(
-                selectinload(Venta.detalles),
+                selectinload(Venta.detalles).selectinload(DetalleVenta.producto),
                 selectinload(Venta.paquetes_vendidos),
                 selectinload(Venta.metodos_pago),
+                selectinload(Venta.documentos),
             )
             .where(Venta.id_venta == pk)
         )

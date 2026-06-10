@@ -17,3 +17,11 @@ export const usePackageDetail = (id: number) => {
     enabled: !!id,
   })
 }
+
+export const usePackageBySlug = (slug: string) => {
+  return useQuery<Pack, Error>({
+    queryKey: ['packages', 'slug', slug],
+    queryFn: () => packagesApi.getBySlug(slug),
+    enabled: !!slug,
+  })
+}

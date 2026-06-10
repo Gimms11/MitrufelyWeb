@@ -5,6 +5,9 @@ import type { ListProductsParams } from '../api/catalogAdminApi'
 import { toast } from 'sonner'
 
 const formatErrorDetail = (error: any, defaultMsg: string): string => {
+  const customMessage = error?.response?.data?.error?.message
+  if (customMessage) return customMessage
+
   const detail = error?.response?.data?.detail
   if (!detail) return defaultMsg
   if (Array.isArray(detail)) {
@@ -19,11 +22,21 @@ const formatErrorDetail = (error: any, defaultMsg: string): string => {
   return defaultMsg
 }
 
-export const useAdminProducts = (params: ListProductsParams) => {
+export const useAdminProducts = (params: ListProductsParams, options?: { enabled?: boolean }) => {
   return useQuery({
     queryKey: ['admin-products', params],
     queryFn: () => catalogAdminApi.listProductsAdmin(params),
     placeholderData: (prev) => prev,
+    ...options,
+  })
+}
+
+export const useActiveProducts = (params: ListProductsParams, options?: { enabled?: boolean }) => {
+  return useQuery({
+    queryKey: ['products', params],
+    queryFn: () => catalogAdminApi.listActiveProducts(params),
+    placeholderData: (prev) => prev,
+    ...options,
   })
 }
 

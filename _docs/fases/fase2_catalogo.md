@@ -18,16 +18,28 @@ Esta fase implementa el módulo de **Catálogo y Paquetes Comerciales** de Mytru
 
 ## 2. Modelos de Base de Datos (ORM)
 
-Basados en `M03_catalogo_inventario.sql`. Todos los modelos están registrados en `app/infrastructure/database/models/__init__.py`.
+Basados en `M03_catalogo_inventario.sql` + `M13_categorias_slug_estado.sql`. Todos los modelos están registrados en `app/infrastructure/database/models/__init__.py`.
 
 ### Tablas del Catálogo
 
 | Tabla | ORM Python | Propósito |
 |---|---|---|
+| `categorias` | `Categoria` | Categorías de productos (con slug + soft delete desde M13) |
 | `productos` | `Producto` | Catálogo de productos físicos |
 | `paquetes` | `Paquete` | Definición comercial del combo/caja |
 | `paquete_productos` | `PaqueteProducto` | Relación N:M paquete ↔ producto (con cantidad) |
 | `venta_paquetes` | `VentaPaquete` | Trazabilidad comercial: snapshot histórico de qué paquetes se vendieron |
+
+### Campos ORM `Categoria`
+
+```python
+class Categoria(Base):
+    id_categoria: int (PK)
+    nombre: str           # UNIQUE, max 100
+    slug: str | None      # UNIQUE, autogenerado (python-slugify)
+    descripcion: str | None
+    estado: bool          # Soft delete (True=activo)
+```
 
 ### Campos ORM `Producto`
 
@@ -97,6 +109,27 @@ class VentaPaquete(Base):
 
 ## 3. Arquitectura del Módulo `products/`
 
+```
+app/modules/products/
+├── router.py          # FastAPI: /api/v1/packages endpoints
+├── service.py         # PaqueteService — lógica de negocio pura
+├── repository.py      # IPaqueteRepository (interfaz abstracta)
+├── repository_impl.py # PaqueteRepositoryImpl (SQLAlchemy)
+├── schemas.py         # Pydantic: PaqueteCreate, PaqueteResponse, etc.
+└── dependencies.py    # DI: get_paquete_repository, get_paquete_service
+```
+
+### 3.0. Módulo `categories/` (NUEVO — M13)
+
+```
+app/modules/categories/
+├── __init__.py
+├── router.py          # FastAPI: /api/v1/categorias endpoints
+├── service.py         # CategoriaService — lógica de negocio pura
+├── repository.py      # ICategoriaRepository (interfaz abstracta)
+├── repository_impl.py # CategoriaRepositoryImpl (SQLAlchemy + python-slugify)
+├── schemas.py         # Pydantic: CategoriaCreate, CategoriaUpdate, CategoriaResponse
+└── dependencies.py    # DI: get_categoria_repository, get_categoria_service
 ```
 app/modules/products/
 ├── router.py          # FastAPI: /api/v1/packages endpoints
@@ -286,6 +319,17 @@ class VentaRequest(BaseModel):
 
 ## 7. Endpoints de la API
 
+### Categories (`/api/v1/categorias`) [NUEVO — M13]
+
+| Método | Ruta | Auth | Descripción |
+|---|---|---|---|
+| `GET` | `/` | Público | `PaginatedResponse` con categorías `estado=True`. Filtro: `?search=`. |
+| `GET` | `/admin` | `ADMIN` | `PaginatedResponse` sin filtro de estado. |
+| `GET` | `/{id}` | Público | Detalle de una categoría. |
+| `POST` | `/` | `ADMIN` | Crear categoría (JSON body, auto-slug con python-slugify). Da `409` si nombre duplicado. |
+| `PUT` | `/{id}` | `ADMIN` | Actualizar categoría (JSON body, regenera slug si cambia nombre). |
+| `DELETE` | `/{id}` | `ADMIN` | Soft delete (`estado=False`). Da `422` si tiene productos o cupones asociados. |
+
 ### Packages (`/api/v1/packages`)
 
 | Método | Ruta | Auth | Descripción |
@@ -344,11 +388,14 @@ class VentaRequest(BaseModel):
 
 | Componente | Estado |
 |---|---|
+| ORM `Categoria` (slug, estado, unique constraints desde M13) | ✅ Implementado |
+| Módulo `categories/` (CRUD completo: router, service, repository, schemas, DI) | ✅ Implementado |
+| Migración M13 (slug + estado en categorias) | ✅ Aplicada |
 | ORM Models (`Producto`, `Paquete`, `PaqueteProducto`, `VentaPaquete`) | ✅ Implementado |
 | Models registrados en `models/__init__.py` | ✅ Implementado |
-| `ProductoRepositoryImpl` / `PaqueteRepositoryImpl` (SQLAlchemy) | ✅ Implementado |
-| `ProductoService` / `PaqueteService` (precio dinámico, disponibilidad) | ✅ Implementado |
-| Router `/api/v1/packages` y `/api/v1/products` | ✅ Implementado |
+| `CategoriaRepositoryImpl` / `ProductoRepositoryImpl` / `PaqueteRepositoryImpl` | ✅ Implementado |
+| `CategoriaService` / `ProductoService` / `PaqueteService` | ✅ Implementado |
+| Router `/api/v1/categorias`, `/api/v1/packages` y `/api/v1/products` | ✅ Implementado |
 | `VentaService.create_checkout` (productos + paquetes) | ✅ Implementado |
 | Tests unitarios `test_paquete_service.py` y `test_producto_service.py` | ✅ Implementado |
 | Tests unitarios `test_venta_service.py` | ✅ Implementado |

@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { X, Upload, Check } from 'lucide-react'
 import type { Producto } from '../types'
+import { useActiveCategories } from '../hooks/useCategories'
 
 const productFormSchema = z.object({
   nombre: z.string().min(1, 'El nombre es obligatorio').max(150, 'Máximo 150 caracteres'),
@@ -36,6 +37,9 @@ export function AdminProductForm({
 }: AdminProductFormProps) {
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [imagePreview, setImagePreview] = useState<string | null>(initialData?.imagen_url || null)
+
+  const { data: categoriesRes, isLoading: categoriesLoading } = useActiveCategories({ size: 100 })
+  const categoriesList = categoriesRes?.items || []
 
   const {
     register,
@@ -156,12 +160,15 @@ export function AdminProductForm({
                 </label>
                 <select
                   {...register('id_categoria')}
-                  className="w-full px-3.5 py-2.5 text-sm bg-stone-50 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#5c0f1b]/20 focus:border-[#5c0f1b] transition-all text-[#2a1115] cursor-pointer"
+                  disabled={categoriesLoading}
+                  className="w-full px-3.5 py-2.5 text-sm bg-stone-50 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#5c0f1b]/20 focus:border-[#5c0f1b] transition-all text-[#2a1115] cursor-pointer disabled:opacity-50"
                 >
-                  <option value="">Sin Categoría</option>
-                  <option value="1">Best Sellers</option>
-                  <option value="2">Nuevos Sabores</option>
-                  <option value="3">Promociones</option>
+                  <option value="">{categoriesLoading ? 'Cargando categorías...' : 'Sin Categoría'}</option>
+                  {categoriesList.map((cat) => (
+                    <option key={cat.id_categoria} value={cat.id_categoria}>
+                      {cat.nombre}
+                    </option>
+                  ))}
                 </select>
                 {errors.id_categoria && (
                   <p className="text-xs text-red-500 font-semibold mt-1">{errors.id_categoria.message}</p>

@@ -47,16 +47,26 @@ if TYPE_CHECKING:
 
 # ── Categoria ─────────────────────────────────────────────────────────────────
 
+
 class Categoria(Base):
     """
     Categoría de productos (postres, tortas, etc.).
     Tabla: categorias | M03_catalogo_inventario.sql
+    Extended: M13_categorias_slug_estado.sql (slug + estado + constraints)
     """
+
     __tablename__ = "categorias"
+    __table_args__ = (
+        Index("uq_categorias_nombre", "nombre", unique=True),
+        Index("idx_categorias_estado", "estado"),
+        Index("idx_categorias_slug", "slug"),
+    )
 
     id_categoria: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    nombre: Mapped[str] = mapped_column(String(100), nullable=False)
+    nombre: Mapped[str] = mapped_column(String(100), nullable=False, unique=True)
+    slug: Mapped[str | None] = mapped_column(String(150), unique=True, nullable=True)
     descripcion: Mapped[str | None] = mapped_column(Text, nullable=True)
+    estado: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True, index=True)
 
     # ── Relaciones ─────────────────────────────────────────────────────────
     productos: Mapped[list["Producto"]] = relationship(
@@ -69,6 +79,7 @@ class Categoria(Base):
 
 # ── Producto ──────────────────────────────────────────────────────────────────
 
+
 class Producto(Base):
     """
     Producto del catálogo (pastel, bebida, etc.).
@@ -77,11 +88,17 @@ class Producto(Base):
     NOTE: stock_actual is a cached counter; the authoritative source
     is the Kardex (movimientos_stock). Updated by triggers in NeonDB.
     """
+
     __tablename__ = "productos"
     __table_args__ = (
         CheckConstraint("precio > 0", name="chk_productos_precio_positivo"),
         CheckConstraint("peso_gramos > 0", name="chk_productos_peso_positivo"),
-        Index("uq_producto_activo_nombre", "nombre", unique=True, postgresql_where=text("estado = true")),
+        Index(
+            "uq_producto_activo_nombre",
+            "nombre",
+            unique=True,
+            postgresql_where=text("estado = true"),
+        ),
     )
 
     id_producto: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
@@ -114,9 +131,7 @@ class Producto(Base):
     categoria: Mapped["Categoria | None"] = relationship(
         "Categoria", back_populates="productos", lazy="select"
     )
-    lotes: Mapped[list["Lote"]] = relationship(
-        "Lote", back_populates="producto", lazy="select"
-    )
+    lotes: Mapped[list["Lote"]] = relationship("Lote", back_populates="producto", lazy="select")
     movimientos_stock: Mapped[list["MovimientoStock"]] = relationship(
         "MovimientoStock", back_populates="producto", lazy="select"
     )
@@ -127,13 +142,16 @@ class Producto(Base):
         "PaqueteProducto", back_populates="producto", lazy="select"
     )
 
+
 # ── Paquete ───────────────────────────────────────────────────────────────────
+
 
 class Paquete(Base):
     """
     Agrupación comercial de productos (Combo / Caja).
     Tabla: paquetes | M03_catalogo_inventario.sql
     """
+
     __tablename__ = "paquetes"
 
     id_paquete: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
@@ -158,11 +176,13 @@ class Paquete(Base):
 
 # ── PaqueteProducto ───────────────────────────────────────────────────────────
 
+
 class PaqueteProducto(Base):
     """
     Receta (productos y cantidades) que conforman un paquete fijo.
     Tabla: paquete_productos | M03_catalogo_inventario.sql
     """
+
     __tablename__ = "paquete_productos"
     __table_args__ = (
         CheckConstraint("cantidad >= 1", name="chk_paquete_productos_cantidad_minima"),
@@ -182,15 +202,14 @@ class PaqueteProducto(Base):
     cantidad: Mapped[int] = mapped_column(Integer, nullable=False)
 
     # ── Relaciones ─────────────────────────────────────────────────────────
-    paquete: Mapped["Paquete"] = relationship(
-        "Paquete", back_populates="productos", lazy="select"
-    )
+    paquete: Mapped["Paquete"] = relationship("Paquete", back_populates="productos", lazy="select")
     producto: Mapped["Producto"] = relationship(
         "Producto", back_populates="paquetes_incluidos", lazy="selectin"
     )
 
 
 # ── Lote ──────────────────────────────────────────────────────────────────────
+
 
 class Lote(Base):
     """
@@ -201,6 +220,7 @@ class Lote(Base):
     (tg_lotes_validar_insert, tg_lotes_post_insert) in NeonDB.
     Do NOT update these fields directly — insert via the trigger flow.
     """
+
     __tablename__ = "lotes"
 
     id_lote: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
@@ -224,9 +244,7 @@ class Lote(Base):
     )
 
     # ── Relaciones ─────────────────────────────────────────────────────────
-    producto: Mapped["Producto"] = relationship(
-        "Producto", back_populates="lotes", lazy="select"
-    )
+    producto: Mapped["Producto"] = relationship("Producto", back_populates="lotes", lazy="select")
     movimientos_stock: Mapped[list["MovimientoStock"]] = relationship(
         "MovimientoStock", back_populates="lote", lazy="select"
     )
@@ -237,6 +255,7 @@ class Lote(Base):
 
 # ── MovimientoStock ───────────────────────────────────────────────────────────
 
+
 class MovimientoStock(Base):
     """
     Kardex de movimientos de inventario por producto/lote.
@@ -245,6 +264,7 @@ class MovimientoStock(Base):
     NOTE: Rows in this table are primarily created by NeonDB triggers
     (tg_lotes_post_insert, tg_detalles_venta_asignar_lotes, etc.).
     """
+
     __tablename__ = "movimientos_stock"
 
     id_movimiento_stock: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)

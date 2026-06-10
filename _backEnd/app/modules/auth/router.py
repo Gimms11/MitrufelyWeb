@@ -13,6 +13,8 @@ from app.core.config import settings
 from app.infrastructure.cache.redis_client import get_redis
 from app.modules.auth.dependencies import get_auth_service
 from app.modules.auth.schemas import (
+    DatosFiscalesResponse,
+    DatosFiscalesUpsert,
     GoogleLoginRequest,
     LoginRequest,
     RefreshTokenRequest,
@@ -20,6 +22,7 @@ from app.modules.auth.schemas import (
     RegisterResponse,
     TokenResponse,
     UserMeResponse,
+    UserProfileUpdate,
 )
 from app.modules.auth.service import AuthService
 from app.security.dependencies import AuthUser
@@ -169,4 +172,49 @@ async def get_me(
 ) -> UserMeResponse:
     """Retrieve the current user profile from the database using JWT subject."""
     db_user = await service.get_me(current_user.user_id)
+    return db_user
+
+
+@router.get(
+    "/me/datos-fiscales",
+    response_model=DatosFiscalesResponse | None,
+    status_code=status.HTTP_200_OK,
+    summary="Obtener datos fiscales del usuario",
+)
+async def get_datos_fiscales(
+    current_user: AuthUser,
+    service: AuthServiceDep,
+):
+    """Retrieve the user's default fiscal data, or None if not set."""
+    return await service.get_datos_fiscales(current_user.user_id)
+
+
+@router.post(
+    "/me/datos-fiscales",
+    response_model=DatosFiscalesResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Crear o actualizar datos fiscales",
+)
+async def upsert_datos_fiscales(
+    payload: DatosFiscalesUpsert,
+    current_user: AuthUser,
+    service: AuthServiceDep,
+):
+    """Create or update the user's fiscal data (DNI/RUC)."""
+    return await service.upsert_datos_fiscales(current_user.user_id, payload)
+
+
+@router.put(
+    "/me",
+    response_model=UserMeResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Actualizar perfil del usuario",
+)
+async def update_me(
+    payload: UserProfileUpdate,
+    current_user: AuthUser,
+    service: AuthServiceDep,
+):
+    """Update user profile fields: phone, address, reference."""
+    db_user = await service.update_me(current_user.user_id, payload)
     return db_user

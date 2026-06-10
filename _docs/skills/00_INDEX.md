@@ -68,13 +68,14 @@ Están diseñados para ser pasados a la IA como contexto de referencia antes de 
 app/modules/
 ├── auth/          # Login, registro, tokens
 ├── users/         # Perfil, datos fiscales
+├── categories/    # Categorías CRUD (slug, soft delete)       ← [Fase 2 — M13]
 ├── products/      # Catálogo, categorías, paquetes comerciales ← [Fase 2]
-├── inventory/     # Lotes, Kardex, stock                  ← [Fase 3]
-├── orders/        # Ventas, checkout, detalles, estados    ← [Fase 4]
-├── cart/          # Carrito persistente en Redis           ← [Fase 4]
-├── CriptoTrufas/  # Puntos, cupones, canjes               ← [Fase 5 pendiente]
-├── reports/       # PDF, Excel, documentos                ← [Fase 6 pendiente]
-└── dashboard/     # Métricas, KPIs                        ← [Fase 6 pendiente]
+├── inventory/     # Lotes, Kardex, stock                      ← [Fase 3]
+├── orders/        # Ventas, checkout, detalles, estados        ← [Fase 4]
+├── cart/          # Carrito persistente en Redis               ← [Fase 4]
+├── CriptoTrufas/  # Puntos, cupones, canjes                   ← [Fase 5 pendiente]
+├── reports/       # PDF, Excel, documentos                    ← [Fase 6 pendiente]
+└── dashboard/     # Métricas, KPIs                            ← [Fase 6 pendiente]
 ```
 
 ---
