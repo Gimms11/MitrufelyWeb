@@ -21,6 +21,8 @@ def _apply_venta_defaults(obj):
         object.__setattr__(obj, "fecha_venta", datetime.now(timezone.utc))
     if hasattr(obj, "id_venta") and obj.id_venta is None:
         object.__setattr__(obj, "id_venta", 1)
+    if hasattr(obj, "id_cliente") and obj.id_cliente is None:
+        object.__setattr__(obj, "id_cliente", 1)
 
 
 @pytest.mark.integration
@@ -32,9 +34,11 @@ class TestCheckoutFlowIntegration:
         db_session_sample_product,
     ) -> None:
         prod = db_session_sample_product
-        mock_result = MagicMock()
-        mock_result.scalar_one_or_none.return_value = prod
-        mock_session.execute = AsyncMock(return_value=mock_result)
+        mock_result_cliente = MagicMock()
+        mock_result_cliente.scalar_one_or_none.return_value = None
+        mock_result_producto = MagicMock()
+        mock_result_producto.scalar_one_or_none.return_value = prod
+        mock_session.execute = AsyncMock(side_effect=[mock_result_cliente, mock_result_producto])
 
         session_add_calls: list = []
         mock_session.add.side_effect = lambda obj: session_add_calls.append(obj)
@@ -52,8 +56,8 @@ class TestCheckoutFlowIntegration:
         )
 
         result = await service.create_checkout(id_cliente=1, dto=dto)
-        assert result.estado == "PENDIENTE"
-        assert result.estado_pago == "PENDIENTE"
+        assert result.estado == "PAGADO"
+        assert result.estado_pago == "PAGADO"
         assert result.total > Decimal("0")
         assert result.id_venta == 1
         assert result.id_cliente == 1
@@ -71,9 +75,11 @@ class TestCheckoutEdgeCases:
         prod.stock_actual = 1
         prod.estado = True
 
-        mock_result = MagicMock()
-        mock_result.scalar_one_or_none.return_value = prod
-        mock_session.execute = AsyncMock(return_value=mock_result)
+        mock_result_cliente = MagicMock()
+        mock_result_cliente.scalar_one_or_none.return_value = None
+        mock_result_producto = MagicMock()
+        mock_result_producto.scalar_one_or_none.return_value = prod
+        mock_session.execute = AsyncMock(side_effect=[mock_result_cliente, mock_result_producto])
 
         session_add_calls: list = []
         mock_session.add.side_effect = lambda obj: session_add_calls.append(obj)
@@ -105,9 +111,11 @@ class TestCheckoutEdgeCases:
         prod.stock_actual = 10
         prod.estado = True
 
-        mock_result = MagicMock()
-        mock_result.scalar_one_or_none.return_value = prod
-        mock_session.execute = AsyncMock(return_value=mock_result)
+        mock_result_cliente = MagicMock()
+        mock_result_cliente.scalar_one_or_none.return_value = None
+        mock_result_producto = MagicMock()
+        mock_result_producto.scalar_one_or_none.return_value = prod
+        mock_session.execute = AsyncMock(side_effect=[mock_result_cliente, mock_result_producto])
 
         session_add_calls: list = []
         mock_session.add.side_effect = lambda obj: session_add_calls.append(obj)

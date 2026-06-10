@@ -53,7 +53,7 @@ export default function OrderDetailPage() {
   }
 
   const isAdminOrManager = user?.role === 'admin' || user?.role === 'manager'
-  const isEntregaPending = order?.estado === 'PENDIENTE'
+  const isEntregaPending = order?.estado === 'PENDIENTE' || order?.estado === 'PAGADO'
   const isNotCancelled = true
   const showEntregaBtn = isAdminOrManager && isEntregaPending && isNotCancelled
 

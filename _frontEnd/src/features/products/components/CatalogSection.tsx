@@ -39,7 +39,7 @@ export const CatalogSection = forwardRef<HTMLElement, CatalogSectionProps>(
     }, [categories, activeTab, onTabChange])
 
     // 3. Obtener productos asociados a la categoría seleccionada
-    const { data: productsRes, isLoading: productsLoading } = useActiveProducts(
+    const { data: productsRes, isLoading: productsLoading, isPlaceholderData } = useActiveProducts(
       {
         categoria: activeTab || undefined,
         search: searchQuery || undefined,
@@ -107,7 +107,7 @@ export const CatalogSection = forwardRef<HTMLElement, CatalogSectionProps>(
             className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6 min-h-[350px]"
           >
             <AnimatePresence mode="popLayout">
-              {productsLoading ? (
+              {productsLoading || isPlaceholderData ? (
                 <div className="col-span-full py-20 text-center flex flex-col items-center justify-center gap-3">
                   <div className="h-8 w-8 animate-spin rounded-full border-3 border-[#5c0f1b] border-t-transparent" />
                   <span className="text-[#2a1115]/50 font-bold text-sm">Cargando delicias...</span>

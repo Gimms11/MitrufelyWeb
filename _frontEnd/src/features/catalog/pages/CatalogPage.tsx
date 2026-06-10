@@ -86,6 +86,36 @@ export default function CatalogPage() {
 
   const allProducts = productsRes?.items || []
 
+  const [isTransitioning, setIsTransitioning] = useState(false)
+  const isInitialLoad = useRef(true)
+  const priceInitialized = useRef(false)
+
+  // Disparar loader temporal cuando cambian los filtros, ordenamiento, búsqueda o página
+  useEffect(() => {
+    // Si la query del backend aún está cargando la primera vez, ignorar transiciones locales
+    if (isLoading) {
+      isInitialLoad.current = true
+      return
+    }
+
+    // Esperar a que los filtros de rango de precio se inicialicen con los datos reales
+    if (!priceInitialized.current) {
+      return
+    }
+
+    // Evitar disparar el loader en el montaje inicial cuando los filtros se inicializan
+    if (isInitialLoad.current) {
+      isInitialLoad.current = false
+      return
+    }
+
+    setIsTransitioning(true)
+    const timer = setTimeout(() => {
+      setIsTransitioning(false)
+    }, 300)
+    return () => clearTimeout(timer)
+  }, [filters, sortBy, pagination.page, searchQuery, isLoading])
+
   useEffect(() => {
     const prevBg    = document.body.style.backgroundColor
     const prevColor = document.body.style.color
@@ -167,7 +197,6 @@ export default function CatalogPage() {
     ? Math.max(...allProducts.map((p) => p.precio))
     : 20
 
-  const priceInitialized = useRef(false)
   useEffect(() => {
     if (!priceInitialized.current && allProducts.length > 0) {
       const ceiling = Math.ceil(Math.max(...allProducts.map((p) => p.precio))) || 20
@@ -232,13 +261,34 @@ export default function CatalogPage() {
           {/* Stats dinámicos reales */}
           <div className="flex justify-center gap-8 mt-8">
             {[
-              { valor: `${availableCount}`, label: 'Disponibles' },
-              { valor: `${allProducts.length}`, label: 'Variedades' },
-              { valor: `S/. ${minPrice.toFixed(2)}`, label: 'Desde' },
+              {
+                valor: isLoading ? (
+                  <span className="inline-block h-8 w-12 bg-white/20 rounded animate-pulse my-0.5" />
+                ) : (
+                  `${availableCount}`
+                ),
+                label: 'Disponibles',
+              },
+              {
+                valor: isLoading ? (
+                  <span className="inline-block h-8 w-12 bg-white/20 rounded animate-pulse my-0.5" />
+                ) : (
+                  `${allProducts.length}`
+                ),
+                label: 'Variedades',
+              },
+              {
+                valor: isLoading ? (
+                  <span className="inline-block h-8 w-20 bg-white/20 rounded animate-pulse my-0.5" />
+                ) : (
+                  `S/. ${minPrice.toFixed(2)}`
+                ),
+                label: 'Desde',
+              },
             ].map(({ valor, label }) => (
-              <div key={label} className="text-center">
+              <div key={label} className="text-center flex flex-col items-center">
                 <span
-                  className="block text-2xl font-black text-accent"
+                  className="block text-2xl font-black text-accent h-8 leading-8"
                   style={{ fontFamily: "'Outfit', sans-serif" }}
                 >
                   {valor}
@@ -258,7 +308,11 @@ export default function CatalogPage() {
 
           <aside className="hidden lg:block w-64 flex-shrink-0">
             <div className="sticky top-28">
-              <CatalogSidebar resultCount={filteredProducts.length} maxPrice={maxPrice} />
+              <CatalogSidebar
+                resultCount={filteredProducts.length}
+                maxPrice={maxPrice}
+                isLoading={isLoading}
+              />
             </div>
           </aside>
 
@@ -308,7 +362,7 @@ export default function CatalogPage() {
               <AnimatePresence mode="popLayout">
                 <ProductGrid
                   products={paginatedProducts}
-                  isLoading={isLoading}
+                  isLoading={isLoading || isTransitioning}
                   totalPages={totalPages}
                 />
               </AnimatePresence>

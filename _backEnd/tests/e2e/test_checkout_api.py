@@ -43,7 +43,7 @@ class TestCheckoutAPI:
         auth_headers_client: dict,
     ) -> None:
         response = await client.put(
-            "/ventas/1/pagar",
+            "/ventas/1/entregar",
             headers=auth_headers_client,
         )
         assert response.status_code == 403
@@ -59,7 +59,7 @@ class TestCheckoutAPI:
         auth_headers_admin: dict,
     ) -> None:
         response = await client.put(
-            "/ventas/99999/pagar",
+            "/ventas/99999/entregar",
             headers=auth_headers_admin,
         )
         assert response.status_code == 404

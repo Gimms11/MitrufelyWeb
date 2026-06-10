@@ -4,6 +4,7 @@ import structlog
 from sqlalchemy import select
 from sqlalchemy.exc import DBAPIError
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
 
 from app.core.exceptions import (
     BusinessRuleError,
@@ -18,6 +19,7 @@ from app.infrastructure.database.models.enums import (
     EstadoTransaccionEnum,
     EstadoVentaEnum,
     TipoDocumentoVentaEnum,
+    TipoPagoEnum,
 )
 from app.infrastructure.database.models.ventas import (
     DetalleVenta,
@@ -55,11 +57,12 @@ class VentaService(AbstractService[VentaResponse, VentaRequest, None, int]):
 
         subtotal = Decimal("0.0")
 
+        is_tarjeta = dto.tipo_pago == TipoPagoEnum.TARJETA
         nueva_venta = Venta(
             id_cliente=0,
             origen_venta=dto.origen_venta,
-            estado=EstadoVentaEnum.PENDIENTE,
-            estado_pago=EstadoPagoEnum.PENDIENTE,
+            estado=EstadoVentaEnum.PAGADO if is_tarjeta else EstadoVentaEnum.PENDIENTE,
+            estado_pago=EstadoPagoEnum.PAGADO if is_tarjeta else EstadoPagoEnum.PENDIENTE,
             id_cupon_cliente=dto.id_cupon_cliente,
         )
 
@@ -174,7 +177,7 @@ class VentaService(AbstractService[VentaResponse, VentaRequest, None, int]):
                     MetodoPago(
                         tipo_pago=dto.tipo_pago,
                         monto=subtotal,
-                        estado_transaccion=EstadoTransaccionEnum.PENDIENTE,
+                        estado_transaccion=EstadoTransaccionEnum.APROBADO if is_tarjeta else EstadoTransaccionEnum.PENDIENTE,
                     )
                 )
 
@@ -236,22 +239,36 @@ class VentaService(AbstractService[VentaResponse, VentaRequest, None, int]):
     async def confirmar_pago(self, id_venta: int) -> VentaResponse:
         """
         Marca una venta como ENTREGADA (admin).
-        Solo disponible si el estado actual es PENDIENTE y no ha sido anulada.
+        Solo disponible si el estado actual es PENDIENTE o PAGADO y no ha sido anulada.
         """
         try:
             async with self.session.begin():
-                stmt = select(Venta).where(Venta.id_venta == id_venta)
+                stmt = (
+                    select(Venta)
+                    .options(
+                        selectinload(Venta.detalles).selectinload(DetalleVenta.producto),
+                        selectinload(Venta.paquetes_vendidos),
+                        selectinload(Venta.metodos_pago),
+                        selectinload(Venta.documentos),
+                    )
+                    .where(Venta.id_venta == id_venta)
+                )
                 result = await self.session.execute(stmt)
                 venta = result.scalar_one_or_none()
 
                 if not venta:
                     raise NotFoundError(f"Venta con ID {id_venta} no encontrada.")
-                if venta.estado.value == "ANULADO" or venta.estado.value == "ANULADO":
+                if venta.estado == EstadoVentaEnum.ANULADO:
                     raise BusinessRuleError("No se puede entregar una venta anulada.")
-                if venta.estado.value in ("ENTREGADO", "PAGADO"):
+                if venta.estado == EstadoVentaEnum.ENTREGADO:
                     raise BusinessRuleError("La venta ya está entregada.")
 
                 venta.estado = EstadoVentaEnum.ENTREGADO
+                venta.estado_pago = EstadoPagoEnum.PAGADO
+
+                for mp in venta.metodos_pago:
+                    if mp.estado_transaccion == EstadoTransaccionEnum.PENDIENTE:
+                        mp.estado_transaccion = EstadoTransaccionEnum.APROBADO
 
                 self.session.add(venta)
                 await self.session.flush()
