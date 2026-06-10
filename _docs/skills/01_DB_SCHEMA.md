@@ -48,7 +48,7 @@ Todos estos tipos deben mapearse en Python como `enum.StrEnum` o `enum.Enum` y d
 ### 3.2 Catálogo e Inventario
 | Tabla | Descripción clave |
 |---|---|
-| `categorias` | Catálogo simple. FK en `productos` y `cupones_maestro`. |
+| `categorias` | **Extendida en M13.** `nombre` UNIQUE, `slug` UNIQUE (python-slugify), `estado` (soft delete). FK en `productos` y `cupones_maestro`. |
 | `productos` | `stock_actual` es un **cache operativo**; el Kardex real está en `movimientos_stock`. |
 | `lotes` | Unidad de inventario físico. `cantidad_disponible` se reduce por ventas/vencimiento. `estado_lote_enum`. |
 | `movimientos_stock` | Kardex completo. `tipo_movimiento_stock_enum`. Generado mayoritariamente por triggers. |
@@ -158,6 +158,12 @@ ON datos_fiscales (id_usuario) WHERE es_predeterminado = true;
 -- Correlativo de documento único por tipo+serie
 CREATE UNIQUE INDEX uq_documento_serie_correlativo
 ON documentos (tipo_documento, numero_serie, numero_correlativo);
+
+-- Categorías: nombre único (M13)
+ALTER TABLE categorias ADD CONSTRAINT uq_categorias_nombre UNIQUE (nombre);
+
+-- Categorías: slug único (M13)
+ALTER TABLE categorias ADD CONSTRAINT uq_categorias_slug UNIQUE (slug);
 ```
 
 ---

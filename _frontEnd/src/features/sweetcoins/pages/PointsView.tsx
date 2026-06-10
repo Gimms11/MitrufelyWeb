@@ -9,12 +9,11 @@
  *
  * Integraciones:
  *   - useCriptoTrufaStore para estado global
- *   - useCartStore(selectItemCount) para badge del header
+ *   - useCartItemCount para badge del header
  *   - useAuthStore para datos del usuario en el header
  */
 
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Star,
@@ -35,7 +34,7 @@ import { PublicFooter } from '@/shared/components/layout/PublicFooter'
 
 // ── Stores ─────────────────────────────────────────────────────────────────────
 import { useAuthStore } from '@/app/store'
-import { useCartStore, selectItemCount } from '@/stores/cart.store'
+import { useCartItemCount } from '@/features/cart/hooks/useCart'
 import { useCriptoTrufaStore } from '@/stores/criptotrufa.store'
 
 // ── Componentes propios ────────────────────────────────────────────────────────
@@ -54,11 +53,10 @@ function formatDate(iso: string) {
 // ─── Vista ────────────────────────────────────────────────────────────────────
 
 export default function PointsView() {
-  const navigate = useNavigate()
 
   // Stores
   const { user, isAuthenticated, logout } = useAuthStore()
-  const cartCount       = useCartStore(selectItemCount)
+  const cartCount       = useCartItemCount()
   const saldoActual     = useCriptoTrufaStore((s) => s.saldoActual)
   const cuponesCliente  = useCriptoTrufaStore((s) => s.cuponesCliente)
   const cuponesMaestro  = useCriptoTrufaStore((s) => s.cuponesMaestro)

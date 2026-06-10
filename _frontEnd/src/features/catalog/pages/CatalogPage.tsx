@@ -1,52 +1,69 @@
 /**
  * CatalogPage.tsx — Página pública del Catálogo de Trufas Mitrufely.
  *
- * Estructura idéntica a HomePage.tsx:
- *   - PublicHeader (header borgoña con buscador)
- *   - PublicNav (barra de navegación secundaria)
- *   - Contenido: layout 2 columnas (CatalogSidebar + ProductGrid)
- *   - PublicFooter
- *   - ProductModal (AnimatePresence igual que HomePage)
- *
- * Datos: MOCK_PRODUCTS filtrados en cliente. Cuando el backend esté
- * disponible, se reemplaza el useMemo por un useQuery de React Query.
+ * Conectada al backend real:
+ *   - Productos desde GET /products/
+ *   - Categorías desde GET /categorias/
+ *   - Filtros en cliente: categoría, ingrediente, alérgenos, precio, disponibilidad
+ *   - Búsqueda global: nombre + descripción + ingredientes
+ *   - Ordenamiento: recientes, precio, nombre
+ *   - Navegación por slug: /producto/:slug
  */
-
-import { useMemo, useState, useEffect } from 'react'
+import { useMemo, useState, useEffect, useRef } from 'react'
 import { toast } from 'sonner'
 import { motion, AnimatePresence } from 'framer-motion'
+import { AlertTriangle } from 'lucide-react'
 import { useAuthStore } from '@/app/store'
 
-// ── Layout compartido (igual que HomePage) ─────────────────────────────────────
 import { PublicHeader }  from '@/shared/components/layout/PublicHeader'
 import { PublicNav }     from '@/shared/components/layout/PublicNav'
 import { PublicFooter }  from '@/shared/components/layout/PublicFooter'
 
-// ── Componentes del catálogo ───────────────────────────────────────────────────
 import { CatalogSidebar } from '../components/CatalogSidebar'
 import { ProductGrid }    from '../components/ProductGrid'
 import { ProductModal }   from '../components/ProductModal'
 
-// ── Store y datos ──────────────────────────────────────────────────────────────
-import { MOCK_PRODUCTS }  from '@/mocks/mockProducts'
-import { useCatalogStore, CATEGORY_FILTER_MAP } from '@/stores/catalog.store'
-import { useCartStore, selectItemCount } from '@/stores/cart.store'
+import { useCatalogStore } from '@/stores/catalog.store'
+import { useActiveProducts } from '@/features/products/hooks/useCatalogAdmin'
+import { useCartItemCount } from '@/features/cart/hooks/useCart'
 import type { Producto }  from '@/features/products/types'
 
-// ─── Mapas de keywords para filtros semánticos ─────────────────────────────────
+// ─── Helpers de filtrado ─────────────────────────────────────────────────────
 
-const INGREDIENT_KEYWORDS: Record<string, string[]> = {
-  chocolate_negro:  ['negro', 'amargo', 'oscuro', '70%', '75%', '80%', '85%', '90%'],
-  chocolate_blanco: ['blanco', 'ruby'],
-  frutas:           ['frambuesa', 'maracuyá', 'limón', 'menta', 'jengibre', 'champán', 'matcha'],
-  frutos_secos:     ['almendra', 'pistacho', 'avellana', 'maní'],
+function matchesText(value: string | null | undefined, query: string): boolean {
+  if (!value) return false
+  return value.toLowerCase().includes(query)
 }
 
-const OCASION_KEYWORDS: Record<string, string[]> = {
-  cumpleanos:    ['cumpleaños', 'cumple'],
-  san_valentin:  ['valentín', 'san valentin', 'amor', 'corazón'],
-  navidad:       ['navidad', 'navideña', 'jengibre', 'festiv'],
-  graduacion:    ['graduación', 'graduad'],
+function matchesAllergen(
+  alergenos: string | null | undefined,
+  text: string,
+  mode: 'exclude' | 'only',
+): boolean {
+  if (!text.trim()) return true
+  const hay = (alergenos ?? '').toLowerCase()
+  const q = text.toLowerCase()
+  const contains = hay.includes(q)
+  return mode === 'exclude' ? !contains : contains
+}
+
+function sortProducts(products: Producto[], sortBy: string): Producto[] {
+  const sorted = [...products]
+  switch (sortBy) {
+    case 'price_asc':
+      return sorted.sort((a, b) => a.precio - b.precio)
+    case 'price_desc':
+      return sorted.sort((a, b) => b.precio - a.precio)
+    case 'name_asc':
+      return sorted.sort((a, b) => a.nombre.localeCompare(b.nombre, 'es'))
+    case 'name_desc':
+      return sorted.sort((a, b) => b.nombre.localeCompare(a.nombre, 'es'))
+    case 'recent':
+    default:
+      return sorted.sort((a, b) =>
+        new Date(b.fecha_creacion).getTime() - new Date(a.fecha_creacion).getTime(),
+      )
+  }
 }
 
 // ─── Página ────────────────────────────────────────────────────────────────────
@@ -54,14 +71,21 @@ const OCASION_KEYWORDS: Record<string, string[]> = {
 export default function CatalogPage() {
   const { user, isAuthenticated, logout } = useAuthStore()
 
-  // ── Estado de UI (idéntico patrón al de HomePage) ─────────────────────────
   const [searchQuery,  setSearchQuery]  = useState('')
   const [userMenuOpen, setUserMenuOpen] = useState(false)
+  const cartCount = useCartItemCount()
 
-  // Contador del carrito desde el store global
-  const cartCount = useCartStore(selectItemCount)
+  const { filters, pagination, sortBy, setPriceRange } = useCatalogStore()
 
-  // Forzar fondo claro (igual que HomePage)
+  // Datos desde backend
+  const {
+    data: productsRes,
+    isLoading,
+    isError,
+  } = useActiveProducts({ size: 100 })
+
+  const allProducts = productsRes?.items || []
+
   useEffect(() => {
     const prevBg    = document.body.style.backgroundColor
     const prevColor = document.body.style.color
@@ -73,61 +97,58 @@ export default function CatalogPage() {
     }
   }, [])
 
-  // ── Store del catálogo ────────────────────────────────────────────────────
-  const { filters, pagination, setPage } = useCatalogStore()
-
-  // ── Filtrado en cliente ───────────────────────────────────────────────────
+  // ── Filtrado en cliente ─────────────────────────────────────────────────
   const filteredProducts = useMemo<Producto[]>(() => {
-    let result = [...MOCK_PRODUCTS]
+    let result = [...allProducts]
 
-    // 1. Búsqueda por texto (sincronizada con el buscador del header)
+    // Búsqueda global: nombre + descripción + ingredientes
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase()
       result = result.filter(
         (p) =>
-          p.nombre.toLowerCase().includes(q) ||
-          (p.descripcion ?? '').toLowerCase().includes(q),
+          matchesText(p.nombre, q) ||
+          matchesText(p.descripcion, q) ||
+          matchesText(p.ingredientes, q),
       )
     }
 
-    // 2. Categoría
-    const categoryId = CATEGORY_FILTER_MAP[filters.category]
-    if (categoryId !== null) {
-      result = result.filter((p) => p.id_categoria === categoryId)
+    // Categoría
+    if (filters.categoryId !== null) {
+      result = result.filter((p) => p.id_categoria === filters.categoryId)
     }
 
-    // 3. Solo disponibles
+    // Solo disponibles
     if (filters.soloDisponibles) {
       result = result.filter((p) => p.disponible)
     }
 
-    // 4. Rango de precio
+    // Rango de precio
     result = result.filter(
       (p) => p.precio >= filters.priceRange.min && p.precio <= filters.priceRange.max,
     )
 
-    // 5. Ingrediente
-    if (filters.ingredient !== 'all') {
-      const kws = INGREDIENT_KEYWORDS[filters.ingredient] ?? []
-      result = result.filter((p) => {
-        const hay = `${p.ingredientes ?? ''} ${p.nombre}`.toLowerCase()
-        return kws.some((kw) => hay.includes(kw))
-      })
+    // Ingrediente principal (búsqueda libre)
+    if (filters.ingredientSearch.trim()) {
+      const q = filters.ingredientSearch.toLowerCase()
+      result = result.filter((p) =>
+        matchesText(p.ingredientes, q) || matchesText(p.nombre, q),
+      )
     }
 
-    // 6. Ocasión
-    if (filters.ocasion !== 'all') {
-      const kws = OCASION_KEYWORDS[filters.ocasion] ?? []
-      result = result.filter((p) => {
-        const hay = `${p.nombre} ${p.descripcion ?? ''}`.toLowerCase()
-        return kws.some((kw) => hay.includes(kw))
-      })
+    // Alérgenos
+    if (filters.allergenText.trim()) {
+      result = result.filter((p) =>
+        matchesAllergen(p.alergenos, filters.allergenText, filters.allergenMode),
+      )
     }
+
+    // Ordenamiento
+    result = sortProducts(result, sortBy)
 
     return result
-  }, [filters, searchQuery])
+  }, [allProducts, filters, searchQuery, sortBy])
 
-  // ── Paginación del resultado filtrado ────────────────────────────────────
+  // ── Paginación ──────────────────────────────────────────────────────────
   const { page, size } = pagination
   const totalPages = Math.max(1, Math.ceil(filteredProducts.length / size))
   const safePage   = Math.min(page, totalPages)
@@ -137,7 +158,25 @@ export default function CatalogPage() {
     return filteredProducts.slice(start, start + size)
   }, [filteredProducts, safePage, size])
 
-  // ── Handlers (misma firma que HomePage) ──────────────────────────────────
+  // Stats dinámicos
+  const availableCount = allProducts.filter((p) => p.disponible).length
+  const minPrice = allProducts.length > 0
+    ? Math.min(...allProducts.map((p) => p.precio))
+    : 0
+  const maxPrice = allProducts.length > 0
+    ? Math.max(...allProducts.map((p) => p.precio))
+    : 20
+
+  const priceInitialized = useRef(false)
+  useEffect(() => {
+    if (!priceInitialized.current && allProducts.length > 0) {
+      const ceiling = Math.ceil(Math.max(...allProducts.map((p) => p.precio))) || 20
+      setPriceRange({ min: 0, max: ceiling })
+      priceInitialized.current = true
+    }
+  }, [allProducts, setPriceRange])
+
+  // ── Handlers ────────────────────────────────────────────────────────────
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
     if (!searchQuery.trim()) return
@@ -150,11 +189,10 @@ export default function CatalogPage() {
     toast.success('Sesión cerrada correctamente.')
   }
 
-  // ── Render ────────────────────────────────────────────────────────────────
+  // ── Render ──────────────────────────────────────────────────────────────
   return (
     <div className="min-h-screen bg-[#faf8f5] text-[#2a1115] font-sans antialiased overflow-x-hidden">
 
-      {/* ── Header borgoña (igual que HomePage) ── */}
       <PublicHeader
         cartCount={cartCount}
         favoriteCount={0}
@@ -168,10 +206,9 @@ export default function CatalogPage() {
         onLogout={handleLogout}
       />
 
-      {/* ── Barra de navegación secundaria ── */}
       <PublicNav />
 
-      {/* ── Banner hero del catálogo ── */}
+      {/* Banner hero */}
       <section className="bg-gradient-to-br from-[#5c0f1b] to-[#3d0911] py-14 px-4 text-center">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -192,12 +229,12 @@ export default function CatalogPage() {
             Elaboradas a mano con el mejor cacao peruano y rellenos irresistibles.
           </p>
 
-          {/* Stats rápidos */}
+          {/* Stats dinámicos reales */}
           <div className="flex justify-center gap-8 mt-8">
             {[
-              { valor: `${MOCK_PRODUCTS.filter((p) => p.disponible).length}`, label: 'Disponibles' },
-              { valor: `${MOCK_PRODUCTS.length}`, label: 'Variedades' },
-              { valor: 'S/. 5.50', label: 'Desde' },
+              { valor: `${availableCount}`, label: 'Disponibles' },
+              { valor: `${allProducts.length}`, label: 'Variedades' },
+              { valor: `S/. ${minPrice.toFixed(2)}`, label: 'Desde' },
             ].map(({ valor, label }) => (
               <div key={label} className="text-center">
                 <span
@@ -215,29 +252,33 @@ export default function CatalogPage() {
         </motion.div>
       </section>
 
-      {/* ── Cuerpo: Sidebar + Grid ── */}
+      {/* Cuerpo: Sidebar + Grid */}
       <main className="max-w-7xl mx-auto px-4 md:px-8 py-12">
         <div className="flex gap-10">
 
-          {/* ── Sidebar de filtros (sticky) ── */}
           <aside className="hidden lg:block w-64 flex-shrink-0">
             <div className="sticky top-28">
-              <CatalogSidebar resultCount={filteredProducts.length} />
+              <CatalogSidebar resultCount={filteredProducts.length} maxPrice={maxPrice} />
             </div>
           </aside>
 
-          {/* ── Área de contenido ── */}
           <div className="flex-1 min-w-0">
 
-            {/* Barra de resultados y ordenamiento */}
+            {/* Barra de resultados */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-8">
               <div>
                 <p className="text-[#2a1115]/55 font-medium text-sm">
-                  Mostrando{' '}
-                  <strong className="text-[#2a1115]">{paginatedProducts.length}</strong>
-                  {' '}de{' '}
-                  <strong className="text-[#2a1115]">{filteredProducts.length}</strong>
-                  {' '}trufas
+                  {isLoading ? (
+                    'Cargando productos...'
+                  ) : (
+                    <>
+                      Mostrando{' '}
+                      <strong className="text-[#2a1115]">{paginatedProducts.length}</strong>
+                      {' '}de{' '}
+                      <strong className="text-[#2a1115]">{filteredProducts.length}</strong>
+                      {' '}trufas
+                    </>
+                  )}
                 </p>
               </div>
               {totalPages > 1 && (
@@ -247,22 +288,36 @@ export default function CatalogPage() {
               )}
             </div>
 
-            {/* Grid de productos con framer-motion layout */}
-            <AnimatePresence mode="popLayout">
-              <ProductGrid
-                products={paginatedProducts}
-                isLoading={false}
-                totalPages={totalPages}
-              />
-            </AnimatePresence>
+            {/* Error API */}
+            {isError && (
+              <div className="flex flex-col items-center justify-center py-20 gap-4 text-center">
+                <div className="h-16 w-16 rounded-2xl bg-red-50 border border-red-200 flex items-center justify-center">
+                  <AlertTriangle className="h-8 w-8 text-red-400" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-black text-[#2a1115] mb-1">Error al cargar</h3>
+                  <p className="text-sm text-stone-400 max-w-xs">
+                    No pudimos conectar con el servidor. Intenta recargar la página.
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* Grid de productos */}
+            {!isError && (
+              <AnimatePresence mode="popLayout">
+                <ProductGrid
+                  products={paginatedProducts}
+                  isLoading={isLoading}
+                  totalPages={totalPages}
+                />
+              </AnimatePresence>
+            )}
           </div>
         </div>
       </main>
 
-      {/* ── Footer ── */}
       <PublicFooter />
-
-      {/* ── Modal superpuesto (framer-motion, idéntico al de HomePage) ── */}
       <ProductModal />
     </div>
   )

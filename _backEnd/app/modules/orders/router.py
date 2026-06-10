@@ -86,10 +86,10 @@ async def checkout_from_cart(
 
 
 @router.put(
-    "/{id_venta}/pagar",
+    "/{id_venta}/entregar",
     response_model=VentaResponse,
     status_code=status.HTTP_200_OK,
-    summary="Confirmar pago (admin / académico)",
+    summary="Marcar venta como entregada (admin)",
 )
 async def confirmar_pago(
     id_venta: int,
@@ -111,7 +111,7 @@ async def list_ventas(
     limit: int = Query(20, ge=1, le=100),
     offset: int = Query(0, ge=0),
 ) -> list[VentaResponse]:
-    return await service.get_by_cliente(id_cliente=current_user.user_id, limit=limit, offset=offset)
+    return await service.get_by_usuario(id_usuario=current_user.user_id, limit=limit, offset=offset)
 
 
 @router.get(

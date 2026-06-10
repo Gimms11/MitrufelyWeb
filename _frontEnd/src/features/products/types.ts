@@ -84,6 +84,16 @@ export interface Producto {
   tiempo_vida_dias?: number | undefined
 }
 
+export interface Category {
+  id_categoria: number
+  nombre: string
+  descripcion: string | null
+  estado: boolean
+  slug: string | null
+  fecha_creacion?: string
+  fecha_actualizacion?: string
+}
+
 export interface PaginatedResponse<T> {
   items: T[]
   page: number
@@ -91,4 +101,5 @@ export interface PaginatedResponse<T> {
   total: number
   pages: number
 }
+
 

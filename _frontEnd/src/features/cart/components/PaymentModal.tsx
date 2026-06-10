@@ -1,138 +1,156 @@
 /**
- * PaymentModal.tsx — Modal de checkout con react-hook-form + Zod.
+ * PaymentModal.tsx — Modal de checkout multi-step.
  *
- * Fases:
- *   1. Formulario (datos personales, envío, método de pago)
- *   2. Loading simulado (1.5 s)
- *   3. Éxito: confetti + mensaje + limpieza del carrito
+ * Pasos:
+ *   0. Resumen del carrito
+ *   1. Datos fiscales (consulta/crea DNI o RUC)
+ *   2. Datos de envío (dirección, referencia, teléfono)
+ *   3. Pasarela de pago simulada (tarjeta obligatoria)
+ *   4. Procesando → Éxito
  *
- * El modal usa el mismo patrón de overlay/spring que ProductModal.tsx.
+ * Datos fiscales y envío se persisten en BD para compras futuras.
  */
-
 import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, CheckCircle, Loader2, CreditCard, Smartphone, Banknote } from 'lucide-react'
+import {
+  X, CheckCircle, Loader2, ArrowRight, ArrowLeft,
+  CreditCard, MapPin, ShieldCheck,
+} from 'lucide-react'
 import confetti from 'canvas-confetti'
 import { useNavigate } from 'react-router'
-
-import { checkoutSchema, type CheckoutFormData } from '../schemas/checkout.schema'
+import { useCartStore } from '@/stores/cart.store'
+import { useCheckoutCart } from '../hooks/useCart'
+import { useDatosFiscales, useUpsertDatosFiscales, useUpdateProfile } from '@/features/auth/hooks/useProfile'
 import {
-  useCartStore,
-  selectSubtotal,
-  selectTotal,
-} from '@/stores/cart.store'
+  fiscalSchema, type FiscalFormData,
+  tarjetaSchema, type TarjetaFormData,
+} from '../schemas/checkout.schema'
 
 // ─── Props ────────────────────────────────────────────────────────────────────
 
 interface PaymentModalProps {
   isOpen: boolean
   onClose: () => void
+  subtotal: number
+  total: number
 }
 
-// ─── Helpers UI ───────────────────────────────────────────────────────────────
+type Step = 0 | 1 | 2 | 3 | 4 | 5
 
-type Phase = 'form' | 'loading' | 'success'
+const STEP_LABELS = ['Resumen', 'Fiscales', 'Envío', 'Pago', '', '']
 
-const METODOS = [
-  { value: 'tarjeta',    label: 'Pago con tarjeta',       icon: CreditCard },
-  { value: 'billetera',  label: 'Billetera Digital',       icon: Smartphone },
-  { value: 'efectivo',   label: 'Efectivo – Contra entrega', icon: Banknote },
-] as const
+// ─── Helpers ──────────────────────────────────────────────────────────────────
 
-// Campo reutilizable
-function Field({
-  label,
-  error,
-  required = false,
-  children,
-}: {
-  label: string
-  error?: string | undefined
-  required?: boolean | undefined
-  children: React.ReactNode
+function formatCardInput(value: string): string {
+  const cleaned = value.replace(/\D/g, '').slice(0, 16)
+  return cleaned.replace(/(\d{4})(?=\d)/g, '$1 ')
+}
+
+function detectCardBrand(number: string): { name: string; color: string } | null {
+  const cleaned = number.replace(/\s/g, '')
+  if (/^4/.test(cleaned)) return { name: 'VISA', color: '#1a1f71' }
+  if (/^5[1-5]/.test(cleaned)) return { name: 'Mastercard', color: '#eb001b' }
+  if (/^3[47]/.test(cleaned)) return { name: 'Amex', color: '#2e77bb' }
+  if (cleaned.length >= 4) return { name: '••••', color: '#5c0f1b' }
+  return null
+}
+
+// ─── Sub-componentes de formulario ────────────────────────────────────────────
+
+function Field({ label, error, required = false, children }: {
+  label: string; error?: string | undefined; required?: boolean; children: React.ReactNode
 }) {
   return (
     <div className="flex flex-col gap-1">
       <label className="text-xs font-black text-[#2a1115]/70 uppercase tracking-wide">
-        {label}
-        {required && <span className="text-[#5c0f1b] ml-0.5">*</span>}
+        {label}{required && <span className="text-[#5c0f1b] ml-0.5">*</span>}
       </label>
       {children}
-      {error && (
-        <p className="text-[10px] font-bold text-red-500">{error}</p>
-      )}
+      {error && <p className="text-[10px] font-bold text-red-500">{error}</p>}
     </div>
   )
 }
 
-// Input estándar
-function Input({
-  id,
-  placeholder,
-  error,
-  ...rest
-}: React.InputHTMLAttributes<HTMLInputElement> & {
-  id: string
-  placeholder?: string
-  error?: boolean
-}) {
+function Input({ id, error, ...rest }: React.InputHTMLAttributes<HTMLInputElement> & { id: string; error?: boolean }) {
   return (
     <input
       id={id}
-      placeholder={placeholder}
       {...rest}
       className={`w-full rounded-xl border px-3 py-2.5 text-sm font-semibold text-[#2a1115] placeholder:text-[#2a1115]/30 focus:outline-none focus:ring-2 focus:ring-[#ff7a45]/40 transition-all ${
-        error
-          ? 'border-red-400 bg-red-50'
-          : 'border-[#5c0f1b]/20 bg-white hover:border-[#5c0f1b]/40'
+        error ? 'border-red-400 bg-red-50' : 'border-[#5c0f1b]/20 bg-white hover:border-[#5c0f1b]/40'
       }`}
     />
   )
 }
 
-// ─── Componente ───────────────────────────────────────────────────────────────
+// ─── Componente Principal ─────────────────────────────────────────────────────
 
-export function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
-  const navigate   = useNavigate()
-  const [phase, setPhase] = useState<Phase>('form')
-  const clearCart  = useCartStore((s) => s.clearCart)
-  const cartState  = useCartStore()
-  const subtotal   = selectSubtotal(cartState)
-  const total      = selectTotal(cartState)
-  const discount   = cartState.discount
-  const canvasRef  = useRef<HTMLCanvasElement | null>(null)
+export function PaymentModal({ isOpen, onClose, subtotal, total }: PaymentModalProps) {
+  const navigate = useNavigate()
+  const [step, setStep] = useState<Step>(0)
+  const [ventaId, setVentaId] = useState<number | null>(null)
+  const [editFiscal, setEditFiscal] = useState(false)
+  const [showCardFront, setShowCardFront] = useState(true)
+
+  const { discount, coupon, clearDiscount } = useCartStore()
+  const checkout = useCheckoutCart()
+  const { data: fiscalData, isLoading: fiscalLoading } = useDatosFiscales()
+  const upsertFiscal = useUpsertDatosFiscales()
+  const updateProfile = useUpdateProfile()
+
+  const canvasRef = useRef<HTMLCanvasElement | null>(null)
   const confettiRef = useRef<confetti.CreateTypes | null>(null)
 
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-    reset,
-  } = useForm<CheckoutFormData>({
-    resolver: zodResolver(checkoutSchema),
-    defaultValues: { metodoPago: 'tarjeta', tipoDocumento: 'DNI' },
+  // ── Forms ──────────────────────────────────────────────────────────────────
+  const fiscalForm = useForm<FiscalFormData>({
+    resolver: zodResolver(fiscalSchema),
+    defaultValues: { tipo_documento: 'DNI', numero_documento: '', razon_social: '', direccion_fiscal: '' },
   })
 
-  const tipoDoc  = watch('tipoDocumento')
-  const metodoPago = watch('metodoPago')
+  const tarjetaForm = useForm<TarjetaFormData>({
+    resolver: zodResolver(tarjetaSchema),
+    defaultValues: { numero_tarjeta: '', expiracion: '', cvv: '', titular: '' },
+  })
 
-  // Resetear form al abrir
+  // ── Envío (sin Zod, campos simples) ────────────────────────────────────────
+  const [direccion, setDireccion] = useState('')
+  const [referencia, setReferencia] = useState('')
+  const [telefono, setTelefono] = useState('')
+
+  // ── Reset al abrir ─────────────────────────────────────────────────────────
   useEffect(() => {
     if (isOpen) {
-      reset()
-      setPhase('form')
+      setStep(0)
+      setVentaId(null)
+      setEditFiscal(false)
+      fiscalForm.reset()
+      tarjetaForm.reset()
+      setDireccion('')
+      setReferencia('')
+      setTelefono('')
     }
-  }, [isOpen, reset])
+  }, [isOpen])
 
-  // Bloquear scroll + Escape
+  // ── Pre-llenar fiscal si ya existe ─────────────────────────────────────────
+  useEffect(() => {
+    if (fiscalData && step === 1 && !editFiscal) {
+      fiscalForm.reset({
+        tipo_documento: fiscalData.tipo_documento,
+        numero_documento: fiscalData.numero_documento,
+        razon_social: fiscalData.razon_social || '',
+        direccion_fiscal: fiscalData.direccion_fiscal || '',
+      })
+    }
+  }, [fiscalData, step, editFiscal])
+
+  // ── Escape / scroll lock ───────────────────────────────────────────────────
   useEffect(() => {
     if (!isOpen) return
     const handleKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && phase !== 'loading') onClose()
+      if (e.key === 'Escape' && step !== 4) onClose()
     }
     document.addEventListener('keydown', handleKey)
     document.body.style.overflow = 'hidden'
@@ -140,71 +158,90 @@ export function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
       document.removeEventListener('keydown', handleKey)
       document.body.style.overflow = ''
     }
-  }, [isOpen, phase, onClose])
+  }, [isOpen, step, onClose])
 
-  // ── Confetti ──────────────────────────────────────────────────────────────
-  // Inicializar confetti sobre el canvas del portal cuando esté disponible
+  // ── Confetti ───────────────────────────────────────────────────────────────
   useEffect(() => {
     const canvas = canvasRef.current
     if (!canvas) return
-    // Ajustar el canvas al tamaño real de la pantalla
-    canvas.width  = window.innerWidth
+    canvas.width = window.innerWidth
     canvas.height = window.innerHeight
-    confettiRef.current = confetti.create(canvas, {
-      resize: true,
-      useWorker: false,
-    })
-    return () => {
-      confettiRef.current?.reset()
-    }
+    confettiRef.current = confetti.create(canvas, { resize: true, useWorker: false })
+    return () => { confettiRef.current?.reset() }
   }, [isOpen])
 
   const fireConfetti = () => {
     const shoot = confettiRef.current ?? confetti
-    const fire = (particleRatio: number, opts: confetti.Options) => {
-      shoot({
-        origin: { y: 0.6 },
-        ...opts,
-        particleCount: Math.floor(200 * particleRatio),
-      })
+    shoot({ origin: { y: 0.6 }, spread: 26, startVelocity: 55, particleCount: 50, colors: ['#5c0f1b', '#ff7a45', '#fff'] })
+    shoot({ origin: { y: 0.6 }, spread: 60, particleCount: 40, colors: ['#ff7a45', '#5c0f1b'] })
+    shoot({ origin: { y: 0.6 }, spread: 100, particleCount: 70, decay: 0.91, scalar: 0.8, colors: ['#fff', '#5c0f1b'] })
+  }
+
+  // ── Handlers ───────────────────────────────────────────────────────────────
+  const handleFiscalSubmit = fiscalForm.handleSubmit(async (data) => {
+    await upsertFiscal.mutateAsync({
+      tipo_documento: data.tipo_documento,
+      numero_documento: data.numero_documento,
+      razon_social: data.razon_social || null,
+      direccion_fiscal: data.direccion_fiscal || null,
+    })
+    setEditFiscal(false)
+    setStep(2)
+  })
+
+  const handleEnvioSubmit = async () => {
+    await updateProfile.mutateAsync({
+      telefono: telefono || null,
+      direccion: direccion || null,
+      referencia: referencia || null,
+    })
+    setStep(3)
+  }
+
+  const handlePagoSubmit = tarjetaForm.handleSubmit(async () => {
+    setStep(4)
+    try {
+      const result = await checkout.mutateAsync()
+      setVentaId(result.id_venta)
+      clearDiscount()
+      setStep(5)
+      setTimeout(() => fireConfetti(), 100)
+    } catch {
+      setStep(3)
     }
-    fire(0.25, { spread: 26, startVelocity: 55, colors: ['#5c0f1b', '#ff7a45', '#fff'] })
-    fire(0.2,  { spread: 60, colors: ['#ff7a45', '#5c0f1b'] })
-    fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8, colors: ['#fff', '#5c0f1b'] })
-    fire(0.1,  { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 })
-    fire(0.1,  { spread: 120, startVelocity: 45, colors: ['#ff7a45'] })
-  }
+  })
 
-  // ── Submit ────────────────────────────────────────────────────────────────
-  const onSubmit = async (_data: CheckoutFormData) => {
-    setPhase('loading')
-    await new Promise((res) => setTimeout(res, 1600))
-    clearCart()
-    setPhase('success')
-    setTimeout(() => fireConfetti(), 100)
-  }
-
-  // ── Cerrar (success) ──────────────────────────────────────────────────────
-  const handleSuccessClose = () => {
+  const handleGoToOrder = () => {
     onClose()
-    navigate('/catalogo')
+    if (ventaId) navigate(`/mi-cuenta/pedidos/${ventaId}`)
   }
+
+  const cardBrand = detectCardBrand(tarjetaForm.watch('numero_tarjeta'))
+
+  const renderStepIndicator = () => (
+    <div className="flex items-center justify-center gap-1.5 px-6 pt-5 pb-4 border-b border-[#5c0f1b]/8">
+      {([0, 1, 2, 3] as Step[]).map((s) => (
+        <div key={s} className="flex items-center gap-1.5">
+          <div className={`h-7 w-7 rounded-full flex items-center justify-center text-xs font-black transition-all ${
+            step === s ? 'bg-[#5c0f1b] text-white shadow-md' :
+            step > s ? 'bg-emerald-500 text-white' :
+            'bg-stone-100 text-stone-400'
+          }`}>
+            {step > s ? '✓' : s + 1}
+          </div>
+          <span className={`text-[10px] font-bold hidden sm:inline ${step === s ? 'text-[#5c0f1b]' : 'text-stone-400'}`}>
+            {STEP_LABELS[s]}
+          </span>
+          {s < 3 && <div className={`w-6 h-0.5 ${step > s ? 'bg-emerald-400' : 'bg-stone-200'}`} />}
+        </div>
+      ))}
+    </div>
+  )
 
   return (
     <>
-    {/* ── Canvas global del confetti — portal sobre document.body ── */}
     {typeof document !== 'undefined' && createPortal(
-      <canvas
-        ref={canvasRef}
-        style={{
-          position: 'fixed',
-          inset: 0,
-          width: '100vw',
-          height: '100vh',
-          pointerEvents: 'none',
-          zIndex: 99999,
-        }}
-      />,
+      <canvas ref={canvasRef} style={{ position: 'fixed', inset: 0, width: '100vw', height: '100vh', pointerEvents: 'none', zIndex: 99999 }} />,
       document.body,
     )}
     <AnimatePresence>
@@ -215,7 +252,7 @@ export function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
           exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
           className="fixed inset-0 z-[200] bg-black/55 backdrop-blur-sm flex items-center justify-center p-4"
-          onClick={() => phase !== 'loading' && onClose()}
+          onClick={() => step !== 4 && onClose()}
         >
           <motion.div
             initial={{ scale: 0.92, y: 30, opacity: 0 }}
@@ -224,47 +261,275 @@ export function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
             transition={{ type: 'spring', damping: 26, stiffness: 240 }}
             className="bg-white w-full max-w-lg rounded-[28px] overflow-hidden shadow-2xl relative border border-[#5c0f1b]/10 max-h-[92vh] flex flex-col"
             onClick={(e) => e.stopPropagation()}
-            role="dialog"
-            aria-modal="true"
-            aria-label="Modal de pago"
+            role="dialog" aria-modal="true"
           >
-
-
-            {/* ── Header del modal ── */}
+            {/* Header */}
             <div className="flex items-center justify-between px-6 pt-5 pb-4 border-b border-[#5c0f1b]/8 shrink-0">
-              <h2
-                className="font-black text-[#2a1115] text-lg"
-                style={{ fontFamily: "'Outfit', sans-serif" }}
-              >
-                {phase === 'success' ? '¡Pago completado!' : 'Finalizar compra'}
+              <h2 className="font-black text-[#2a1115] text-lg" style={{ fontFamily: "'Outfit', sans-serif" }}>
+                {step === 5 ? '¡Pedido confirmado!' : 'Finalizar compra'}
               </h2>
-              {phase !== 'loading' && (
-                <button
-                  id="payment-modal-close"
-                  onClick={onClose}
-                  aria-label="Cerrar modal de pago"
-                  className="p-2 rounded-full border border-[#5c0f1b]/10 text-[#5c0f1b] hover:text-[#ff7a45] hover:scale-110 active:scale-90 transition-all cursor-pointer"
-                >
+              {step !== 4 && (
+                <button onClick={onClose} aria-label="Cerrar" className="p-2 rounded-full border border-[#5c0f1b]/10 text-[#5c0f1b] hover:text-[#ff7a45] hover:scale-110 active:scale-90 transition-all cursor-pointer">
                   <X className="h-4 w-4" />
                 </button>
               )}
             </div>
 
-            {/* ══════════════════════════════════════════════════════════════
-                FASE: LOADING
-            ══════════════════════════════════════════════════════════════ */}
-            {phase === 'loading' && (
-              <div className="flex-1 flex flex-col items-center justify-center py-16 gap-6">
+            {/* Step indicator */}
+            {step <= 3 && renderStepIndicator()}
+
+            {/* ═══════════════ STEP 0: Resumen ═══════════════ */}
+            {step === 0 && (
+              <div className="px-6 py-5 space-y-5 flex-1 overflow-y-auto">
+                <div className="bg-[#faf8f5] rounded-2xl p-5 border border-[#5c0f1b]/8 space-y-2">
+                  <div className="flex justify-between text-sm font-semibold text-[#2a1115]/70">
+                    <span>Subtotal</span>
+                    <span>S/ {subtotal.toFixed(2)}</span>
+                  </div>
+                  {discount > 0 && (
+                    <div className="flex justify-between text-sm font-semibold text-emerald-600">
+                      <span>Descuento {coupon && `(${coupon})`}</span>
+                      <span>− S/ {discount.toFixed(2)}</span>
+                    </div>
+                  )}
+                  <div className="flex justify-between text-lg font-black text-[#5c0f1b] border-t border-[#5c0f1b]/10 pt-2 mt-2">
+                    <span>Total</span>
+                    <span>S/ {total.toFixed(2)}</span>
+                  </div>
+                </div>
+
+                <p className="text-xs text-[#2a1115]/50 font-medium text-center leading-relaxed">
+                  Necesitaremos tus datos fiscales y de envío para procesar el pedido.
+                  Toda la información se guarda para tus próximas compras.
+                </p>
+
+                <button
+                  onClick={() => setStep(1)}
+                  className="w-full py-4 rounded-full bg-[#5c0f1b] text-white font-black text-base hover:bg-[#7a1525] transition-all active:scale-95 shadow-lg cursor-pointer border-none flex items-center justify-center gap-2"
+                >
+                  Continuar <ArrowRight className="h-4 w-4" />
+                </button>
+              </div>
+            )}
+
+            {/* ═══════════════ STEP 1: Datos Fiscales ═══════════════ */}
+            {step === 1 && (
+              <form onSubmit={handleFiscalSubmit} className="overflow-y-auto flex-1 px-6 py-5 space-y-5">
+                <div className="flex items-center gap-2 text-sm font-black text-[#5c0f1b]">
+                  <ShieldCheck className="h-4 w-4" />
+                  Datos Fiscales
+                </div>
+
+                {fiscalLoading ? (
+                  <div className="flex justify-center py-6">
+                    <Loader2 className="h-6 w-6 animate-spin text-[#5c0f1b]" />
+                  </div>
+                ) : fiscalData && !editFiscal ? (
+                  <div className="bg-emerald-50 rounded-2xl p-5 border border-emerald-200 space-y-3">
+                    <div className="flex justify-between">
+                      <span className="text-xs font-bold text-stone-500 uppercase">Documento</span>
+                      <span className="text-sm font-black text-[#2a1115]">{fiscalData.tipo_documento}: {fiscalData.numero_documento}</span>
+                    </div>
+                    {fiscalData.razon_social && (
+                      <div className="flex justify-between">
+                        <span className="text-xs font-bold text-stone-500 uppercase">Razón Social</span>
+                        <span className="text-sm font-black text-[#2a1115]">{fiscalData.razon_social}</span>
+                      </div>
+                    )}
+                    <div className="flex justify-between">
+                      <span className="text-xs font-bold text-stone-500 uppercase">Dirección Fiscal</span>
+                      <span className="text-sm font-black text-[#2a1115]">{fiscalData.direccion_fiscal || '—'}</span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setEditFiscal(true)}
+                      className="text-xs font-bold text-[#5c0f1b] underline hover:text-[#ff7a45] transition-colors cursor-pointer"
+                    >
+                      Editar datos fiscales
+                    </button>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    <Field label="Tipo de Documento" error={fiscalForm.formState.errors.tipo_documento?.message} required>
+                      <select
+                        {...fiscalForm.register('tipo_documento')}
+                        className="w-full rounded-xl border border-[#5c0f1b]/20 px-3 py-2.5 text-sm font-semibold text-[#2a1115] focus:outline-none focus:ring-2 focus:ring-[#ff7a45]/40 transition-all cursor-pointer bg-white"
+                      >
+                        <option value="DNI">DNI</option>
+                        <option value="RUC">RUC</option>
+                      </select>
+                    </Field>
+                    <Field label="Número de Documento" error={fiscalForm.formState.errors.numero_documento?.message} required>
+                      <Input id="fiscal-numero" placeholder={fiscalForm.watch('tipo_documento') === 'RUC' ? '11 dígitos' : '8 dígitos'} error={!!fiscalForm.formState.errors.numero_documento} {...fiscalForm.register('numero_documento')} />
+                    </Field>
+                    {fiscalForm.watch('tipo_documento') === 'RUC' && (
+                      <Field label="Razón Social" error={fiscalForm.formState.errors.razon_social?.message} required>
+                        <Input id="fiscal-razon" placeholder="Razón Social" error={!!fiscalForm.formState.errors.razon_social} {...fiscalForm.register('razon_social')} />
+                      </Field>
+                    )}
+                    <Field label="Dirección Fiscal" error={fiscalForm.formState.errors.direccion_fiscal?.message} required>
+                      <Input id="fiscal-direccion" placeholder="Av. / Jr. / Calle" error={!!fiscalForm.formState.errors.direccion_fiscal} {...fiscalForm.register('direccion_fiscal')} />
+                    </Field>
+                  </div>
+                )}
+
+                <div className="flex gap-3 pt-2">
+                  <button type="button" onClick={() => setStep(0)} className="flex-1 py-3 rounded-full border-2 border-[#5c0f1b]/20 text-[#5c0f1b] font-black text-sm hover:border-[#5c0f1b]/40 transition-all cursor-pointer flex items-center justify-center gap-2">
+                    <ArrowLeft className="h-4 w-4" /> Volver
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={upsertFiscal.isPending}
+                    className="flex-1 py-3 rounded-full bg-[#5c0f1b] text-white font-black text-sm hover:bg-[#7a1525] transition-all active:scale-95 shadow-lg cursor-pointer border-none flex items-center justify-center gap-2"
+                  >
+                    {upsertFiscal.isPending ? 'Guardando...' : 'Guardar y continuar'} <ArrowRight className="h-4 w-4" />
+                  </button>
+                </div>
+              </form>
+            )}
+
+            {/* ═══════════════ STEP 2: Envío ═══════════════ */}
+            {step === 2 && (
+              <div className="overflow-y-auto flex-1 px-6 py-5 space-y-5">
+                <div className="flex items-center gap-2 text-sm font-black text-[#5c0f1b]">
+                  <MapPin className="h-4 w-4" />
+                  Datos de Envío
+                </div>
+
+                <div className="space-y-3">
+                  <Field label="Dirección" required>
+                    <Input id="envio-direccion" placeholder="Av. / Jr. / Calle" value={direccion} onChange={(e) => setDireccion(e.target.value)} />
+                  </Field>
+                  <Field label="Referencia" required>
+                    <Input id="envio-ref" placeholder="Ej. Al costado del parque" value={referencia} onChange={(e) => setReferencia(e.target.value)} />
+                  </Field>
+                  <Field label="Teléfono" required>
+                    <Input id="envio-tel" type="tel" placeholder="+51 999 999 999" value={telefono} onChange={(e) => setTelefono(e.target.value)} />
+                  </Field>
+                </div>
+
+                <div className="flex gap-3 pt-2">
+                  <button type="button" onClick={() => setStep(1)} className="flex-1 py-3 rounded-full border-2 border-[#5c0f1b]/20 text-[#5c0f1b] font-black text-sm hover:border-[#5c0f1b]/40 transition-all cursor-pointer flex items-center justify-center gap-2">
+                    <ArrowLeft className="h-4 w-4" /> Volver
+                  </button>
+                  <button
+                    onClick={handleEnvioSubmit}
+                    disabled={updateProfile.isPending}
+                    className="flex-1 py-3 rounded-full bg-[#5c0f1b] text-white font-black text-sm hover:bg-[#7a1525] transition-all active:scale-95 shadow-lg cursor-pointer border-none flex items-center justify-center gap-2"
+                  >
+                    {updateProfile.isPending ? 'Guardando...' : 'Guardar y continuar'} <ArrowRight className="h-4 w-4" />
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* ═══════════════ STEP 3: Tarjeta ═══════════════ */}
+            {step === 3 && (
+              <form onSubmit={handlePagoSubmit} className="overflow-y-auto flex-1 px-6 py-5 space-y-5">
+                <div className="flex items-center gap-2 text-sm font-black text-[#5c0f1b]">
+                  <CreditCard className="h-4 w-4" />
+                  Información de Pago
+                </div>
+
+                {/* Tarjeta visual */}
+                <div
+                  className="rounded-2xl p-5 text-white min-h-[180px] flex flex-col justify-between shadow-lg transition-all duration-300"
+                  style={{ background: `linear-gradient(135deg, ${cardBrand?.color || '#5c0f1b'}, ${cardBrand ? '#000' : '#3d0911'})` }}
+                >
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <p className="text-[10px] font-bold uppercase opacity-70">Mitrufely Bank</p>
+                      <p className="text-lg font-mono font-black tracking-widest mt-1">
+                        {showCardFront ? (tarjetaForm.watch('numero_tarjeta') || '•••• •••• •••• ••••') : '•••• •••• •••• ••••'}
+                      </p>
+                    </div>
+                    <span className="text-sm font-black">{cardBrand?.name || ''}</span>
+                  </div>
+                  <div className="flex justify-between items-end">
+                    <div>
+                      <p className="text-[9px] uppercase opacity-60 mb-0.5">Titular</p>
+                      <p className="text-sm font-bold">{tarjetaForm.watch('titular') || 'NOMBRE DEL TITULAR'}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-[9px] uppercase opacity-60 mb-0.5">Expira</p>
+                      <p className="text-xs font-mono font-bold">{tarjetaForm.watch('expiracion') || 'MM/AA'}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <Field label="Número de Tarjeta" error={tarjetaForm.formState.errors.numero_tarjeta?.message} required>
+                    <div className="relative">
+                      <Input
+                        id="card-number"
+                        placeholder="0000 0000 0000 0000"
+                        maxLength={19}
+                        error={!!tarjetaForm.formState.errors.numero_tarjeta}
+                        value={formatCardInput(tarjetaForm.watch('numero_tarjeta'))}
+                        onChange={(e) => tarjetaForm.setValue('numero_tarjeta', e.target.value.replace(/\s/g, ''), { shouldValidate: true })}
+                      />
+                    </div>
+                  </Field>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <Field label="Expiración" error={tarjetaForm.formState.errors.expiracion?.message} required>
+                      <Input id="card-exp" placeholder="MM/AA" maxLength={5} error={!!tarjetaForm.formState.errors.expiracion}
+                        value={tarjetaForm.watch('expiracion')}
+                        onChange={(e) => {
+                          let val = e.target.value.replace(/\D/g, '').slice(0, 4)
+                          if (val.length >= 3) val = val.slice(0, 2) + '/' + val.slice(2)
+                          tarjetaForm.setValue('expiracion', val, { shouldValidate: true })
+                        }}
+                      />
+                    </Field>
+                    <Field label="CVV" error={tarjetaForm.formState.errors.cvv?.message} required>
+                      <Input id="card-cvv" type="password" placeholder="•••" maxLength={3}
+                        error={!!tarjetaForm.formState.errors.cvv}
+                        {...tarjetaForm.register('cvv')}
+                        onFocus={() => setShowCardFront(false)}
+                        onBlur={() => setShowCardFront(true)}
+                      />
+                    </Field>
+                  </div>
+
+                  <Field label="Titular de la Tarjeta" error={tarjetaForm.formState.errors.titular?.message} required>
+                    <Input id="card-holder" placeholder="Como aparece en la tarjeta" error={!!tarjetaForm.formState.errors.titular} {...tarjetaForm.register('titular')} />
+                  </Field>
+                </div>
+
+                <div className="bg-[#faf8f5] rounded-2xl p-4 border border-[#5c0f1b]/8">
+                  <div className="flex justify-between text-base font-black text-[#5c0f1b]">
+                    <span>Total a pagar</span>
+                    <span>S/ {total.toFixed(2)}</span>
+                  </div>
+                </div>
+
+                <div className="flex gap-3 pt-2">
+                  <button type="button" onClick={() => setStep(2)} className="flex-1 py-3 rounded-full border-2 border-[#5c0f1b]/20 text-[#5c0f1b] font-black text-sm hover:border-[#5c0f1b]/40 transition-all cursor-pointer flex items-center justify-center gap-2">
+                    <ArrowLeft className="h-4 w-4" /> Volver
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={checkout.isPending}
+                    className="flex-1 py-3 rounded-full bg-[#5c0f1b] text-white font-black text-sm hover:bg-[#7a1525] transition-all active:scale-95 shadow-lg cursor-pointer border-none flex items-center justify-center gap-2"
+                  >
+                    <CreditCard className="h-4 w-4" />
+                    {checkout.isPending ? '...' : `Pagar S/ ${total.toFixed(2)}`}
+                  </button>
+                </div>
+              </form>
+            )}
+
+            {/* ═══════════════ STEP 4: Loading ═══════════════ */}
+            {step === 4 && (
+              <div className="flex flex-col items-center justify-center py-16 gap-6">
                 <div className="relative">
                   <div className="h-20 w-20 rounded-full border-4 border-[#5c0f1b]/10" />
                   <Loader2 className="h-20 w-20 text-[#5c0f1b] animate-spin absolute inset-0" />
                 </div>
                 <div className="text-center">
-                  <p
-                    className="font-black text-[#2a1115] text-lg"
-                    style={{ fontFamily: "'Outfit', sans-serif" }}
-                  >
-                    Procesando tu pago…
+                  <p className="font-black text-[#2a1115] text-lg" style={{ fontFamily: "'Outfit', sans-serif" }}>
+                    Procesando tu pedido…
                   </p>
                   <p className="text-sm text-[#2a1115]/50 font-medium mt-1">
                     Por favor no cierres esta ventana
@@ -273,262 +538,29 @@ export function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
               </div>
             )}
 
-            {/* ══════════════════════════════════════════════════════════════
-                FASE: SUCCESS
-            ══════════════════════════════════════════════════════════════ */}
-            {phase === 'success' && (
-              <div className="flex-1 flex flex-col items-center justify-center py-14 gap-6 px-8 text-center">
-                <motion.div
-                  initial={{ scale: 0, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  transition={{ type: 'spring', damping: 15, stiffness: 200, delay: 0.1 }}
-                >
+            {/* ═══════════════ STEP 5: Success ═══════════════ */}
+            {step === 5 && (
+              <div className="flex flex-col items-center justify-center py-14 gap-6 px-8 text-center">
+                <motion.div initial={{ scale: 0, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ type: 'spring', damping: 15, stiffness: 200, delay: 0.1 }}>
                   <CheckCircle className="h-24 w-24 text-emerald-500" strokeWidth={1.5} />
                 </motion.div>
-
-                <motion.div
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.3 }}
-                >
-                  <h3
-                    className="font-black text-[#2a1115] text-2xl mb-2"
-                    style={{ fontFamily: "'Outfit', sans-serif" }}
-                  >
-                    ¡Compra exitosa! 🎉
+                <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
+                  <h3 className="font-black text-[#2a1115] text-2xl mb-2" style={{ fontFamily: "'Outfit', sans-serif" }}>
+                    ¡Pedido registrado! 🎉
                   </h3>
                   <p className="text-sm text-[#2a1115]/60 font-medium max-w-xs mx-auto">
-                    Tu pedido ha sido registrado. Te enviaremos la confirmación
-                    en breve. ¡Gracias por confiar en Mitrufely!
+                    Tu pedido <strong>#{ventaId}</strong> está en estado PENDIENTE. Te contactaremos para coordinar el pago y envío.
                   </p>
                 </motion.div>
-
-                <motion.div
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.45 }}
-                  className="flex gap-3 mt-2 w-full"
-                >
-                  <button
-                    id="payment-success-home"
-                    onClick={() => { onClose(); navigate('/') }}
-                    className="flex-1 py-3 rounded-full border-2 border-[#5c0f1b]/20 text-[#5c0f1b] font-black text-sm hover:border-[#5c0f1b]/40 transition-all cursor-pointer"
-                  >
+                <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45 }} className="flex gap-3 mt-2 w-full">
+                  <button onClick={() => { onClose(); navigate('/') }} className="flex-1 py-3 rounded-full border-2 border-[#5c0f1b]/20 text-[#5c0f1b] font-black text-sm hover:border-[#5c0f1b]/40 transition-all cursor-pointer">
                     Ir al inicio
                   </button>
-                  <button
-                    id="payment-success-catalog"
-                    onClick={handleSuccessClose}
-                    className="flex-1 py-3 rounded-full bg-[#5c0f1b] text-white font-black text-sm hover:bg-[#7a1525] transition-all active:scale-95 cursor-pointer border-none"
-                  >
-                    Ver catálogo
+                  <button onClick={handleGoToOrder} className="flex-1 py-3 rounded-full bg-[#5c0f1b] text-white font-black text-sm hover:bg-[#7a1525] transition-all active:scale-95 cursor-pointer border-none flex items-center justify-center gap-2">
+                    Ver pedido <ArrowRight className="h-4 w-4" />
                   </button>
                 </motion.div>
               </div>
-            )}
-
-            {/* ══════════════════════════════════════════════════════════════
-                FASE: FORM
-            ══════════════════════════════════════════════════════════════ */}
-            {phase === 'form' && (
-              <form
-                id="payment-form"
-                onSubmit={handleSubmit(onSubmit)}
-                noValidate
-                className="overflow-y-auto flex-1 px-6 py-5 space-y-6"
-              >
-                {/* ── Datos personales ── */}
-                <section>
-                  <h3
-                    className="font-black text-[#2a1115] text-sm mb-4 uppercase tracking-widest"
-                    style={{ fontFamily: "'Outfit', sans-serif" }}
-                  >
-                    Datos Personales
-                  </h3>
-                  <div className="grid grid-cols-2 gap-3">
-                    <Field label="Nombres" error={errors.nombres?.message} required>
-                      <Input
-                        id="pay-nombres"
-                        placeholder="Nombres completos"
-                        error={!!errors.nombres}
-                        {...register('nombres')}
-                      />
-                    </Field>
-                    <Field label="Apellidos" error={errors.apellidos?.message} required>
-                      <Input
-                        id="pay-apellidos"
-                        placeholder="Apellidos completos"
-                        error={!!errors.apellidos}
-                        {...register('apellidos')}
-                      />
-                    </Field>
-                    <Field label="Teléfono" error={errors.telefono?.message} required>
-                      <Input
-                        id="pay-telefono"
-                        type="tel"
-                        placeholder="Teléfono"
-                        error={!!errors.telefono}
-                        {...register('telefono')}
-                      />
-                    </Field>
-                    <Field label="Correo" error={errors.correo?.message} required>
-                      <Input
-                        id="pay-correo"
-                        type="email"
-                        placeholder="Correo Electrónico"
-                        error={!!errors.correo}
-                        {...register('correo')}
-                      />
-                    </Field>
-
-                    {/* Tipo de documento */}
-                    <Field label="Tipo de Documento" error={errors.tipoDocumento?.message} required>
-                      <select
-                        id="pay-tipo-doc"
-                        {...register('tipoDocumento')}
-                        className={`w-full rounded-xl border px-3 py-2.5 text-sm font-semibold text-[#2a1115] focus:outline-none focus:ring-2 focus:ring-[#ff7a45]/40 transition-all cursor-pointer ${
-                          errors.tipoDocumento
-                            ? 'border-red-400 bg-red-50'
-                            : 'border-[#5c0f1b]/20 bg-white hover:border-[#5c0f1b]/40'
-                        }`}
-                      >
-                        <option value="DNI">DNI</option>
-                        <option value="RUC">RUC</option>
-                      </select>
-                    </Field>
-
-                    <Field label="Número de Documento" error={errors.numeroDocumento?.message} required>
-                      <Input
-                        id="pay-num-doc"
-                        placeholder={tipoDoc === 'RUC' ? '11 dígitos' : '8 dígitos'}
-                        maxLength={tipoDoc === 'RUC' ? 11 : 8}
-                        error={!!errors.numeroDocumento}
-                        {...register('numeroDocumento')}
-                      />
-                    </Field>
-
-                    {tipoDoc === 'RUC' && (
-                      <Field
-                        label="Razón Social"
-                        error={errors.razonSocial?.message}
-                        required
-                      >
-                        <div className="col-span-2">
-                          <Input
-                            id="pay-razon-social"
-                            placeholder="Razón Social"
-                            error={!!errors.razonSocial}
-                            className="col-span-2"
-                            {...register('razonSocial')}
-                          />
-                        </div>
-                      </Field>
-                    )}
-                  </div>
-                </section>
-
-                {/* ── Envío ── */}
-                <section>
-                  <h3
-                    className="font-black text-[#2a1115] text-sm mb-4 uppercase tracking-widest"
-                    style={{ fontFamily: "'Outfit', sans-serif" }}
-                  >
-                    Envío
-                  </h3>
-                  <div className="grid grid-cols-2 gap-3">
-                    <Field label="Dirección" error={errors.direccion?.message} required>
-                      <Input
-                        id="pay-direccion"
-                        placeholder="Dirección"
-                        error={!!errors.direccion}
-                        {...register('direccion')}
-                      />
-                    </Field>
-                    <Field label="Referencia" error={errors.referencia?.message} required>
-                      <Input
-                        id="pay-referencia"
-                        placeholder="Referencia"
-                        error={!!errors.referencia}
-                        {...register('referencia')}
-                      />
-                    </Field>
-                  </div>
-                </section>
-
-                {/* ── Método de pago ── */}
-                <section>
-                  <h3
-                    className="font-black text-[#2a1115] text-sm mb-4 uppercase tracking-widest"
-                    style={{ fontFamily: "'Outfit', sans-serif" }}
-                  >
-                    Información de Pago
-                  </h3>
-                  <div className="space-y-2">
-                    {METODOS.map(({ value, label, icon: Icon }) => {
-                      const checked = metodoPago === value
-                      return (
-                        <label
-                          key={value}
-                          htmlFor={`pay-metodo-${value}`}
-                          className={`flex items-center justify-between px-4 py-3 rounded-xl border cursor-pointer transition-all ${
-                            checked
-                              ? 'bg-[#5c0f1b] border-[#5c0f1b] text-white'
-                              : 'bg-white border-[#5c0f1b]/20 text-[#2a1115] hover:border-[#5c0f1b]/40'
-                          }`}
-                        >
-                          <div className="flex items-center gap-3">
-                            <Icon className={`h-4 w-4 ${checked ? 'text-white' : 'text-[#5c0f1b]'}`} />
-                            <span className="text-sm font-bold">{label}</span>
-                          </div>
-                          <div
-                            className={`h-5 w-5 rounded-sm border-2 flex items-center justify-center transition-all ${
-                              checked ? 'bg-white/25 border-white/60' : 'border-[#5c0f1b]/30'
-                            }`}
-                          >
-                            {checked && (
-                              <div className="h-2.5 w-2.5 rounded-sm bg-white" />
-                            )}
-                          </div>
-                          <input
-                            id={`pay-metodo-${value}`}
-                            type="radio"
-                            value={value}
-                            className="sr-only"
-                            {...register('metodoPago')}
-                          />
-                        </label>
-                      )
-                    })}
-                  </div>
-                </section>
-
-                {/* ── Resumen de pago ── */}
-                <section className="bg-[#faf8f5] rounded-2xl p-4 border border-[#5c0f1b]/8">
-                  <div className="flex justify-between text-sm font-semibold text-[#2a1115]/70 mb-1">
-                    <span>Subtotal</span>
-                    <span>S/ {subtotal.toFixed(2)}</span>
-                  </div>
-                  {discount > 0 && (
-                    <div className="flex justify-between text-sm font-semibold text-[#ff7a45] mb-1">
-                      <span>Descuento</span>
-                      <span>− S/ {discount.toFixed(2)}</span>
-                    </div>
-                  )}
-                  <div className="flex justify-between text-base font-black text-[#5c0f1b] border-t border-[#5c0f1b]/10 pt-2 mt-2">
-                    <span>Total</span>
-                    <span>S/ {total.toFixed(2)}</span>
-                  </div>
-                </section>
-
-                {/* ── CTA ── */}
-                <button
-                  id="payment-submit-btn"
-                  type="submit"
-                  className="w-full py-4 rounded-full bg-[#5c0f1b] text-white font-black text-base hover:bg-[#7a1525] transition-all active:scale-95 shadow-lg cursor-pointer border-none"
-                >
-                  Pagar S/ {total.toFixed(2)}
-                </button>
-              </form>
             )}
           </motion.div>
         </motion.div>

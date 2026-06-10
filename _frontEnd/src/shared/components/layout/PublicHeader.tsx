@@ -143,6 +143,13 @@ export function PublicHeader({
                         <p className="text-sm font-black text-[#5c0f1b] truncate">{userName}</p>
                       </div>
                       <button
+                        onClick={() => navigate('/mi-cuenta/pedidos')}
+                        className="w-full flex items-center gap-2.5 px-4 py-3 text-sm font-bold text-[#5c0f1b] hover:bg-[#5c0f1b]/5 transition-colors"
+                      >
+                        <ShoppingCart className="h-4 w-4" />
+                        Mis Pedidos
+                      </button>
+                      <button
                         onClick={onLogout}
                         className="w-full flex items-center gap-2.5 px-4 py-3 text-sm font-bold text-[#5c0f1b] hover:bg-[#5c0f1b]/5 transition-colors"
                       >

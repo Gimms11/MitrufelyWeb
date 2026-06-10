@@ -43,11 +43,13 @@ if TYPE_CHECKING:
 
 # ── Rol ───────────────────────────────────────────────────────────────────────
 
+
 class Rol(Base):
     """
     Roles del sistema.
     Tabla: roles | M02_usuarios_roles.sql
     """
+
     __tablename__ = "roles"
 
     id_rol: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
@@ -62,18 +64,18 @@ class Rol(Base):
     )
 
     # ── Relaciones ─────────────────────────────────────────────────────────
-    usuarios: Mapped[list["Usuario"]] = relationship(
-        "Usuario", back_populates="rol", lazy="select"
-    )
+    usuarios: Mapped[list["Usuario"]] = relationship("Usuario", back_populates="rol", lazy="select")
 
 
 # ── Usuario ───────────────────────────────────────────────────────────────────
+
 
 class Usuario(Base):
     """
     Usuarios del sistema (admin, cliente).
     Tabla: usuarios | M02_usuarios_roles.sql
     """
+
     __tablename__ = "usuarios"
 
     id_usuario: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
@@ -115,11 +117,13 @@ class Usuario(Base):
 
 # ── Cliente ───────────────────────────────────────────────────────────────────
 
+
 class Cliente(Base):
     """
     Perfil extendido de un usuario con rol CLIENTE.
     Tabla: clientes | M02_usuarios_roles.sql
     """
+
     __tablename__ = "clientes"
 
     id_cliente: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
@@ -131,14 +135,11 @@ class Cliente(Base):
     )
     direccion: Mapped[str | None] = mapped_column(String(255), nullable=True)
     referencia: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    telefono: Mapped[str | None] = mapped_column(String(20), nullable=True)
 
     # ── Relaciones ─────────────────────────────────────────────────────────
-    usuario: Mapped["Usuario"] = relationship(
-        "Usuario", back_populates="cliente", lazy="select"
-    )
-    ventas: Mapped[list["Venta"]] = relationship(
-        "Venta", back_populates="cliente", lazy="select"
-    )
+    usuario: Mapped["Usuario"] = relationship("Usuario", back_populates="cliente", lazy="select")
+    ventas: Mapped[list["Venta"]] = relationship("Venta", back_populates="cliente", lazy="select")
     cupones_cliente: Mapped[list["CuponCliente"]] = relationship(  # type: ignore[name-defined]
         "CuponCliente", back_populates="cliente", lazy="select"
     )
@@ -149,6 +150,7 @@ class Cliente(Base):
 
 # ── DatosFiscales ─────────────────────────────────────────────────────────────
 
+
 class DatosFiscales(Base):
     """
     Información fiscal (DNI/RUC) de un usuario.
@@ -157,6 +159,7 @@ class DatosFiscales(Base):
     NOTE: Solo puede haber un registro con es_predeterminado=True por usuario
     (enforced via partial unique index uq_datos_fiscales_predeterminado in DB).
     """
+
     __tablename__ = "datos_fiscales"
 
     id_dato_fiscal: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
@@ -189,11 +192,13 @@ class DatosFiscales(Base):
 
 # ── LogSistema ────────────────────────────────────────────────────────────────
 
+
 class LogSistema(Base):
     """
     Registro de auditoría de acciones del sistema.
     Tabla: logs_sistema | M02_usuarios_roles.sql
     """
+
     __tablename__ = "logs_sistema"
 
     id_log: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
@@ -203,9 +208,7 @@ class LogSistema(Base):
         nullable=True,
     )
     accion: Mapped[str] = mapped_column(String(255), nullable=False)
-    fecha: Mapped[datetime] = mapped_column(
-        DateTime, nullable=False, server_default=func.now()
-    )
+    fecha: Mapped[datetime] = mapped_column(DateTime, nullable=False, server_default=func.now())
 
     # ── Relaciones ─────────────────────────────────────────────────────────
     usuario: Mapped["Usuario | None"] = relationship(

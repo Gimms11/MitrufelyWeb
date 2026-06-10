@@ -11,7 +11,7 @@
  *
  * Integraciones:
  *   - useParams para leer :slug
- *   - MOCK_PRODUCTS para buscar el producto
+ *   - useActiveProducts para buscar el producto por slug desde el backend
  *   - useCartStore.addToCart para agregar al carrito
  *   - InfoModal para información adicional
  *   - WhatsApp link dinámico para cotizaciones
@@ -39,11 +39,11 @@ import { PublicNav }    from '@/shared/components/layout/PublicNav'
 import { PublicFooter } from '@/shared/components/layout/PublicFooter'
 
 // ── Store ──────────────────────────────────────────────────────────────────────
-import { useCartStore, selectItemCount } from '@/stores/cart.store'
+import { useCartItemCount, useAddCartItem } from '@/features/cart/hooks/useCart'
 import { useAuthStore } from '@/app/store'
 
-// ── Datos y tipos ──────────────────────────────────────────────────────────────
-import { MOCK_PRODUCTS } from '@/mocks/mockProducts'
+// ── Datos y hooks ──────────────────────────────────────────────────────────────
+import { useActiveProducts } from '../hooks/useCatalogAdmin'
 
 // ── InfoModal ─────────────────────────────────────────────────────────────────
 import { InfoModal } from '../components/InfoModal'
@@ -83,8 +83,8 @@ export default function ProductDetailView() {
   const navigate  = useNavigate()
 
   const { user, isAuthenticated, logout } = useAuthStore()
-  const addToCart  = useCartStore((s) => s.addToCart)
-  const cartCount  = useCartStore(selectItemCount)
+  const addToCartMutation = useAddCartItem()
+  const cartCount  = useCartItemCount()
 
   // UI state
   const [searchQuery,   setSearchQuery]   = useState('')
@@ -93,8 +93,9 @@ export default function ProductDetailView() {
   const [infoOpen,      setInfoOpen]      = useState(false)
   const [addedAnim,     setAddedAnim]     = useState(false)
 
-  // Buscar producto por slug
-  const product = MOCK_PRODUCTS.find((p) => p.slug === slug) ?? null
+  // Buscar producto por slug desde backend
+  const { data: productsRes, isLoading: productLoading } = useActiveProducts({ size: 100 })
+  const product = productsRes?.items?.find((p) => p.slug === slug) ?? null
 
   // Fondo claro consistente
   useEffect(() => {
@@ -137,7 +138,7 @@ export default function ProductDetailView() {
 
   const handleAddToCart = () => {
     if (!product || !product.disponible) return
-    addToCart(product, quantity)
+    addToCartMutation.mutate({ id_producto: product.id_producto, cantidad: quantity })
     setAddedAnim(true)
     setTimeout(() => setAddedAnim(false), 1000)
     toast.success(
@@ -171,6 +172,33 @@ export default function ProductDetailView() {
 
   const handleRating = () => {
     toast.info('¡Gracias! Las calificaciones estarán disponibles próximamente.')
+  }
+
+  // ─── Loading ──────────────────────────────────────────────────────────────
+
+  if (productLoading) {
+    return (
+      <div className="min-h-screen bg-[#faf8f5] text-[#2a1115] font-sans antialiased">
+        <PublicHeader
+          cartCount={cartCount}
+          favoriteCount={0}
+          coinsBalance={null}
+          userName={null}
+          userMenuOpen={false}
+          onUserMenuToggle={() => {}}
+          searchQuery=""
+          onSearchChange={() => {}}
+          onSearchSubmit={(e) => e.preventDefault()}
+          onLogout={() => {}}
+        />
+        <PublicNav />
+        <div className="flex flex-col items-center justify-center py-32 gap-4">
+          <div className="h-8 w-8 animate-spin rounded-full border-3 border-[#5c0f1b] border-t-transparent" />
+          <span className="text-[#2a1115]/50 font-bold text-sm">Cargando producto...</span>
+        </div>
+        <PublicFooter />
+      </div>
+    )
   }
 
   // ─── Producto no encontrado ───────────────────────────────────────────────

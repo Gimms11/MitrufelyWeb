@@ -4,7 +4,12 @@ import json
 from fastapi import APIRouter, Depends, HTTPException, status, File, Form, UploadFile
 
 from app.modules.products.dependencies import get_paquete_service
-from app.modules.products.schemas import PaqueteCreate, PaqueteResponse, PaqueteUpdate, PaqueteProductoCreate
+from app.modules.products.schemas import (
+    PaqueteCreate,
+    PaqueteResponse,
+    PaqueteUpdate,
+    PaqueteProductoCreate,
+)
 from app.modules.products.service import PaqueteService
 from app.routers.storage import get_storage_service
 from app.infrastructure.storage.cloudinary_service import CloudinaryService
@@ -14,6 +19,7 @@ from app.infrastructure.database.models.enums import TipoRolEnum
 router = APIRouter(prefix="/packages", tags=["Packages"])
 
 PaqueteServiceDep = Annotated[PaqueteService, Depends(get_paquete_service)]
+
 
 @router.get(
     "/",
@@ -29,6 +35,7 @@ async def list_packages(
     """Retorna los paquetes disponibles (con disponibilidad dinámica = True)"""
     return await service.get_all(limit=limit, offset=offset)
 
+
 @router.get(
     "/admin",
     response_model=List[PaqueteResponse],
@@ -43,6 +50,26 @@ async def list_packages_admin(
 ) -> List[PaqueteResponse]:
     """Retorna todos los paquetes, sin importar su disponibilidad, para el panel administrativo"""
     return await service.get_all_admin(limit=limit, offset=offset)
+
+
+@router.get(
+    "/slug/{slug}",
+    response_model=PaqueteResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Obtener detalle de un paquete por slug",
+)
+async def get_package_by_slug(
+    slug: str,
+    service: PaqueteServiceDep,
+) -> PaqueteResponse:
+    paquete = await service.get_by_slug(slug)
+    if not paquete:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Paquete no encontrado",
+        )
+    return paquete
+
 
 @router.get(
     "/{id}",
@@ -61,6 +88,7 @@ async def get_package(
             detail="Paquete no encontrado",
         )
     return paquete
+
 
 @router.post(
     "/",
@@ -88,20 +116,17 @@ async def create_package(
     except Exception:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="productos_json debe ser una lista JSON válida de productos con id_producto y cantidad."
+            detail="productos_json debe ser una lista JSON válida de productos con id_producto y cantidad.",
         )
 
     # 2. Instanciar PaqueteCreate
     payload = PaqueteCreate(
-        nombre=nombre,
-        slug=slug,
-        descripcion=descripcion,
-        estado=estado,
-        productos=productos_dto
+        nombre=nombre, slug=slug, descripcion=descripcion, estado=estado, productos=productos_dto
     )
 
     # 3. Invocar service.create_with_image
     return await service.create_with_image(payload, image, storage_service)
+
 
 @router.put(
     "/{id}",
@@ -132,16 +157,12 @@ async def update_package(
         except Exception:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail="productos_json debe ser una lista JSON válida."
+                detail="productos_json debe ser una lista JSON válida.",
             )
 
     # 2. Instanciar PaqueteUpdate
     payload = PaqueteUpdate(
-        nombre=nombre,
-        slug=slug,
-        descripcion=descripcion,
-        estado=estado,
-        productos=productos_dto
+        nombre=nombre, slug=slug, descripcion=descripcion, estado=estado, productos=productos_dto
     )
 
     # 3. Invocar service.update_with_image
@@ -152,6 +173,7 @@ async def update_package(
             detail="Paquete no encontrado",
         )
     return paquete
+
 
 @router.delete(
     "/{id}",

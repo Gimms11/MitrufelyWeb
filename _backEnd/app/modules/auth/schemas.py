@@ -72,3 +72,42 @@ class UserMeResponse(BaseModel):
     rol: RolResponse
 
     model_config = ConfigDict(from_attributes=True)
+
+
+# ── Datos Fiscales ─────────────────────────────────────────────────────────────
+
+
+class DatosFiscalesResponse(BaseModel):
+    id_dato_fiscal: int
+    id_usuario: int
+    tipo_documento: str
+    numero_documento: str
+    razon_social: str | None = None
+    direccion_fiscal: str | None = None
+    es_predeterminado: bool
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class DatosFiscalesUpsert(BaseModel):
+    tipo_documento: str = Field(..., pattern=r"^(DNI|RUC)$")
+    numero_documento: str = Field(..., min_length=8, max_length=20)
+    razon_social: str | None = None
+    direccion_fiscal: str | None = None
+
+    @field_validator("razon_social")
+    @classmethod
+    def validate_razon_social(cls, v: str | None, info) -> str | None:
+        tipo = info.data.get("tipo_documento", "")
+        if tipo == "RUC" and (not v or not v.strip()):
+            raise ValueError("La razón social es obligatoria para RUC")
+        return v
+
+
+# ── Perfil / Envío ─────────────────────────────────────────────────────────────
+
+
+class UserProfileUpdate(BaseModel):
+    telefono: str | None = Field(None, pattern=r"^\+?[\d\s\-]{7,20}$")
+    direccion: str | None = Field(None, min_length=5, max_length=255)
+    referencia: str | None = Field(None, min_length=3, max_length=255)

@@ -16,12 +16,12 @@ import { toast } from 'sonner'
 import { Link, useNavigate } from 'react-router'
 import { cn } from '@/lib/utils'
 import { useCatalogStore } from '@/stores/catalog.store'
-import { useCartStore } from '@/stores/cart.store'
+import { useAddCartItem } from '@/features/cart/hooks/useCart'
 
 export function ProductModal() {
   const navigate = useNavigate()
   const { modal, closeModal } = useCatalogStore()
-  const addToCart = useCartStore((s) => s.addToCart)
+  const addToCartMutation = useAddCartItem()
   const { isOpen, selectedProduct } = modal
   const [quantity, setQuantity] = useState(1)
 
@@ -46,20 +46,26 @@ export function ProductModal() {
 
   const handleAddToCart = () => {
     if (!selectedProduct) return
-    addToCart(selectedProduct, quantity)
-    toast.success(
-      <span>
-        {quantity}× <strong>{selectedProduct.nombre}</strong> agregado al carrito 🛍️{' '}
-        <button
-          onClick={() => navigate('/carrito')}
-          style={{ textDecoration: 'underline', fontWeight: 700, cursor: 'pointer', background: 'none', border: 'none', color: 'inherit', padding: 0 }}
-        >
-          Ver carrito
-        </button>
-      </span>
+    addToCartMutation.mutate(
+      { id_producto: selectedProduct.id_producto, cantidad: quantity },
+      {
+        onSuccess: () => {
+          toast.success(
+            <span>
+              {quantity}× <strong>{selectedProduct.nombre}</strong> agregado 🛍️{' '}
+              <button
+                onClick={() => navigate('/carrito')}
+                style={{ textDecoration: 'underline', fontWeight: 700, cursor: 'pointer', background: 'none', border: 'none', color: 'inherit', padding: 0 }}
+              >
+                Ver carrito
+              </button>
+            </span>
+          )
+          closeModal()
+          setQuantity(1)
+        },
+      },
     )
-    closeModal()
-    setQuantity(1)
   }
 
   return (
