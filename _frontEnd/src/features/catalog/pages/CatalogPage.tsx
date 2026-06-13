@@ -235,8 +235,6 @@ export default function CatalogPage() {
         onLogout={handleLogout}
       />
 
-      <PublicNav />
-
       {/* Banner hero */}
       <section className="bg-gradient-to-br from-[#5c0f1b] to-[#3d0911] py-14 px-4 text-center">
         <motion.div

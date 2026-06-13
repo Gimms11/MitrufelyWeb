@@ -57,7 +57,6 @@ export default function CustomerOrderDetailPage() {
         <PublicHeader cartCount={cartCount} favoriteCount={0} coinsBalance={null} userName={null}
           userMenuOpen={false} onUserMenuToggle={() => {}} searchQuery="" onSearchChange={() => {}}
           onSearchSubmit={(e) => e.preventDefault()} onLogout={() => {}} />
-        <PublicNav />
         <div className="flex flex-col items-center justify-center py-32 gap-4">
           <Loader2 className="h-8 w-8 text-[#5c0f1b] animate-spin" />
           <span className="text-[#2a1115]/50 font-bold text-sm">Cargando pedido...</span>
@@ -73,7 +72,6 @@ export default function CustomerOrderDetailPage() {
         <PublicHeader cartCount={cartCount} favoriteCount={0} coinsBalance={null} userName={null}
           userMenuOpen={false} onUserMenuToggle={() => {}} searchQuery="" onSearchChange={() => {}}
           onSearchSubmit={(e) => e.preventDefault()} onLogout={() => {}} />
-        <PublicNav />
         <div className="flex flex-col items-center justify-center py-32 gap-6 text-center max-w-md mx-auto">
           <div className="h-16 w-16 rounded-2xl bg-red-50 border border-red-200 flex items-center justify-center">
             <Package className="h-8 w-8 text-red-400" />
@@ -98,8 +96,6 @@ export default function CustomerOrderDetailPage() {
         searchQuery={searchQuery} onSearchChange={setSearchQuery}
         onSearchSubmit={handleSearch} onLogout={handleLogout}
       />
-      <PublicNav />
-
       <main className="max-w-4xl mx-auto px-4 md:px-8 py-10">
         <Link to="/mi-cuenta/pedidos" className="inline-flex items-center gap-2 text-sm font-bold text-[#5c0f1b]/60 hover:text-[#5c0f1b] transition-colors mb-6">
           <ArrowLeft className="h-4 w-4" /> Volver a mis pedidos

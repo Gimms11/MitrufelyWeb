@@ -2,6 +2,11 @@
  * PublicNav.tsx — Menú de navegación secundario (subheader)
  *
  * Barra de links bajo el header principal. Puramente presentacional.
+ *
+ * UI REFACTOR:
+ *  - Item activo: texto en negrita (font-bold) + underline grueso borgoña
+ *  - Items inactivos: peso normal (font-normal), sin subrayado
+ *  - Separador inferior sutil usando border-b
  */
 import { Users, BookOpen, Home, Award } from 'lucide-react'
 import { Link, useLocation } from 'react-router'
@@ -10,59 +15,64 @@ import { Link, useLocation } from 'react-router'
 
 export function PublicNav() {
   const location = useLocation()
-  const isCatalog = location.pathname === '/catalogo'
-  const isHome    = location.pathname === '/'
-  const isPuntos  = location.pathname === '/puntos'
+  const isHome     = location.pathname === '/'
+  const isCatalog  = location.pathname === '/catalogo'
+  const isNosotros = location.pathname === '/nosotros'
+  const isPuntos   = location.pathname === '/puntos'
+
+  /** Clases de un ítem activo: bold + underline blanco grueso */
+  const activeClass =
+    'text-white font-bold border-b-[3px] border-white'
+
+  /** Clases de un ítem inactivo: peso normal, sin underline */
+  const inactiveClass =
+    'text-white/65 font-normal border-b-[3px] border-transparent hover:text-white hover:border-white/40 transition-colors'
 
   return (
-    <nav className="bg-[#faf8f5] py-2.5 px-4 border-b border-[#5c0f1b]/8">
-      <div className="max-w-7xl mx-auto flex items-center justify-center gap-8 md:gap-12">
+    <nav className="bg-[#5c0f1b] border-b border-[#4a0a14]">
+      <div className="max-w-7xl mx-auto px-2 md:px-12 justify-center flex items-center gap-8 md:gap-10">
 
         {/* Inicio */}
         <Link
           to="/"
-          className={`flex items-center gap-2 text-lg font-bold transition-colors py-0.5 border-b-2 ${
-            isHome
-              ? 'text-[#5c0f1b] border-[#5c0f1b]'
-              : 'text-[#5c0f1b]/70 border-transparent hover:text-[#ff7a45] hover:border-[#ff7a45]'
+          className={`flex items-center gap-2 text-sm py-3 transition-all ${
+            isHome ? activeClass : inactiveClass
           }`}
         >
-          <Home className="h-5 w-5" strokeWidth={2.5} />
+          <Home className="h-4 w-4 shrink-0" strokeWidth={isHome ? 2.5 : 2} />
           <span>Inicio</span>
         </Link>
 
         {/* Catálogo — ruta real */}
         <Link
           to="/catalogo"
-          className={`flex items-center gap-2 text-lg font-bold transition-colors py-0.5 border-b-2 ${
-            isCatalog
-              ? 'text-[#5c0f1b] border-[#5c0f1b]'
-              : 'text-[#5c0f1b]/70 border-transparent hover:text-[#ff7a45] hover:border-[#ff7a45]'
+          className={`flex items-center gap-2 text-sm py-3 transition-all ${
+            isCatalog ? activeClass : inactiveClass
           }`}
         >
-          <BookOpen className="h-5 w-5" strokeWidth={2.5} />
+          <BookOpen className="h-4 w-4 shrink-0" strokeWidth={isCatalog ? 2.5 : 2} />
           <span>Catálogo</span>
         </Link>
 
         {/* Nosotros */}
-        <a
-          href="#nosotros"
-          className="flex items-center gap-2 text-lg font-bold text-[#5c0f1b]/70 hover:text-[#ff7a45] transition-colors py-0.5 border-b-2 border-transparent hover:border-[#ff7a45]"
+        <Link
+          to="/nosotros"
+          className={`flex items-center gap-2 text-sm py-3 transition-all ${
+            isNosotros ? activeClass : inactiveClass
+          }`}
         >
-          <Users className="h-5 w-5" strokeWidth={2.5} />
+          <Users className="h-4 w-4 shrink-0" strokeWidth={isNosotros ? 2.5 : 2} />
           <span>Nosotros</span>
-        </a>
+        </Link>
 
         {/* Tus puntos */}
         <Link
           to="/puntos"
-          className={`flex items-center gap-2 text-lg font-bold transition-colors py-0.5 border-b-2 ${
-            isPuntos
-              ? 'text-[#5c0f1b] border-[#5c0f1b]'
-              : 'text-[#5c0f1b]/70 border-transparent hover:text-[#ff7a45] hover:border-[#ff7a45]'
+          className={`flex items-center gap-2 text-sm py-3 transition-all ${
+            isPuntos ? activeClass : inactiveClass
           }`}
         >
-          <Award className="h-5 w-5" strokeWidth={2.5} />
+          <Award className="h-4 w-4 shrink-0" strokeWidth={isPuntos ? 2.5 : 2} />
           <span>Tus puntos</span>
         </Link>
       </div>

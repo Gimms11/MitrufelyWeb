@@ -25,6 +25,7 @@ const ProductDetailView = lazy(() => import('@/features/products/pages/ProductDe
 const PackDetailView = lazy(() => import('@/features/products/pages/PackDetailView'))
 const CustomerOrdersPage = lazy(() => import('@/features/orders/pages/CustomerOrdersPage'))
 const CustomerOrderDetailPage = lazy(() => import('@/features/orders/pages/CustomerOrderDetailPage'))
+const AboutPage = lazy(() => import('@/features/about/pages/AboutPage'))
 
 // ─── Loading fallback ─────────────────────────────────────────────────────────
 function PageLoader() {
@@ -131,6 +132,7 @@ export function AppRouter() {
         {/* Rutas públicas */}
         <Route path="/" element={<HomePage />} />
         <Route path="/catalogo" element={<CatalogPage />} />
+        <Route path="/nosotros" element={<AboutPage />} />
         <Route path="/carrito" element={<CartPage />} />
         <Route path="/producto/:slug" element={<ProductDetailView />} />
         <Route path="/pack/:slug" element={<PackDetailView />} />

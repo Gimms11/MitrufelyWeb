@@ -29,24 +29,38 @@ export function PacksSection() {
   return (
     <section
       id="puntos"
-      className="bg-gradient-to-b from-[#f7f3ee] to-[#f2ece3] py-20 px-4 scroll-mt-20"
+      className="bg-white py-24 px-4 scroll-mt-20"
     >
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-14">
-          <span className="inline-block bg-[#5c0f1b]/8 text-[#5c0f1b] text-xs font-black uppercase tracking-widest px-4 py-1.5 rounded-full mb-3">
+        <motion.div
+          initial={{ opacity: 0, y: 28 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.35 }}
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          className="text-center mb-14"
+        >
+          <span className="inline-block bg-[#5c0f1b]/8 text-[#5c0f1b] text-[10px] font-black uppercase tracking-[0.18em] px-4 py-1.5 rounded-full mb-4  border-[#5c0f1b]/10">
             Packs Especiales
           </span>
           <h3
             className="font-black text-[#2a1115] mb-3"
-            style={{ fontFamily: "'Outfit', sans-serif", fontSize: 'clamp(1.75rem, 4vw, 2.5rem)' }}
+            style={{ fontFamily: "'Outfit', sans-serif", fontSize: 'clamp(2rem, 4.5vw, 3rem)' }}
           >
             Packs para compartir{' '}
             <span className="text-[#5c0f1b]">(o para ti solo)</span>
           </h3>
-          <p className="text-[#2a1115]/55 max-w-md mx-auto text-sm font-medium">
+          <p className="text-[#2a1115]/60 max-w-md mx-auto text-base font-light leading-relaxed">
             Nuestras cajas surtidas más exclusivas, diseñadas para regalar, estudiar o disfrutar.
           </p>
-        </div>
+          {/* Separador decorativo */}
+          <motion.div
+            initial={{ scaleX: 0 }}
+            whileInView={{ scaleX: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
+            className="mx-auto mt-5 h-[2px] w-14 rounded-full bg-gradient-to-r from-[#5c0f1b] to-[#ff7a45] origin-center"
+          />
+        </motion.div>
 
         <div className="relative max-w-6xl mx-auto">
           {showArrows && (

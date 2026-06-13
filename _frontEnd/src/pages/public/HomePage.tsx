@@ -69,8 +69,9 @@ export default function HomePage() {
 
   // ── Render ────────────────────────────────────────────────────────────
   return (
-    <div className="min-h-screen bg-[#faf8f5] text-[#2a1115] font-sans antialiased overflow-x-hidden">
+    <div className="min-h-screen bg-[#faf8f5] text-[#2a1115] font-sans antialiased">
 
+      {/* ── Bloque de navegación fijo ── */}
       <PublicHeader
         cartCount={cartCount}
         favoriteCount={favorites.length}
@@ -83,9 +84,6 @@ export default function HomePage() {
         onSearchSubmit={handleSearch}
         onLogout={handleLogout}
       />
-
-      <PublicNav />
-
       <HeroSection onCatalogClick={scrollToCatalog} />
 
       <CatalogSection

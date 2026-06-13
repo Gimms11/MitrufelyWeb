@@ -33,7 +33,7 @@ export function ArcadeSection() {
     <div className="flex flex-col gap-4">
 
       {/* ── Card de la Ruleta ── */}
-      <div className="bg-white rounded-[22px] border border-[#5c0f1b]/10 overflow-hidden shadow-[0_4px_20px_rgba(92,15,27,0.08)]">
+      <div className="bg-white rounded-[22px] overflow-hidden shadow-[0_4px_20px_rgba(92,15,27,0.08)]">
 
         {/* Header de la card */}
         <div className="bg-gradient-to-r from-[#5c0f1b] to-[#7a1525] px-5 py-4">
@@ -137,7 +137,7 @@ export function ArcadeSection() {
       </div>
 
       {/* ── Probabilidades ── */}
-      <div className="bg-white rounded-[22px] border border-[#5c0f1b]/10 p-5 shadow-[0_2px_8px_rgba(92,15,27,0.05)]">
+      <div className="bg-white rounded-[22px] p-5 shadow-[0_2px_8px_rgba(92,15,27,0.05)]">
         <h4
           className="font-black text-[#2a1115] text-sm mb-3 uppercase tracking-widest"
           style={{ fontFamily: "'Outfit', sans-serif" }}

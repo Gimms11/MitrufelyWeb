@@ -1,10 +1,14 @@
 /**
  * CouponCard.tsx — Tarjeta de cupón propio del cliente (cuponesCliente).
  *
- * Muestra: porcentaje, código único, origen, estado y fecha de expiración.
- * Paleta: borgoña, marrón oscuro, naranja claro.
+ * Hover (solo tarjetas activas):
+ *   - Elevación: translateY(-8px) via framer-motion whileHover
+ *   - Sombra: CSS transition de shadow suave → profunda
+ *   - Franja: gradient más intenso via CSS group-hover
+ *   - Bloque código: fondo más oscuro via CSS hover
  */
 
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Tag, Clock, CheckCircle, XCircle } from 'lucide-react'
 import type { CuponCliente } from '@/stores/criptotrufa.store'
@@ -22,7 +26,9 @@ const ORIGEN_LABELS: Record<CuponCliente['origen'], string> = {
 }
 
 function formatDate(iso: string) {
-  return new Intl.DateTimeFormat('es-PE', { day: '2-digit', month: 'short', year: 'numeric' }).format(new Date(iso))
+  return new Intl.DateTimeFormat('es-PE', {
+    day: '2-digit', month: 'short', year: 'numeric',
+  }).format(new Date(iso))
 }
 
 function isExpired(iso: string) {
@@ -34,24 +40,38 @@ export function CouponCard({ coupon, index = 0 }: CouponCardProps) {
   const used    = coupon.estado === 'USADO'
   const active  = !expired && !used
 
+  const [hovered, setHovered] = useState(false)
+
   return (
     <motion.div
-      initial={{ opacity: 0, y: 16 }}
+      initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.07, duration: 0.35 }}
-      className={`relative overflow-hidden rounded-[22px] border flex flex-col min-w-[220px] ${
-        active
-          ? 'bg-white border-[#5c0f1b]/15 shadow-[0_4px_20px_rgba(92,15,27,0.10)]'
-          : 'bg-stone-50 border-stone-200 opacity-60'
+      transition={{ delay: index * 0.07, type: 'spring', damping: 22, stiffness: 90 }}
+      whileHover={active ? { y: -10, scale: 1.03 } : {}}
+      onHoverStart={() => setHovered(true)}
+      onHoverEnd={()   => setHovered(false)}
+      style={{
+        willChange: 'transform',
+        boxShadow: hovered && active
+          ? '0 24px 56px rgba(92,15,27,0.22), 0 10px 24px rgba(92,15,27,0.15)'
+          : '0 4px 20px rgba(92,15,27,0.10)',
+        transition: 'box-shadow 0.3s ease',
+      }}
+      className={`relative overflow-hidden rounded-[22px] flex flex-col min-w-[220px] ${
+        active ? 'bg-white cursor-pointer' : 'bg-stone-50 opacity-60'
       }`}
     >
-      {/* ── Franja superior con porcentaje ── */}
+      {/* ── Franja superior — cambia de color en hover ── */}
       <div
-        className={`px-5 py-4 ${
-          active
-            ? 'bg-gradient-to-r from-[#5c0f1b] to-[#8a1a2e]'
-            : 'bg-stone-300'
-        }`}
+        style={{
+          background: hovered && active
+            ? 'linear-gradient(to right, #7a1525, #c0292e)'
+            : active
+              ? 'linear-gradient(to right, #5c0f1b, #8a1a2e)'
+              : '#d6d3d1',
+          transition: 'background 0.35s ease',
+          padding: '16px 20px',
+        }}
       >
         <div className="flex items-center justify-between">
           <span
@@ -60,7 +80,18 @@ export function CouponCard({ coupon, index = 0 }: CouponCardProps) {
           >
             {coupon.cupon.porcentaje_descuento}%
           </span>
-          <span className="text-white/60 text-xs font-bold uppercase tracking-widest mt-1">OFF</span>
+          <span
+            style={{
+              color: hovered && active ? 'rgba(255,255,255,0.95)' : 'rgba(255,255,255,0.6)',
+              transition: 'color 0.3s ease',
+              fontSize: '0.75rem',
+              fontWeight: 700,
+              textTransform: 'uppercase',
+              letterSpacing: '0.1em',
+            }}
+          >
+            OFF
+          </span>
         </div>
         <p className="text-white/80 text-xs font-semibold mt-1 line-clamp-1">
           {coupon.cupon.nombre}
@@ -69,14 +100,25 @@ export function CouponCard({ coupon, index = 0 }: CouponCardProps) {
 
       {/* ── Separador perforado ── */}
       <div className="flex items-center px-4 py-2 gap-2">
-        <div className="h-3 w-3 rounded-full bg-[#faf8f5] -ml-6 border border-stone-200 shrink-0" />
-        <div className="flex-1 border-t-2 border-dashed border-stone-200" />
-        <div className="h-3 w-3 rounded-full bg-[#faf8f5] -mr-6 border border-stone-200 shrink-0" />
+        <div className="h-3 w-3 rounded-full bg-[#faf8f5] -ml-6 shrink-0" />
+        <div className="flex-1 border-t-2 border-dashed border-stone-100" />
+        <div className="h-3 w-3 rounded-full bg-[#faf8f5] -mr-6 shrink-0" />
       </div>
 
       {/* ── Código + meta ── */}
-      <div className="px-5 pb-4 flex flex-col gap-2">
-        <div className="flex items-center gap-2 bg-[#faf8f5] border border-[#5c0f1b]/10 rounded-xl px-3 py-2">
+      <div className="px-5 pb-5 flex flex-col gap-2.5">
+        {/* Bloque código: cambia fondo en hover */}
+        <div
+          style={{
+            backgroundColor: hovered && active ? '#ede8e4' : '#faf8f5',
+            transition: 'background-color 0.25s ease',
+            borderRadius: '0.75rem',
+            padding: '8px 12px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+          }}
+        >
           <Tag className="h-3.5 w-3.5 text-[#5c0f1b]/50 shrink-0" />
           <span
             className="font-black text-[#5c0f1b] tracking-wider text-sm"
@@ -111,6 +153,16 @@ export function CouponCard({ coupon, index = 0 }: CouponCardProps) {
           <span>Vence: {formatDate(coupon.fecha_expiracion)}</span>
         </div>
       </div>
+
+      {/* ── Brillo naranja esquina superior derecha (solo activos en hover) ── */}
+      <div
+        className="absolute top-0 right-0 w-20 h-20 pointer-events-none rounded-tr-[22px]"
+        style={{
+          background: 'radial-gradient(circle at top right, rgba(255,122,69,0.2) 0%, transparent 70%)',
+          opacity: hovered && active ? 1 : 0,
+          transition: 'opacity 0.35s ease',
+        }}
+      />
     </motion.div>
   )
 }

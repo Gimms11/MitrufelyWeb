@@ -191,7 +191,6 @@ export default function ProductDetailView() {
           onSearchSubmit={(e) => e.preventDefault()}
           onLogout={() => {}}
         />
-        <PublicNav />
         <div className="flex flex-col items-center justify-center py-32 gap-4">
           <div className="h-8 w-8 animate-spin rounded-full border-3 border-[#5c0f1b] border-t-transparent" />
           <span className="text-[#2a1115]/50 font-bold text-sm">Cargando producto...</span>
@@ -218,7 +217,6 @@ export default function ProductDetailView() {
           onSearchSubmit={(e) => e.preventDefault()}
           onLogout={() => {}}
         />
-        <PublicNav />
         <div className="flex flex-col items-center justify-center py-32 gap-6">
           <ShoppingBag className="h-20 w-20 text-[#5c0f1b]/20" />
           <div className="text-center">
@@ -267,9 +265,6 @@ export default function ProductDetailView() {
         onSearchSubmit={handleSearch}
         onLogout={handleLogout}
       />
-
-      {/* ── Nav ── */}
-      <PublicNav />
 
       {/* ── Breadcrumb ── */}
       <div className="max-w-7xl mx-auto px-4 md:px-8 pt-5 pb-2">

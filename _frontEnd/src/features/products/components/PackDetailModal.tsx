@@ -100,7 +100,7 @@ export function PackDetailModal({ isOpen, pack, onClose }: PackDetailModalProps)
             animate={{ scale: 1, y: 0, opacity: 1 }}
             exit={{ scale: 0.92, y: 30, opacity: 0 }}
             transition={{ type: 'spring', damping: 26, stiffness: 240 }}
-            className="bg-white w-full max-w-2xl rounded-[36px] overflow-hidden shadow-2xl relative grid grid-cols-1 md:grid-cols-2 border border-[#5c0f1b]/10 max-h-[92vh]"
+            className="bg-white w-full max-w-2xl rounded-[36px] overflow-hidden shadow-2xl relative grid grid-cols-1 md:grid-cols-2  border-[#5c0f1b]/10 max-h-[92vh]"
             onClick={(e) => e.stopPropagation()}
             role="dialog"
             aria-modal="true"
@@ -109,7 +109,7 @@ export function PackDetailModal({ isOpen, pack, onClose }: PackDetailModalProps)
             <button
               onClick={onClose}
               aria-label="Cerrar"
-              className="absolute top-4 right-4 z-20 p-2 bg-white rounded-full border border-[#5c0f1b]/10 text-[#5c0f1b] hover:text-[#ff7a45] shadow-sm transition-all hover:scale-110 active:scale-90 cursor-pointer"
+              className="absolute top-4 right-4 z-20 p-2 bg-white rounded-full  border-[#5c0f1b]/10 text-[#5c0f1b] hover:text-[#ff7a45] shadow-sm transition-all hover:scale-110 active:scale-90 cursor-pointer"
             >
               <X className="h-5 w-5" />
             </button>
@@ -142,7 +142,7 @@ export function PackDetailModal({ isOpen, pack, onClose }: PackDetailModalProps)
             {/* Info */}
             <div className="p-6 md:p-8 flex flex-col max-h-[80vh] overflow-y-auto">
               <div>
-                <div className="inline-flex items-center gap-1.5 bg-[#ff7a45]/12 border border-[#ff7a45]/20 px-3 py-1 rounded-full mb-4 text-xs font-black text-[#ff7a45] uppercase tracking-wide">
+                <div className="inline-flex items-center gap-1.5 bg-[#ff7a45]/12  border-[#ff7a45]/20 px-3 py-1 rounded-full mb-4 text-xs font-black text-[#ff7a45] uppercase tracking-wide">
                   ✨ Pack Especial
                 </div>
 
@@ -168,7 +168,7 @@ export function PackDetailModal({ isOpen, pack, onClose }: PackDetailModalProps)
                     {packProducts.map((pp) => (
                       <div
                         key={pp.id_paquete_producto}
-                        className="flex items-center gap-3 bg-stone-50 rounded-xl p-2 border border-stone-100"
+                        className="flex items-center gap-3 bg-stone-50 rounded-xl p-2  border-stone-100"
                       >
                         <div className="h-12 w-12 rounded-lg overflow-hidden bg-[#f0ede8] shrink-0 flex items-center justify-center">
                           {pp.imagen_url ? (

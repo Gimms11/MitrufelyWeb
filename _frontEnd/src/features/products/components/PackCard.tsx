@@ -8,6 +8,7 @@
 import { Star } from 'lucide-react'
 import { toast } from 'sonner'
 import { useNavigate } from 'react-router'
+import { motion } from 'framer-motion'
 import type { Pack } from '../types'
 import { useAddCartItem } from '@/features/cart/hooks/useCart'
 
@@ -45,7 +46,10 @@ export function PackCard({ pack }: PackCardProps) {
   }
 
   return (
-    <div className="relative w-full max-w-[300px] h-[400px] overflow-hidden rounded-[24px] shadow-lg group mx-auto">
+    <motion.div
+      whileHover={{ y: -8, boxShadow: '0px 20px 40px rgba(62, 39, 35, 0.08)' }}
+      className="relative w-full max-w-[300px] h-[400px] overflow-hidden rounded-[24px] border-[rgba(62,39,35,0.1)] group mx-auto transition-all duration-300 bg-white"
+    >
       <img
         src={pack.imagen_url || 'https://images.unsplash.com/photo-1513534894444-24c9190c3741?auto=format&fit=crop&q=80&w=600'}
         alt={pack.nombre}
@@ -74,7 +78,7 @@ export function PackCard({ pack }: PackCardProps) {
         <div className="flex gap-2">
           <button
             onClick={handleViewDetails}
-            className="flex-1 py-2.5 rounded-full border-2 border-[#5c0f1b]/30 text-[#5c0f1b] font-bold text-sm hover:bg-[#5c0f1b]/8 transition-all cursor-pointer bg-transparent"
+            className="flex-1 py-2.5 rounded-full  border-[#5c0f1b]/30 text-[#5c0f1b] font-bold text-sm hover:bg-[#5c0f1b]/8 transition-all cursor-pointer bg-transparent"
           >
             Ver más
           </button>
@@ -87,6 +91,6 @@ export function PackCard({ pack }: PackCardProps) {
           </button>
         </div>
       </div>
-    </div>
+    </motion.div>
   )
 }
