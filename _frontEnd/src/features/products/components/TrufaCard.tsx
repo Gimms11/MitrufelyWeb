@@ -35,7 +35,8 @@ export function TrufaCard({ producto }: TrufaCardProps) {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.9 }}
       transition={{ duration: 0.3 }}
-      className="bg-white rounded-[28px] p-4 flex flex-col shadow-[0_2px_12px_rgba(42,17,21,0.1),0_1px_3px_rgba(42,17,21,0.06)] hover:shadow-[0_8px_28px_rgba(92,15,27,0.12),0_3px_8px_rgba(92,15,27,0.06)] hover:-translate-y-1 transition-all duration-250 group"
+      whileHover={{ y: -8, boxShadow: '0px 20px 40px rgba(62, 39, 35, 0.08)' }}
+      className="bg-white rounded-[28px] p-4 flex flex-col border-[rgba(62,39,35,0.1)] transition-all duration-300 group"
     >
       {/* Imagen */}
       <div className="relative rounded-[20px] overflow-hidden mb-4 aspect-square bg-[#f0ede8]">

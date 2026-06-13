@@ -89,7 +89,6 @@ export default function PackDetailView() {
           userMenuOpen={userMenuOpen} onUserMenuToggle={() => setUserMenuOpen((o) => !o)}
           searchQuery={searchQuery} onSearchChange={setSearchQuery}
           onSearchSubmit={(e) => e.preventDefault()} onLogout={() => {}} />
-        <PublicNav />
         <div className="flex flex-col items-center justify-center py-32 gap-4">
           <Loader2 className="h-8 w-8 text-[#5c0f1b] animate-spin" />
           <span className="text-[#2a1115]/50 font-bold text-sm">Cargando paquete...</span>
@@ -107,7 +106,6 @@ export default function PackDetailView() {
           userMenuOpen={userMenuOpen} onUserMenuToggle={() => setUserMenuOpen((o) => !o)}
           searchQuery={searchQuery} onSearchChange={setSearchQuery}
           onSearchSubmit={(e) => e.preventDefault()} onLogout={() => {}} />
-        <PublicNav />
         <div className="flex flex-col items-center justify-center py-32 gap-6 text-center">
           <div className="h-16 w-16 rounded-2xl bg-red-50 border border-red-200 flex items-center justify-center">
             <AlertTriangle className="h-8 w-8 text-red-400" />
@@ -139,8 +137,6 @@ export default function PackDetailView() {
         onSearchSubmit={handleSearch}
         onLogout={handleLogout}
       />
-      <PublicNav />
-
       <main className="max-w-7xl mx-auto px-4 md:px-8 py-8">
         {/* Breadcrumb */}
         <Link to="/" className="inline-flex items-center gap-2 text-sm font-bold text-[#5c0f1b]/60 hover:text-[#5c0f1b] transition-colors mb-8">

@@ -112,7 +112,6 @@ export default function PointsView() {
         onSearchSubmit={handleSearch}
         onLogout={handleLogout}
       />
-      <PublicNav />
 
       <main className="max-w-7xl mx-auto px-4 md:px-8 py-8 space-y-10">
 
@@ -196,7 +195,7 @@ export default function PointsView() {
                 transition={{ duration: 0.3 }}
                 className="overflow-hidden"
               >
-                <div className="bg-white rounded-[22px] border border-[#5c0f1b]/10 mt-4 p-5 shadow-sm">
+                <div className="bg-white rounded-[22px] mt-4 p-5 shadow-sm">
                   <h3
                     className="font-black text-[#2a1115] text-sm uppercase tracking-widest mb-4"
                     style={{ fontFamily: "'Outfit', sans-serif" }}
@@ -207,7 +206,7 @@ export default function PointsView() {
                     {historial.map((mov) => (
                       <div
                         key={mov.id_movimiento_punto}
-                        className="flex items-center gap-3 p-3 rounded-xl bg-[#faf8f5] border border-[#5c0f1b]/6"
+                        className="flex items-center gap-3 p-3 rounded-xl bg-[#faf8f5]"
                       >
                         <div
                           className={`h-8 w-8 rounded-xl flex items-center justify-center shrink-0 ${
@@ -268,14 +267,14 @@ export default function PointsView() {
               <button
                 onClick={() => setCarouselIdx((i) => Math.max(0, i - 1))}
                 disabled={!canPrev}
-                className="h-8 w-8 rounded-full border border-[#5c0f1b]/15 flex items-center justify-center text-[#5c0f1b] hover:bg-[#5c0f1b]/6 transition-all disabled:opacity-30 cursor-pointer disabled:cursor-default"
+                className="h-8 w-8 rounded-full flex items-center justify-center text-[#5c0f1b] hover:bg-[#5c0f1b]/6 transition-all disabled:opacity-30 cursor-pointer disabled:cursor-default shadow-sm"
               >
                 <ChevronLeft className="h-4 w-4" />
               </button>
               <button
                 onClick={() => setCarouselIdx((i) => Math.min(maxIdx, i + 1))}
                 disabled={!canNext}
-                className="h-8 w-8 rounded-full border border-[#5c0f1b]/15 flex items-center justify-center text-[#5c0f1b] hover:bg-[#5c0f1b]/6 transition-all disabled:opacity-30 cursor-pointer disabled:cursor-default"
+                className="h-8 w-8 rounded-full flex items-center justify-center text-[#5c0f1b] hover:bg-[#5c0f1b]/6 transition-all disabled:opacity-30 cursor-pointer disabled:cursor-default shadow-sm"
               >
                 <ChevronRight className="h-4 w-4" />
               </button>
@@ -283,7 +282,7 @@ export default function PointsView() {
           </div>
 
           {cuponesCliente.length === 0 ? (
-            <div className="bg-white rounded-[22px] border border-[#5c0f1b]/10 p-10 text-center">
+            <div className="bg-white rounded-[22px] p-10 text-center shadow-sm">
               <TicketCheck className="h-12 w-12 text-[#5c0f1b]/15 mx-auto mb-3" />
               <p className="font-black text-[#2a1115]/40 text-sm">Aún no tienes cupones.</p>
               <p className="text-xs text-[#2a1115]/30 font-semibold mt-1">
@@ -350,7 +349,7 @@ export default function PointsView() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6 }}
-          className="bg-[#5c0f1b]/4 border border-[#5c0f1b]/10 rounded-2xl px-6 py-4 text-center"
+          className="bg-[#5c0f1b]/4 rounded-2xl px-6 py-4 text-center"
         >
           <p className="text-xs font-semibold text-[#2a1115]/50 leading-relaxed">
             🍫 Las CriptoTrufas se acumulan automáticamente al completar tus compras.

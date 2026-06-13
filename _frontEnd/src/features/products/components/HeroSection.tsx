@@ -1,11 +1,19 @@
 /**
  * HeroSection.tsx — Sección Hero de la HomePage pública
  *
- * SRP: renderizar únicamente el bloque hero (texto + estadísticas + imagen flotante).
+ * SRP: renderizar únicamente el bloque hero (texto + imagen de fondo).
  * Recibe un callback para hacer scroll al catálogo.
+ *
+ * UI REFACTOR (v2):
+ *   - min-height: 100vh (pantalla completa)
+ *   - Imagen de fondo: mármol con trufas (/image.png), alineada a la derecha
+ *   - Texto alineado a la izquierda con gran espacio respirable
+ *   - Subtítulo bicolor: gris-marrón oscuro + borgoña (NO rosa)
+ *   - Tarjetas flotantes con animación suave (framer-motion)
  */
+
 import { Star } from 'lucide-react'
-import { motion } from 'framer-motion'
+import { motion, type Variants } from 'framer-motion'
 import { Button } from '@/shared/components/ui/Button'
 
 // ─── Props ────────────────────────────────────────────────────────────────
@@ -14,125 +22,153 @@ interface HeroSectionProps {
   onCatalogClick: () => void
 }
 
-// ─── Datos estáticos de la sección ────────────────────────────────────────
+// ─── Datos estáticos ──────────────────────────────────────────────────────
 
 const STATS = [
   { value: '+500', label: 'Clientes felices' },
-  { value: '100%', label: 'Artesanal' },
-  { value: '4.9★', label: 'Calificación' },
+  { value: '100%', label: 'Artesanal'        },
+  { value: '4.9★', label: 'Calificación'     },
 ] as const
+
+// ─── Variantes de animación ───────────────────────────────────────────────
+
+/** Contenedor del texto: stagger 80 ms entre hijos */
+const textContainer: Variants = {
+  hidden: {},
+  show: {
+    transition: {
+      staggerChildren: 0.08,
+      delayChildren: 0.05,
+    },
+  },
+}
+
+/** Cada hijo del stack de texto */
+const textItem: Variants = {
+  hidden: { opacity: 0, y: 22 },
+  show:   { opacity: 1, y: 0, transition: { type: 'spring', damping: 20, stiffness: 100 } },
+}
+
+/** Tarjeta flotante izquierda: precio */
+const cardLeft: Variants = {
+  hidden: { opacity: 0, x: -20 },
+  show:   { opacity: 1, x: 0, transition: { type: 'spring', damping: 22, stiffness: 120, delay: 0.55 } },
+}
+
+/** Tarjeta flotante derecha: puntos */
+const cardRight: Variants = {
+  hidden: { opacity: 0, x: 20 },
+  show:   { opacity: 1, x: 0, transition: { type: 'spring', damping: 22, stiffness: 120, delay: 0.7 } },
+}
 
 // ─── Componente ───────────────────────────────────────────────────────────
 
 export function HeroSection({ onCatalogClick }: HeroSectionProps) {
   return (
-    <section className="bg-gradient-to-br from-[#faf8f5] via-[#f5f0e8] to-[#f0e8d8] relative overflow-hidden py-16 md:py-24 px-4">
-      {/* Destellos decorativos de fondo */}
-      <div className="pointer-events-none absolute top-[-100px] right-[-100px] w-[500px] h-[500px] rounded-full bg-[radial-gradient(circle,rgba(255,122,69,0.08)_0%,transparent_70%)]" />
-      <div className="pointer-events-none absolute bottom-[-80px] left-[-80px] w-[400px] h-[400px] rounded-full bg-[radial-gradient(circle,rgba(92,15,27,0.06)_0%,transparent_70%)]" />
+    <section
+      className="relative overflow-hidden"
+      style={{ minHeight: '100vh' }}
+    >
+      {/* Imagen de fondo — mármol con trufas (alineada a la derecha) */}
+      <div
+        className="absolute inset-0 bg-[#5c0f1b]"
+        style={{
+          backgroundImage: 'url(/4.png)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center right',
+          backgroundRepeat: 'no-repeat',
+        }}
+      />
 
-      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 items-center gap-10 lg:gap-16 relative z-10">
+      {/* Overlay izquierdo — menos intenso y rojizo (borgoña) */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+          'linear-gradient(to right, rgba(255, 122, 69, 0.95) 10%, rgba(255, 122, 69, 0.65) 30%, rgba(255, 122, 69, 0.15) 65%, transparent 70%)',
+        }}
+      />
 
-        {/* ── Texto ── */}
+      {/* Contenido */}
+      <div className="relative z-10 max-w-7xl mx-auto px-2 md:px-10 flex items-start pt-8 md:pt-[10vh]" style={{ minHeight: '100vh' }}>
+
+        {/* ── Columna de texto (stagger) — máximo 50% del ancho ── */}
         <motion.div
-          initial={{ opacity: 0, x: -40 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6, ease: 'easeOut' }}
-          className="flex flex-col items-start text-left"
+          variants={textContainer}
+          initial="hidden"
+          animate="show"
+          className="flex flex-col items-start text-left w-full max-w-[860px]"
         >
-          <h2
-            className="font-black text-[#2a1115] leading-[1.05] mb-6"
-            style={{ fontFamily: "'Outfit', sans-serif", fontSize: 'clamp(2.25rem, 5vw, 3.75rem)' }}
+          {/* Etiqueta superior */}
+          <motion.span
+            variants={textItem}
+            className="inline-flex items-center gap-1.5 mb-6 text-[15px] font-black uppercase tracking-[0.2em] text-white/90  border-white/20 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-sm"
+          >
+            🍫 La Trufería de Élite
+          </motion.span>
+
+          {/* Titular principal — blanco, grande, negrita */}
+          <motion.h1
+            variants={textItem}
+            className="font-black text-[var(--color-primary)] leading-[1.04] mb-6"
+            style={{ fontFamily: "'Outfit', sans-serif", fontSize: 'clamp(2.6rem, 5.5vw, 4.2rem)' }}
           >
             El antojo perfecto<br />
-            <span className="text-[#5c0f1b]">que te recompensa</span>
-          </h2>
+            <span className="text-[var(--color-primary)]">que te recompensa.</span>
+          </motion.h1>
 
-          <p className="text-base md:text-lg text-[#2a1115]/75 font-medium mb-8 leading-relaxed max-w-lg">
-            Gana puntos{' '}
-            <strong className="text-[#ff7a45] font-black">CriptoTrufas</strong> por cada compra.{' '}
-            <span className="text-[#5c0f1b] font-bold">
-              Canjéalos por descuentos exclusivos y más trufas.
+          {/* Subtítulo — blanco */}
+          <motion.p
+            variants={textItem}
+            className="text-base md:text-lg font-light mb-9 leading-[1.75] max-w-[460px]"
+          >
+            <span className="text-[#ffffff] font-normal">
+              Gana puntos{' '}
+              <strong className="text-[#892700] font-black">CriptoTrufas</strong>
+              {' '}por cada compra.{' '}
             </span>
-          </p>
+            <span className="text-white font-semibold">
+              Canjéalos por descuentos y más trufas.
+            </span>
+          </motion.p>
 
-          {/* Estadísticas */}
-          <div className="flex items-center gap-6 mb-8">
-            {STATS.map(({ value, label }) => (
+          {/* Stats */}
+          <motion.div variants={textItem} className="flex items-center gap-8 md:gap-10 mb-10">
+            {STATS.map(({ value, label }, i) => (
               <div key={label} className="text-center">
+                {i > 0 && <div className="hidden" />}
                 <p
-                  className="text-xl font-black text-[#5c0f1b]"
+                  className="text-2xl font-black text-white leading-none"
                   style={{ fontFamily: "'Outfit', sans-serif" }}
                 >
                   {value}
                 </p>
-                <p className="text-xs text-[#2a1115]/50 font-semibold">{label}</p>
-              </div>
-            ))}
-          </div>
-
-          <Button id="hp-hero-cta" variant="primary" onClick={onCatalogClick} className="px-10 py-4 text-base">
-            Ver Catálogo
-          </Button>
-        </motion.div>
-
-        {/* ── Imagen ── */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.92, y: 20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          transition={{ duration: 0.7, ease: 'easeOut', delay: 0.1 }}
-          className="relative flex justify-center lg:justify-end"
-        >
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(255,122,69,0.15)_0%,transparent_70%)]" />
-
-          <div className="relative z-10 w-full max-w-lg">
-            <div className="rounded-[40px] overflow-hidden shadow-[0_20px_60px_rgba(92,15,27,0.18),0_8px_24px_rgba(92,15,27,0.1)]">
-              <img
-                src="/hero_truffles.png"
-                alt="Trufas Artesanales Premium Mitrufely"
-                className="w-full h-[320px] md:h-[400px] object-cover"
-                onError={(e) => {
-                  ;(e.target as HTMLImageElement).src =
-                    'https://images.unsplash.com/photo-1581798459219-318e76aecc7b?auto=format&fit=crop&q=80&w=800'
-                }}
-              />
-            </div>
-
-            {/* Tarjeta flotante: precio */}
-            <motion.div
-              animate={{ y: [0, -6, 0] }}
-              transition={{ repeat: Infinity, duration: 3, ease: 'easeInOut' }}
-              className="absolute -bottom-4 -left-4 md:-left-8 bg-white rounded-2xl shadow-xl px-4 py-3 flex items-center gap-3"
-            >
-              <div className="h-10 w-10 rounded-xl bg-[#5c0f1b] flex items-center justify-center text-lg">
-                🍫
-              </div>
-              <div>
-                <p className="text-xs text-[#2a1115]/50 font-semibold">Desde</p>
-                <p
-                  className="text-lg font-black text-[#5c0f1b]"
-                  style={{ fontFamily: "'Outfit', sans-serif" }}
-                >
-                  S/. 2.20
+                <p className="text-[11px] text-white/60 font-semibold mt-0.5 uppercase tracking-wider">
+                  {label}
                 </p>
               </div>
-            </motion.div>
+            ))}
+          </motion.div>
 
-            {/* Tarjeta flotante: puntos */}
-            <motion.div
-              animate={{ y: [0, 6, 0] }}
-              transition={{ repeat: Infinity, duration: 3.5, ease: 'easeInOut', delay: 0.5 }}
-              className="absolute -top-4 -right-4 md:-right-6 bg-[#ff7a45] rounded-2xl shadow-xl px-4 py-3 flex items-center gap-2"
+          {/* CTA */}
+          <motion.div variants={textItem} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+            <Button
+              id="hp-hero-cta"
+              variant="primary"
+              onClick={onCatalogClick}
+              className="px-10 py-4 text-base shadow-[0_8px_24px_rgba(92,15,27,0.22)]"
             >
-              <Star className="h-5 w-5 fill-white text-white" />
-              <div>
-                <p className="text-xs text-white/75 font-semibold">Ganas</p>
-                <p className="text-base font-black text-white">+250 pts</p>
-              </div>
-            </motion.div>
-          </div>
+              Ver Catálogo
+            </Button>
+          </motion.div>
         </motion.div>
       </div>
+
+      {/* Tarjeta flotante: precio (esquina inferior izquierda) */}
+      
+
+      {/* Tarjeta flotante: puntos (esquina superior derecha del área visible) */}
+      
     </section>
   )
 }

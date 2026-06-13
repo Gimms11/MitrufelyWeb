@@ -140,6 +140,7 @@ html {
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 body {
@@ -177,3 +178,43 @@ body {
 }
 
 
+/* ─── Animated glowing border — Selector de Categorías ────────────────────── */
+
+@keyframes tab-border-spin {
+  0%   { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+.tab-glow-wrapper {
+  position: relative;
+  border-radius: 9999px;
+  padding: 3px;          /* grosor del borde visible */
+  overflow: hidden;
+}
+
+.tab-glow-wrapper::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  /* Cuadrado grande que al rotar cubre el perímetro completo */
+  width: 200%;
+  height: 600%;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    transparent 60deg,
+    rgb(239, 64, 2),          
+    rgb(255, 255, 255) 110deg,
+    transparent 140deg,
+    transparent 360deg
+  );
+  animation: tab-border-spin 3s linear infinite;
+  border-radius: 0;
+}
+
+.tab-glow-inner {
+  position: relative;
+  z-index: 1;
+  border-radius: 9999px;
+}

@@ -4,12 +4,16 @@
  * Contiene: logo, buscador, balance CriptoTrufas, favoritos, carrito, menú usuario.
  * Recibe todo el estado necesario via props — no se conecta directamente al store
  * para mantenerse testeable y desacoplado.
+ *
+ * UI REFACTOR: Fondo claro crema, sin borde superior, parte del bloque sticky.
  */
 import { Search, Star, User, ShoppingCart, Heart, LogOut, LayoutDashboard } from 'lucide-react'
 import { Link, useNavigate } from 'react-router'
 import { motion, AnimatePresence } from 'framer-motion'
 import { toast } from 'sonner'
 import { useAuthStore } from '@/app/store'
+import { useState, useEffect, useRef } from 'react'
+import { PublicNav } from './PublicNav'
 
 // ─── Props ────────────────────────────────────────────────────────────────
 
@@ -50,9 +54,37 @@ export function PublicHeader({
   const isAuthenticated = userName !== null
   const { user } = useAuthStore()
 
+  // ── Auto-hide al scroll ───────────────────────────────────────────────
+  const [visible, setVisible] = useState(true)
+  const lastY = useRef(0)
+
+  useEffect(() => {
+    const onScroll = () => {
+      const currentY = window.scrollY
+      if (currentY < 60) {
+        // Siempre visible cerca del top
+        setVisible(true)
+      } else if (currentY > lastY.current + 4) {
+        // Bajando: ocultar
+        setVisible(false)
+      } else if (currentY < lastY.current - 4) {
+        // Subiendo: mostrar
+        setVisible(true)
+      }
+      lastY.current = currentY
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
   return (
-    <header className="bg-gradient-to-r from-[#5c0f1b] to-[#7a1525] sticky top-0 z-50 shadow-lg">
-      <div className="max-w-7xl mx-auto px-4 md:px-8 py-3.5 flex items-center justify-between gap-4">
+    <motion.div
+      animate={{ y: visible ? 0 : '-100%' }}
+      transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
+      className="sticky top-0 z-50 shadow-sm"
+    >
+    <header className="bg-[#5c0f1b]">
+      <div className="max-w-7xl mx-auto px-4 md:px-8 py-3 flex items-center justify-between gap-4">
 
         {/* Logo */}
         <Link to="/" className="shrink-0 select-none group">
@@ -66,11 +98,11 @@ export function PublicHeader({
 
         {/* Buscador */}
         <form onSubmit={onSearchSubmit} className="hidden md:flex flex-1 max-w-sm relative">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-white/60 pointer-events-none" />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-white/50 pointer-events-none" />
           <input
             id="hp-search"
             type="text"
-            className="bg-white/15 rounded-full px-5 pl-10 py-2.5 text-white text-sm font-semibold placeholder:text-white/55 focus:outline-none focus:bg-white/22 transition-all w-full max-w-sm"
+            className="bg-white/15 border border-white/20 rounded-full px-5 pl-10 py-2.5 text-white text-sm font-medium placeholder:text-white/50 focus:outline-none focus:bg-white/22 focus:border-white/35 transition-all w-full max-w-sm"
             placeholder="Buscar trufas, sabores..."
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
@@ -81,7 +113,7 @@ export function PublicHeader({
         <div className="flex items-center gap-3 md:gap-4">
 
           {/* CriptoTrufas balance */}
-          <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full select-none">
+          <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/10 select-none">
             <Star className="h-4 w-4 fill-[#ff7a45] text-[#ff7a45]" />
             <span className="text-sm font-black text-white">
               {coinsBalance !== null ? coinsBalance.toLocaleString() : '2000'}
@@ -92,7 +124,7 @@ export function PublicHeader({
           <button
             id="hp-favorites-btn"
             onClick={() => toast.info('Favoritos disponibles al iniciar sesión.')}
-            className="relative p-2 text-white/80 hover:text-white transition-colors"
+            className="relative p-2 text-white/70 hover:text-white transition-colors"
             aria-label="Favoritos"
           >
             <Heart
@@ -109,7 +141,7 @@ export function PublicHeader({
           <button
             id="hp-cart-btn"
             onClick={() => navigate('/carrito')}
-            className="relative p-2 text-white/80 hover:text-white transition-colors"
+            className="relative p-2 text-white/70 hover:text-white transition-colors"
             aria-label="Carrito"
           >
             <ShoppingCart className="h-5 w-5" />
@@ -191,7 +223,7 @@ export function PublicHeader({
               <button
                 id="hp-login-btn"
                 onClick={() => navigate('/login')}
-                className="flex h-9 items-center gap-2 px-4 rounded-full bg-white/15 text-white hover:bg-white/25 transition-colors text-sm font-black"
+                className="flex h-9 items-center gap-2 px-4 rounded-full bg-white/15 text-white hover:bg-white/25 border border-white/25 transition-colors text-sm font-black"
               >
                 <User className="h-4 w-4" />
                 <span className="hidden sm:inline">Ingresar</span>
@@ -201,5 +233,7 @@ export function PublicHeader({
         </div>
       </div>
     </header>
+    <PublicNav />
+    </motion.div>
   )
 }

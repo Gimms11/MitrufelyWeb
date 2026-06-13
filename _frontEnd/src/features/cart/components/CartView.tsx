@@ -127,8 +127,6 @@ export default function CartView() {
         onLogout={handleLogout}
       />
 
-      <PublicNav />
-
       <main className="max-w-7xl mx-auto px-4 md:px-8 py-10">
         <div className="mb-8">
           <h1

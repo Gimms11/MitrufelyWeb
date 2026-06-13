@@ -62,8 +62,6 @@ export default function CustomerOrdersPage() {
         searchQuery={searchQuery} onSearchChange={setSearchQuery}
         onSearchSubmit={handleSearch} onLogout={handleLogout}
       />
-      <PublicNav />
-
       <main className="max-w-4xl mx-auto px-4 md:px-8 py-10">
         <Link to="/" className="inline-flex items-center gap-2 text-sm font-bold text-[#5c0f1b]/60 hover:text-[#5c0f1b] transition-colors mb-6">
           <ArrowLeft className="h-4 w-4" /> Volver al inicio

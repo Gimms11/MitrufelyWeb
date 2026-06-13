@@ -54,7 +54,7 @@ function InfoRow({
 }) {
   return (
     <div
-      className={`flex gap-3 p-3.5 rounded-xl border transition-colors ${
+      className={`flex gap-3 p-3.5 rounded-xl  transition-colors ${
         warning
           ? 'bg-amber-50 border-amber-200'
           : accent
@@ -138,7 +138,7 @@ export function InfoModal({ product, isOpen, onClose }: InfoModalProps) {
             animate={{ scale: 1, y: 0, opacity: 1 }}
             exit={{ scale: 0.92, y: 30, opacity: 0 }}
             transition={{ type: 'spring', damping: 26, stiffness: 240 }}
-            className="bg-white w-full max-w-lg rounded-[28px] overflow-hidden shadow-2xl border border-[#5c0f1b]/10 max-h-[90vh] flex flex-col"
+            className="bg-white w-full max-w-lg rounded-[28px] overflow-hidden shadow-2xl  border-[#5c0f1b]/10 max-h-[90vh] flex flex-col"
             onClick={(e) => e.stopPropagation()}
             role="dialog"
             aria-modal="true"
