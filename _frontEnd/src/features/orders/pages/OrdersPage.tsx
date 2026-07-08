@@ -32,11 +32,21 @@ export default function OrdersPage() {
   const [statusFilter, setStatusFilter] = useState<string>('all')
   const [paymentFilter, setPaymentFilter] = useState<string>('all')
 
-  // Estado para el modal de confirmación personalizado
-  const [confirmModal, setConfirmModal] = useState<{ isOpen: boolean; id: number | null; action: string | null }>({
+  // Estado para el modal de confirmación personalizado (con captura de motivo)
+  const [confirmModal, setConfirmModal] = useState<{
+    isOpen: boolean
+    id: number | null
+    action: string | null
+    motivo: string
+    monto: string
+    error: string | null
+  }>({
     isOpen: false,
     id: null,
     action: null,
+    motivo: '',
+    monto: '',
+    error: null,
   })
 
   // Query sales
@@ -51,29 +61,63 @@ export default function OrdersPage() {
   // Mutation for state transitions (M14)
   const transitionMut = useTransitionVentaMutation()
 
+  // Acciones que requieren motivo obligatorio (mín. 5 chars según backend)
+  const ACCIONES_CON_MOTIVO = new Set(['cancelar', 'devolver', 'reembolsar'])
+  const ACCIONES_CON_MONTO = new Set(['reembolsar'])
+
   const handleTransition = (id: number, action: string, e: React.MouseEvent) => {
     e.preventDefault()
-    setConfirmModal({ isOpen: true, id, action })
+    setConfirmModal({ isOpen: true, id, action, motivo: '', monto: '', error: null })
   }
 
   const confirmTransition = () => {
-    if (confirmModal.id && confirmModal.action) {
-      transitionMut.mutate(
-        { id: confirmModal.id, action: confirmModal.action },
-        {
-          onSuccess: () => {
-            closeConfirmModal()
-          },
-          onError: () => {
-            closeConfirmModal()
-          },
-        }
-      )
+    if (!confirmModal.id || !confirmModal.action) return
+    const action = confirmModal.action
+
+    // Validación cliente-side según el tipo de acción
+    if (ACCIONES_CON_MOTIVO.has(action)) {
+      if (confirmModal.motivo.trim().length < 5) {
+        setConfirmModal({ ...confirmModal, error: 'El motivo debe tener al menos 5 caracteres.' })
+        return
+      }
     }
+    if (ACCIONES_CON_MONTO.has(action)) {
+      const montoNum = Number(confirmModal.monto)
+      if (!confirmModal.monto || isNaN(montoNum) || montoNum <= 0) {
+        setConfirmModal({ ...confirmModal, error: 'Ingresa un monto válido mayor a 0.' })
+        return
+      }
+    }
+
+    // Construir payload según la acción
+    const payload: { motivo?: string; observaciones?: string; monto?: number } = {}
+    if (ACCIONES_CON_MOTIVO.has(action)) {
+      payload.motivo = confirmModal.motivo.trim()
+    }
+    if (ACCIONES_CON_MONTO.has(action)) {
+      payload.monto = Number(confirmModal.monto)
+    }
+
+    transitionMut.mutate(
+      { id: confirmModal.id, action, payload },
+      {
+        onSuccess: () => closeConfirmModal(),
+        onError: (error: unknown) => {
+          // NO cerrar el modal: mostrar el error dentro para permitir reintentar
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const e = error as any
+          const detail = e?.response?.data?.detail
+          let msg = 'No se pudo procesar la transición.'
+          if (Array.isArray(detail)) msg = detail.map((err) => err.msg || err).join(', ')
+          else if (typeof detail === 'string') msg = detail
+          setConfirmModal((prev) => ({ ...prev, error: msg }))
+        },
+      }
+    )
   }
 
   const closeConfirmModal = () => {
-    setConfirmModal({ isOpen: false, id: null, action: null })
+    setConfirmModal({ isOpen: false, id: null, action: null, motivo: '', monto: '', error: null })
   }
 
   // Filter orders on client side to enable clean dashboard-like control
@@ -203,17 +247,29 @@ export default function OrdersPage() {
                   {order.estado === 'PAGADO' && (
                     <>
                       <button onClick={(e) => handleTransition(order.id_venta, 'preparar', e)} className="w-full text-left px-3 py-2 text-xs font-bold hover:bg-orange-50 text-orange-700">Preparar</button>
-                      <button onClick={(e) => handleTransition(order.id_venta, 'reembolsar', e)} className="w-full text-left px-3 py-2 text-xs font-bold hover:bg-purple-50 text-purple-700">Reembolsar</button>
+                      <button onClick={(e) => handleTransition(order.id_venta, 'cancelar', e)} className="w-full text-left px-3 py-2 text-xs font-bold hover:bg-red-50 text-red-700">Cancelar</button>
                     </>
                   )}
                   {order.estado === 'PREPARANDO' && (
-                    <button onClick={(e) => handleTransition(order.id_venta, 'despachar', e)} className="w-full text-left px-3 py-2 text-xs font-bold hover:bg-indigo-50 text-indigo-700">Despachar</button>
+                    <>
+                      <button onClick={(e) => handleTransition(order.id_venta, 'despachar', e)} className="w-full text-left px-3 py-2 text-xs font-bold hover:bg-indigo-50 text-indigo-700">Despachar</button>
+                      <button onClick={(e) => handleTransition(order.id_venta, 'cancelar', e)} className="w-full text-left px-3 py-2 text-xs font-bold hover:bg-red-50 text-red-700">Cancelar</button>
+                    </>
                   )}
                   {order.estado === 'EN_CAMINO' && (
-                    <button onClick={(e) => handleTransition(order.id_venta, 'entregar', e)} className="w-full text-left px-3 py-2 text-xs font-bold hover:bg-emerald-50 text-emerald-700">Entregar</button>
+                    <>
+                      <button onClick={(e) => handleTransition(order.id_venta, 'entregar', e)} className="w-full text-left px-3 py-2 text-xs font-bold hover:bg-emerald-50 text-emerald-700">Entregar</button>
+                      <button onClick={(e) => handleTransition(order.id_venta, 'devolver', e)} className="w-full text-left px-3 py-2 text-xs font-bold hover:bg-rose-50 text-rose-700">Devolver (retorna)</button>
+                    </>
                   )}
                   {order.estado === 'ENTREGADO' && (
-                    <button onClick={(e) => handleTransition(order.id_venta, 'devolver', e)} className="w-full text-left px-3 py-2 text-xs font-bold hover:bg-rose-50 text-rose-700">Devolver</button>
+                    <>
+                      <button onClick={(e) => handleTransition(order.id_venta, 'devolver', e)} className="w-full text-left px-3 py-2 text-xs font-bold hover:bg-rose-50 text-rose-700">Devolver</button>
+                      <button onClick={(e) => handleTransition(order.id_venta, 'reembolsar', e)} className="w-full text-left px-3 py-2 text-xs font-bold hover:bg-purple-50 text-purple-700">Reembolsar</button>
+                    </>
+                  )}
+                  {(order.estado === 'CANCELADO' || order.estado === 'DEVUELTO') && (
+                    <button onClick={(e) => handleTransition(order.id_venta, 'reembolsar', e)} className="w-full text-left px-3 py-2 text-xs font-bold hover:bg-purple-50 text-purple-700">Reembolsar</button>
                   )}
                 </div>
               </div>
@@ -315,23 +371,76 @@ export default function OrdersPage() {
         )}
       </main>
 
-      {/* Modal de Confirmación Custom */}
+      {/* Modal de Confirmación Custom (con captura de motivo / monto) */}
       {confirmModal.isOpen && (
         <div className="fixed inset-0 z-[200] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl relative border border-[#5c0f1b]/10 animate-in fade-in zoom-in duration-200">
-            <h3 className="text-lg font-black text-[#5c0f1b] mb-2" style={{ fontFamily: "'Outfit', sans-serif" }}>Confirmar Acción</h3>
-            <p className="text-sm text-stone-600 mb-6">
-              ¿Estás seguro de que deseas aplicar la acción <strong>'{confirmModal.action}'</strong> a la venta <strong>#{confirmModal.id}</strong>?
+          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl relative border border-[#5c0f1b]/10 animate-in fade-in zoom-in duration-200">
+            <h3 className="text-lg font-black text-[#5c0f1b] mb-2" style={{ fontFamily: "'Outfit', sans-serif" }}>
+              {confirmModal.action === 'cancelar' && 'Cancelar pedido'}
+              {confirmModal.action === 'devolver' && 'Registrar devolución'}
+              {confirmModal.action === 'reembolsar' && 'Procesar reembolso'}
+              {!ACCIONES_CON_MOTIVO.has(confirmModal.action ?? '') && 'Confirmar acción'}
+            </h3>
+            <p className="text-sm text-stone-600 mb-4">
+              Venta <strong>#{confirmModal.id}</strong> —{' '}
+              <span className="capitalize">{confirmModal.action}</span>.
+              {ACCIONES_CON_MOTIVO.has(confirmModal.action ?? '') &&
+                ' Esta acción reintegra el stock y queda registrada en el historial.'}
             </p>
+
+            {/* Campos dinámicos según la acción */}
+            {ACCIONES_CON_MONTO.has(confirmModal.action ?? '') && (
+              <div className="mb-3">
+                <label className="block text-xs font-black uppercase tracking-wide text-stone-500 mb-1">
+                  Monto a reembolsar (S/)
+                </label>
+                <input
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  value={confirmModal.monto}
+                  onChange={(e) => setConfirmModal({ ...confirmModal, monto: e.target.value, error: null })}
+                  placeholder="Ej: 50.00"
+                  className="w-full px-3 py-2 rounded-xl border border-stone-200 bg-[#faf8f5] text-sm font-semibold text-[#2a1115] outline-none focus:border-[#5c0f1b]"
+                  disabled={transitionMut.isPending}
+                />
+              </div>
+            )}
+
+            {ACCIONES_CON_MOTIVO.has(confirmModal.action ?? '') && (
+              <div className="mb-3">
+                <label className="block text-xs font-black uppercase tracking-wide text-stone-500 mb-1">
+                  Motivo <span className="text-red-500">*</span>
+                </label>
+                <textarea
+                  value={confirmModal.motivo}
+                  onChange={(e) => setConfirmModal({ ...confirmModal, motivo: e.target.value, error: null })}
+                  placeholder="Describe el motivo (mínimo 5 caracteres)..."
+                  rows={3}
+                  className="w-full px-3 py-2 rounded-xl border border-stone-200 bg-[#faf8f5] text-sm font-semibold text-[#2a1115] outline-none focus:border-[#5c0f1b] resize-none"
+                  disabled={transitionMut.isPending}
+                />
+                <p className="text-[10px] text-stone-400 mt-1">{confirmModal.motivo.trim().length}/5 mínimo</p>
+              </div>
+            )}
+
+            {/* Error inline (no cierra el modal para permitir reintentar) */}
+            {confirmModal.error && (
+              <div className="mb-4 p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs font-semibold flex items-start gap-2">
+                <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+                <span>{confirmModal.error}</span>
+              </div>
+            )}
+
             <div className="flex gap-3">
-              <button 
+              <button
                 onClick={closeConfirmModal}
                 disabled={transitionMut.isPending}
                 className="flex-1 py-2.5 rounded-xl border border-stone-200 text-stone-600 font-bold text-sm hover:bg-stone-50 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Cancelar
               </button>
-              <button 
+              <button
                 onClick={confirmTransition}
                 disabled={transitionMut.isPending}
                 className="flex-1 py-2.5 rounded-xl bg-[#5c0f1b] text-white font-bold text-sm hover:bg-[#7a1525] transition-all cursor-pointer shadow-md disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"

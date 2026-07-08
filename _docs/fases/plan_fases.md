@@ -13,7 +13,7 @@ graph TD
     F3 -->|✅ Completado| F4[Fase 4: Carrito & Checkout Transaccional]
     F4 -->|✅ Completado| F5[Fase 5: Sistema de Pedidos y E-Commerce Extendido]
     F5 -->|✅ Completado| F6[Fase 6: Recompensas CriptoTrufas]
-    F6 --> F7[Fase 7: Dashboard, Reportes PDF/Excel]
+    F6 -->|✅ Completado| F7[Fase 7: Dashboard, Reportes PDF/Excel]
     F7 --> F8[Fase 8: Pruebas, Optimización & Despliegue]
 ```
 
@@ -81,15 +81,22 @@ graph TD
   * Vitrina de canje de cupones con animaciones dinámicas de felicitación (`framer-motion` + `canvas-confetti`).
   * Integración en el Checkout para seleccionar y aplicar cupones de descuento válidos con recálculo dinámico del total de compra.
 
-### 🔹 Fase 7: Panel de Administración, Reportes y Documentos (PDF/Excel)
+### 🔹 Fase 7: Panel de Administración, Reportes y Documentos (PDF/Excel) ✅ IMPLEMENTADO
+* Ver detalle completo en [fase7_reportes_dashboard.md](./fase7_reportes_dashboard.md).
 * **Objetivo:** Proveer herramientas visuales y descargables para que los administradores controlen el negocio y los clientes obtengan sus comprobantes formales.
+* **Identificación de 7 reportes funcionales:** Rendimiento de Ventas, Seguimiento de Pedidos, Catálogo Comercial, Control de Inventario, Gestión de Usuarios, Comprobantes Electrónicos (PDF) y Fidelización SweetCoins / CriptoTrufa.
 * **Backend (`FastAPI`):**
-  * Generación asíncrona de reportes agregados y KPIs en segundo plano utilizando `celery`.
-  * **Generación de Comprobantes PDF con WeasyPrint:** Se utiliza exclusivamente `WeasyPrint` para la conversión de plantillas HTML/CSS premium a PDF.
-  * Generación de archivos Excel de Kardex y ventas usando `openpyxl` y `xlsxwriter`.
+  * Módulo `app/modules/reports` completo: `ReportsService` (consultas agregadas), generadores PDF (`reportlab`) y Excel (`openpyxl`), router con 4 endpoints (JSON / PDF / Excel + comprobante por venta).
+  * Módulo `app/modules/users` completo: listado, detalle y activar/desactivar cuentas (Reporte de Gestión de Usuarios).
+  * **Dashboard de KPIs en vivo** (`app/modules/dashboard`).
+  * Tareas Celery `generate_sales_pdf` / `export_inventory_excel` implementadas (generación asíncrona).
+  * Generación de **Comprobantes Electrónicos PDF** por venta con `reportlab` (datos del cliente, productos, cantidades y total).
 * **Frontend (`React + TypeScript`):**
-  * Dashboard premium para administradores con KPIs interactivos y gráficos SVG responsivos usando la librería `recharts`.
-  * Uso de librerías en el cliente como `jspdf` y `exceljs` para descargas inmediatas.
+  * Dashboard premium con KPIs y gráficos `recharts`.
+  * `ReportsPage` con exportación en cliente (`exceljs`/print) **y** botones de descarga desde el servidor (PDF/Excel generados con reportlab/openpyxl).
+  * `AdminUsersPage` (`/dashboard/usuarios`) para gestión de usuarios.
+  * Botón de descarga de comprobante PDF en `CustomerOrderDetailPage`.
+* **Stack PDF:** `reportlab` (en lugar de WeasyPrint) por portabilidad en Windows.
 
 ### 🔹 Fase 8: Pruebas, Optimización y Despliegue
 * **Objetivo:** Optimizar el rendimiento de la aplicación, asegurar su robustez con cobertura de pruebas automatizadas y realizar el despliegue a producción.

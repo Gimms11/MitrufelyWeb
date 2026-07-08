@@ -24,6 +24,7 @@ const AdminReviewsPage = lazy(() => import('@/features/reviews/pages/AdminReview
 const AdminIssuesPage = lazy(() => import('@/features/issues/pages/AdminIssuesPage'))
 const CriptoTrufasPage = lazy(() => import('@/features/sweetcoins/pages/SweetCoinsPage'))
 const AdminSweetCoinsPage = lazy(() => import('@/features/sweetcoins/pages/AdminSweetCoinsPage'))
+const AdminUsersPage = lazy(() => import('@/features/users/pages/AdminUsersPage'))
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'))
 const CartPage = lazy(() => import('@/features/cart/pages/CartPage'))
 const ProductDetailView = lazy(() => import('@/features/products/pages/ProductDetailView'))
@@ -135,6 +136,11 @@ export function AppRouter() {
                 <Route path="reviews" element={<AdminReviewsPage />} />
                 <Route path="incidencias" element={<AdminIssuesPage />} />
               </Route>
+            </Route>
+
+            {/* Solo ADMIN — Gestión de Usuarios (Reporte Fase 7) */}
+            <Route element={<RequirePermission permission="MANAGE_USERS" />}>
+              <Route path="/dashboard/usuarios" element={<AdminUsersPage />} />
             </Route>
 
             {/* ADMIN, MANAGER y CUSTOMER */}

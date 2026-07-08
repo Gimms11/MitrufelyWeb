@@ -24,6 +24,7 @@ import pytest
 
 from app.core.exceptions import (
     BusinessRuleError,
+    ForbiddenError,
     InsufficientStockError,
     NotFoundError,
 )
@@ -34,7 +35,7 @@ from app.infrastructure.database.models.enums import (
     EstadoPagoEnum,
     EstadoVentaEnum,
 )
-from app.modules.orders.schemas import ItemPaquete, ItemProducto, VentaRequest
+from app.modules.orders.schemas import CancelRequest, ItemPaquete, ItemProducto, VentaRequest
 from app.modules.orders.service import VentaService
 
 
@@ -694,3 +695,95 @@ class TestVentaServiceConsultas:
 
         result = await service.get_by_cliente(id_cliente=1)
         assert result == []
+
+
+@pytest.mark.unit
+class TestVentaServiceCancelar:
+    """Tests del flujo de cancelación: estados cancelables y titularidad."""
+
+    def _make_venta_con_cliente(
+        self,
+        estado: EstadoVentaEnum = EstadoVentaEnum.PENDIENTE,
+        id_cliente: int = 1,
+        id_usuario_cliente: int = 5,
+    ) -> MagicMock:
+        venta = make_venta_mock(estado=estado, id_cliente=id_cliente)
+        cliente_mock = MagicMock()
+        cliente_mock.id_cliente = id_cliente
+        cliente_mock.id_usuario = id_usuario_cliente
+        venta.cliente = cliente_mock
+        return venta
+
+    async def test_cancelar_estado_no_cancelable_lanza_business_error(
+        self,
+        service: VentaService,
+        mock_session: AsyncMock,
+    ) -> None:
+        # EN_CAMINO no es cancelable (debe ir a DEVUELTO)
+        venta = self._make_venta_con_cliente(estado=EstadoVentaEnum.EN_CAMINO)
+
+        mock_result = MagicMock()
+        mock_result.scalar_one_or_none.return_value = venta
+        mock_session.execute = AsyncMock(return_value=mock_result)
+
+        dto = CancelRequest(motivo="Pedido en tránsito, no cancelable")
+        with pytest.raises(BusinessRuleError) as exc_info:
+            await service.cancelar(id_venta=1, id_usuario=5, dto=dto, es_admin=True)
+        assert "cancelarse" in exc_info.value.message.lower() or "cancelar" in exc_info.value.message.lower()
+
+    async def test_cancelar_cliente_ajeno_lanza_forbidden(
+        self,
+        service: VentaService,
+        mock_session: AsyncMock,
+    ) -> None:
+        # El pedido pertenece al usuario 5; un cliente distinto (999) intenta cancelarlo
+        venta = self._make_venta_con_cliente(
+            estado=EstadoVentaEnum.PENDIENTE, id_usuario_cliente=5
+        )
+
+        mock_result = MagicMock()
+        mock_result.scalar_one_or_none.return_value = venta
+        mock_session.execute = AsyncMock(return_value=mock_result)
+
+        dto = CancelRequest(motivo="Intento de cancelar pedido ajeno")
+        with pytest.raises(ForbiddenError):
+            await service.cancelar(id_venta=1, id_usuario=999, dto=dto, es_admin=False)
+
+    async def test_cancelar_duenio_exitoso(
+        self,
+        service: VentaService,
+        mock_session: AsyncMock,
+    ) -> None:
+        # El dueño (usuario 5) cancela su propio pedido PENDIENTE
+        venta = self._make_venta_con_cliente(
+            estado=EstadoVentaEnum.PENDIENTE, id_usuario_cliente=5
+        )
+
+        mock_result = MagicMock()
+        mock_result.scalar_one_or_none.return_value = venta
+        mock_session.execute = AsyncMock(return_value=mock_result)
+
+        dto = CancelRequest(motivo="Ya no lo necesito, gracias")
+        # Debe completarse sin excepción (el stock devuelto se mockea vía detalles vacíos)
+        result = await service.cancelar(id_venta=1, id_usuario=5, dto=dto, es_admin=False)
+        assert result.estado == "CANCELADO"
+        assert venta.cancellation_reason == "Ya no lo necesito, gracias"
+
+    async def test_admin_puede_cancelar_cualquier_pedido(
+        self,
+        service: VentaService,
+        mock_session: AsyncMock,
+    ) -> None:
+        # Un admin puede cancelar el pedido de cualquier cliente
+        venta = self._make_venta_con_cliente(
+            estado=EstadoVentaEnum.PAGADO, id_usuario_cliente=5
+        )
+
+        mock_result = MagicMock()
+        mock_result.scalar_one_or_none.return_value = venta
+        mock_session.execute = AsyncMock(return_value=mock_result)
+
+        dto = CancelRequest(motivo="Cancelación administrativa por incidencia")
+        result = await service.cancelar(id_venta=1, id_usuario=1, dto=dto, es_admin=True)
+        assert result.estado == "CANCELADO"
+
