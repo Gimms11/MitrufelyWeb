@@ -34,6 +34,9 @@ services:
       - PYTHONPATH=/app            # Necesario para imports desde bind mount
       - WATCHFILES_FORCE_POLLING=true   # REQUERIDO en Windows+WSL2 para hot reload
       - WATCHFILES_POLL_DELAY_MS=1000   # Polling cada 1s (balance perf/latencia)
+      - REDIS_URL=redis://redis:6399/0
+      - CELERY_BROKER_URL=redis://redis:6399/1
+      - CELERY_RESULT_BACKEND=redis://redis:6399/2
     env_file:
       - .env
     depends_on:
@@ -79,6 +82,9 @@ services:
       - .:/app
     environment:
       - PYTHONPATH=/app
+      - REDIS_URL=redis://redis:6399/0
+      - CELERY_BROKER_URL=redis://redis:6399/1
+      - CELERY_RESULT_BACKEND=redis://redis:6399/2
     env_file:
       - .env
     depends_on:
@@ -109,6 +115,9 @@ services:
       - beat_schedule:/var/celerybeat   # FIX: directorio dedicado, path explícito
     environment:
       - PYTHONPATH=/app
+      - REDIS_URL=redis://redis:6399/0
+      - CELERY_BROKER_URL=redis://redis:6399/1
+      - CELERY_RESULT_BACKEND=redis://redis:6399/2
     env_file:
       - .env
     depends_on:

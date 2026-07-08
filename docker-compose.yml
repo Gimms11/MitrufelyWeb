@@ -28,6 +28,9 @@ services:
       - PYTHONPATH=/app
       - WATCHFILES_FORCE_POLLING=true
       - WATCHFILES_POLL_DELAY_MS=1000
+      - REDIS_URL=redis://redis:6399/0
+      - CELERY_BROKER_URL=redis://redis:6399/1
+      - CELERY_RESULT_BACKEND=redis://redis:6399/2
     env_file:
       - ./_backEnd/.env
     depends_on:
@@ -99,6 +102,9 @@ services:
       - ./_backEnd:/app
     environment:
       - PYTHONPATH=/app
+      - REDIS_URL=redis://redis:6399/0
+      - CELERY_BROKER_URL=redis://redis:6399/1
+      - CELERY_RESULT_BACKEND=redis://redis:6399/2
     env_file:
       - ./_backEnd/.env
     depends_on:
@@ -129,6 +135,9 @@ services:
       - beat_schedule:/var/celerybeat
     environment:
       - PYTHONPATH=/app
+      - REDIS_URL=redis://redis:6399/0
+      - CELERY_BROKER_URL=redis://redis:6399/1
+      - CELERY_RESULT_BACKEND=redis://redis:6399/2
     env_file:
       - ./_backEnd/.env
     depends_on:
