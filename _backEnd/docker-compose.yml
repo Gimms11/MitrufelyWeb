@@ -1,8 +1,7 @@
 # ==============================================================================
-# Mifrufely Web — Docker Compose (Development)
-# Services: API + Redis + Celery Worker + Celery Beat
+# Mifrufely Web — Docker Compose (Development) — Backend standalone
+# Ejecutar desde: MitrufelyWeb/_backEnd/
 # ==============================================================================
-# NOTA: 'version' eliminado — obsoleto en Docker Compose v2+
 
 services:
 
@@ -11,7 +10,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      target: development          # Stage dedicado a desarrollo (ver Dockerfile)
+      target: development
     command:
       - uvicorn
       - app.main:app
@@ -25,20 +24,22 @@ services:
       - --log-level
       - info
     volumes:
-      - .:/app                     # Bind mount: código local → contenedor
+      - .:/app
     ports:
-      - "127.0.0.1:8000:8000"     # Solo accesible desde localhost
+      - "127.0.0.1:8000:8000"
+    env_file:
+      - .env
     environment:
       - APP_ENV=development
       - DEBUG=true
-      - PYTHONPATH=/app            # Necesario para imports desde bind mount
-      - WATCHFILES_FORCE_POLLING=true   # REQUERIDO en Windows+WSL2 para hot reload
-      - WATCHFILES_POLL_DELAY_MS=1000   # Polling cada 1s (balance perf/latencia)
+      - PYTHONPATH=/app
+      - WATCHFILES_FORCE_POLLING=true
+      - WATCHFILES_POLL_DELAY_MS=1000
+      # ─── REDIS / CELERY — VALORES DEFINITIVOS (no cambiar) ───────────────
       - REDIS_URL=redis://redis:6399/0
       - CELERY_BROKER_URL=redis://redis:6399/1
       - CELERY_RESULT_BACKEND=redis://redis:6399/2
-    env_file:
-      - .env
+      # ─────────────────────────────────────────────────────────────────────
     depends_on:
       redis:
         condition: service_healthy
@@ -49,16 +50,17 @@ services:
   # ── Redis ──────────────────────────────────────────────────────────────────
   redis:
     image: redis:7.2-alpine
-    ports:
-      - "127.0.0.1:6399:6399"     # Puerto 6399: evita conflicto con otros contenedores en 6379
     command: redis-server --port 6399 --maxmemory 256mb --maxmemory-policy allkeys-lru
+    ports:
+      - "127.0.0.1:6399:6399"
     volumes:
       - redis_data:/data
     healthcheck:
       test: ["CMD", "redis-cli", "-p", "6399", "ping"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
     networks:
       - mifrufely-net
     restart: unless-stopped
@@ -68,7 +70,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      target: development          # Mismo stage que api para consistencia
+      target: development
     command:
       - celery
       - -A
@@ -78,18 +80,22 @@ services:
       - --concurrency=2
       - -Q
       - celery
+      - --without-mingle
     volumes:
       - .:/app
+    env_file:
+      - .env
     environment:
       - PYTHONPATH=/app
+      # ─── REDIS / CELERY — VALORES DEFINITIVOS (no cambiar) ───────────────
       - REDIS_URL=redis://redis:6399/0
       - CELERY_BROKER_URL=redis://redis:6399/1
       - CELERY_RESULT_BACKEND=redis://redis:6399/2
-    env_file:
-      - .env
+      # ─────────────────────────────────────────────────────────────────────
+      - C_FORCE_ROOT=true
     depends_on:
       redis:
-        condition: service_healthy  # FIX: esperar a que Redis esté listo
+        condition: service_healthy
     networks:
       - mifrufely-net
     restart: on-failure
@@ -112,17 +118,20 @@ services:
       - /var/celerybeat/celerybeat-schedule
     volumes:
       - .:/app
-      - beat_schedule:/var/celerybeat   # FIX: directorio dedicado, path explícito
+      - beat_schedule:/var/celerybeat
+    env_file:
+      - .env
     environment:
       - PYTHONPATH=/app
+      # ─── REDIS / CELERY — VALORES DEFINITIVOS (no cambiar) ───────────────
       - REDIS_URL=redis://redis:6399/0
       - CELERY_BROKER_URL=redis://redis:6399/1
       - CELERY_RESULT_BACKEND=redis://redis:6399/2
-    env_file:
-      - .env
+      # ─────────────────────────────────────────────────────────────────────
+      - C_FORCE_ROOT=true
     depends_on:
       redis:
-        condition: service_healthy   # FIX: esperar a que Redis esté listo
+        condition: service_healthy
     networks:
       - mifrufely-net
     restart: on-failure
@@ -134,4 +143,3 @@ volumes:
 networks:
   mifrufely-net:
     driver: bridge
-

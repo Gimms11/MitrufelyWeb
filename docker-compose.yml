@@ -22,17 +22,23 @@ services:
       - ./_backEnd:/app
     ports:
       - "127.0.0.1:8000:8000"
+    # ORDEN IMPORTANTE: env_file primero, luego environment.
+    # Docker Compose da prioridad a 'environment' sobre 'env_file'.
+    # Las 3 variables de Redis se sobreescriben aquí de forma explícita
+    # para garantizar el puerto correcto (6399) sin importar qué haya en el .env.
+    env_file:
+      - ./_backEnd/.env
     environment:
       - APP_ENV=development
       - DEBUG=true
       - PYTHONPATH=/app
       - WATCHFILES_FORCE_POLLING=true
       - WATCHFILES_POLL_DELAY_MS=1000
+      # ─── REDIS / CELERY — VALORES DEFINITIVOS (no cambiar) ───────────────
       - REDIS_URL=redis://redis:6399/0
       - CELERY_BROKER_URL=redis://redis:6399/1
       - CELERY_RESULT_BACKEND=redis://redis:6399/2
-    env_file:
-      - ./_backEnd/.env
+      # ─────────────────────────────────────────────────────────────────────
     depends_on:
       redis:
         condition: service_healthy
@@ -69,16 +75,18 @@ services:
   # ── Redis ──────────────────────────────────────────────────────────────────
   redis:
     image: redis:7.2-alpine
-    ports:
-      - "127.0.0.1:6399:6399"
+    # Puerto 6399 para evitar conflicto con cualquier Redis local en el host (6379)
     command: redis-server --port 6399 --maxmemory 256mb --maxmemory-policy allkeys-lru
+    ports:
+      - "127.0.0.1:6399:6399"   # Expuesto solo en localhost para evitar acceso externo
     volumes:
       - redis_data:/data
     healthcheck:
       test: ["CMD", "redis-cli", "-p", "6399", "ping"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      interval: 5s      # Verificar cada 5s (más rápido para acelerar el arranque)
+      timeout: 3s
+      retries: 10       # 10 reintentos = hasta 50s de gracia antes de fallar
+      start_period: 10s # Dar 10s extra al inicio para que Redis arranque
     networks:
       - mifrufely-net
     restart: unless-stopped
@@ -98,15 +106,21 @@ services:
       - --concurrency=2
       - -Q
       - celery
+      # Suprimir el warning de root (solo desarrollo)
+      - --without-mingle
     volumes:
       - ./_backEnd:/app
+    env_file:
+      - ./_backEnd/.env
     environment:
       - PYTHONPATH=/app
+      # ─── REDIS / CELERY — VALORES DEFINITIVOS (no cambiar) ───────────────
       - REDIS_URL=redis://redis:6399/0
       - CELERY_BROKER_URL=redis://redis:6399/1
       - CELERY_RESULT_BACKEND=redis://redis:6399/2
-    env_file:
-      - ./_backEnd/.env
+      # ─────────────────────────────────────────────────────────────────────
+      # Suprimir el warning de root en desarrollo
+      - C_FORCE_ROOT=true
     depends_on:
       redis:
         condition: service_healthy
@@ -133,13 +147,16 @@ services:
     volumes:
       - ./_backEnd:/app
       - beat_schedule:/var/celerybeat
+    env_file:
+      - ./_backEnd/.env
     environment:
       - PYTHONPATH=/app
+      # ─── REDIS / CELERY — VALORES DEFINITIVOS (no cambiar) ───────────────
       - REDIS_URL=redis://redis:6399/0
       - CELERY_BROKER_URL=redis://redis:6399/1
       - CELERY_RESULT_BACKEND=redis://redis:6399/2
-    env_file:
-      - ./_backEnd/.env
+      # ─────────────────────────────────────────────────────────────────────
+      - C_FORCE_ROOT=true
     depends_on:
       redis:
         condition: service_healthy

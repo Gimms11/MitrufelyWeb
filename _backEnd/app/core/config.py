@@ -60,12 +60,12 @@ class Settings(BaseSettings):
     ALLOWED_HEADERS: list[str] = ["*"]
 
     # ── Redis ─────────────────────────────────────────────────────────────────
-    REDIS_URL: str = "redis://localhost:6379/0"
+    REDIS_URL: str = "redis://redis:6399/0"
     REDIS_CACHE_TTL: int = 300
 
     # ── Celery ────────────────────────────────────────────────────────────────
-    CELERY_BROKER_URL: str = "redis://localhost:6379/1"
-    CELERY_RESULT_BACKEND: str = "redis://localhost:6379/2"
+    CELERY_BROKER_URL: str = "redis://redis:6399/1"
+    CELERY_RESULT_BACKEND: str = "redis://redis:6399/2"
 
     # ── Logging ───────────────────────────────────────────────────────────────
     LOG_LEVEL: Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"] = "INFO"
