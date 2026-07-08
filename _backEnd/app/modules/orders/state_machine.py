@@ -6,12 +6,26 @@ Transiciones válidas:
   PENDIENTE   → PAGADO | CANCELADO
   PAGADO      → PREPARANDO | CANCELADO
   PREPARANDO  → EN_CAMINO | CANCELADO
-  EN_CAMINO   → ENTREGADO
-  ENTREGADO   → DEVUELTO
+  EN_CAMINO   → ENTREGADO | DEVUELTO
+  ENTREGADO   → DEVUELTO | REEMBOLSADO
   CANCELADO   → REEMBOLSADO
   DEVUELTO    → REEMBOLSADO
   REEMBOLSADO → (terminal)
   ANULADO     → (terminal — solo Celery expire)
+
+Estados terminales: REEMBOLSADO y ANULADO.
+
+Escenarios de error cubiertos por el flujo:
+  - Cancelación del cliente/admin antes del despacho: PENDIENTE/PAGADO/PREPARANDO → CANCELADO.
+  - Pedido en tránsito que retorna a tienda (cliente no ubicado, dirección errada,
+    producto dañado en ruta): EN_CAMINO → DEVUELTO.
+  - Devolución post-entrega: ENTREGADO → DEVUELTO.
+  - Reembolso directo post-entrega sin devolución física previa: ENTREGADO → REEMBOLSADO.
+  - Reembolso tras cancelación o devolución: CANCELADO/DEVUELTO → REEMBOLSADO.
+
+Reglas de gobernanza: el administrador y el cliente operan BAJO LAS MISMAS
+REGLAS de transición (no existe override manual). El control de autorización
+(quién puede operar sobre qué pedido) vive en el servicio y el router, no aquí.
 
 Uso:
     from app.modules.orders.state_machine import validate_transition, VALID_TRANSITIONS
@@ -37,9 +51,11 @@ VALID_TRANSITIONS: dict[EstadoVentaEnum, list[EstadoVentaEnum]] = {
     ],
     EstadoVentaEnum.EN_CAMINO: [
         EstadoVentaEnum.ENTREGADO,
+        EstadoVentaEnum.DEVUELTO,
     ],
     EstadoVentaEnum.ENTREGADO: [
         EstadoVentaEnum.DEVUELTO,
+        EstadoVentaEnum.REEMBOLSADO,
     ],
     EstadoVentaEnum.CANCELADO: [
         EstadoVentaEnum.REEMBOLSADO,
@@ -129,6 +145,11 @@ def is_terminal(estado: EstadoVentaEnum) -> bool:
 def can_cancel(estado: EstadoVentaEnum) -> bool:
     """Retorna True si desde este estado se puede cancelar el pedido."""
     return EstadoVentaEnum.CANCELADO in VALID_TRANSITIONS.get(estado, [])
+
+
+def can_devolver(estado: EstadoVentaEnum) -> bool:
+    """Retorna True si desde este estado se puede registrar una devolución (DEVUELTO)."""
+    return EstadoVentaEnum.DEVUELTO in VALID_TRANSITIONS.get(estado, [])
 
 
 def can_request_refund(estado: EstadoVentaEnum) -> bool:

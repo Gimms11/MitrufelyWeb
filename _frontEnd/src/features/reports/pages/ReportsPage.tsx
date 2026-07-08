@@ -1,1021 +1,900 @@
-import { useState, useMemo } from 'react'
+/**
+ * ReportsPage — Módulo de Reportes (Fase 7).
+ *
+ * Siete reportes funcionales, cada uno como una pestaña dedicada con su
+ * tabla, KPIs, filtros y descarga PDF/Excel desde el backend:
+ *   1. Rendimiento de Ventas
+ *   2. Seguimiento de Pedidos
+ *   3. Catálogo Comercial
+ *   4. Control de Inventario
+ *   5. Gestión de Usuarios
+ *   6. Comprobantes Electrónicos
+ *   7. Fidelización CriptoTrufas
+ */
+
+import { useMemo, useState } from 'react'
 import {
-  FileText,
-  Printer,
-  Calendar,
-  Boxes,
   TrendingUp,
-  Sparkles,
-  AlertTriangle,
-  CheckCircle,
+  PackageSearch,
+  Boxes,
+  Users as UsersIcon,
+  Receipt,
+  Coins,
   RefreshCw,
+  FileText,
   FileSpreadsheet,
-  AlertOctagon,
-  ArrowRight,
+  Sparkles,
+  ClipboardList,
+  ChevronDown,
 } from 'lucide-react'
-import ExcelJS from 'exceljs'
+import { toast } from 'sonner'
+
 import { cn } from '@/lib/utils'
+import { reportsApi, descargarBlob } from '@/features/reports/api/reports.api'
+import type { ReporteFiltros, ReporteTipo } from '@/features/reports/types'
+import { useReporteQuery } from '@/features/reports/hooks/useReportes'
 
-import { useAdminProducts } from '@/features/products/hooks/useCatalogAdmin'
-import { useOrdersQuery } from '@/features/orders/hooks/useOrders'
-import { useReconciliationQuery } from '@/features/inventory/hooks/useInventory'
+type TabId = ReporteTipo | 'comprobantes'
 
-type ReportType = 'inventory' | 'sales' | 'audit'
+interface TabDef {
+  id: TabId
+  nombre: string
+  descripcion: string
+  icon: typeof TrendingUp
+}
+
+const TABS: TabDef[] = [
+  {
+    id: 'ventas',
+    nombre: 'Rendimiento de Ventas',
+    descripcion:
+      'Comportamiento económico del negocio: ventas por periodo, productos más vendidos y métodos de pago.',
+    icon: TrendingUp,
+  },
+  {
+    id: 'pedidos',
+    nombre: 'Seguimiento de Pedidos',
+    descripcion:
+      'Control del estado de los pedidos: pendientes, completados y entregados.',
+    icon: ClipboardList,
+  },
+  {
+    id: 'catalogo',
+    nombre: 'Catálogo Comercial',
+    descripcion:
+      'Productos registrados: nombre, categoría, precio y estado. Detección de productos inactivos.',
+    icon: PackageSearch,
+  },
+  {
+    id: 'inventario',
+    nombre: 'Control de Inventario',
+    descripcion:
+      'Stock disponible, productos agotados o con bajo stock y planificación de reposición.',
+    icon: Boxes,
+  },
+  {
+    id: 'usuarios',
+    nombre: 'Gestión de Usuarios',
+    descripcion: 'Personas registradas: roles, estado de cuentas y actividad.',
+    icon: UsersIcon,
+  },
+  {
+    id: 'comprobantes',
+    nombre: 'Comprobantes Electrónicos',
+    descripcion:
+      'Comprobantes digitales en PDF por compra: datos del cliente, productos y total.',
+    icon: Receipt,
+  },
+  {
+    id: 'fidelizacion',
+    nombre: 'Fidelización CriptoTrufas',
+    descripcion:
+      'Puntos acumulados, utilizados y próximos a vencer; recompensas del programa.',
+    icon: Coins,
+  },
+]
 
 export default function ReportsPage() {
-  const [activeTab, setActiveTab] = useState<ReportType>('inventory')
-
-  // --- FILTERS STATE ---
-  // Inventory Filters
-  const [invStockFilter, setInvStockFilter] = useState<'all' | 'low' | 'out' | 'available'>('all')
-
-  // Sales Filters
-  const today = new Date()
-  const defaultStartDate =
-    new Date(today.getFullYear(), today.getMonth() - 1, today.getDate())
-      .toISOString()
-      .split('T')[0] || ''
-  const defaultEndDate = today.toISOString().split('T')[0] || ''
-  
-  const [salesStartDate, setSalesStartDate] = useState<string>(defaultStartDate)
-  const [salesEndDate, setSalesEndDate] = useState<string>(defaultEndDate)
-  const [salesPayStatus, setSalesPayStatus] = useState<'all' | 'PAGADO' | 'PENDIENTE'>('all')
-
-  // Audit Filters
-  const [auditOnlyDiscrepancies, setAuditOnlyDiscrepancies] = useState<boolean>(false)
-
-  // --- DATA LOADING (TanStack Query) ---
-  // Fetch up to 200 products for inventory report
-  const { data: productsData, isLoading: productsLoading, refetch: refetchProducts } = useAdminProducts({ size: 200 })
-  const products = productsData?.items || []
-
-  // Fetch up to 1000 orders for sales report
-  const { data: orders = [], isLoading: ordersLoading, refetch: refetchOrders } = useOrdersQuery({ limit: 100 })
-
-  // Fetch reconciliation data for FEFO audit
-  const { data: reconciliation = [], isLoading: reconLoading, refetch: refetchRecon } = useReconciliationQuery(false)
-
-  const isLoading = productsLoading || ordersLoading || reconLoading
-
-  // --- REFRESH HANDLER ---
-  const handleRefreshData = () => {
-    if (activeTab === 'inventory') refetchProducts()
-    else if (activeTab === 'sales') refetchOrders()
-    else if (activeTab === 'audit') refetchRecon()
-  }
-
-  // --- CATEGORIES HELPER ---
-  const getCategoryName = (idCategoria: number | null) => {
-    if (!idCategoria) return 'Sin categoría'
-    switch (idCategoria) {
-      case 1:
-        return 'Best Sellers'
-      case 2:
-        return 'Nuevos Sabores'
-      case 3:
-        return 'Promociones'
-      default:
-        return `Categoría #${idCategoria}`
-    }
-  }
-
-  // --- FILTERED DATA COMPUTATION ---
-  // 1. Filtered Inventory
-  const filteredInventory = useMemo(() => {
-    return products.filter((p) => {
-      if (invStockFilter === 'out') return p.stock_actual === 0
-      if (invStockFilter === 'low') return p.stock_actual > 0 && p.stock_actual <= p.stock_minimo
-      if (invStockFilter === 'available') return p.stock_actual > p.stock_minimo
-      return true
-    })
-  }, [products, invStockFilter])
-
-  // 2. Filtered Sales
-  const filteredSales = useMemo(() => {
-    return orders.filter((order) => {
-      // Date filter
-      if (order.fecha_venta) {
-        const orderDateStr = order.fecha_venta.split('T')[0] || ''
-        if (salesStartDate && orderDateStr < salesStartDate) return false
-        if (salesEndDate && orderDateStr > salesEndDate) return false
-      }
-      // Status filter
-      if (salesPayStatus !== 'all' && order.estado_pago !== salesPayStatus) return false
-      return true
-    })
-  }, [orders, salesStartDate, salesEndDate, salesPayStatus])
-
-  // 3. Filtered Audit
-  const filteredAudit = useMemo(() => {
-    return reconciliation.filter((r) => {
-      if (auditOnlyDiscrepancies) return r.descuadrado
-      return true
-    })
-  }, [reconciliation, auditOnlyDiscrepancies])
-
-  // --- METRICS COMPUTATION ---
-  const inventoryMetrics = useMemo(() => {
-    const total = products.length
-    const lowStock = products.filter((p) => p.stock_actual > 0 && p.stock_actual <= p.stock_minimo).length
-    const outOfStock = products.filter((p) => p.stock_actual === 0).length
-    const totalValuation = products.reduce((sum, p) => sum + p.precio * p.stock_actual, 0)
-    return { total, lowStock, outOfStock, totalValuation }
-  }, [products])
-
-  const salesMetrics = useMemo(() => {
-    const totalCount = filteredSales.length
-    const paidCount = filteredSales.filter((s) => s.estado_pago === 'PAGADO').length
-    
-    // Base imponible y IGV sumatorios
-    const totalRevenue = filteredSales.reduce((sum, s) => sum + Number(s.total), 0)
-    const paidRevenue = filteredSales
-      .filter((s) => s.estado_pago === 'PAGADO')
-      .reduce((sum, s) => sum + Number(s.total), 0)
-      
-    const baseImponibleTotal = filteredSales.reduce((sum, s) => {
-      return sum + (s.base_imponible ?? Number(s.total) / 1.18)
-    }, 0)
-
-    const igvTotal = filteredSales.reduce((sum, s) => {
-      return sum + (s.igv ?? (Number(s.total) - (s.base_imponible ?? Number(s.total) / 1.18)))
-    }, 0)
-
-    return { totalCount, paidCount, totalRevenue, paidRevenue, baseImponibleTotal, igvTotal }
-  }, [filteredSales])
-
-  const auditMetrics = useMemo(() => {
-    const totalAudited = reconciliation.length
-    const discrepancies = reconciliation.filter((r) => r.descuadrado).length
-    return { totalAudited, discrepancies, isClean: discrepancies === 0 }
-  }, [reconciliation])
-
-  // --- EXPORT TO EXCEL (EXCELJS) ---
-  const handleExportExcel = async () => {
-    const workbook = new ExcelJS.Workbook()
-    const sheet = workbook.addWorksheet('Reporte Corporativo')
-
-    // Style elements
-    const titleStyle = { font: { name: 'Arial', size: 16, bold: true, color: { argb: 'FFFFFFFF' } }, fill: { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF5C0F1B' } } }
-    const headerStyle = { font: { name: 'Arial', size: 11, bold: true, color: { argb: 'FFFFFFFF' } }, fill: { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF7A1525' } } }
-    const totalRowStyle = { font: { name: 'Arial', size: 11, bold: true }, fill: { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFDF6F0' } } }
-
-    if (activeTab === 'inventory') {
-      sheet.mergeCells('A1:G1')
-      const titleRow = sheet.getCell('A1')
-      titleRow.value = 'REPORTE CORPORATIVO DE INVENTARIO - MITRUFELY'
-      titleRow.style = titleStyle as any
-      titleRow.alignment = { horizontal: 'center' }
-
-      sheet.addRow([])
-      sheet.addRow(['Generado el:', new Date().toLocaleString('es-PE')])
-      sheet.addRow(['Filtro aplicado:', invStockFilter.toUpperCase()])
-      sheet.addRow(['Valorización Total:', `S/. ${Number(inventoryMetrics.totalValuation || 0).toFixed(2)}`])
-      sheet.addRow([])
-
-      // Table headers
-      const headers = ['ID Producto', 'Nombre', 'Categoría', 'Precio Unitario', 'Stock Mínimo', 'Stock Actual', 'Estado Almacén']
-      const row = sheet.addRow(headers)
-      row.eachCell((cell) => { cell.style = headerStyle as any })
-
-      filteredInventory.forEach((p) => {
-        const status = p.stock_actual === 0 ? 'AGOTADO' : (p.stock_actual <= p.stock_minimo ? 'BAJO STOCK' : 'DISPONIBLE')
-        sheet.addRow([
-          p.id_producto,
-          p.nombre,
-          getCategoryName(p.id_categoria),
-          p.precio,
-          p.stock_minimo,
-          p.stock_actual,
-          status
-        ])
-      })
-
-      // Column widths
-      sheet.columns.forEach((col, idx) => {
-        col.width = ([15, 30, 20, 15, 15, 15, 15][idx] ?? 15) as number
-      })
-
-    } else if (activeTab === 'sales') {
-      sheet.mergeCells('A1:G1')
-      const titleRow = sheet.getCell('A1')
-      titleRow.value = 'REPORTE CORPORATIVO DE VENTAS - MITRUFELY'
-      titleRow.style = titleStyle as any
-      titleRow.alignment = { horizontal: 'center' }
-
-      sheet.addRow([])
-      sheet.addRow(['Generado el:', new Date().toLocaleString('es-PE')])
-      sheet.addRow(['Rango de Fechas:', `${salesStartDate} a ${salesEndDate}`])
-      sheet.addRow(['Estado de Pago:', salesPayStatus.toUpperCase()])
-      sheet.addRow([])
-
-      // Table headers
-      const headers = ['ID Venta', 'Fecha y Hora', 'ID Cliente', 'Estado Pago', 'Base Imponible', 'IGV', 'Total (S/.)']
-      const row = sheet.addRow(headers)
-      row.eachCell((cell) => { cell.style = headerStyle as any })
-
-      filteredSales.forEach((s) => {
-        const base = s.base_imponible ?? (Number(s.total) / 1.18)
-        const igv = s.igv ?? (Number(s.total) - base)
-        sheet.addRow([
-          s.id_venta,
-          new Date(s.fecha_venta).toLocaleString('es-PE'),
-          s.id_cliente,
-          s.estado_pago,
-          base,
-          igv,
-          Number(s.total)
-        ])
-      })
-
-      // Summary row
-      sheet.addRow([])
-      const totalRow = sheet.addRow([
-        'TOTAL GENERAL', '', '', '',
-        salesMetrics.baseImponibleTotal,
-        salesMetrics.igvTotal,
-        salesMetrics.totalRevenue
-      ])
-      totalRow.eachCell((cell) => { cell.style = totalRowStyle as any })
-
-      // Column widths
-      sheet.columns.forEach((col, idx) => {
-        col.width = ([15, 25, 15, 15, 18, 15, 18][idx] ?? 15) as number
-      })
-
-    } else if (activeTab === 'audit') {
-      sheet.mergeCells('A1:F1')
-      const titleRow = sheet.getCell('A1')
-      titleRow.value = 'REPORTE DE AUDITORÍA Y CONCILIACIÓN FEFO - MITRUFELY'
-      titleRow.style = titleStyle as any
-      titleRow.alignment = { horizontal: 'center' }
-
-      sheet.addRow([])
-      sheet.addRow(['Generado el:', new Date().toLocaleString('es-PE')])
-      sheet.addRow(['Discrepancias encontradas:', `${auditMetrics.discrepancies} productos desalineados`])
-      sheet.addRow([])
-
-      // Table headers
-      const headers = ['ID Producto', 'Producto', 'Stock Actual (Caché)', 'Kardex (Transaccional)', 'Lotes Activos (Físico)', 'Estado Conciliación']
-      const row = sheet.addRow(headers)
-      row.eachCell((cell) => { cell.style = headerStyle as any })
-
-      filteredAudit.forEach((r) => {
-        sheet.addRow([
-          r.id_producto,
-          r.nombre,
-          r.stock_actual,
-          r.stock_calculado_kardex,
-          r.stock_calculado_lotes,
-          r.descuadrado ? 'DESALINEADO' : 'CUADRADO'
-        ])
-      })
-
-      // Column widths
-      sheet.columns.forEach((col, idx) => {
-        col.width = ([15, 30, 20, 22, 22, 20][idx] ?? 15) as number
-      })
-    }
-
-    const buffer = await workbook.xlsx.writeBuffer()
-    const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
-    const link = document.createElement('a')
-    link.href = URL.createObjectURL(blob)
-    link.download = `reporte_mitrufely_${activeTab}_${new Date().toISOString().split('T')[0]}.xlsx`
-    link.click()
-  }
-
-  // --- PRINT WINDOW ---
-  const handlePrint = () => {
-    window.print()
-  }
-
-  const activeReportName = useMemo(() => {
-    if (activeTab === 'inventory') return 'Reporte de Inventario de Productos'
-    if (activeTab === 'sales') return 'Reporte de Ventas y Rendimiento'
-    return 'Reporte de Auditoría y Conciliación FEFO'
-  }, [activeTab])
+  const [activeTab, setActiveTab] = useState<TabId>('ventas')
+  const [isOpen, setIsOpen] = useState(false)
 
   return (
-    <div className="min-h-screen bg-[#faf8f5] text-[#2a1115] font-sans antialiased pb-12 print:bg-white print:pb-0">
-      
-      {/* ========================================================================= */}
-      {/* 1. SCREEN LAYOUT (Hidden in print mode)                                   */}
-      {/* ========================================================================= */}
-      <div className="print:hidden">
-        {/* Header */}
-        <header className="bg-white border-b border-[#5c0f1b]/10 sticky top-0 z-40 backdrop-blur-md bg-white/95">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex items-center justify-between">
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-black bg-[#ff7a45]/12 border border-[#ff7a45]/20 px-2.5 py-1 rounded-full text-[#ff7a45] uppercase tracking-wide">
-                  Módulo de Inteligencia
+    <div className="min-h-screen bg-[#faf8f5] text-[#2a1115] font-sans antialiased pb-12">
+      {/* Header */}
+      <header className="bg-white border-b border-[#5c0f1b]/10 sticky top-0 z-40 backdrop-blur-md bg-white/95">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-black bg-[#ff7a45]/12 border border-[#ff7a45]/20 px-2.5 py-1 rounded-full text-[#ff7a45] uppercase tracking-wide">
+              Módulo de Inteligencia
+            </span>
+            <Sparkles className="h-4 w-4 text-[#ff7a45] animate-pulse" />
+          </div>
+          <h1
+            className="text-2xl font-black text-[#5c0f1b] tracking-tight mt-1"
+            style={{ fontFamily: "'Outfit', sans-serif" }}
+          >
+            Reportes y Exportación Corporativa
+          </h1>
+          <p className="text-sm text-stone-500 font-semibold mt-0.5">
+            Siete reportes funcionales para supervisar, controlar y tomar decisiones sobre el negocio.
+          </p>
+        </div>
+      </header>
+
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+        {/* Selector de Reporte (ComboBox / Dropdown) */}
+        <div className="relative z-30 max-w-md">
+          <label className="block text-xs font-black uppercase tracking-wider text-stone-400 mb-2">
+            Seleccionar Reporte
+          </label>
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="w-full flex items-center justify-between gap-3 bg-white hover:bg-stone-50 border border-stone-200 px-4 py-3 rounded-2xl shadow-sm transition-all text-[#2a1115] font-black text-sm text-left cursor-pointer outline-none focus:ring-2 focus:ring-[#5c0f1b]/20 focus:border-[#5c0f1b]"
+          >
+            {(() => {
+              const active = TABS.find((t) => t.id === activeTab)!
+              const Icon = active.icon
+              return (
+                <span className="flex items-center gap-3">
+                  <Icon className="h-5 w-5 text-[#ff7a45]" />
+                  <span>{active.nombre}</span>
                 </span>
-                <Sparkles className="h-4 w-4 text-[#ff7a45] animate-pulse" />
-              </div>
-              <h1 className="text-2xl font-black text-[#5c0f1b] tracking-tight mt-1" style={{ fontFamily: "'Outfit', sans-serif" }}>
-                Reportes y Exportación Corporativa
-              </h1>
-            </div>
-            
-            <div className="flex items-center gap-3">
-              <button
-                onClick={handleRefreshData}
-                disabled={isLoading}
-                className="inline-flex items-center justify-center h-10 w-10 bg-stone-100 hover:bg-stone-200 active:bg-stone-300 text-stone-700 rounded-xl transition-all border-none cursor-pointer disabled:opacity-50"
-                title="Refrescar datos"
-              >
-                <RefreshCw className={cn("h-5 w-5", isLoading && "animate-spin")} />
-              </button>
+              )
+            })()}
+            <ChevronDown className={cn("h-4 w-4 text-stone-400 transition-transform duration-200", isOpen && "transform rotate-180")} />
+          </button>
+
+          {isOpen && (
+            <>
+              {/* Overlay para cerrar al hacer clic fuera */}
+              <div 
+                className="fixed inset-0 z-30" 
+                onClick={() => setIsOpen(false)}
+              />
               
-              <button
-                onClick={handlePrint}
-                className="inline-flex items-center gap-2 bg-[#5c0f1b] text-white hover:bg-[#7a1525] active:scale-98 transition-all px-4 py-2.5 rounded-xl text-sm font-bold shadow-md shadow-[#5c0f1b]/15 border-none cursor-pointer"
-              >
-                <Printer className="h-4 w-4" />
-                Imprimir (PDF)
-              </button>
-
-              <button
-                onClick={handleExportExcel}
-                className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white active:scale-98 transition-all px-4 py-2.5 rounded-xl text-sm font-bold shadow-md shadow-emerald-600/15 border-none cursor-pointer"
-              >
-                <FileSpreadsheet className="h-4 w-4" />
-                Exportar Excel
-              </button>
-            </div>
-          </div>
-        </header>
-
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
-          
-          {/* Tab Selector Buttons */}
-          <div className="flex border-b border-stone-200">
-            <button
-              onClick={() => setActiveTab('inventory')}
-              className={cn(
-                'pb-4 px-6 text-sm font-bold uppercase tracking-wider transition-all border-b-2 cursor-pointer',
-                activeTab === 'inventory'
-                  ? 'border-[#5c0f1b] text-[#5c0f1b]'
-                  : 'border-transparent text-stone-400 hover:text-stone-600'
-              )}
-            >
-              <div className="flex items-center gap-2">
-                <Boxes className="h-4 w-4" />
-                Inventario y Stock
-              </div>
-            </button>
-            
-            <button
-              onClick={() => setActiveTab('sales')}
-              className={cn(
-                'pb-4 px-6 text-sm font-bold uppercase tracking-wider transition-all border-b-2 cursor-pointer',
-                activeTab === 'sales'
-                  ? 'border-[#5c0f1b] text-[#5c0f1b]'
-                  : 'border-transparent text-stone-400 hover:text-stone-600'
-              )}
-            >
-              <div className="flex items-center gap-2">
-                <TrendingUp className="h-4 w-4" />
-                Ventas y Facturación
-              </div>
-            </button>
-            
-            <button
-              onClick={() => setActiveTab('audit')}
-              className={cn(
-                'pb-4 px-6 text-sm font-bold uppercase tracking-wider transition-all border-b-2 cursor-pointer',
-                activeTab === 'audit'
-                  ? 'border-[#5c0f1b] text-[#5c0f1b]'
-                  : 'border-transparent text-stone-400 hover:text-stone-600'
-              )}
-            >
-              <div className="flex items-center gap-2">
-                <FileText className="h-4 w-4" />
-                Conciliación y Auditoría
-              </div>
-            </button>
-          </div>
-
-          {/* ============================================== */}
-          {/* TABS VIEW CONTROLLERS (SCREEN)                 */}
-          {/* ============================================== */}
-          
-          {/* TAB 1: INVENTARIO */}
-          {activeTab === 'inventory' && (
-            <div className="space-y-6">
-              {/* Summary Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                <div className="bg-white p-5 rounded-2xl border border-stone-200 shadow-sm">
-                  <p className="text-[10px] font-black uppercase text-stone-400">Total Productos</p>
-                  <p className="text-2xl font-black text-[#5c0f1b] mt-1">{inventoryMetrics.total}</p>
-                </div>
-                <div className="bg-white p-5 rounded-2xl border border-stone-200 shadow-sm">
-                  <p className="text-[10px] font-black uppercase text-stone-400">Productos Bajo Stock</p>
-                  <p className={cn("text-2xl font-black mt-1", inventoryMetrics.lowStock > 0 ? "text-amber-600" : "text-stone-700")}>
-                    {inventoryMetrics.lowStock}
-                  </p>
-                </div>
-                <div className="bg-white p-5 rounded-2xl border border-stone-200 shadow-sm">
-                  <p className="text-[10px] font-black uppercase text-stone-400">Productos Agotados</p>
-                  <p className={cn("text-2xl font-black mt-1", inventoryMetrics.outOfStock > 0 ? "text-red-600 animate-pulse" : "text-stone-700")}>
-                    {inventoryMetrics.outOfStock}
-                  </p>
-                </div>
-                <div className="bg-white p-5 rounded-2xl border border-stone-200 shadow-sm">
-                  <p className="text-[10px] font-black uppercase text-stone-400">Valorización del Almacén</p>
-                  <p className="text-2xl font-black text-emerald-600 mt-1">S/. {Number(inventoryMetrics.totalValuation || 0).toFixed(2)}</p>
-                </div>
-              </div>
-
-              {/* Filters Panel */}
-              <div className="bg-white p-5 rounded-2xl border border-stone-200 shadow-sm flex flex-wrap items-center justify-between gap-4">
-                <div className="flex items-center gap-3">
-                  <span className="text-xs font-bold text-stone-500 uppercase">Filtrar por Stock:</span>
-                  <div className="flex bg-stone-100 rounded-lg p-1">
-                    {(['all', 'low', 'out', 'available'] as const).map((filter) => (
-                      <button
-                        key={filter}
-                        onClick={() => setInvStockFilter(filter)}
-                        className={cn(
-                          "px-3 py-1.5 rounded-md text-xs font-black cursor-pointer transition-all border-none",
-                          invStockFilter === filter
-                            ? "bg-[#5c0f1b] text-white"
-                            : "text-stone-500 hover:text-stone-700"
-                        )}
-                      >
-                        {filter === 'all' && 'Todos'}
-                        {filter === 'low' && 'Bajo Stock'}
-                        {filter === 'out' && 'Agotados'}
-                        {filter === 'available' && 'Disponible'}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-                <span className="text-xs font-bold text-stone-400">
-                  Mostrando {filteredInventory.length} de {products.length} productos
-                </span>
-              </div>
-
-              {/* Screen Table */}
-              <div className="bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden">
-                <div className="overflow-x-auto">
-                  <table className="w-full border-collapse text-left text-sm text-stone-600">
-                    <thead className="bg-stone-50 text-stone-700 text-xs font-black uppercase tracking-wider border-b border-stone-200">
-                      <tr>
-                        <th className="py-4 px-6">ID</th>
-                        <th className="py-4 px-6">Producto</th>
-                        <th className="py-4 px-6">Categoría</th>
-                        <th className="py-4 px-6 text-right">Precio unitario</th>
-                        <th className="py-4 px-6 text-right">Stock Mínimo</th>
-                        <th className="py-4 px-6 text-right">Stock Actual</th>
-                        <th className="py-4 px-6 text-center">Estado</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-stone-100">
-                      {isLoading ? (
-                        <tr>
-                          <td colSpan={7} className="py-12 text-center text-stone-400 font-bold">
-                            Cargando productos de la base de datos...
-                          </td>
-                        </tr>
-                      ) : filteredInventory.length === 0 ? (
-                        <tr>
-                          <td colSpan={7} className="py-12 text-center text-stone-400">
-                            Ningún producto coincide con el filtro de stock.
-                          </td>
-                        </tr>
-                      ) : (
-                        filteredInventory.map((p) => {
-                          const isAgotado = p.stock_actual === 0
-                          const isBajo = p.stock_actual > 0 && p.stock_actual <= p.stock_minimo
-                          return (
-                            <tr key={p.id_producto} className="hover:bg-stone-50 transition-colors">
-                              <td className="py-4 px-6 font-mono text-xs font-bold text-stone-400">#{p.id_producto}</td>
-                              <td className="py-4 px-6 font-bold text-[#2a1115]">{p.nombre}</td>
-                              <td className="py-4 px-6 text-stone-500">{getCategoryName(p.id_categoria)}</td>
-                              <td className="py-4 px-6 text-right font-semibold">S/. {Number(p.precio).toFixed(2)}</td>
-                              <td className="py-4 px-6 text-right font-medium text-stone-400">{p.stock_minimo} uds</td>
-                              <td className="py-4 px-6 text-right font-bold text-stone-800">{p.stock_actual} uds</td>
-                              <td className="py-4 px-6 text-center">
-                                <span className={cn(
-                                  "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider border",
-                                  isAgotado
-                                    ? "bg-red-50 text-red-600 border-red-200"
-                                    : isBajo
-                                    ? "bg-amber-50 text-amber-600 border-amber-200"
-                                    : "bg-green-50 text-green-700 border-green-200"
-                                )}>
-                                  {isAgotado ? 'Agotado' : isBajo ? 'Bajo Stock' : 'Disponible'}
-                                </span>
-                              </td>
-                            </tr>
-                          )
-                        })
+              {/* Contenido del Dropdown */}
+              <div className="absolute left-0 right-0 mt-2 bg-white border border-stone-200/80 rounded-2xl shadow-xl z-40 max-h-96 overflow-y-auto divide-y divide-stone-50 py-1 animate-in fade-in slide-in-from-top-2 duration-200">
+                {TABS.map((tab) => {
+                  const Icon = tab.icon
+                  const activo = activeTab === tab.id
+                  return (
+                    <button
+                      key={tab.id}
+                      onClick={() => {
+                        setActiveTab(tab.id)
+                        setIsOpen(false)
+                      }}
+                      className={cn(
+                        "w-full flex items-start gap-3 px-4 py-3 text-left transition-colors cursor-pointer",
+                        activo 
+                          ? "bg-[#5c0f1b]/5 text-[#5c0f1b]" 
+                          : "text-stone-600 hover:bg-stone-50 hover:text-[#2a1115]"
                       )}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* TAB 2: VENTAS & RENDIMIENTO */}
-          {activeTab === 'sales' && (
-            <div className="space-y-6">
-              {/* Summary Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                <div className="bg-white p-5 rounded-2xl border border-stone-200 shadow-sm">
-                  <p className="text-[10px] font-black uppercase text-stone-400">Órdenes Totales</p>
-                  <p className="text-2xl font-black text-[#5c0f1b] mt-1">{salesMetrics.totalCount}</p>
-                </div>
-                <div className="bg-white p-5 rounded-2xl border border-stone-200 shadow-sm">
-                  <p className="text-[10px] font-black uppercase text-stone-400">Total Base Imponible</p>
-                  <p className="text-2xl font-black text-stone-700 mt-1">S/. {Number(salesMetrics.baseImponibleTotal || 0).toFixed(2)}</p>
-                </div>
-                <div className="bg-white p-5 rounded-2xl border border-stone-200 shadow-sm">
-                  <p className="text-[10px] font-black uppercase text-stone-400">Total IGV (18%)</p>
-                  <p className="text-2xl font-black text-stone-700 mt-1">S/. {Number(salesMetrics.igvTotal || 0).toFixed(2)}</p>
-                </div>
-                <div className="bg-white p-5 rounded-2xl border border-stone-200 shadow-sm">
-                  <p className="text-[10px] font-black uppercase text-stone-400">Ventas Cobradas (Suma Total)</p>
-                  <p className="text-2xl font-black text-emerald-600 mt-1">S/. {Number(salesMetrics.totalRevenue || 0).toFixed(2)}</p>
-                </div>
-              </div>
-
-              {/* Filters Panel */}
-              <div className="bg-white p-5 rounded-2xl border border-stone-200 shadow-sm flex flex-wrap items-center justify-between gap-6">
-                <div className="flex flex-wrap items-center gap-6">
-                  {/* Date range picker */}
-                  <div className="flex items-center gap-3">
-                    <Calendar className="h-4 w-4 text-stone-400" />
-                    <span className="text-xs font-bold text-stone-500 uppercase">Rango:</span>
-                    <input
-                      type="date"
-                      value={salesStartDate}
-                      onChange={(e) => setSalesStartDate(e.target.value)}
-                      className="border border-stone-200 rounded-lg p-2 text-xs font-semibold focus:outline-[#5c0f1b] text-stone-700 bg-stone-50"
-                    />
-                    <ArrowRight className="h-3.5 w-3.5 text-stone-400" />
-                    <input
-                      type="date"
-                      value={salesEndDate}
-                      onChange={(e) => setSalesEndDate(e.target.value)}
-                      className="border border-stone-200 rounded-lg p-2 text-xs font-semibold focus:outline-[#5c0f1b] text-stone-700 bg-stone-50"
-                    />
-                  </div>
-
-                  {/* Payment Status */}
-                  <div className="flex items-center gap-3">
-                    <span className="text-xs font-bold text-stone-500 uppercase">Estado Pago:</span>
-                    <select
-                      value={salesPayStatus}
-                      onChange={(e: any) => setSalesPayStatus(e.target.value)}
-                      className="border border-stone-200 rounded-lg p-2 text-xs font-semibold focus:outline-[#5c0f1b] text-stone-700 bg-stone-50"
                     >
-                      <option value="all">Todos</option>
-                      <option value="PAGADO">Cobrados (Pagado)</option>
-                      <option value="PENDIENTE">Pendientes de Pago</option>
-                    </select>
-                  </div>
-                </div>
-
-                <span className="text-xs font-bold text-stone-400">
-                  Mostrando {filteredSales.length} de {orders.length} pedidos en rango
-                </span>
+                      <Icon className={cn("h-5 w-5 mt-0.5 shrink-0", activo ? "text-[#ff7a45]" : "text-stone-400")} />
+                      <div>
+                        <div className={cn("text-sm font-black", activo ? "text-[#5c0f1b]" : "text-[#2a1115]")}>
+                          {tab.nombre}
+                        </div>
+                        <div className="text-xs text-stone-400 font-semibold mt-0.5 leading-relaxed">
+                          {tab.descripcion}
+                        </div>
+                      </div>
+                    </button>
+                  )
+                })}
               </div>
-
-              {/* Screen Table */}
-              <div className="bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden">
-                <div className="overflow-x-auto">
-                  <table className="w-full border-collapse text-left text-sm text-stone-600">
-                    <thead className="bg-stone-50 text-stone-700 text-xs font-black uppercase tracking-wider border-b border-stone-200">
-                      <tr>
-                        <th className="py-4 px-6">ID Pedido</th>
-                        <th className="py-4 px-6">Fecha y Hora</th>
-                        <th className="py-4 px-6">ID Cliente</th>
-                        <th className="py-4 px-6">Estado Pago</th>
-                        <th className="py-4 px-6 text-right">Base Imponible</th>
-                        <th className="py-4 px-6 text-right">IGV (18%)</th>
-                        <th className="py-4 px-6 text-right">Total</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-stone-100">
-                      {isLoading ? (
-                        <tr>
-                          <td colSpan={7} className="py-12 text-center text-stone-400 font-bold">
-                            Cargando listado de ventas...
-                          </td>
-                        </tr>
-                      ) : filteredSales.length === 0 ? (
-                        <tr>
-                          <td colSpan={7} className="py-12 text-center text-stone-400">
-                            No se encontraron transacciones en el rango de fechas.
-                          </td>
-                        </tr>
-                      ) : (
-                        filteredSales.map((s) => {
-                          const base = s.base_imponible ?? (Number(s.total) / 1.18)
-                          const igv = s.igv ?? (Number(s.total) - base)
-                          return (
-                            <tr key={s.id_venta} className="hover:bg-stone-50 transition-colors">
-                              <td className="py-4 px-6 font-mono text-xs font-bold text-[#5c0f1b]">#{s.id_venta}</td>
-                              <td className="py-4 px-6 font-semibold">
-                                {new Date(s.fecha_venta).toLocaleString('es-PE', {
-                                  day: '2-digit',
-                                  month: 'short',
-                                  year: 'numeric',
-                                  hour: '2-digit',
-                                  minute: '2-digit',
-                                })}
-                              </td>
-                              <td className="py-4 px-6 font-mono text-xs text-stone-400">Cliente #{s.id_cliente}</td>
-                              <td className="py-4 px-6">
-                                <span className={cn(
-                                  "inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[10px] font-black uppercase border",
-                                  s.estado_pago === 'PAGADO'
-                                    ? "bg-green-50 text-green-700 border-green-200"
-                                    : "bg-amber-50 text-amber-700 border-amber-200"
-                                )}>
-                                  {s.estado_pago === 'PAGADO' ? 'Cobrado' : 'Pendiente'}
-                                </span>
-                              </td>
-                              <td className="py-4 px-6 text-right text-stone-500 font-medium">S/. {Number(base || 0).toFixed(2)}</td>
-                              <td className="py-4 px-6 text-right text-stone-500 font-medium">S/. {Number(igv || 0).toFixed(2)}</td>
-                              <td className="py-4 px-6 text-right font-black text-stone-800">S/. {Number(s.total).toFixed(2)}</td>
-                            </tr>
-                          )
-                        })
-                      )}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
+            </>
           )}
+        </div>
 
-          {/* TAB 3: CONCILIACIÓN & AUDITORÍA FEFO */}
-          {activeTab === 'audit' && (
-            <div className="space-y-6">
-              {/* Summary Audit Panel */}
-              <div className={cn(
-                'p-6 rounded-3xl border transition-all flex flex-col md:flex-row items-start md:items-center justify-between gap-6',
-                auditMetrics.isClean
-                  ? 'bg-green-50/50 border-green-200/60'
-                  : 'bg-red-50/50 border-red-200/60'
-              )}>
-                <div className="flex items-start gap-4">
-                  <div className={cn(
-                    'p-3.5 rounded-2xl',
-                    auditMetrics.isClean ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
-                  )}>
-                    {auditMetrics.isClean ? (
-                      <CheckCircle className="h-7 w-7" />
-                    ) : (
-                      <AlertTriangle className="h-7 w-7" />
-                    )}
-                  </div>
-                  <div>
-                    <h3 className={cn(
-                      'text-xl font-black',
-                      auditMetrics.isClean ? 'text-green-800' : 'text-red-800'
-                    )} style={{ fontFamily: "'Outfit', sans-serif" }}>
-                      {auditMetrics.isClean
-                        ? 'Auditoría Cuadrada Sin Desviaciones'
-                        : 'Se detectaron discrepancias en existencias'}
-                    </h3>
-                    <p className="text-xs text-stone-500 mt-1 max-w-xl">
-                      El sistema valida de forma cruzada el stock registrado en el caché de Redis contra los lotes físicos activos en almacén (FIFO/FEFO) y la sumatoria transaccional del Kardex.
-                    </p>
-                    {!auditMetrics.isClean && (
-                      <p className="text-xs font-black text-red-600 mt-3 flex items-center gap-1.5">
-                        <AlertOctagon className="h-4 w-4" />
-                        Atención: Hay {auditMetrics.discrepancies} producto(s) desalineado(s) que requieren corrección de inventario.
-                      </p>
-                    )}
-                  </div>
-                </div>
-
-                <div className="flex flex-col gap-2">
-                  <div className="text-right print:hidden">
-                    <span className="text-[10px] font-black uppercase text-stone-400 block">Auditoría Triple</span>
-                    <span className="text-xs font-bold text-stone-600 block">{auditMetrics.totalAudited} Productos Auditados</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Filters Panel */}
-              <div className="bg-white p-5 rounded-2xl border border-stone-200 shadow-sm flex flex-wrap items-center justify-between gap-4">
-                <div className="flex items-center gap-3">
-                  <span className="text-xs font-bold text-stone-500 uppercase">Filtrar por Auditoría:</span>
-                  <label className="inline-flex items-center gap-2 cursor-pointer text-xs font-bold text-stone-600">
-                    <input
-                      type="checkbox"
-                      checked={auditOnlyDiscrepancies}
-                      onChange={(e) => setAuditOnlyDiscrepancies(e.target.checked)}
-                      className="h-4 w-4 accent-[#5c0f1b]"
-                    />
-                    Mostrar solo discrepancias (Desalineados)
-                  </label>
-                </div>
-                <span className="text-xs font-bold text-stone-400">
-                  Mostrando {filteredAudit.length} de {reconciliation.length} productos analizados
-                </span>
-              </div>
-
-              {/* Screen Table */}
-              <div className="bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden">
-                <div className="overflow-x-auto">
-                  <table className="w-full border-collapse text-left text-sm text-stone-600">
-                    <thead className="bg-stone-50 text-stone-700 text-xs font-black uppercase tracking-wider border-b border-stone-200">
-                      <tr>
-                        <th className="py-4 px-6">ID</th>
-                        <th className="py-4 px-6">Producto</th>
-                        <th className="py-4 px-6 text-right">Stock Caché</th>
-                        <th className="py-4 px-6 text-right">Kardex (Transaccional)</th>
-                        <th className="py-4 px-6 text-right">Lotes Activos (Físico)</th>
-                        <th className="py-4 px-6 text-right">Desviación</th>
-                        <th className="py-4 px-6 text-center">Estado Auditoría</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-stone-100">
-                      {isLoading ? (
-                        <tr>
-                          <td colSpan={7} className="py-12 text-center text-stone-400 font-bold">
-                            Corriendo conciliación cruzada de almacén...
-                          </td>
-                        </tr>
-                      ) : filteredAudit.length === 0 ? (
-                        <tr>
-                          <td colSpan={7} className="py-12 text-center text-stone-400">
-                            No se encontraron desajustes de stock en esta auditoría.
-                          </td>
-                        </tr>
-                      ) : (
-                        filteredAudit.map((r) => {
-                          const drift = r.stock_actual - r.stock_calculado_lotes
-                          return (
-                            <tr key={r.id_producto} className="hover:bg-stone-50 transition-colors">
-                              <td className="py-4 px-6 font-mono text-xs font-bold text-stone-400">#{r.id_producto}</td>
-                              <td className="py-4 px-6 font-bold text-[#2a1115]">{r.nombre}</td>
-                              <td className="py-4 px-6 text-right font-semibold text-stone-800">{r.stock_actual} uds</td>
-                              <td className="py-4 px-6 text-right font-medium text-stone-600">{r.stock_calculado_kardex} uds</td>
-                              <td className="py-4 px-6 text-right font-medium text-stone-600">{r.stock_calculado_lotes} uds</td>
-                              <td className={cn(
-                                "py-4 px-6 text-right font-black",
-                                drift !== 0 ? "text-red-600" : "text-stone-400"
-                              )}>
-                                {drift > 0 ? `+${drift}` : drift}
-                              </td>
-                              <td className="py-4 px-6 text-center">
-                                <span className={cn(
-                                  "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider border",
-                                  r.descuadrado
-                                    ? "bg-red-50 text-red-600 border-red-200 animate-pulse"
-                                    : "bg-green-50 text-green-700 border-green-200"
-                                )}>
-                                  {r.descuadrado ? 'Desalineado' : 'Cuadrado'}
-                                </span>
-                              </td>
-                            </tr>
-                          )
-                        })
-                      )}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
+        {/* Descripción del reporte activo */}
+        {(() => {
+          const tab = TABS.find((t) => t.id === activeTab)!
+          return (
+            <div className="bg-white rounded-2xl border border-[#5c0f1b]/8 p-5 shadow-sm">
+              <h2 className="text-lg font-black text-[#5c0f1b] flex items-center gap-2">
+                <tab.icon className="h-5 w-5 text-[#ff7a45]" />
+                {tab.nombre}
+              </h2>
+              <p className="text-sm text-stone-500 font-medium mt-1">{tab.descripcion}</p>
             </div>
-          )}
+          )
+        })()}
 
-        </main>
+        {/* Contenido por tab */}
+        {activeTab === 'ventas' && <ReporteVentasTab />}
+        {activeTab === 'pedidos' && <ReportePedidosTab />}
+        {activeTab === 'catalogo' && <ReporteCatalogoTab />}
+        {activeTab === 'inventario' && <ReporteInventarioTab />}
+        {activeTab === 'usuarios' && <ReporteUsuariosTab />}
+        {activeTab === 'comprobantes' && <ComprobantesTab />}
+        {activeTab === 'fidelizacion' && <ReporteFidelizacionTab />}
+      </main>
+    </div>
+  )
+}
+
+// ── Componentes compartidos ──────────────────────────────────────────────────
+
+function ExportarBotones({
+  tipo,
+  filtros,
+}: {
+  tipo: ReporteTipo
+  filtros?: ReporteFiltros
+}) {
+  const [exportando, setExportando] = useState<null | 'pdf' | 'excel'>(null)
+
+  const handle = async (formato: 'pdf' | 'excel') => {
+    setExportando(formato)
+    try {
+      const stamp = new Date().toISOString().split('T')[0]
+      if (formato === 'pdf') {
+        const blob = await reportsApi.descargarPdf(tipo, filtros)
+        descargarBlob(blob, `reporte_${tipo}_${stamp}.pdf`)
+      } else {
+        const blob = await reportsApi.descargarExcel(tipo, filtros)
+        descargarBlob(blob, `reporte_${tipo}_${stamp}.xlsx`)
+      }
+      toast.success(`Reporte descargado (${formato.toUpperCase()})`)
+    } catch {
+      toast.error('No se pudo generar el reporte')
+    } finally {
+      setExportando(null)
+    }
+  }
+
+  return (
+    <div className="flex items-center gap-2">
+      <button
+        onClick={() => handle('pdf')}
+        disabled={exportando !== null}
+        className="inline-flex items-center gap-2 bg-[#5c0f1b] hover:bg-[#7a1525] text-white text-sm font-bold px-4 py-2.5 rounded-xl transition active:scale-95 cursor-pointer disabled:opacity-50"
+      >
+        {exportando === 'pdf' ? (
+          <RefreshCw className="h-4 w-4 animate-spin" />
+        ) : (
+          <FileText className="h-4 w-4" />
+        )}
+        PDF
+      </button>
+      <button
+        onClick={() => handle('excel')}
+        disabled={exportando !== null}
+        className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold px-4 py-2.5 rounded-xl transition active:scale-95 cursor-pointer disabled:opacity-50"
+      >
+        {exportando === 'excel' ? (
+          <RefreshCw className="h-4 w-4 animate-spin" />
+        ) : (
+          <FileSpreadsheet className="h-4 w-4" />
+        )}
+        Excel
+      </button>
+    </div>
+  )
+}
+
+function KpiCard({
+  label,
+  value,
+  accent,
+}: {
+  label: string
+  value: string | number
+  accent?: 'green' | 'red' | 'orange'
+}) {
+  const color =
+    accent === 'green'
+      ? 'text-green-600'
+      : accent === 'red'
+        ? 'text-red-600'
+        : accent === 'orange'
+          ? 'text-[#ff7a45]'
+          : 'text-[#5c0f1b]'
+  return (
+    <div className="bg-white p-5 rounded-2xl border border-stone-200 shadow-sm">
+      <p className="text-[11px] font-black uppercase tracking-wider text-stone-400">{label}</p>
+      <p className={cn('text-2xl font-black mt-1', color)}>{value}</p>
+    </div>
+  )
+}
+
+function FiltrosFechas({
+  desde,
+  hasta,
+  onDesde,
+  onHasta,
+}: {
+  desde: string | undefined
+  hasta: string | undefined
+  onDesde: (v: string) => void
+  onHasta: (v: string) => void
+}) {
+  return (
+    <div className="flex flex-wrap items-center gap-3">
+      <label className="flex items-center gap-2 text-sm font-bold text-stone-500">
+        Desde
+        <input
+          type="date"
+          value={desde}
+          onChange={(e) => onDesde(e.target.value)}
+          className="px-3 py-2 rounded-xl border border-stone-200 bg-[#faf8f5] text-[#2a1115] font-semibold outline-none"
+        />
+      </label>
+      <label className="flex items-center gap-2 text-sm font-bold text-stone-500">
+        Hasta
+        <input
+          type="date"
+          value={hasta}
+          onChange={(e) => onHasta(e.target.value)}
+          className="px-3 py-2 rounded-xl border border-stone-200 bg-[#faf8f5] text-[#2a1115] font-semibold outline-none"
+        />
+      </label>
+    </div>
+  )
+}
+
+function Tabla({
+  headers,
+  children,
+}: {
+  headers: string[]
+  children: React.ReactNode
+}) {
+  return (
+    <div className="overflow-x-auto rounded-2xl border border-stone-100 bg-white">
+      <table className="w-full text-sm">
+        <thead>
+          <tr className="bg-stone-50 text-stone-500 font-bold uppercase tracking-wider text-[11px]">
+            {headers.map((h) => (
+              <th key={h} className="text-left px-4 py-3 whitespace-nowrap">
+                {h}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-stone-100 text-[#2a1115] font-semibold">
+          {children}
+        </tbody>
+      </table>
+    </div>
+  )
+}
+
+function Badge({
+  texto,
+  tono,
+}: {
+  texto: string
+  tono: 'vino' | 'naranja' | 'green' | 'red' | 'gris'
+}) {
+  const estilos: Record<string, string> = {
+    vino: 'bg-[#5c0f1b]/10 text-[#5c0f1b]',
+    naranja: 'bg-[#ff7a45]/10 text-[#7a1525]',
+    green: 'bg-green-100 text-green-700',
+    red: 'bg-red-100 text-red-700',
+    gris: 'bg-stone-100 text-stone-600',
+  }
+  return (
+    <span
+      className={cn('inline-flex items-center px-3 py-1 rounded-full text-[11px] font-black', estilos[tono])}
+    >
+      {texto}
+    </span>
+  )
+}
+
+function Cargando() {
+  return (
+    <div className="flex justify-center py-16">
+      <RefreshCw className="h-8 w-8 animate-spin text-[#5c0f1b]" />
+    </div>
+  )
+}
+
+function Vacio({ mensaje }: { mensaje: string }) {
+  return <p className="text-center py-12 font-bold text-stone-400">{mensaje}</p>
+}
+
+const money = (v: string | number | null | undefined) => {
+  if (v === null || v === undefined) return '—'
+  const n = typeof v === 'number' ? v : Number(v)
+  return `S/ ${n.toLocaleString('es-PE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+}
+
+// ── 1. Rendimiento de Ventas ─────────────────────────────────────────────────
+
+function ReporteVentasTab() {
+  const hoy = new Date()
+  const haceUnMes = new Date(hoy.getFullYear(), hoy.getMonth() - 1, hoy.getDate())
+  const [desde, setDesde] = useState(haceUnMes.toISOString().split('T')[0])
+  const [hasta, setHasta] = useState(hoy.toISOString().split('T')[0])
+  const [estadoPago, setEstadoPago] = useState<'all' | 'PAGADO' | 'PENDIENTE'>('all')
+
+  const filtros: ReporteFiltros = useMemo(
+    () => ({
+      fecha_desde: desde || undefined,
+      fecha_hasta: hasta || undefined,
+      estado_pago: estadoPago !== 'all' ? estadoPago : undefined,
+    }),
+    [desde, hasta, estadoPago],
+  )
+
+  const { data, isLoading, isFetching, refetch } = useReporteQuery('ventas', filtros)
+
+  return (
+    <div className="space-y-5">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <FiltrosFechas desde={desde} hasta={hasta} onDesde={setDesde} onHasta={setHasta} />
+        <div className="flex items-center gap-2">
+          <select
+            value={estadoPago}
+            onChange={(e) => setEstadoPago(e.target.value as 'all' | 'PAGADO' | 'PENDIENTE')}
+            className="px-3 py-2 rounded-xl border border-stone-200 bg-[#faf8f5] text-sm font-bold text-[#2a1115] outline-none cursor-pointer"
+          >
+            <option value="all">Todos los pagos</option>
+            <option value="PAGADO">Pagados</option>
+            <option value="PENDIENTE">Pendientes</option>
+          </select>
+          <button
+            onClick={() => refetch()}
+            className="p-2.5 rounded-xl border border-stone-200 bg-[#faf8f5] hover:bg-[#5c0f1b]/5 cursor-pointer"
+            title="Refrescar"
+          >
+            <RefreshCw className={cn('h-4 w-4 text-[#5c0f1b]', isFetching && 'animate-spin')} />
+          </button>
+          <ExportarBotones tipo="ventas" filtros={filtros} />
+        </div>
       </div>
 
-      {/* ========================================================================= */}
-      {/* 2. PRINT LAYOUT (Only visible during print - window.print())             */}
-      {/* ========================================================================= */}
-      <div className="hidden print:block text-black bg-white p-8 space-y-8 max-w-full text-xs">
-        
-        {/* Letterhead */}
-        <div className="flex justify-between items-start border-b-2 border-stone-800 pb-4">
-          <div>
-            <h1 className="text-xl font-black uppercase tracking-wider text-[#5c0f1b]">Mitrufely Web S.A.C.</h1>
-            <p className="text-stone-500 font-bold">R.U.C. 20123456789</p>
-            <p className="text-stone-500">Pasaje Fino de Trufas de Chocolate y Pastelería de Lujo</p>
-          </div>
-          <div className="text-right">
-            <h2 className="text-sm font-black uppercase text-stone-700">Reporte de Control Administrativo</h2>
-            <p className="text-stone-500"><strong>Fecha Emisión:</strong> {new Date().toLocaleString('es-PE')}</p>
-            <p className="text-stone-500"><strong>Tipo de Reporte:</strong> {activeReportName}</p>
-          </div>
-        </div>
-
-        {/* METRICS ROW IN PRINT VIEW */}
-        {activeTab === 'inventory' && (
-          <div className="grid grid-cols-4 gap-4 p-4 bg-stone-50 border border-stone-200 rounded-lg">
-            <div>
-              <span className="font-bold block uppercase text-stone-500 text-[9px]">Total Productos:</span>
-              <span className="text-lg font-black text-[#5c0f1b]">{inventoryMetrics.total}</span>
-            </div>
-            <div>
-              <span className="font-bold block uppercase text-stone-500 text-[9px]">Bajo Stock:</span>
-              <span className="text-lg font-black text-amber-600">{inventoryMetrics.lowStock}</span>
-            </div>
-            <div>
-              <span className="font-bold block uppercase text-stone-500 text-[9px]">Agotados:</span>
-              <span className="text-lg font-black text-red-600">{inventoryMetrics.outOfStock}</span>
-            </div>
-            <div>
-              <span className="font-bold block uppercase text-stone-500 text-[9px]">Valorización Total:</span>
-              <span className="text-lg font-black text-emerald-600">S/. {Number(inventoryMetrics.totalValuation || 0).toFixed(2)}</span>
-            </div>
-          </div>
-        )}
-
-        {activeTab === 'sales' && (
-          <div className="grid grid-cols-4 gap-4 p-4 bg-stone-50 border border-stone-200 rounded-lg">
-            <div>
-              <span className="font-bold block uppercase text-stone-500 text-[9px]">Ventas Totales:</span>
-              <span className="text-lg font-black text-[#5c0f1b]">{salesMetrics.totalCount} órdenes</span>
-            </div>
-            <div>
-              <span className="font-bold block uppercase text-stone-500 text-[9px]">Total Base Imponible:</span>
-              <span className="text-lg font-black text-stone-800">S/. {Number(salesMetrics.baseImponibleTotal || 0).toFixed(2)}</span>
-            </div>
-            <div>
-              <span className="font-bold block uppercase text-stone-500 text-[9px]">Total IGV Recaudado:</span>
-              <span className="text-lg font-black text-stone-800">S/. {Number(salesMetrics.igvTotal || 0).toFixed(2)}</span>
-            </div>
-            <div>
-              <span className="font-bold block uppercase text-stone-500 text-[9px]">Total Recaudación:</span>
-              <span className="text-lg font-black text-emerald-600">S/. {Number(salesMetrics.totalRevenue || 0).toFixed(2)}</span>
-            </div>
-          </div>
-        )}
-
-        {activeTab === 'audit' && (
-          <div className="grid grid-cols-3 gap-4 p-4 bg-stone-50 border border-stone-200 rounded-lg">
-            <div>
-              <span className="font-bold block uppercase text-stone-500 text-[9px]">Productos Fiscalizados:</span>
-              <span className="text-lg font-black text-stone-800">{auditMetrics.totalAudited}</span>
-            </div>
-            <div>
-              <span className="font-bold block uppercase text-stone-500 text-[9px]">Discrepancias en Conciliación:</span>
-              <span className={cn("text-lg font-black", auditMetrics.isClean ? "text-green-700" : "text-red-700")}>
-                {auditMetrics.discrepancies} discrepancias
-              </span>
-            </div>
-            <div>
-              <span className="font-bold block uppercase text-stone-500 text-[9px]">Dictamen de Almacén:</span>
-              <span className={cn("text-lg font-black uppercase", auditMetrics.isClean ? "text-green-700" : "text-red-700")}>
-                {auditMetrics.isClean ? "CONCILIADO" : "CON INCIDENCIAS"}
-              </span>
-            </div>
-          </div>
-        )}
-
-        {/* PRINT TABLES */}
-        <div className="border border-stone-300 rounded-lg overflow-hidden">
-          {activeTab === 'inventory' && (
-            <table className="w-full border-collapse text-left text-[10px]">
-              <thead className="bg-stone-100 border-b border-stone-300">
-                <tr>
-                  <th className="py-2 px-3 border-r border-stone-200 font-bold">ID</th>
-                  <th className="py-2 px-3 border-r border-stone-200 font-bold">Producto</th>
-                  <th className="py-2 px-3 border-r border-stone-200 font-bold">Categoría</th>
-                  <th className="py-2 px-3 border-r border-stone-200 font-bold text-right">Precio unitario</th>
-                  <th className="py-2 px-3 border-r border-stone-200 text-right font-bold">Stock Mínimo</th>
-                  <th className="py-2 px-3 border-r border-stone-200 text-right font-bold">Stock Actual</th>
-                  <th className="py-2 px-3 text-center font-bold">Estado Almacén</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-stone-200">
-                {filteredInventory.map((p) => {
-                  const isAgotado = p.stock_actual === 0
-                  const isBajo = p.stock_actual > 0 && p.stock_actual <= p.stock_minimo
-                  return (
-                    <tr key={p.id_producto}>
-                      <td className="py-2 px-3 border-r border-stone-200 font-mono">#{p.id_producto}</td>
-                      <td className="py-2 px-3 border-r border-stone-200 font-bold">{p.nombre}</td>
-                      <td className="py-2 px-3 border-r border-stone-200 text-stone-600">{getCategoryName(p.id_categoria)}</td>
-                      <td className="py-2 px-3 border-r border-stone-200 text-right font-semibold">S/. {Number(p.precio).toFixed(2)}</td>
-                      <td className="py-2 px-3 border-r border-stone-200 text-right text-stone-500">{p.stock_minimo}</td>
-                      <td className="py-2 px-3 border-r border-stone-200 text-right font-bold text-stone-800">{p.stock_actual}</td>
-                      <td className="py-2 px-3 text-center">
-                        <span className={cn(
-                          "px-2 py-0.5 rounded text-[8px] font-bold uppercase border",
-                          isAgotado
-                            ? "bg-red-50 text-red-600 border-red-200"
-                            : isBajo
-                            ? "bg-amber-50 text-amber-600 border-amber-200"
-                            : "bg-green-50 text-green-700 border-green-200"
-                        )}>
-                          {isAgotado ? 'Agotado' : isBajo ? 'Bajo Stock' : 'Disponible'}
-                        </span>
-                      </td>
-                    </tr>
-                  )
-                })}
-              </tbody>
-            </table>
-          )}
-
-          {activeTab === 'sales' && (
-            <table className="w-full border-collapse text-left text-[10px]">
-              <thead className="bg-stone-100 border-b border-stone-300">
-                <tr>
-                  <th className="py-2 px-3 border-r border-stone-200 font-bold">ID Pedido</th>
-                  <th className="py-2 px-3 border-r border-stone-200 font-bold">Fecha y Hora</th>
-                  <th className="py-2 px-3 border-r border-stone-200 font-bold">Cliente</th>
-                  <th className="py-2 px-3 border-r border-stone-200 font-bold">Estado Pago</th>
-                  <th className="py-2 px-3 border-r border-stone-200 text-right font-bold">Base Imponible</th>
-                  <th className="py-2 px-3 border-r border-stone-200 text-right font-bold">IGV (18%)</th>
-                  <th className="py-2 px-3 text-right font-bold">Total</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-stone-200">
-                {filteredSales.map((s) => {
-                  const base = s.base_imponible ?? (Number(s.total) / 1.18)
-                  const igv = s.igv ?? (Number(s.total) - base)
-                  return (
-                    <tr key={s.id_venta}>
-                      <td className="py-2 px-3 border-r border-stone-200 font-mono font-bold">#{s.id_venta}</td>
-                      <td className="py-2 px-3 border-r border-stone-200 font-medium">{new Date(s.fecha_venta).toLocaleString('es-PE')}</td>
-                      <td className="py-2 px-3 border-r border-stone-200 font-mono">Cliente #{s.id_cliente}</td>
-                      <td className="py-2 px-3 border-r border-stone-200 font-bold">
-                        {s.estado_pago === 'PAGADO' ? 'COBRADO' : 'PENDIENTE'}
-                      </td>
-                      <td className="py-2 px-3 border-r border-stone-200 text-right">S/. {Number(base || 0).toFixed(2)}</td>
-                      <td className="py-2 px-3 border-r border-stone-200 text-right">S/. {Number(igv || 0).toFixed(2)}</td>
-                      <td className="py-2 px-3 text-right font-bold">S/. {Number(s.total).toFixed(2)}</td>
-                    </tr>
-                  )
-                })}
-                {/* Total Summary Row */}
-                <tr className="bg-stone-50 font-bold border-t-2 border-stone-300">
-                  <td colSpan={4} className="py-2 px-3 border-r border-stone-200 text-left font-black uppercase text-stone-700">Total General del Reporte</td>
-                  <td className="py-2 px-3 border-r border-stone-200 text-right">S/. {Number(salesMetrics.baseImponibleTotal || 0).toFixed(2)}</td>
-                  <td className="py-2 px-3 border-r border-stone-200 text-right">S/. {Number(salesMetrics.igvTotal || 0).toFixed(2)}</td>
-                  <td className="py-2 px-3 text-right text-emerald-700 font-black">S/. {Number(salesMetrics.totalRevenue || 0).toFixed(2)}</td>
-                </tr>
-              </tbody>
-            </table>
-          )}
-
-          {activeTab === 'audit' && (
-            <table className="w-full border-collapse text-left text-[10px]">
-              <thead className="bg-stone-100 border-b border-stone-300">
-                <tr>
-                  <th className="py-2 px-3 border-r border-stone-200 font-bold">ID</th>
-                  <th className="py-2 px-3 border-r border-stone-200 font-bold">Producto</th>
-                  <th className="py-2 px-3 border-r border-stone-200 text-right font-bold">Stock Caché</th>
-                  <th className="py-2 px-3 border-r border-stone-200 text-right font-bold">Kardex (Transaccional)</th>
-                  <th className="py-2 px-3 border-r border-stone-200 text-right font-bold">Lotes Activos (Físico)</th>
-                  <th className="py-2 px-3 border-r border-stone-200 text-right font-bold">Desviación</th>
-                  <th className="py-2 px-3 text-center font-bold">Estado Auditoría</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-stone-200">
-                {filteredAudit.map((r) => {
-                  const drift = r.stock_actual - r.stock_calculado_lotes
-                  return (
-                    <tr key={r.id_producto}>
-                      <td className="py-2 px-3 border-r border-stone-200 font-mono">#{r.id_producto}</td>
-                      <td className="py-2 px-3 border-r border-stone-200 font-bold">{r.nombre}</td>
-                      <td className="py-2 px-3 border-r border-stone-200 text-right">{r.stock_actual}</td>
-                      <td className="py-2 px-3 border-r border-stone-200 text-right">{r.stock_calculado_kardex}</td>
-                      <td className="py-2 px-3 border-r border-stone-200 text-right">{r.stock_calculado_lotes}</td>
-                      <td className={cn(
-                        "py-2 px-3 border-r border-stone-200 text-right font-bold",
-                        drift !== 0 ? "text-red-600 font-black" : "text-stone-400"
-                      )}>
-                        {drift > 0 ? `+${drift}` : drift}
-                      </td>
-                      <td className="py-2 px-3 text-center">
-                        <span className={cn(
-                          "px-2 py-0.5 rounded text-[8px] font-bold uppercase border",
-                          r.descuadrado
-                            ? "bg-red-50 text-red-600 border-red-200"
-                            : "bg-green-50 text-green-700 border-green-200"
-                        )}>
-                          {r.descuadrado ? 'DESALINEADO' : 'CUADRADO'}
-                        </span>
-                      </td>
-                    </tr>
-                  )
-                })}
-              </tbody>
-            </table>
-          )}
-        </div>
-
-        {/* Corporate Footer */}
-        <div className="pt-12 text-center text-[8px] text-stone-400 border-t border-dashed border-stone-300">
-          <p>Documento de uso confidencial interno para Mitrufely Web S.A.C.</p>
-          <p>© {new Date().getFullYear()} Mitrufely. Todos los derechos reservados.</p>
-        </div>
-
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <KpiCard label="Total ventas" value={money(data?.total_ventas)} />
+        <KpiCard label="N° pedidos" value={data?.cantidad_pedidos ?? 0} accent="orange" />
+        <KpiCard label="Ticket promedio" value={money(data?.ticket_promedio)} accent="green" />
       </div>
 
+      {isLoading ? (
+        <Cargando />
+      ) : !data?.items?.length ? (
+        <Vacio mensaje="No hay ventas en el rango seleccionado." />
+      ) : (
+        <Tabla headers={['ID', 'Fecha', 'Cliente', 'Estado', 'Pago', 'Base', 'IGV', 'Total', 'M. Pago']}>
+          {data.items.map((v) => (
+            <tr key={v.id_venta} className="hover:bg-[#faf8f5]/50">
+              <td className="px-4 py-3">#{v.id_venta}</td>
+              <td className="px-4 py-3">{new Date(v.fecha_venta).toLocaleDateString('es-PE')}</td>
+              <td className="px-4 py-3 max-w-[200px] truncate">{v.cliente}</td>
+              <td className="px-4 py-3">
+                <Badge
+                  texto={v.estado}
+                  tono={v.estado === 'ENTREGADO' ? 'green' : v.estado === 'CANCELADO' ? 'red' : 'naranja'}
+                />
+              </td>
+              <td className="px-4 py-3">
+                <Badge texto={v.estado_pago} tono={v.estado_pago === 'PAGADO' ? 'green' : 'gris'} />
+              </td>
+              <td className="px-4 py-3">{money(v.base_imponible)}</td>
+              <td className="px-4 py-3">{money(v.igv)}</td>
+              <td className="px-4 py-3 font-black">{money(v.total)}</td>
+              <td className="px-4 py-3 text-stone-500">{v.metodo_pago ?? '—'}</td>
+            </tr>
+          ))}
+        </Tabla>
+      )}
+    </div>
+  )
+}
+
+// ── 2. Seguimiento de Pedidos ────────────────────────────────────────────────
+
+function ReportePedidosTab() {
+  const hoy = new Date()
+  const haceUnMes = new Date(hoy.getFullYear(), hoy.getMonth() - 1, hoy.getDate())
+  const [desde, setDesde] = useState(haceUnMes.toISOString().split('T')[0])
+  const [hasta, setHasta] = useState(hoy.toISOString().split('T')[0])
+  const [estado, setEstado] = useState<string>('all')
+
+  const filtros: ReporteFiltros = useMemo(
+    () => ({
+      fecha_desde: desde || undefined,
+      fecha_hasta: hasta || undefined,
+      estado: estado !== 'all' ? estado : undefined,
+    }),
+    [desde, hasta, estado],
+  )
+
+  const { data, isLoading, isFetching, refetch } = useReporteQuery('pedidos', filtros)
+
+  return (
+    <div className="space-y-5">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <FiltrosFechas desde={desde} hasta={hasta} onDesde={setDesde} onHasta={setHasta} />
+        <div className="flex items-center gap-2">
+          <select
+            value={estado}
+            onChange={(e) => setEstado(e.target.value)}
+            className="px-3 py-2 rounded-xl border border-stone-200 bg-[#faf8f5] text-sm font-bold text-[#2a1115] outline-none cursor-pointer"
+          >
+            <option value="all">Todos los estados</option>
+            <option value="PENDIENTE">Pendiente</option>
+            <option value="PAGADO">Pagado</option>
+            <option value="PREPARANDO">Preparando</option>
+            <option value="EN_CAMINO">En camino</option>
+            <option value="ENTREGADO">Entregado</option>
+            <option value="CANCELADO">Cancelado</option>
+          </select>
+          <button
+            onClick={() => refetch()}
+            className="p-2.5 rounded-xl border border-stone-200 bg-[#faf8f5] hover:bg-[#5c0f1b]/5 cursor-pointer"
+            title="Refrescar"
+          >
+            <RefreshCw className={cn('h-4 w-4 text-[#5c0f1b]', isFetching && 'animate-spin')} />
+          </button>
+          <ExportarBotones tipo="pedidos" filtros={filtros} />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <KpiCard label="Total pedidos" value={data?.total_pedidos ?? 0} />
+        {data?.por_estado &&
+          Object.entries(data.por_estado)
+            .slice(0, 3)
+            .map(([k, v]) => (
+              <KpiCard
+                key={k}
+                label={k}
+                value={v}
+                accent={k === 'ENTREGADO' ? 'green' : 'orange'}
+              />
+            ))}
+      </div>
+
+      {isLoading ? (
+        <Cargando />
+      ) : !data?.items?.length ? (
+        <Vacio mensaje="No hay pedidos en el rango seleccionado." />
+      ) : (
+        <Tabla headers={['ID', 'Cliente', 'Estado', 'Pago', 'Fecha venta', 'Entregado', 'Total']}>
+          {data.items.map((p) => (
+            <tr key={p.id_venta} className="hover:bg-[#faf8f5]/50">
+              <td className="px-4 py-3">#{p.id_venta}</td>
+              <td className="px-4 py-3 max-w-[200px] truncate">{p.cliente}</td>
+              <td className="px-4 py-3">
+                <Badge
+                  texto={p.estado}
+                  tono={p.estado === 'ENTREGADO' ? 'green' : p.estado === 'CANCELADO' ? 'red' : 'naranja'}
+                />
+              </td>
+              <td className="px-4 py-3">
+                <Badge texto={p.estado_pago} tono={p.estado_pago === 'PAGADO' ? 'green' : 'gris'} />
+              </td>
+              <td className="px-4 py-3">{new Date(p.fecha_venta).toLocaleDateString('es-PE')}</td>
+              <td className="px-4 py-3 text-stone-500">
+                {p.delivery_completed_at
+                  ? new Date(p.delivery_completed_at).toLocaleDateString('es-PE')
+                  : '—'}
+              </td>
+              <td className="px-4 py-3 font-black">{money(p.total_final)}</td>
+            </tr>
+          ))}
+        </Tabla>
+      )}
+    </div>
+  )
+}
+
+// ── 3. Catálogo Comercial ────────────────────────────────────────────────────
+
+function ReporteCatalogoTab() {
+  const [search, setSearch] = useState('')
+  const filtros: ReporteFiltros = useMemo(() => ({ search: search || undefined }), [search])
+  const { data, isLoading, isFetching, refetch } = useReporteQuery('catalogo', filtros)
+
+  return (
+    <div className="space-y-5">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <input
+          type="text"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Buscar producto..."
+          className="px-4 py-2.5 rounded-xl border border-stone-200 bg-[#faf8f5] text-sm font-semibold text-[#2a1115] outline-none flex-1 min-w-[200px]"
+        />
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => refetch()}
+            className="p-2.5 rounded-xl border border-stone-200 bg-[#faf8f5] hover:bg-[#5c0f1b]/5 cursor-pointer"
+            title="Refrescar"
+          >
+            <RefreshCw className={cn('h-4 w-4 text-[#5c0f1b]', isFetching && 'animate-spin')} />
+          </button>
+          <ExportarBotones tipo="catalogo" filtros={filtros} />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <KpiCard label="Total productos" value={data?.total_productos ?? 0} />
+        <KpiCard label="Activos" value={data?.productos_activos ?? 0} accent="green" />
+        <KpiCard label="Inactivos" value={data?.productos_inactivos ?? 0} accent="red" />
+      </div>
+
+      {isLoading ? (
+        <Cargando />
+      ) : !data?.items?.length ? (
+        <Vacio mensaje="No hay productos que coincidan con la búsqueda." />
+      ) : (
+        <Tabla headers={['ID', 'Nombre', 'Categoría', 'Precio', 'Stock', 'Estado']}>
+          {data.items.map((p) => (
+            <tr key={p.id_producto} className="hover:bg-[#faf8f5]/50">
+              <td className="px-4 py-3">#{p.id_producto}</td>
+              <td className="px-4 py-3 font-black">{p.nombre}</td>
+              <td className="px-4 py-3 text-stone-500">{p.categoria ?? '—'}</td>
+              <td className="px-4 py-3">{money(p.precio)}</td>
+              <td className="px-4 py-3">{p.stock_actual}</td>
+              <td className="px-4 py-3">
+                <Badge texto={p.estado ? 'Activo' : 'Inactivo'} tono={p.estado ? 'green' : 'red'} />
+              </td>
+            </tr>
+          ))}
+        </Tabla>
+      )}
+    </div>
+  )
+}
+
+// ── 4. Control de Inventario ─────────────────────────────────────────────────
+
+function ReporteInventarioTab() {
+  const { data, isLoading, isFetching, refetch } = useReporteQuery('inventario')
+
+  return (
+    <div className="space-y-5">
+      <div className="flex items-center justify-end gap-2">
+        <button
+          onClick={() => refetch()}
+          className="p-2.5 rounded-xl border border-stone-200 bg-[#faf8f5] hover:bg-[#5c0f1b]/5 cursor-pointer"
+          title="Refrescar"
+        >
+          <RefreshCw className={cn('h-4 w-4 text-[#5c0f1b]', isFetching && 'animate-spin')} />
+        </button>
+        <ExportarBotones tipo="inventario" />
+      </div>
+
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <KpiCard label="Productos" value={data?.total_productos ?? 0} />
+        <KpiCard label="Bajo stock" value={data?.productos_bajo_stock ?? 0} accent="orange" />
+        <KpiCard label="Agotados" value={data?.productos_agotados ?? 0} accent="red" />
+        <KpiCard label="Valor inventario" value={money(data?.valor_inventario)} accent="green" />
+      </div>
+
+      {isLoading ? (
+        <Cargando />
+      ) : !data?.items?.length ? (
+        <Vacio mensaje="No hay productos registrados." />
+      ) : (
+        <Tabla
+          headers={['ID', 'Nombre', 'Categoría', 'Stock', 'Mínimo', 'Estado stock', 'Valorización']}
+        >
+          {data.items.map((p) => (
+            <tr key={p.id_producto} className="hover:bg-[#faf8f5]/50">
+              <td className="px-4 py-3">#{p.id_producto}</td>
+              <td className="px-4 py-3 font-black">{p.nombre}</td>
+              <td className="px-4 py-3 text-stone-500">{p.categoria ?? '—'}</td>
+              <td className="px-4 py-3">{p.stock_actual}</td>
+              <td className="px-4 py-3">{p.stock_minimo}</td>
+              <td className="px-4 py-3">
+                <Badge
+                  texto={p.estado_stock}
+                  tono={
+                    p.estado_stock === 'AGOTADO'
+                      ? 'red'
+                      : p.estado_stock === 'BAJO'
+                        ? 'naranja'
+                        : 'green'
+                  }
+                />
+              </td>
+              <td className="px-4 py-3">{money(p.valorizacion)}</td>
+            </tr>
+          ))}
+        </Tabla>
+      )}
+    </div>
+  )
+}
+
+// ── 5. Gestión de Usuarios ───────────────────────────────────────────────────
+
+function ReporteUsuariosTab() {
+  const [search, setSearch] = useState('')
+  const [rol, setRol] = useState<'all' | 'ADMIN' | 'CLIENTE'>('all')
+  const filtros: ReporteFiltros = useMemo(
+    () => ({ search: search || undefined, estado: rol !== 'all' ? rol : undefined }),
+    [search, rol],
+  )
+  const { data, isLoading, isFetching, refetch } = useReporteQuery('usuarios', filtros)
+
+  return (
+    <div className="space-y-5">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <input
+          type="text"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Buscar usuario..."
+          className="px-4 py-2.5 rounded-xl border border-stone-200 bg-[#faf8f5] text-sm font-semibold text-[#2a1115] outline-none flex-1 min-w-[200px]"
+        />
+        <div className="flex items-center gap-2">
+          <select
+            value={rol}
+            onChange={(e) => setRol(e.target.value as 'all' | 'ADMIN' | 'CLIENTE')}
+            className="px-3 py-2 rounded-xl border border-stone-200 bg-[#faf8f5] text-sm font-bold text-[#2a1115] outline-none cursor-pointer"
+          >
+            <option value="all">Todos los roles</option>
+            <option value="ADMIN">Administradores</option>
+            <option value="CLIENTE">Clientes</option>
+          </select>
+          <button
+            onClick={() => refetch()}
+            className="p-2.5 rounded-xl border border-stone-200 bg-[#faf8f5] hover:bg-[#5c0f1b]/5 cursor-pointer"
+            title="Refrescar"
+          >
+            <RefreshCw className={cn('h-4 w-4 text-[#5c0f1b]', isFetching && 'animate-spin')} />
+          </button>
+          <ExportarBotones tipo="usuarios" filtros={filtros} />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <KpiCard label="Total usuarios" value={data?.total_usuarios ?? 0} />
+        <KpiCard label="Activos" value={data?.activos ?? 0} accent="green" />
+        <KpiCard label="Inactivos" value={data?.inactivos ?? 0} accent="red" />
+      </div>
+
+      {isLoading ? (
+        <Cargando />
+      ) : !data?.items?.length ? (
+        <Vacio mensaje="No hay usuarios que coincidan con los filtros." />
+      ) : (
+        <Tabla headers={['ID', 'Nombre', 'Email', 'Rol', 'Estado', 'Auth']}>
+          {data.items.map((u) => (
+            <tr key={u.id_usuario} className="hover:bg-[#faf8f5]/50">
+              <td className="px-4 py-3">#{u.id_usuario}</td>
+              <td className="px-4 py-3 font-black">
+                {u.nombres} {u.apellidos}
+              </td>
+              <td className="px-4 py-3 text-stone-500">{u.email}</td>
+              <td className="px-4 py-3">
+                <Badge texto={u.rol} tono={u.rol === 'ADMIN' ? 'vino' : 'naranja'} />
+              </td>
+              <td className="px-4 py-3">
+                <Badge texto={u.estado ? 'Activo' : 'Inactivo'} tono={u.estado ? 'green' : 'red'} />
+              </td>
+              <td className="px-4 py-3 text-stone-500">{u.auth_provider}</td>
+            </tr>
+          ))}
+        </Tabla>
+      )}
+    </div>
+  )
+}
+
+// ── 6. Comprobantes Electrónicos ─────────────────────────────────────────────
+
+function ComprobantesTab() {
+  const [idVenta, setIdVenta] = useState('')
+  const [descargando, setDescargando] = useState(false)
+
+  const handleDescargar = async () => {
+    const id = Number(idVenta)
+    if (!id || isNaN(id)) {
+      toast.warning('Ingrese un ID de venta válido.')
+      return
+    }
+    setDescargando(true)
+    try {
+      const blob = await reportsApi.descargarComprobante(id)
+      descargarBlob(blob, `comprobante_venta_${id}.pdf`)
+      toast.success('Comprobante descargado')
+    } catch {
+      toast.error('No se pudo generar el comprobante. Verifique el ID de venta.')
+    } finally {
+      setDescargando(false)
+    }
+  }
+
+  return (
+    <div className="space-y-5">
+      <div className="bg-white rounded-2xl border border-[#5c0f1b]/8 p-6 shadow-sm">
+        <div className="flex items-start gap-4">
+          <div className="h-12 w-12 rounded-2xl bg-[#5c0f1b]/8 flex items-center justify-center shrink-0">
+            <Receipt className="h-6 w-6 text-[#5c0f1b]" />
+          </div>
+          <div className="flex-1">
+            <h3 className="font-black text-[#2a1115]">Generar comprobante por venta</h3>
+            <p className="text-sm text-stone-500 font-medium mt-1 mb-4">
+              Ingresa el ID de una venta para generar su comprobante electrónico en PDF. El documento
+              incluye los datos del cliente, los productos adquiridos, las cantidades y el total pagado.
+            </p>
+            <div className="flex flex-wrap items-center gap-3">
+              <input
+                type="number"
+                value={idVenta}
+                onChange={(e) => setIdVenta(e.target.value)}
+                placeholder="ID de venta (ej: 12)"
+                className="px-4 py-2.5 rounded-xl border border-stone-200 bg-[#faf8f5] text-sm font-semibold text-[#2a1115] outline-none w-48"
+              />
+              <button
+                onClick={handleDescargar}
+                disabled={descargando || !idVenta}
+                className="inline-flex items-center gap-2 bg-[#5c0f1b] hover:bg-[#7a1525] text-white text-sm font-bold px-5 py-2.5 rounded-xl transition active:scale-95 cursor-pointer disabled:opacity-50"
+              >
+                {descargando ? (
+                  <RefreshCw className="h-4 w-4 animate-spin" />
+                ) : (
+                  <FileText className="h-4 w-4" />
+                )}
+                Generar PDF
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-[#fff7ed] border border-[#ff7a45]/20 rounded-2xl p-5">
+        <p className="text-sm text-[#7a1525] font-semibold">
+          💡 Los clientes también pueden descargar su comprobante directamente desde el detalle de su
+          pedido en <span className="font-black">Mi Cuenta → Pedidos</span>.
+        </p>
+      </div>
+    </div>
+  )
+}
+
+// ── 7. Fidelización CriptoTrufas ───────────────────────────────────────────────
+
+function ReporteFidelizacionTab() {
+  const { data, isLoading, isFetching, refetch } = useReporteQuery('fidelizacion')
+
+  return (
+    <div className="space-y-5">
+      <div className="flex items-center justify-end gap-2">
+        <button
+          onClick={() => refetch()}
+          className="p-2.5 rounded-xl border border-stone-200 bg-[#faf8f5] hover:bg-[#5c0f1b]/5 cursor-pointer"
+          title="Refrescar"
+        >
+          <RefreshCw className={cn('h-4 w-4 text-[#5c0f1b]', isFetching && 'animate-spin')} />
+        </button>
+        <ExportarBotones tipo="fidelizacion" />
+      </div>
+
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <KpiCard label="Clientes" value={data?.total_clientes ?? 0} />
+        <KpiCard label="Puntos circulación" value={data?.puntos_circulacion ?? 0} accent="orange" />
+        <KpiCard label="Cupones disponibles" value={data?.cupones_disponibles_total ?? 0} accent="green" />
+      </div>
+
+      {isLoading ? (
+        <Cargando />
+      ) : !data?.items?.length ? (
+        <Vacio mensaje="No hay clientes con actividad de fidelización." />
+      ) : (
+        <Tabla headers={['ID', 'Cliente', 'Email', 'Saldo puntos', 'Puntos usados']}>
+          {data.items.map((c) => (
+            <tr key={c.id_cliente} className="hover:bg-[#faf8f5]/50">
+              <td className="px-4 py-3">#{c.id_cliente}</td>
+              <td className="px-4 py-3 font-black">{c.cliente}</td>
+              <td className="px-4 py-3 text-stone-500">{c.email}</td>
+              <td className="px-4 py-3">
+                <Badge texto={String(c.saldo_puntos)} tono="naranja" />
+              </td>
+              <td className="px-4 py-3 text-stone-500">{c.puntos_usados}</td>
+            </tr>
+          ))}
+        </Tabla>
+      )}
     </div>
   )
 }

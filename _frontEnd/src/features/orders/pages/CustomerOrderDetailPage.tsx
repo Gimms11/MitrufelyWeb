@@ -8,16 +8,17 @@ import { useState } from 'react'
 import { Link, useParams } from 'react-router'
 import { motion } from 'framer-motion'
 import { toast } from 'sonner'
-import { Loader2, ArrowLeft, ShoppingBag, Clock, Package, Receipt, CreditCard, Coins, Star, AlertTriangle } from 'lucide-react'
+import { Loader2, ArrowLeft, ShoppingBag, Clock, Package, Receipt, CreditCard, Coins, Star, AlertTriangle, Download, Ban, AlertCircle, XCircle } from 'lucide-react'
 
 import { useAuthStore } from '@/app/store'
 import { PublicHeader } from '@/shared/components/layout/PublicHeader'
 import { PublicFooter } from '@/shared/components/layout/PublicFooter'
 import { useCartItemCount } from '@/features/cart/hooks/useCart'
-import { useOrderDetailQuery } from '@/features/orders/hooks/useOrders'
+import { useOrderDetailQuery, useTransitionVentaMutation } from '@/features/orders/hooks/useOrders'
 import { OrderTrackingTimeline } from '@/features/orders/components/OrderTrackingTimeline'
 import { ReviewModal } from '@/features/reviews/components/ReviewModal'
 import { IssueModal } from '@/features/issues/components/IssueModal'
+import { reportsApi, descargarBlob } from '@/features/reports/api/reports.api'
 import { useQueryClient, useQuery } from '@tanstack/react-query'
 import { reviewsApi } from '@/features/reviews/api/reviews.api'
 
@@ -57,8 +58,59 @@ export default function CustomerOrderDetailPage() {
   // Modals state
   const [reviewModalOpen, setReviewModalOpen] = useState(false)
   const [issueModalOpen, setIssueModalOpen] = useState(false)
+  const [downloadingComprobante, setDownloadingComprobante] = useState(false)
+  // Cancelación por el cliente
+  const [cancelModalOpen, setCancelModalOpen] = useState(false)
+  const [cancelMotivo, setCancelMotivo] = useState('')
+  const [cancelError, setCancelError] = useState<string | null>(null)
+  const transitionMut = useTransitionVentaMutation()
 
   const orderId = id ? Number(id) : null
+
+  const ESTADOS_CANCELABLES = ['PENDIENTE', 'PAGADO', 'PREPARANDO']
+
+  const handleCancelarPedido = () => {
+    if (!orderId) return
+    if (cancelMotivo.trim().length < 5) {
+      setCancelError('El motivo debe tener al menos 5 caracteres.')
+      return
+    }
+    transitionMut.mutate(
+      { id: orderId, action: 'cancelar', payload: { motivo: cancelMotivo.trim() } },
+      {
+        onSuccess: () => {
+          setCancelModalOpen(false)
+          setCancelMotivo('')
+          setCancelError(null)
+        },
+        onError: (error: unknown) => {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const e = error as any
+          const detail = e?.response?.data?.detail
+          let msg = 'No se pudo cancelar el pedido.'
+          if (Array.isArray(detail)) msg = detail.map((err) => err.msg || err).join(', ')
+          else if (typeof detail === 'string') msg = detail
+          setCancelError(msg)
+        },
+      }
+    )
+  }
+
+  const handleDownloadComprobante = async () => {
+    if (!orderId) return
+    setDownloadingComprobante(true)
+    try {
+      const blob = await reportsApi.descargarComprobante(orderId)
+      const tipo = order?.documentos?.[0]?.tipo_documento?.toLowerCase() ?? 'comprobante'
+      const serie = order?.documentos?.[0]?.numero_serie ?? String(orderId)
+      descargarBlob(blob, `${tipo}_${serie}.pdf`)
+      toast.success('Comprobante descargado')
+    } catch {
+      toast.error('No se pudo generar el comprobante')
+    } finally {
+      setDownloadingComprobante(false)
+    }
+  }
 
   const { data: order, isLoading, isError } = useOrderDetailQuery(orderId)
 
@@ -202,11 +254,31 @@ export default function CustomerOrderDetailPage() {
                         <p className="font-black text-[#2a1115] text-sm">¿Tuviste un problema?</p>
                         <p className="text-xs text-[#2a1115]/50">Reportar incidencia</p>
                       </div>
-                      <button 
+                      <button
                         onClick={() => setIssueModalOpen(true)}
                         className="px-4 py-2 bg-red-50 text-red-700 hover:bg-red-100 font-bold text-xs rounded-xl flex items-center gap-2 transition-colors cursor-pointer"
                       >
                         <AlertTriangle className="h-3.5 w-3.5" /> Reportar
+                      </button>
+                    </div>
+                  )}
+
+                  {/* Cancelación por el cliente (solo estados cancelables) */}
+                  {ESTADOS_CANCELABLES.includes(order.estado) && (
+                    <div className="flex items-center justify-between w-full sm:w-auto sm:gap-4 pt-4 sm:pt-0">
+                      <div>
+                        <p className="font-black text-[#2a1115] text-sm">¿Ya no lo necesitas?</p>
+                        <p className="text-xs text-[#2a1115]/50">Cancelar pedido (reintegra stock)</p>
+                      </div>
+                      <button
+                        onClick={() => {
+                          setCancelMotivo('')
+                          setCancelError(null)
+                          setCancelModalOpen(true)
+                        }}
+                        className="px-4 py-2 bg-[#5c0f1b]/8 text-[#5c0f1b] hover:bg-[#5c0f1b]/15 font-bold text-xs rounded-xl flex items-center gap-2 transition-colors cursor-pointer shrink-0"
+                      >
+                        <Ban className="h-3.5 w-3.5" /> Cancelar pedido
                       </button>
                     </div>
                   )}
@@ -314,22 +386,51 @@ export default function CustomerOrderDetailPage() {
                 )}
               </div>
 
-              {/* Placeholders para futuras fases */}
+              {/* Comprobante electrónico (PDF generado en servidor) */}
               <div className="bg-white rounded-2xl border border-dashed border-[#5c0f1b]/15 p-5 space-y-3">
                 <h3 className="font-black text-[#2a1115] text-sm uppercase tracking-wider mb-2 flex items-center gap-2">
-                  Documentos
+                  <Receipt className="h-4 w-4 text-[#5c0f1b]" />
+                  Comprobante Electrónico
                 </h3>
                 {order.documentos && order.documentos.length > 0 ? (
-                  order.documentos.map((doc) => (
-                    <div key={doc.id_documento} className="flex justify-between text-sm font-semibold">
-                      <span className="text-[#2a1115]/60">{doc.tipo_documento === 'BOLETA' ? 'Boleta' : doc.tipo_documento}</span>
-                      <span className="text-[#2a1115]">{doc.numero_serie || '—'}</span>
-                    </div>
-                  ))
+                  <div className="space-y-3">
+                    {order.documentos.map((doc) => (
+                      <div key={doc.id_documento} className="flex justify-between items-center text-sm font-semibold">
+                        <span className="text-[#2a1115]/60">{doc.tipo_documento === 'BOLETA' ? 'Boleta' : doc.tipo_documento === 'FACTURA' ? 'Factura' : doc.tipo_documento}</span>
+                        <span className="text-[#2a1115]">{doc.numero_serie || '—'}</span>
+                      </div>
+                    ))}
+                    <button
+                      onClick={handleDownloadComprobante}
+                      disabled={downloadingComprobante}
+                      className="w-full inline-flex items-center justify-center gap-2 bg-[#5c0f1b] hover:bg-[#7a1525] text-white text-sm font-bold py-2.5 rounded-xl transition active:scale-95 cursor-pointer disabled:opacity-50"
+                    >
+                      {downloadingComprobante ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <Download className="h-4 w-4" />
+                      )}
+                      Descargar comprobante PDF
+                    </button>
+                  </div>
                 ) : (
-                  <p className="text-xs text-[#2a1115]/30 font-medium text-center py-4 italic">
-                    Comprobante disponible próximamente
-                  </p>
+                  <div className="space-y-3">
+                    <p className="text-xs text-[#2a1115]/50 font-medium text-center py-2 italic">
+                      Genera tu comprobante electrónico en formato PDF.
+                    </p>
+                    <button
+                      onClick={handleDownloadComprobante}
+                      disabled={downloadingComprobante}
+                      className="w-full inline-flex items-center justify-center gap-2 bg-[#5c0f1b] hover:bg-[#7a1525] text-white text-sm font-bold py-2.5 rounded-xl transition active:scale-95 cursor-pointer disabled:opacity-50"
+                    >
+                      {downloadingComprobante ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <Download className="h-4 w-4" />
+                      )}
+                      Generar comprobante PDF
+                    </button>
+                  </div>
                 )}
               </div>
             </div>
@@ -347,12 +448,84 @@ export default function CustomerOrderDetailPage() {
         onSuccess={handleModalSuccess} 
       />
 
-      <IssueModal 
-        isOpen={issueModalOpen} 
-        onClose={() => setIssueModalOpen(false)} 
-        id_venta={orderId!} 
-        onSuccess={handleModalSuccess} 
+      <IssueModal
+        isOpen={issueModalOpen}
+        onClose={() => setIssueModalOpen(false)}
+        id_venta={orderId!}
+        onSuccess={handleModalSuccess}
       />
+
+      {/* Modal de cancelación (cliente) */}
+      {cancelModalOpen && (
+        <div className="fixed inset-0 z-[200] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-[#5c0f1b]/10">
+            <div className="flex items-start justify-between mb-3">
+              <h3 className="text-lg font-black text-[#5c0f1b]">Cancelar pedido #{orderId}</h3>
+              <button
+                onClick={() => setCancelModalOpen(false)}
+                disabled={transitionMut.isPending}
+                className="cursor-pointer disabled:opacity-50"
+              >
+                <XCircle className="h-6 w-6 text-stone-400 hover:text-stone-600" />
+              </button>
+            </div>
+            <p className="text-sm text-stone-600 mb-4">
+              Indica el motivo de la cancelación. El stock de los productos será reintegrado
+              automáticamente.
+            </p>
+
+            <label className="block text-xs font-black uppercase tracking-wide text-stone-500 mb-1">
+              Motivo <span className="text-red-500">*</span>
+            </label>
+            <textarea
+              value={cancelMotivo}
+              onChange={(e) => {
+                setCancelMotivo(e.target.value)
+                setCancelError(null)
+              }}
+              placeholder="Ej: Ya no necesito el pedido, me equivoqué..."
+              rows={3}
+              className="w-full px-3 py-2 rounded-xl border border-stone-200 bg-[#faf8f5] text-sm font-semibold text-[#2a1115] outline-none focus:border-[#5c0f1b] resize-none"
+              disabled={transitionMut.isPending}
+            />
+            <p className="text-[10px] text-stone-400 mt-1 mb-3">{cancelMotivo.trim().length}/5 mínimo</p>
+
+            {cancelError && (
+              <div className="mb-4 p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs font-semibold flex items-start gap-2">
+                <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+                <span>{cancelError}</span>
+              </div>
+            )}
+
+            <div className="flex gap-3">
+              <button
+                onClick={() => setCancelModalOpen(false)}
+                disabled={transitionMut.isPending}
+                className="flex-1 py-2.5 rounded-xl border border-stone-200 text-stone-600 font-bold text-sm hover:bg-stone-50 transition-all cursor-pointer disabled:opacity-50"
+              >
+                Cerrar
+              </button>
+              <button
+                onClick={handleCancelarPedido}
+                disabled={transitionMut.isPending}
+                className="flex-1 py-2.5 rounded-xl bg-[#5c0f1b] text-white font-bold text-sm hover:bg-[#7a1525] transition-all cursor-pointer shadow-md disabled:opacity-50 flex items-center justify-center gap-2"
+              >
+                {transitionMut.isPending ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Cancelando...
+                  </>
+                ) : (
+                  <>
+                    <Ban className="h-4 w-4" />
+                    Confirmar cancelación
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

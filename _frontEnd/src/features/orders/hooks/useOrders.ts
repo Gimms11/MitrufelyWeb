@@ -71,10 +71,19 @@ export const useTransitionVentaMutation = () => {
         default: throw new Error('Acción no válida')
       }
     },
-    onSuccess: (data) => {
+    onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['orders'] })
       queryClient.invalidateQueries({ queryKey: ['orders', 'detail', data.id_venta] })
-      toast.success(`Transición aplicada exitosamente a la venta #${data.id_venta}`)
+      const mensajes: Record<string, string> = {
+        pagar: `Venta #${data.id_venta} marcada como PAGADA 💰`,
+        preparar: `Venta #${data.id_venta} en PREPARACIÓN 👨‍🍳`,
+        despachar: `Venta #${data.id_venta} despachada (EN CAMINO) 🛵`,
+        entregar: `Venta #${data.id_venta} marcada como ENTREGADA ✨`,
+        cancelar: `Venta #${data.id_venta} CANCELADA — stock reintegrado`,
+        devolver: `Venta #${data.id_venta} marcada como DEVUELTA 📦`,
+        reembolsar: `Reembolso procesado para la venta #${data.id_venta} 💸`,
+      }
+      toast.success(mensajes[variables.action] ?? `Transición aplicada a la venta #${data.id_venta}`)
     },
     onError: (error: unknown) => {
       const detail = formatErrorDetail(error, 'Error al procesar la transición.')

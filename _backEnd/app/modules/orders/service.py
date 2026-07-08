@@ -27,6 +27,7 @@ from sqlalchemy.orm import selectinload
 from app.core.exceptions import (
     BusinessRuleError,
     DatabaseError,
+    ForbiddenError,
     InsufficientStockError,
     NotFoundError,
 )
@@ -625,19 +626,40 @@ class VentaService(AbstractService[VentaResponse, VentaRequest, None, int]):
     # CANCELAR — cualquier estado cancelable → CANCELADO
     # ══════════════════════════════════════════════════════════════════════════
 
+    def _verificar_titularidad(self, venta: Venta, id_usuario: int, es_admin: bool) -> None:
+        """
+        Verifica que el usuario tenga permiso para operar sobre la venta.
+        Los ADMIN pueden operar sobre cualquier venta. Los CLIENTE solo sobre las suyas.
+        Lanza ForbiddenError si un cliente intenta operar sobre un pedido ajeno.
+        """
+        if es_admin:
+            return
+        cliente = getattr(venta, "cliente", None)
+        id_duenio = getattr(cliente, "id_usuario", None) if cliente else None
+        if id_duenio != id_usuario:
+            raise ForbiddenError(
+                "No tienes permiso para operar sobre este pedido: pertenece a otra cuenta."
+            )
+
+
     async def cancelar(
         self,
         id_venta: int,
         id_usuario: int,
         dto: "CancelRequest",
+        es_admin: bool = False,
     ) -> VentaResponse:
         """
         Cancela un pedido. Válido desde PENDIENTE, PAGADO, PREPARANDO.
         Devuelve el stock automáticamente via movimientos_stock (DEVOLUCION).
+        Los CLIENTE solo pueden cancelar sus propios pedidos; los ADMIN, cualquiera.
         """
         try:
             async with self.session.begin():
                 venta = await self._get_venta_or_raise(id_venta)
+
+                # Autorización: el cliente solo puede cancelar sus propios pedidos.
+                self._verificar_titularidad(venta, id_usuario, es_admin)
 
                 if not can_cancel(venta.estado):
                     raise BusinessRuleError(
@@ -671,7 +693,7 @@ class VentaService(AbstractService[VentaResponse, VentaRequest, None, int]):
                         mensaje=f"Tu pedido #{id_venta} fue cancelado. Motivo: {dto.motivo}.",
                     )
 
-        except (NotFoundError, BusinessRuleError):
+        except (NotFoundError, BusinessRuleError, ForbiddenError):
             raise
         except DBAPIError as exc:
             raise DatabaseError(str(exc.orig) if exc.orig else str(exc)) from exc
@@ -778,11 +800,19 @@ class VentaService(AbstractService[VentaResponse, VentaRequest, None, int]):
         id_venta: int,
         id_usuario: int,
         dto: "DevolucionRequest",
+        es_admin: bool = False,
     ) -> VentaResponse:
-        """Inicia proceso de devolución. ENTREGADO → DEVUELTO."""
+        """
+        Inicia proceso de devolución. Válido desde ENTREGADO y EN_CAMINO (pedido
+        en tránsito que retorna a tienda). Devuelve el stock.
+        Los CLIENTE solo pueden devolver sus propios pedidos; los ADMIN, cualquiera.
+        """
         try:
             async with self.session.begin():
                 venta = await self._get_venta_or_raise(id_venta)
+
+                # Autorización: el cliente solo puede operar sobre sus propios pedidos.
+                self._verificar_titularidad(venta, id_usuario, es_admin)
 
                 await self._cambiar_estado(
                     venta=venta,
@@ -798,7 +828,7 @@ class VentaService(AbstractService[VentaResponse, VentaRequest, None, int]):
 
                 await self.session.flush()
 
-        except (NotFoundError, BusinessRuleError):
+        except (NotFoundError, BusinessRuleError, ForbiddenError):
             raise
         except Exception as exc:
             raise DatabaseError(f"Error al procesar devolución. {exc}") from exc

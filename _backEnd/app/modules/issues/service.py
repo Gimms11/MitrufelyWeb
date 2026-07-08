@@ -89,7 +89,7 @@ class IssueService:
             if dto.resolution_type == TipoResolucionEnum.DEVOLUCION:
                 if self.venta_service:
                     req = DevolucionRequest(motivo=dto.resolution or "Resolución de incidencia", observaciones="Automático desde incidencias")
-                    await self.venta_service.solicitar_devolucion(issue.id_venta, id_usuario, req)
+                    await self.venta_service.solicitar_devolucion(issue.id_venta, id_usuario, req, es_admin=True)
             elif dto.resolution_type == TipoResolucionEnum.REEMBOLSO:
                 if self.venta_service:
                     monto = dto.monto_reembolso or 0.0

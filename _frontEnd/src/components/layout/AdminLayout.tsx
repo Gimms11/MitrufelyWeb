@@ -18,6 +18,7 @@ import {
   ChevronRight,
   Home,
   MessageSquare,
+  Users,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { toast } from 'sonner'
@@ -96,6 +97,12 @@ export default function AdminLayout() {
               href: '/dashboard/atencion-cliente',
               icon: MessageSquare,
               permission: 'VIEW_REPORTS', // ADMIN, MANAGER
+            },
+            {
+              name: 'Usuarios',
+              href: '/dashboard/usuarios',
+              icon: Users,
+              permission: 'MANAGE_USERS', // ADMIN
             },
   ]
 

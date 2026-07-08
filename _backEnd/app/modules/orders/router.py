@@ -285,6 +285,7 @@ async def cancelar_pedido(
         id_venta=id_venta,
         id_usuario=current_user.user_id,
         dto=payload,
+        es_admin=current_user.is_admin(),
     )
 
 
@@ -292,7 +293,7 @@ async def cancelar_pedido(
     "/{id_venta}/devolver",
     response_model=VentaResponse,
     status_code=status.HTTP_200_OK,
-    summary="Solicitar devolución — ENTREGADO → DEVUELTO",
+    summary="Solicitar devolución — ENTREGADO/EN_CAMINO → DEVUELTO",
 )
 async def solicitar_devolucion(
     id_venta: int,
@@ -301,13 +302,15 @@ async def solicitar_devolucion(
     service: VentaServiceDep,
 ) -> VentaResponse:
     """
-    Inicia el proceso de devolución post-entrega.
-    Solo para pedidos en estado ENTREGADO. Devuelve el stock.
+    Inicia el proceso de devolución post-entrega o de un pedido en tránsito que retorna.
+    Válido para pedidos ENTREGADO o EN_CAMINO. Devuelve el stock.
+    Disponible para CLIENTE (sus pedidos propios) y ADMIN (cualquier pedido).
     """
     return await service.solicitar_devolucion(
         id_venta=id_venta,
         id_usuario=current_user.user_id,
         dto=payload,
+        es_admin=current_user.is_admin(),
     )
 
 
