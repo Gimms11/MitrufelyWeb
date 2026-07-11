@@ -79,6 +79,21 @@ def create_verification_token(subject: str) -> str:
     return jwt.encode(payload, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
 
 
+def create_password_reset_token(subject: str) -> str:
+    """
+    Creates a single-use password reset token with a unique JTI.
+    The JTI is tracked in Redis by the service to enforce one-time use
+    (prevents replay attacks — same pattern as refresh token rotation).
+    """
+    jti = str(uuid.uuid4())
+    payload = _build_payload(
+        subject=subject,
+        extra={"type": "password_reset", "jti": jti},
+        expires_delta=timedelta(minutes=settings.PASSWORD_RESET_TOKEN_EXPIRE_MINUTES),
+    )
+    return jwt.encode(payload, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
+
+
 def decode_token(token: str) -> dict[str, Any]:
     try:
         payload: dict[str, Any] = jwt.decode(

@@ -142,16 +142,12 @@ export default function LoginPage() {
 
           {/* Recuperación de contraseña */}
           <div className="text-right">
-            <a 
-              href="#" 
-              onClick={(e) => {
-                e.preventDefault()
-                toast.info('La recuperación de contraseña estará disponible próximamente.')
-              }}
+            <Link
+              to="/forgot-password"
               className="text-xs font-bold text-[#5c0f1b] hover:text-[#ff7a45] underline transition-colors"
             >
               ¿Olvidaste tu contraseña?
-            </a>
+            </Link>
           </div>
 
           {/* Botón de acción principal */}

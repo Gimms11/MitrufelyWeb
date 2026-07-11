@@ -19,6 +19,7 @@ from app.core.exceptions import (
 )
 from app.core.security import (
     create_access_token,
+    create_password_reset_token,
     create_refresh_token,
     decode_token,
     hash_password,
@@ -28,11 +29,13 @@ from app.infrastructure.database.models.enums import AuthProviderEnum
 from app.infrastructure.database.models.usuarios import Usuario
 from app.modules.auth.repository import AbstractAuthRepository
 from app.modules.auth.schemas import (
+    ForgotPasswordRequest,
     GoogleLoginRequest,
     LoginRequest,
     RefreshTokenRequest,
     RegisterRequest,
     RegisterResponse,
+    ResetPasswordRequest,
     TokenResponse,
 )
 
@@ -519,3 +522,91 @@ class AuthService:
 
         await self._repo._session.flush()
         return user
+
+    # ── Recuperación de Contraseña ──────────────────────────────────────────────
+
+    async def request_password_reset(
+        self,
+        payload: ForgotPasswordRequest,
+        background_tasks: BackgroundTasks,
+    ) -> None:
+        """
+        Inicia el flujo de recuperación de contraseña.
+
+        Anti-enumeración: NUNCA levanta excepción, sin importar si el email
+        existe o no. Solo envía el correo de recuperación cuando el usuario
+        existe, su auth_provider es LOCAL y tiene un password_hash. En el resto
+        de casos (no existe, o es cuenta Google) permanece silencioso.
+        """
+        user = await self._repo.get_by_email(payload.email)
+
+        if (
+            user
+            and user.auth_provider == AuthProviderEnum.LOCAL.value
+            and user.password_hash
+        ):
+            reset_token = create_password_reset_token(str(user.id_usuario))
+            from app.infrastructure.email.service import EmailService
+
+            background_tasks.add_task(
+                EmailService.send_password_reset_email,
+                to_email=user.email,
+                token=reset_token,
+                user_name=f"{user.nombres} {user.apellidos}",
+            )
+            logger.info(
+                "auth.password_reset.requested",
+                user_id=user.id_usuario,
+                email=user.email,
+            )
+        else:
+            # Silencioso: no logueamos la existencia (ni ausencia) del email.
+            # Se mantiene el mismo tiempo de respuesta que la rama con envío.
+            logger.info("auth.password_reset.requested_noop")
+
+    async def reset_password(self, payload: ResetPasswordRequest) -> None:
+        """
+        Restablece la contraseña del usuario a partir de un token válido.
+
+        Implementa token de un solo uso: el JTI del token se registra en Redis
+        como consumido. Si el mismo JTI se intenta usar de nuevo, se detecta
+        como replay attack (mismo patrón que el refresh token rotation).
+        """
+        from datetime import datetime, timezone
+
+        token_data = decode_token(payload.token)
+
+        if token_data.get("type") != "password_reset":
+            raise InvalidTokenError("Token inválido para restablecer contraseña")
+
+        jti = token_data.get("jti")
+        if jti:
+            redis_key = f"pwreset_used:{jti}"
+            already_used = await self._redis.exists(redis_key)
+            if already_used:
+                logger.warning(
+                    "auth.password_reset.replay_detected",
+                    jti=jti,
+                    user_id=token_data.get("sub"),
+                )
+                raise InvalidTokenError(
+                    "Este enlace ya fue utilizado. Solicita uno nuevo."
+                )
+
+            # Marcar este JTI como consumido en Redis con TTL = tiempo restante del token
+            exp = token_data.get("exp", 0)
+            remaining_ttl = int(exp - datetime.now(tz=timezone.utc).timestamp())
+            if remaining_ttl > 0:
+                await self._redis.setex(redis_key, remaining_ttl, "used")
+
+        user = await self._repo.get_by_id(int(token_data["sub"]))
+        if not user:
+            raise NotFoundError("Usuario no encontrado")
+
+        user.password_hash = hash_password(payload.new_password)
+        await self._repo.update(user)
+        logger.info(
+            "auth.password_reset.success",
+            user_id=user.id_usuario,
+            email=user.email,
+        )

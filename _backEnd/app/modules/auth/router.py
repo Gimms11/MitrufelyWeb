@@ -15,11 +15,13 @@ from app.modules.auth.dependencies import get_auth_service
 from app.modules.auth.schemas import (
     DatosFiscalesResponse,
     DatosFiscalesUpsert,
+    ForgotPasswordRequest,
     GoogleLoginRequest,
     LoginRequest,
     RefreshTokenRequest,
     RegisterRequest,
     RegisterResponse,
+    ResetPasswordRequest,
     TokenResponse,
     UserMeResponse,
     UserProfileUpdate,
@@ -135,6 +137,70 @@ async def verify_account(
     """Verify user account using the token sent via email."""
     await service.verify_email(token)
     return {"message": "Cuenta verificada exitosamente. Ya puedes iniciar sesión."}
+
+
+@router.post(
+    "/forgot-password",
+    status_code=status.HTTP_200_OK,
+    summary="Solicitar enlace de recuperación de contraseña",
+)
+async def forgot_password(
+    payload: ForgotPasswordRequest,
+    service: AuthServiceDep,
+    background_tasks: BackgroundTasks,
+    redis: RedisDep,
+    request: Request,
+) -> dict[str, str]:
+    """
+    Envía un enlace de recuperación al correo del usuario (si existe y es cuenta local).
+
+    Anti-enumeración: la respuesta es siempre idéntica, sin importar si el email
+    está registrado o si corresponde a una cuenta Google.
+    """
+    # ── Rate Limiting por IP ──────────────────────────────────────────────────
+    client_ip = request.client.host if request.client else "unknown"
+    rate_key = f"pwreset_attempts:{client_ip}"
+    attempts = await redis.incr(rate_key)
+    if attempts == 1:
+        await redis.expire(rate_key, settings.PASSWORD_RESET_RATE_LIMIT_WINDOW_SECONDS)
+
+    if attempts > settings.PASSWORD_RESET_RATE_LIMIT_ATTEMPTS:
+        ttl = await redis.ttl(rate_key)
+        return JSONResponse(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            content={
+                "error": {
+                    "error_code": "RATE_LIMIT_EXCEEDED",
+                    "message": (
+                        f"Demasiadas solicitudes de recuperación. "
+                        f"Intenta de nuevo en {ttl} segundos."
+                    ),
+                }
+            },
+        )
+
+    await service.request_password_reset(payload, background_tasks)
+    # Respuesta SIEMPRE idéntica (anti-enumeración)
+    return {
+        "message": "Si el correo está registrado, recibirás un enlace de recuperación en breve."
+    }
+
+
+@router.post(
+    "/reset-password",
+    status_code=status.HTTP_200_OK,
+    summary="Restablecer contraseña",
+)
+async def reset_password(
+    payload: ResetPasswordRequest,
+    service: AuthServiceDep,
+) -> dict[str, str]:
+    """
+    Restablece la contraseña usando el token enviado por correo.
+    El token es de un solo uso y expira en 15 minutos.
+    """
+    await service.reset_password(payload)
+    return {"message": "Contraseña restablecida exitosamente. Ya puedes iniciar sesión."}
 
 
 @router.post(
