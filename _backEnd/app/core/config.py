@@ -104,6 +104,14 @@ class Settings(BaseSettings):
     # Ventana de tiempo en segundos para el rate limit (default: 60 seg)
     LOGIN_RATE_LIMIT_WINDOW_SECONDS: int = Field(60, description="Rate limit window in seconds")
 
+    # ── Rate Limiting (Password Reset) ────────────────────────────────
+    # Máximo de solicitudes de recuperación de contraseña por IP antes de bloquear
+    PASSWORD_RESET_RATE_LIMIT_ATTEMPTS: int = Field(3, description="Max forgot-password requests per window")
+    # Ventana de tiempo para el rate limit de recuperación (default: 1 hora)
+    PASSWORD_RESET_RATE_LIMIT_WINDOW_SECONDS: int = Field(3600, description="Rate limit window in seconds")
+    # Vigencia del token de restablecimiento de contraseña (default: 15 min)
+    PASSWORD_RESET_TOKEN_EXPIRE_MINUTES: int = Field(15, description="Password reset token validity (minutes)")
+
     # ── Validators ────────────────────────────────────────────────────────────
     @field_validator("ALLOWED_ORIGINS", "ALLOWED_METHODS", "ALLOWED_HEADERS", mode="before")
     @classmethod

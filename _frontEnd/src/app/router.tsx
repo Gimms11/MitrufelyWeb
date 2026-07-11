@@ -9,6 +9,8 @@ import AdminLayout from '@/components/layout/AdminLayout'
 const LoginPage    = lazy(() => import('@/features/auth/pages/LoginPage'))
 const RegisterPage = lazy(() => import('@/features/auth/pages/RegisterPage'))
 const VerifyPage   = lazy(() => import('@/features/auth/pages/VerifyPage'))
+const ForgotPasswordPage = lazy(() => import('@/features/auth/pages/ForgotPasswordPage'))
+const ResetPasswordPage = lazy(() => import('@/features/auth/pages/ResetPasswordPage'))
 const AuthCallbackPage = lazy(() => import('@/features/auth/pages/AuthCallbackPage'))
 const HomePage     = lazy(() => import('@/pages/public/HomePage'))
 const AdminDashboardPage = lazy(() => import('@/features/dashboard/pages/AdminDashboardPage'))
@@ -103,6 +105,7 @@ export function AppRouter() {
         <Route element={<GuestOnly />}>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/auth/callback" element={<AuthCallbackPage />} />
         </Route>
 
@@ -167,6 +170,9 @@ export function AppRouter() {
 
         {/* Ruta de verificación pública */}
         <Route path="/verify" element={<VerifyPage />} />
+
+        {/* Ruta de restablecimiento de contraseña pública (token vía query string) */}
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
 
         {/* 404 */}
         <Route path="*" element={<NotFoundPage />} />

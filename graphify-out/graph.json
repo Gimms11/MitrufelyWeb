@@ -123,7 +123,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\core\\config.py",
-      "source_location": "L110",
+      "source_location": "L118",
       "file_type": "code"
     },
     {
@@ -132,7 +132,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\core\\config.py",
-      "source_location": "L115",
+      "source_location": "L123",
       "file_type": "code"
     },
     {
@@ -141,7 +141,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\core\\config.py",
-      "source_location": "L137",
+      "source_location": "L145",
       "file_type": "code"
     },
     {
@@ -150,7 +150,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\core\\config.py",
-      "source_location": "L144",
+      "source_location": "L152",
       "file_type": "code"
     },
     {
@@ -159,7 +159,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\core\\config.py",
-      "source_location": "L148",
+      "source_location": "L156",
       "file_type": "code"
     },
     {
@@ -168,7 +168,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\core\\config.py",
-      "source_location": "L153",
+      "source_location": "L161",
       "file_type": "code"
     },
     {
@@ -676,12 +676,21 @@
       "file_type": "code"
     },
     {
+      "id": "_backEnd.app.core.security.create_password_reset_token",
+      "label": "create_password_reset_token",
+      "type": "function",
+      "description": "",
+      "source_file": "_backEnd\\app\\core\\security.py",
+      "source_location": "L82",
+      "file_type": "code"
+    },
+    {
       "id": "_backEnd.app.core.security.decode_token",
       "label": "decode_token",
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\core\\security.py",
-      "source_location": "L82",
+      "source_location": "L97",
       "file_type": "code"
     },
     {
@@ -3484,12 +3493,21 @@
       "file_type": "code"
     },
     {
-      "id": "_backEnd.app.infrastructure.email.service.EmailService._send_smtp_verification",
-      "label": "_send_smtp_verification",
+      "id": "_backEnd.app.infrastructure.email.service.EmailService.send_password_reset_email",
+      "label": "send_password_reset_email",
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\infrastructure\\email\\service.py",
       "source_location": "L47",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.infrastructure.email.service.EmailService._send_smtp_password_reset",
+      "label": "_send_smtp_password_reset",
+      "type": "function",
+      "description": "",
+      "source_file": "_backEnd\\app\\infrastructure\\email\\service.py",
+      "source_location": "L68",
       "file_type": "code"
     },
     {
@@ -4987,6 +5005,15 @@
       "file_type": "code"
     },
     {
+      "id": "_backEnd.app.modules.auth.router.import_app_modules_auth_schemas_ForgotPasswordRequest",
+      "label": "app.modules.auth.schemas.ForgotPasswordRequest",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\auth\\router.py",
+      "source_location": "L15",
+      "file_type": "code"
+    },
+    {
       "id": "_backEnd.app.modules.auth.router.import_app_modules_auth_schemas_GoogleLoginRequest",
       "label": "app.modules.auth.schemas.GoogleLoginRequest",
       "type": "import",
@@ -5032,6 +5059,15 @@
       "file_type": "code"
     },
     {
+      "id": "_backEnd.app.modules.auth.router.import_app_modules_auth_schemas_ResetPasswordRequest",
+      "label": "app.modules.auth.schemas.ResetPasswordRequest",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\auth\\router.py",
+      "source_location": "L15",
+      "file_type": "code"
+    },
+    {
       "id": "_backEnd.app.modules.auth.router.import_app_modules_auth_schemas_TokenResponse",
       "label": "app.modules.auth.schemas.TokenResponse",
       "type": "import",
@@ -5064,7 +5100,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L27",
+      "source_location": "L29",
       "file_type": "code"
     },
     {
@@ -5073,7 +5109,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L28",
+      "source_location": "L30",
       "file_type": "code"
     },
     {
@@ -5082,7 +5118,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L42",
+      "source_location": "L44",
       "file_type": "code"
     },
     {
@@ -5091,7 +5127,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L81",
+      "source_location": "L83",
       "file_type": "code"
     },
     {
@@ -5100,7 +5136,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L96",
+      "source_location": "L98",
       "file_type": "code"
     },
     {
@@ -5109,7 +5145,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L118",
+      "source_location": "L120",
       "file_type": "code"
     },
     {
@@ -5118,7 +5154,25 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L131",
+      "source_location": "L133",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.auth.router.forgot_password",
+      "label": "forgot_password",
+      "type": "function",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\auth\\router.py",
+      "source_location": "L147",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.auth.router.reset_password",
+      "label": "reset_password",
+      "type": "function",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\auth\\router.py",
+      "source_location": "L194",
       "file_type": "code"
     },
     {
@@ -5127,7 +5181,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L145",
+      "source_location": "L211",
       "file_type": "code"
     },
     {
@@ -5136,7 +5190,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L152",
+      "source_location": "L218",
       "file_type": "code"
     },
     {
@@ -5145,7 +5199,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L152",
+      "source_location": "L218",
       "file_type": "code"
     },
     {
@@ -5154,7 +5208,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L169",
+      "source_location": "L235",
       "file_type": "code"
     },
     {
@@ -5163,7 +5217,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L184",
+      "source_location": "L250",
       "file_type": "code"
     },
     {
@@ -5172,7 +5226,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L198",
+      "source_location": "L264",
       "file_type": "code"
     },
     {
@@ -5181,7 +5235,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L213",
+      "source_location": "L279",
       "file_type": "code"
     },
     {
@@ -5266,12 +5320,39 @@
       "file_type": "code"
     },
     {
+      "id": "_backEnd.app.modules.auth.schemas.ForgotPasswordRequest",
+      "label": "ForgotPasswordRequest",
+      "type": "class",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\auth\\schemas.py",
+      "source_location": "L28",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.auth.schemas.ResetPasswordRequest",
+      "label": "ResetPasswordRequest",
+      "type": "class",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\auth\\schemas.py",
+      "source_location": "L32",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.auth.schemas.ResetPasswordRequest.validate_password_strength",
+      "label": "validate_password_strength",
+      "type": "function",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\auth\\schemas.py",
+      "source_location": "L38",
+      "file_type": "code"
+    },
+    {
       "id": "_backEnd.app.modules.auth.schemas.RegisterRequest",
       "label": "RegisterRequest",
       "type": "class",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\schemas.py",
-      "source_location": "L25",
+      "source_location": "L46",
       "file_type": "code"
     },
     {
@@ -5280,7 +5361,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\schemas.py",
-      "source_location": "L34",
+      "source_location": "L55",
       "file_type": "code"
     },
     {
@@ -5289,7 +5370,7 @@
       "type": "class",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\schemas.py",
-      "source_location": "L42",
+      "source_location": "L63",
       "file_type": "code"
     },
     {
@@ -5298,7 +5379,7 @@
       "type": "class",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\schemas.py",
-      "source_location": "L48",
+      "source_location": "L69",
       "file_type": "code"
     },
     {
@@ -5307,7 +5388,7 @@
       "type": "class",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\schemas.py",
-      "source_location": "L57",
+      "source_location": "L78",
       "file_type": "code"
     },
     {
@@ -5316,7 +5397,7 @@
       "type": "class",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\schemas.py",
-      "source_location": "L64",
+      "source_location": "L85",
       "file_type": "code"
     },
     {
@@ -5325,7 +5406,7 @@
       "type": "class",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\schemas.py",
-      "source_location": "L72",
+      "source_location": "L93",
       "file_type": "code"
     },
     {
@@ -5334,7 +5415,7 @@
       "type": "class",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\schemas.py",
-      "source_location": "L89",
+      "source_location": "L110",
       "file_type": "code"
     },
     {
@@ -5343,7 +5424,7 @@
       "type": "class",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\schemas.py",
-      "source_location": "L101",
+      "source_location": "L122",
       "file_type": "code"
     },
     {
@@ -5352,7 +5433,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\schemas.py",
-      "source_location": "L109",
+      "source_location": "L130",
       "file_type": "code"
     },
     {
@@ -5361,7 +5442,7 @@
       "type": "class",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\schemas.py",
-      "source_location": "L119",
+      "source_location": "L140",
       "file_type": "code"
     },
     {
@@ -5473,6 +5554,15 @@
       "file_type": "code"
     },
     {
+      "id": "_backEnd.app.modules.auth.service.import_app_core_security_create_password_reset_token",
+      "label": "app.core.security.create_password_reset_token",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\auth\\service.py",
+      "source_location": "L20",
+      "file_type": "code"
+    },
+    {
       "id": "_backEnd.app.modules.auth.service.import_app_core_security_create_refresh_token",
       "label": "app.core.security.create_refresh_token",
       "type": "import",
@@ -5514,7 +5604,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L27",
+      "source_location": "L28",
       "file_type": "code"
     },
     {
@@ -5523,7 +5613,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L28",
+      "source_location": "L29",
       "file_type": "code"
     },
     {
@@ -5532,7 +5622,16 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L29",
+      "source_location": "L30",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.auth.service.import_app_modules_auth_schemas_ForgotPasswordRequest",
+      "label": "app.modules.auth.schemas.ForgotPasswordRequest",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\auth\\service.py",
+      "source_location": "L31",
       "file_type": "code"
     },
     {
@@ -5541,7 +5640,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L30",
+      "source_location": "L31",
       "file_type": "code"
     },
     {
@@ -5550,7 +5649,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L30",
+      "source_location": "L31",
       "file_type": "code"
     },
     {
@@ -5559,7 +5658,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L30",
+      "source_location": "L31",
       "file_type": "code"
     },
     {
@@ -5568,7 +5667,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L30",
+      "source_location": "L31",
       "file_type": "code"
     },
     {
@@ -5577,7 +5676,16 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L30",
+      "source_location": "L31",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.auth.service.import_app_modules_auth_schemas_ResetPasswordRequest",
+      "label": "app.modules.auth.schemas.ResetPasswordRequest",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\auth\\service.py",
+      "source_location": "L31",
       "file_type": "code"
     },
     {
@@ -5586,7 +5694,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L30",
+      "source_location": "L31",
       "file_type": "code"
     },
     {
@@ -5595,7 +5703,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L45",
+      "source_location": "L48",
       "file_type": "code"
     },
     {
@@ -5604,7 +5712,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L58",
+      "source_location": "L61",
       "file_type": "code"
     },
     {
@@ -5613,7 +5721,7 @@
       "type": "class",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L101",
+      "source_location": "L104",
       "file_type": "code"
     },
     {
@@ -5622,7 +5730,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L108",
+      "source_location": "L111",
       "file_type": "code"
     },
     {
@@ -5631,7 +5739,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L112",
+      "source_location": "L115",
       "file_type": "code"
     },
     {
@@ -5640,7 +5748,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L151",
+      "source_location": "L154",
       "file_type": "code"
     },
     {
@@ -5649,7 +5757,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L160",
+      "source_location": "L163",
       "file_type": "code"
     },
     {
@@ -5658,7 +5766,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L161",
+      "source_location": "L164",
       "file_type": "code"
     },
     {
@@ -5667,7 +5775,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L161",
+      "source_location": "L164",
       "file_type": "code"
     },
     {
@@ -5676,7 +5784,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L162",
+      "source_location": "L165",
       "file_type": "code"
     },
     {
@@ -5685,7 +5793,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L163",
+      "source_location": "L166",
       "file_type": "code"
     },
     {
@@ -5694,7 +5802,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L209",
+      "source_location": "L212",
       "file_type": "code"
     },
     {
@@ -5703,7 +5811,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L210",
+      "source_location": "L213",
       "file_type": "code"
     },
     {
@@ -5712,7 +5820,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L225",
+      "source_location": "L228",
       "file_type": "code"
     },
     {
@@ -5721,7 +5829,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L236",
+      "source_location": "L239",
       "file_type": "code"
     },
     {
@@ -5730,7 +5838,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L237",
+      "source_location": "L240",
       "file_type": "code"
     },
     {
@@ -5739,7 +5847,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L238",
+      "source_location": "L241",
       "file_type": "code"
     },
     {
@@ -5748,7 +5856,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L238",
+      "source_location": "L241",
       "file_type": "code"
     },
     {
@@ -5757,7 +5865,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L239",
+      "source_location": "L242",
       "file_type": "code"
     },
     {
@@ -5766,7 +5874,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L323",
+      "source_location": "L326",
       "file_type": "code"
     },
     {
@@ -5775,7 +5883,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L332",
+      "source_location": "L335",
       "file_type": "code"
     },
     {
@@ -5784,7 +5892,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L332",
+      "source_location": "L335",
       "file_type": "code"
     },
     {
@@ -5793,7 +5901,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L384",
+      "source_location": "L387",
       "file_type": "code"
     },
     {
@@ -5802,7 +5910,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L409",
+      "source_location": "L412",
       "file_type": "code"
     },
     {
@@ -5811,7 +5919,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L419",
+      "source_location": "L422",
       "file_type": "code"
     },
     {
@@ -5820,7 +5928,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L424",
+      "source_location": "L427",
       "file_type": "code"
     },
     {
@@ -5829,7 +5937,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L425",
+      "source_location": "L428",
       "file_type": "code"
     },
     {
@@ -5838,7 +5946,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L426",
+      "source_location": "L429",
       "file_type": "code"
     },
     {
@@ -5847,7 +5955,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L439",
+      "source_location": "L442",
       "file_type": "code"
     },
     {
@@ -5856,7 +5964,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L444",
+      "source_location": "L447",
       "file_type": "code"
     },
     {
@@ -5865,7 +5973,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L445",
+      "source_location": "L448",
       "file_type": "code"
     },
     {
@@ -5874,7 +5982,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L445",
+      "source_location": "L448",
       "file_type": "code"
     },
     {
@@ -5883,7 +5991,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L490",
+      "source_location": "L493",
       "file_type": "code"
     },
     {
@@ -5892,7 +6000,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L494",
+      "source_location": "L497",
       "file_type": "code"
     },
     {
@@ -5901,7 +6009,52 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L495",
+      "source_location": "L498",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.auth.service.AuthService.request_password_reset",
+      "label": "request_password_reset",
+      "type": "function",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\auth\\service.py",
+      "source_location": "L528",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.auth.service.AuthService.request_password_reset.import_app_infrastructure_email_service_EmailService",
+      "label": "app.infrastructure.email.service.EmailService",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\auth\\service.py",
+      "source_location": "L549",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.auth.service.AuthService.reset_password",
+      "label": "reset_password",
+      "type": "function",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\auth\\service.py",
+      "source_location": "L567",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.auth.service.AuthService.reset_password.import_datetime_datetime",
+      "label": "datetime.datetime",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\auth\\service.py",
+      "source_location": "L575",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.auth.service.AuthService.reset_password.import_datetime_timezone",
+      "label": "datetime.timezone",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\auth\\service.py",
+      "source_location": "L575",
       "file_type": "code"
     },
     {
@@ -26178,7 +26331,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\app\\router.tsx",
-      "source_location": "L37",
+      "source_location": "L39",
       "file_type": "code"
     },
     {
@@ -26187,7 +26340,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\app\\router.tsx",
-      "source_location": "L49",
+      "source_location": "L51",
       "file_type": "code"
     },
     {
@@ -26196,7 +26349,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\app\\router.tsx",
-      "source_location": "L65",
+      "source_location": "L67",
       "file_type": "code"
     },
     {
@@ -26205,7 +26358,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\app\\router.tsx",
-      "source_location": "L86",
+      "source_location": "L88",
       "file_type": "code"
     },
     {
@@ -26214,7 +26367,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\app\\router.tsx",
-      "source_location": "L98",
+      "source_location": "L100",
       "file_type": "code"
     },
     {
@@ -26223,7 +26376,7 @@
       "type": "interface",
       "description": "",
       "source_file": "_frontEnd\\src\\app\\router.tsx",
-      "source_location": "L61",
+      "source_location": "L63",
       "file_type": "code"
     },
     {
@@ -26686,12 +26839,21 @@
       "file_type": "code"
     },
     {
+      "id": "_frontEnd.src.features.auth.api.auth.api.ResetPasswordPayload",
+      "label": "ResetPasswordPayload",
+      "type": "interface",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\auth\\api\\auth.api.ts",
+      "source_location": "L25",
+      "file_type": "code"
+    },
+    {
       "id": "_frontEnd.src.features.auth.api.auth.api.UserMeResponse",
       "label": "UserMeResponse",
       "type": "interface",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\auth\\api\\auth.api.ts",
-      "source_location": "L25",
+      "source_location": "L30",
       "file_type": "code"
     },
     {
@@ -26755,6 +26917,42 @@
       "description": "",
       "source_file": "_frontEnd\\src\\features\\auth\\api\\profileApi.ts",
       "source_location": "L1",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.auth.hooks.useForgotPassword",
+      "label": "useForgotPassword.ts",
+      "type": "module",
+      "description": "TypeScript module useForgotPassword.ts",
+      "source_file": "_frontEnd\\src\\features\\auth\\hooks\\useForgotPassword.ts",
+      "source_location": "L1",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.auth.hooks.useForgotPassword.useForgotPassword",
+      "label": "useForgotPassword",
+      "type": "function",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\auth\\hooks\\useForgotPassword.ts",
+      "source_location": "L11",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.auth.hooks.useForgotPassword.import_react_query",
+      "label": "@tanstack/react-query",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\auth\\hooks\\useForgotPassword.ts",
+      "source_location": "L1",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.auth.hooks.useForgotPassword.import_auth_api",
+      "label": "../api/auth.api",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\auth\\hooks\\useForgotPassword.ts",
+      "source_location": "L2",
       "file_type": "code"
     },
     {
@@ -27109,6 +27307,42 @@
       "file_type": "code"
     },
     {
+      "id": "_frontEnd.src.features.auth.hooks.useResetPassword",
+      "label": "useResetPassword.ts",
+      "type": "module",
+      "description": "TypeScript module useResetPassword.ts",
+      "source_file": "_frontEnd\\src\\features\\auth\\hooks\\useResetPassword.ts",
+      "source_location": "L1",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.auth.hooks.useResetPassword.useResetPassword",
+      "label": "useResetPassword",
+      "type": "function",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\auth\\hooks\\useResetPassword.ts",
+      "source_location": "L9",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.auth.hooks.useResetPassword.import_react_query",
+      "label": "@tanstack/react-query",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\auth\\hooks\\useResetPassword.ts",
+      "source_location": "L1",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.auth.hooks.useResetPassword.import_auth_api",
+      "label": "../api/auth.api",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\auth\\hooks\\useResetPassword.ts",
+      "source_location": "L2",
+      "file_type": "code"
+    },
+    {
       "id": "_frontEnd.src.features.auth.hooks.useVerifyAccount",
       "label": "useVerifyAccount.ts",
       "type": "module",
@@ -27222,6 +27456,87 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\auth\\pages\\AuthCallbackPage.tsx",
+      "source_location": "L7",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.auth.pages.ForgotPasswordPage",
+      "label": "ForgotPasswordPage.tsx",
+      "type": "module",
+      "description": "TypeScript module ForgotPasswordPage.tsx",
+      "source_file": "_frontEnd\\src\\features\\auth\\pages\\ForgotPasswordPage.tsx",
+      "source_location": "L1",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.auth.pages.ForgotPasswordPage.ForgotPasswordPage",
+      "label": "ForgotPasswordPage",
+      "type": "function",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\auth\\pages\\ForgotPasswordPage.tsx",
+      "source_location": "L16",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.auth.pages.ForgotPasswordPage.onSubmit",
+      "label": "onSubmit",
+      "type": "function",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\auth\\pages\\ForgotPasswordPage.tsx",
+      "source_location": "L27",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.auth.pages.ForgotPasswordPage.import_react_hook_form",
+      "label": "react-hook-form",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\auth\\pages\\ForgotPasswordPage.tsx",
+      "source_location": "L1",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.auth.pages.ForgotPasswordPage.import_zod",
+      "label": "@hookform/resolvers/zod",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\auth\\pages\\ForgotPasswordPage.tsx",
+      "source_location": "L2",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.auth.pages.ForgotPasswordPage.import_react_router",
+      "label": "react-router",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\auth\\pages\\ForgotPasswordPage.tsx",
+      "source_location": "L4",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.auth.pages.ForgotPasswordPage.import_useForgotPassword",
+      "label": "../hooks/useForgotPassword",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\auth\\pages\\ForgotPasswordPage.tsx",
+      "source_location": "L5",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.auth.pages.ForgotPasswordPage.import_lucide_react",
+      "label": "lucide-react",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\auth\\pages\\ForgotPasswordPage.tsx",
+      "source_location": "L6",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.auth.pages.ForgotPasswordPage.import_framer_motion",
+      "label": "framer-motion",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\auth\\pages\\ForgotPasswordPage.tsx",
       "source_location": "L7",
       "file_type": "code"
     },
@@ -27421,6 +27736,96 @@
       "description": "",
       "source_file": "_frontEnd\\src\\features\\auth\\pages\\RegisterPage.tsx",
       "source_location": "L7",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.auth.pages.ResetPasswordPage",
+      "label": "ResetPasswordPage.tsx",
+      "type": "module",
+      "description": "TypeScript module ResetPasswordPage.tsx",
+      "source_file": "_frontEnd\\src\\features\\auth\\pages\\ResetPasswordPage.tsx",
+      "source_location": "L1",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.auth.pages.ResetPasswordPage.ResetPasswordPage",
+      "label": "ResetPasswordPage",
+      "type": "function",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\auth\\pages\\ResetPasswordPage.tsx",
+      "source_location": "L27",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.auth.pages.ResetPasswordPage.onSubmit",
+      "label": "onSubmit",
+      "type": "function",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\auth\\pages\\ResetPasswordPage.tsx",
+      "source_location": "L41",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.auth.pages.ResetPasswordPage.import_react_hook_form",
+      "label": "react-hook-form",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\auth\\pages\\ResetPasswordPage.tsx",
+      "source_location": "L1",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.auth.pages.ResetPasswordPage.import_zod",
+      "label": "@hookform/resolvers/zod",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\auth\\pages\\ResetPasswordPage.tsx",
+      "source_location": "L2",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.auth.pages.ResetPasswordPage.import_react_router",
+      "label": "react-router",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\auth\\pages\\ResetPasswordPage.tsx",
+      "source_location": "L4",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.auth.pages.ResetPasswordPage.import_framer_motion",
+      "label": "framer-motion",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\auth\\pages\\ResetPasswordPage.tsx",
+      "source_location": "L5",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.auth.pages.ResetPasswordPage.import_useResetPassword",
+      "label": "../hooks/useResetPassword",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\auth\\pages\\ResetPasswordPage.tsx",
+      "source_location": "L6",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.auth.pages.ResetPasswordPage.import_lucide_react",
+      "label": "lucide-react",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\auth\\pages\\ResetPasswordPage.tsx",
+      "source_location": "L7",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.auth.pages.ResetPasswordPage.import_axios",
+      "label": "axios",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\auth\\pages\\ResetPasswordPage.tsx",
+      "source_location": "L8",
       "file_type": "code"
     },
     {
@@ -36812,6 +37217,11 @@
     },
     {
       "source": "_backEnd.app.core.security",
+      "target": "_backEnd.app.core.security.create_password_reset_token",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.app.core.security",
       "target": "_backEnd.app.core.security.decode_token",
       "relation": "contains"
     },
@@ -38267,7 +38677,12 @@
     },
     {
       "source": "_backEnd.app.infrastructure.email.service.EmailService",
-      "target": "_backEnd.app.infrastructure.email.service.EmailService._send_smtp_verification",
+      "target": "_backEnd.app.infrastructure.email.service.EmailService.send_password_reset_email",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.app.infrastructure.email.service.EmailService",
+      "target": "_backEnd.app.infrastructure.email.service.EmailService._send_smtp_password_reset",
       "relation": "contains"
     },
     {
@@ -39002,6 +39417,11 @@
     },
     {
       "source": "_backEnd.app.modules.auth.router",
+      "target": "_backEnd.app.modules.auth.router.import_app_modules_auth_schemas_ForgotPasswordRequest",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.auth.router",
       "target": "_backEnd.app.modules.auth.router.import_app_modules_auth_schemas_GoogleLoginRequest",
       "relation": "imports_from"
     },
@@ -39023,6 +39443,11 @@
     {
       "source": "_backEnd.app.modules.auth.router",
       "target": "_backEnd.app.modules.auth.router.import_app_modules_auth_schemas_RegisterResponse",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.auth.router",
+      "target": "_backEnd.app.modules.auth.router.import_app_modules_auth_schemas_ResetPasswordRequest",
       "relation": "imports_from"
     },
     {
@@ -39073,6 +39498,16 @@
     {
       "source": "_backEnd.app.modules.auth.router",
       "target": "_backEnd.app.modules.auth.router.verify_account",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.app.modules.auth.router",
+      "target": "_backEnd.app.modules.auth.router.forgot_password",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.app.modules.auth.router",
+      "target": "_backEnd.app.modules.auth.router.reset_password",
       "relation": "contains"
     },
     {
@@ -39148,6 +39583,21 @@
     {
       "source": "_backEnd.app.modules.auth.schemas",
       "target": "_backEnd.app.modules.auth.schemas.RefreshTokenRequest",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.app.modules.auth.schemas",
+      "target": "_backEnd.app.modules.auth.schemas.ForgotPasswordRequest",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.app.modules.auth.schemas",
+      "target": "_backEnd.app.modules.auth.schemas.ResetPasswordRequest",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.app.modules.auth.schemas.ResetPasswordRequest",
+      "target": "_backEnd.app.modules.auth.schemas.ResetPasswordRequest.validate_password_strength",
       "relation": "contains"
     },
     {
@@ -39262,6 +39712,11 @@
     },
     {
       "source": "_backEnd.app.modules.auth.service",
+      "target": "_backEnd.app.modules.auth.service.import_app_core_security_create_password_reset_token",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.auth.service",
       "target": "_backEnd.app.modules.auth.service.import_app_core_security_create_refresh_token",
       "relation": "imports_from"
     },
@@ -39297,6 +39752,11 @@
     },
     {
       "source": "_backEnd.app.modules.auth.service",
+      "target": "_backEnd.app.modules.auth.service.import_app_modules_auth_schemas_ForgotPasswordRequest",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.auth.service",
       "target": "_backEnd.app.modules.auth.service.import_app_modules_auth_schemas_GoogleLoginRequest",
       "relation": "imports_from"
     },
@@ -39318,6 +39778,11 @@
     {
       "source": "_backEnd.app.modules.auth.service",
       "target": "_backEnd.app.modules.auth.service.import_app_modules_auth_schemas_RegisterResponse",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.auth.service",
+      "target": "_backEnd.app.modules.auth.service.import_app_modules_auth_schemas_ResetPasswordRequest",
       "relation": "imports_from"
     },
     {
@@ -39498,6 +39963,31 @@
     {
       "source": "_backEnd.app.modules.auth.service.AuthService.update_me",
       "target": "_backEnd.app.modules.auth.service.AuthService.update_me.import_app_infrastructure_database_models_usuarios_Cliente",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.auth.service.AuthService",
+      "target": "_backEnd.app.modules.auth.service.AuthService.request_password_reset",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.app.modules.auth.service.AuthService.request_password_reset",
+      "target": "_backEnd.app.modules.auth.service.AuthService.request_password_reset.import_app_infrastructure_email_service_EmailService",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.auth.service.AuthService",
+      "target": "_backEnd.app.modules.auth.service.AuthService.reset_password",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.app.modules.auth.service.AuthService.reset_password",
+      "target": "_backEnd.app.modules.auth.service.AuthService.reset_password.import_datetime_datetime",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.auth.service.AuthService.reset_password",
+      "target": "_backEnd.app.modules.auth.service.AuthService.reset_password.import_datetime_timezone",
       "relation": "imports_from"
     },
     {
@@ -50337,6 +50827,11 @@
     },
     {
       "source": "_frontEnd.src.features.auth.api.auth.api",
+      "target": "_frontEnd.src.features.auth.api.auth.api.ResetPasswordPayload",
+      "relation": "contains"
+    },
+    {
+      "source": "_frontEnd.src.features.auth.api.auth.api",
       "target": "_frontEnd.src.features.auth.api.auth.api.UserMeResponse",
       "relation": "contains"
     },
@@ -50368,6 +50863,21 @@
     {
       "source": "_frontEnd.src.features.auth.api.profileApi",
       "target": "_frontEnd.src.features.auth.api.profileApi.import_axios",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.auth.hooks.useForgotPassword",
+      "target": "_frontEnd.src.features.auth.hooks.useForgotPassword.useForgotPassword",
+      "relation": "contains"
+    },
+    {
+      "source": "_frontEnd.src.features.auth.hooks.useForgotPassword",
+      "target": "_frontEnd.src.features.auth.hooks.useForgotPassword.import_react_query",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.auth.hooks.useForgotPassword",
+      "target": "_frontEnd.src.features.auth.hooks.useForgotPassword.import_auth_api",
       "relation": "imports_from"
     },
     {
@@ -50546,6 +51056,21 @@
       "relation": "imports_from"
     },
     {
+      "source": "_frontEnd.src.features.auth.hooks.useResetPassword",
+      "target": "_frontEnd.src.features.auth.hooks.useResetPassword.useResetPassword",
+      "relation": "contains"
+    },
+    {
+      "source": "_frontEnd.src.features.auth.hooks.useResetPassword",
+      "target": "_frontEnd.src.features.auth.hooks.useResetPassword.import_react_query",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.auth.hooks.useResetPassword",
+      "target": "_frontEnd.src.features.auth.hooks.useResetPassword.import_auth_api",
+      "relation": "imports_from"
+    },
+    {
       "source": "_frontEnd.src.features.auth.hooks.useVerifyAccount",
       "target": "_frontEnd.src.features.auth.hooks.useVerifyAccount.useVerifyAccount",
       "relation": "contains"
@@ -50598,6 +51123,46 @@
     {
       "source": "_frontEnd.src.features.auth.pages.AuthCallbackPage",
       "target": "_frontEnd.src.features.auth.pages.AuthCallbackPage.import_axios",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.auth.pages.ForgotPasswordPage",
+      "target": "_frontEnd.src.features.auth.pages.ForgotPasswordPage.ForgotPasswordPage",
+      "relation": "contains"
+    },
+    {
+      "source": "_frontEnd.src.features.auth.pages.ForgotPasswordPage",
+      "target": "_frontEnd.src.features.auth.pages.ForgotPasswordPage.onSubmit",
+      "relation": "contains"
+    },
+    {
+      "source": "_frontEnd.src.features.auth.pages.ForgotPasswordPage",
+      "target": "_frontEnd.src.features.auth.pages.ForgotPasswordPage.import_react_hook_form",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.auth.pages.ForgotPasswordPage",
+      "target": "_frontEnd.src.features.auth.pages.ForgotPasswordPage.import_zod",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.auth.pages.ForgotPasswordPage",
+      "target": "_frontEnd.src.features.auth.pages.ForgotPasswordPage.import_react_router",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.auth.pages.ForgotPasswordPage",
+      "target": "_frontEnd.src.features.auth.pages.ForgotPasswordPage.import_useForgotPassword",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.auth.pages.ForgotPasswordPage",
+      "target": "_frontEnd.src.features.auth.pages.ForgotPasswordPage.import_lucide_react",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.auth.pages.ForgotPasswordPage",
+      "target": "_frontEnd.src.features.auth.pages.ForgotPasswordPage.import_framer_motion",
       "relation": "imports_from"
     },
     {
@@ -50693,6 +51258,51 @@
     {
       "source": "_frontEnd.src.features.auth.pages.RegisterPage",
       "target": "_frontEnd.src.features.auth.pages.RegisterPage.import_framer_motion",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.auth.pages.ResetPasswordPage",
+      "target": "_frontEnd.src.features.auth.pages.ResetPasswordPage.ResetPasswordPage",
+      "relation": "contains"
+    },
+    {
+      "source": "_frontEnd.src.features.auth.pages.ResetPasswordPage",
+      "target": "_frontEnd.src.features.auth.pages.ResetPasswordPage.onSubmit",
+      "relation": "contains"
+    },
+    {
+      "source": "_frontEnd.src.features.auth.pages.ResetPasswordPage",
+      "target": "_frontEnd.src.features.auth.pages.ResetPasswordPage.import_react_hook_form",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.auth.pages.ResetPasswordPage",
+      "target": "_frontEnd.src.features.auth.pages.ResetPasswordPage.import_zod",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.auth.pages.ResetPasswordPage",
+      "target": "_frontEnd.src.features.auth.pages.ResetPasswordPage.import_react_router",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.auth.pages.ResetPasswordPage",
+      "target": "_frontEnd.src.features.auth.pages.ResetPasswordPage.import_framer_motion",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.auth.pages.ResetPasswordPage",
+      "target": "_frontEnd.src.features.auth.pages.ResetPasswordPage.import_useResetPassword",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.auth.pages.ResetPasswordPage",
+      "target": "_frontEnd.src.features.auth.pages.ResetPasswordPage.import_lucide_react",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.auth.pages.ResetPasswordPage",
+      "target": "_frontEnd.src.features.auth.pages.ResetPasswordPage.import_axios",
       "relation": "imports_from"
     },
     {

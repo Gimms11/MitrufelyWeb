@@ -22,6 +22,11 @@ export interface RegisterResponse {
   message: string
 }
 
+export interface ResetPasswordPayload {
+  token: string
+  new_password: string
+}
+
 export interface UserMeResponse {
   id_usuario: number
   nombres: string
@@ -69,6 +74,16 @@ export const authApi = {
     const { data } = await api.get<{ message: string }>('/auth/verify', {
       params: { token },
     })
+    return data
+  },
+
+  requestPasswordReset: async (email: string): Promise<{ message: string }> => {
+    const { data } = await api.post<{ message: string }>('/auth/forgot-password', { email })
+    return data
+  },
+
+  resetPassword: async (payload: ResetPasswordPayload): Promise<{ message: string }> => {
+    const { data } = await api.post<{ message: string }>('/auth/reset-password', payload)
     return data
   }
 }
