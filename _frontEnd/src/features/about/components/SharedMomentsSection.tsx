@@ -139,11 +139,18 @@ export function SharedMomentsSection() {
                 '0 40px 80px rgba(0,0,0,0.5), 0 16px 32px rgba(92,15,27,0.4), inset 0 1px 0 rgba(255,255,255,0.06)',
             }}
           >
-            <img
-              src="/9.png"
-              alt="Preparación artesanal de trufas Mitrufely"
-              className="w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
-            />
+            <picture>
+              <source srcSet="/9.webp" type="image/webp" />
+              <img
+                src="/9.png"
+                alt="Preparación artesanal de trufas Mitrufely"
+                width={1000}
+                height={989}
+                loading="lazy"
+                decoding="async"
+                className="w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
+              />
+            </picture>
 
             {/* Overlay gradiente permanente */}
             <div
@@ -193,11 +200,18 @@ export function SharedMomentsSection() {
                   '0 24px 56px rgba(0,0,0,0.45), 0 8px 20px rgba(92,15,27,0.35), inset 0 1px 0 rgba(255,255,255,0.05)',
               }}
             >
-              <img
-                src="/10.png"
-                alt="Trufas artesanales Mitrufely listas para degustar"
-                className="w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
-              />
+              <picture>
+                <source srcSet="/10.webp" type="image/webp" />
+                <img
+                  src="/10.png"
+                  alt="Trufas artesanales Mitrufely listas para degustar"
+                  width={1000}
+                  height={957}
+                  loading="lazy"
+                  decoding="async"
+                  className="w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
+                />
+              </picture>
               <div
                 className="absolute inset-0"
                 style={{

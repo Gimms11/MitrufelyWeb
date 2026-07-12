@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, Suspense, lazy } from 'react'
 import { Link } from 'react-router'
 import {
   Sparkles,
@@ -11,18 +11,14 @@ import {
   CheckCircle,
 } from 'lucide-react'
 import { motion } from 'framer-motion'
-import {
-  AreaChart,
-  Area,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  BarChart,
-  Bar,
-  Cell,
-} from 'recharts'
+
+// Code-split: recharts (~1.1MB) solo se carga cuando hay datos que graficar
+const SalesAreaChartGeneric = lazy(() =>
+  import('@/features/dashboard/components/DashboardCharts').then((m) => ({ default: m.SalesAreaChartGeneric })),
+)
+const StockBarChart = lazy(() =>
+  import('@/features/dashboard/components/DashboardCharts').then((m) => ({ default: m.StockBarChart })),
+)
 
 import { useOrdersQuery } from '@/features/orders/hooks/useOrders'
 import { useAdminProducts } from '@/features/products/hooks/useCatalogAdmin'
@@ -255,30 +251,15 @@ export default function DashboardPage() {
               </h3>
               <div className="h-80 w-full">
                 {chartData.length > 0 ? (
-                  <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
-                      <defs>
-                        <linearGradient id="colorVentas" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#5c0f1b" stopOpacity={0.2}/>
-                          <stop offset="95%" stopColor="#5c0f1b" stopOpacity={0}/>
-                        </linearGradient>
-                      </defs>
-                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1eeea" />
-                      <XAxis dataKey="date" stroke="#a39891" fontSize={11} fontWeight="bold" />
-                      <YAxis stroke="#a39891" fontSize={11} fontWeight="bold" tickFormatter={(val) => `S/.${val}`} />
-                      <Tooltip
-                        contentStyle={{
-                          backgroundColor: '#white',
-                          borderRadius: '16px',
-                          border: '1px solid #5c0f1b20',
-                          fontFamily: 'Inter, sans-serif',
-                          fontSize: '12px',
-                        }}
-                        formatter={(value: any) => [`S/. ${Number(value).toFixed(2)}`, 'Ventas Cobradas']}
-                      />
-                      <Area type="monotone" dataKey="ventas" stroke="#5c0f1b" strokeWidth={3} fillOpacity={1} fill="url(#colorVentas)" />
-                    </AreaChart>
-                  </ResponsiveContainer>
+                  <Suspense
+                    fallback={
+                      <div className="h-full flex items-center justify-center">
+                        <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#5c0f1b] border-t-transparent" />
+                      </div>
+                    }
+                  >
+                    <SalesAreaChartGeneric data={chartData} />
+                  </Suspense>
                 ) : (
                   <div className="h-full flex items-center justify-center text-stone-400">
                     Aún no hay transacciones para graficar.
@@ -295,27 +276,15 @@ export default function DashboardPage() {
               </h3>
               <div className="h-80 w-full">
                 {topProductsData.length > 0 ? (
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={topProductsData} layout="vertical" margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                      <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f1eeea" />
-                      <XAxis type="number" stroke="#a39891" fontSize={11} fontWeight="bold" />
-                      <YAxis dataKey="name" type="category" stroke="#a39891" fontSize={9} fontWeight="bold" width={80} />
-                      <Tooltip
-                        contentStyle={{
-                          backgroundColor: '#white',
-                          borderRadius: '16px',
-                          border: '1px solid #5c0f1b20',
-                          fontSize: '12px',
-                        }}
-                        formatter={(value) => [`${value} unidades`, 'Stock Disponible']}
-                      />
-                      <Bar dataKey="stock" radius={[0, 8, 8, 0]}>
-                        {topProductsData.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={entry.stock <= 5 ? '#ff4d4f' : '#ff7a45'} />
-                        ))}
-                      </Bar>
-                    </BarChart>
-                  </ResponsiveContainer>
+                  <Suspense
+                    fallback={
+                      <div className="h-full flex items-center justify-center">
+                        <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#5c0f1b] border-t-transparent" />
+                      </div>
+                    }
+                  >
+                    <StockBarChart data={topProductsData} />
+                  </Suspense>
                 ) : (
                   <div className="h-full flex items-center justify-center text-stone-400">
                     Sin productos registrados.

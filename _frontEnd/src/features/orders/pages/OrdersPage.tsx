@@ -138,7 +138,16 @@ export default function OrdersPage() {
   const filteredOrders = useMemo(() => {
     return orders.filter((order) => {
       const statusMatch = statusFilter === 'all' || order.estado === statusFilter
-      const paymentMatch = paymentFilter === 'all' || order.estado_pago === paymentFilter
+      
+      let paymentMatch = false
+      if (paymentFilter === 'all') {
+        paymentMatch = true
+      } else if (paymentFilter === 'PAGADO') {
+        paymentMatch = order.estado_pago === 'PAGADO'
+      } else if (paymentFilter === 'DEVUELTO') {
+        paymentMatch = order.estado_pago === 'PENDIENTE' || order.estado_pago === 'REEMBOLSADO'
+      }
+
       return statusMatch && paymentMatch
     })
   }, [orders, statusFilter, paymentFilter])
@@ -187,7 +196,12 @@ export default function OrdersPage() {
                 'inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider border',
                 val === 'PAGADO' && 'bg-emerald-50 text-emerald-700 border-emerald-200',
                 val === 'PENDIENTE' && 'bg-amber-50 text-amber-700 border-amber-200',
+                val === 'PREPARANDO' && 'bg-orange-50 text-orange-700 border-orange-200',
+                val === 'EN_CAMINO' && 'bg-blue-50 text-blue-700 border-blue-200',
                 val === 'ENTREGADO' && 'bg-purple-50 text-purple-700 border-purple-200',
+                val === 'CANCELADO' && 'bg-stone-100 text-stone-700 border-stone-300',
+                val === 'DEVUELTO' && 'bg-rose-50 text-rose-700 border-rose-200',
+                val === 'REEMBOLSADO' && 'bg-fuchsia-50 text-fuchsia-700 border-fuchsia-200',
                 val === 'ANULADO' && 'bg-red-50 text-red-700 border-red-200'
               )}
             >
@@ -203,16 +217,16 @@ export default function OrdersPage() {
         accessorKey: 'estado_pago',
         header: 'Estado Pago',
         cell: ({ row }) => {
-          const isReembolsado = row.original.estado === 'REEMBOLSADO'
-          const val = isReembolsado ? 'PENDIENTE' : (row.getValue('estado_pago') as string)
+          const val = row.getValue('estado_pago') as string
+          const isPagado = val === 'PAGADO'
           return (
             <span
               className={cn(
                 'inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider border',
-                val === 'PAGADO' ? 'bg-green-50 text-green-700 border-green-200' : 'bg-yellow-50 text-yellow-700 border-yellow-200'
+                isPagado ? 'bg-green-50 text-green-700 border-green-200' : 'bg-red-50 text-red-700 border-red-200'
               )}
             >
-              {val === 'PAGADO' ? 'Pagado' : 'Pendiente'}
+              {isPagado ? 'Pagado' : 'Devuelto'}
             </span>
           )
         },
@@ -366,7 +380,12 @@ export default function OrdersPage() {
               <option value="all">Todos los estados</option>
               <option value="PENDIENTE">PENDIENTE</option>
               <option value="PAGADO">PAGADO</option>
+              <option value="PREPARANDO">PREPARANDO</option>
+              <option value="EN_CAMINO">EN_CAMINO</option>
               <option value="ENTREGADO">ENTREGADO</option>
+              <option value="CANCELADO">CANCELADO</option>
+              <option value="DEVUELTO">DEVUELTO</option>
+              <option value="REEMBOLSADO">REEMBOLSADO</option>
               <option value="ANULADO">ANULADO</option>
             </select>
           </div>
@@ -382,7 +401,7 @@ export default function OrdersPage() {
               className="w-full px-3.5 py-2.5 text-sm bg-stone-50 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#5c0f1b]/20 focus:border-[#5c0f1b] transition-all text-[#2a1115] cursor-pointer font-bold"
             >
               <option value="all">Todos los pagos</option>
-              <option value="PENDIENTE">PENDIENTE</option>
+              <option value="DEVUELTO">DEVUELTO</option>
               <option value="PAGADO">PAGADO</option>
             </select>
           </div>

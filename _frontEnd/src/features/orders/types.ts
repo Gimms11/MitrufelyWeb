@@ -97,7 +97,7 @@ export interface VentaResponse {
   id_cupon_cliente?: number | null
   cupon_codigo?: string | null
   estado: EstadoVenta
-  estado_pago: 'PENDIENTE' | 'PAGADO'
+  estado_pago: 'PENDIENTE' | 'PAGADO' | 'REEMBOLSADO'
   total: number
   puntos_ganados: number
   fecha_venta: string

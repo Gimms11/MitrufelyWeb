@@ -108,7 +108,6 @@ api.interceptors.response.use(
         // Refresh falló → logout via callback registrado
         setAccessToken(null)
         onLogoutCallback?.()
-        toast.error('Tu sesión expiró. Por favor, inicia sesión nuevamente.')
         return Promise.reject(error)
       } finally {
         isRefreshing = false

@@ -219,7 +219,7 @@ export default function CatalogAdminPage() {
         return (
           <div className="h-12 w-12 rounded-xl overflow-hidden bg-stone-100 border border-stone-200 shadow-2xs">
             {url ? (
-              <img src={url} alt={row.getValue('nombre')} className="h-full w-full object-cover" />
+              <img src={url} alt={row.getValue('nombre')} width={48} height={48} loading="lazy" decoding="async" className="h-full w-full object-cover" />
             ) : (
               <div className="h-full w-full flex items-center justify-center text-[10px] font-bold text-[#5c0f1b]/50">
                 NO IMG
@@ -338,7 +338,7 @@ export default function CatalogAdminPage() {
         return (
           <div className="h-12 w-12 rounded-xl overflow-hidden bg-stone-100 border border-stone-200 shadow-2xs">
             {url ? (
-              <img src={url} alt={row.getValue('nombre')} className="h-full w-full object-cover" />
+              <img src={url} alt={row.getValue('nombre')} width={48} height={48} loading="lazy" decoding="async" className="h-full w-full object-cover" />
             ) : (
               <div className="h-full w-full flex items-center justify-center text-[10px] font-bold text-[#5c0f1b]/50">
                 NO IMG
@@ -888,7 +888,7 @@ function CategoryProductsModal({ nombre_categoria, onClose }: CategoryProductsMo
                   {/* Thumbnail */}
                   <div className="h-12 w-12 rounded-xl overflow-hidden bg-stone-100 border border-stone-200 shadow-2xs flex-shrink-0 relative">
                     {prod.imagen_url ? (
-                      <img src={prod.imagen_url} alt={prod.nombre} className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-200" />
+                      <img src={prod.imagen_url} alt={prod.nombre} width={48} height={48} loading="lazy" decoding="async" className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-200" />
                     ) : (
                       <div className="h-full w-full flex items-center justify-center text-[10px] font-bold text-[#5c0f1b]/40">
                         <Package className="h-5 w-5 stroke-1" />

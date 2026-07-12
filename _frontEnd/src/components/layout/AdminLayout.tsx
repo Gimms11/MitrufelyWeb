@@ -45,8 +45,16 @@ export default function AdminLayout() {
     }
   }, [user, navigate])
 
+  // Skeleton de carga mientras se verifica auth (evita flash/CLS de return null)
   if (!user || user.role === 'customer') {
-    return null
+    return (
+      <div className="flex h-screen w-full items-center justify-center bg-[#faf8f5]">
+        <div className="flex flex-col items-center gap-4">
+          <div className="h-10 w-10 animate-spin rounded-full border-4 border-[#5c0f1b] border-t-transparent" />
+          <p className="text-sm font-bold text-[#5c0f1b]/50">Verificando acceso…</p>
+        </div>
+      </div>
+    )
   }
 
   const handleLogout = () => {
@@ -349,7 +357,7 @@ export default function AdminLayout() {
           <div className="flex items-center gap-4">
             <div className="flex flex-col text-right">
               <span className="text-xs font-black text-[#2a1115]">{user.name}</span>
-              <span className="text-[9px] font-extrabold text-stone-400 uppercase tracking-wider">{roleInfo.label}</span>
+              <span className="text-[9px] font-extrabold text-stone-500 uppercase tracking-wider">{roleInfo.label}</span>
             </div>
             <div className="h-10 w-10 rounded-full bg-[#5c0f1b] border-2 border-[#faf8f5] flex items-center justify-center text-white font-black text-sm shadow-md">
               {user?.name ? user.name[0]?.toUpperCase() : 'A'}

@@ -1,0 +1,4 @@
+# robots.txt — Mitrufely
+# Permitir indexación de todas las rutas
+User-agent: *
+Allow: /

@@ -102,11 +102,18 @@ export function AboutHeroSection() {
           className="relative"
         >
           <div className="relative overflow-hidden rounded-3xl shadow-[0_20px_60px_rgba(92,15,27,0.15)]">
-            <img
-              src="/8.png"
-              alt="Equipo Mitrufely compartiendo momentos dulces"
-              className="w-full h-[340px] md:h-[420px] object-cover"
-            />
+            <picture>
+              <source srcSet="/8.webp" type="image/webp" />
+              <img
+                src="/8.png"
+                alt="Equipo Mitrufely compartiendo momentos dulces"
+                width={1280}
+                height={728}
+                fetchPriority="high"
+                decoding="async"
+                className="w-full h-[340px] md:h-[420px] object-cover"
+              />
+            </picture>
             {/* Overlay sutil borgoña en la parte inferior */}
             <div
               className="absolute inset-0 rounded-3xl"

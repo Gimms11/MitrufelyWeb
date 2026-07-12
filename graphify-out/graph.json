@@ -26259,7 +26259,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\app\\providers.tsx",
-      "source_location": "L11",
+      "source_location": "L21",
       "file_type": "code"
     },
     {
@@ -26268,7 +26268,7 @@
       "type": "interface",
       "description": "",
       "source_file": "_frontEnd\\src\\app\\providers.tsx",
-      "source_location": "L7",
+      "source_location": "L17",
       "file_type": "code"
     },
     {
@@ -26283,15 +26283,6 @@
     {
       "id": "_frontEnd.src.app.providers.import_react_query",
       "label": "@tanstack/react-query",
-      "type": "import",
-      "description": "",
-      "source_file": "_frontEnd\\src\\app\\providers.tsx",
-      "source_location": "L2",
-      "file_type": "code"
-    },
-    {
-      "id": "_frontEnd.src.app.providers.import_react_query_devtools",
-      "label": "@tanstack/react-query-devtools",
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\app\\providers.tsx",
@@ -26331,7 +26322,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\app\\router.tsx",
-      "source_location": "L39",
+      "source_location": "L41",
       "file_type": "code"
     },
     {
@@ -26340,7 +26331,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\app\\router.tsx",
-      "source_location": "L51",
+      "source_location": "L53",
       "file_type": "code"
     },
     {
@@ -26349,7 +26340,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\app\\router.tsx",
-      "source_location": "L67",
+      "source_location": "L69",
       "file_type": "code"
     },
     {
@@ -26358,7 +26349,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\app\\router.tsx",
-      "source_location": "L88",
+      "source_location": "L90",
       "file_type": "code"
     },
     {
@@ -26367,7 +26358,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\app\\router.tsx",
-      "source_location": "L100",
+      "source_location": "L102",
       "file_type": "code"
     },
     {
@@ -26376,7 +26367,7 @@
       "type": "interface",
       "description": "",
       "source_file": "_frontEnd\\src\\app\\router.tsx",
-      "source_location": "L63",
+      "source_location": "L65",
       "file_type": "code"
     },
     {
@@ -26413,15 +26404,6 @@
       "description": "",
       "source_file": "_frontEnd\\src\\app\\router.tsx",
       "source_location": "L4",
-      "file_type": "code"
-    },
-    {
-      "id": "_frontEnd.src.app.router.import_AdminLayout",
-      "label": "@/components/layout/AdminLayout",
-      "type": "import",
-      "description": "",
-      "source_file": "_frontEnd\\src\\app\\router.tsx",
-      "source_location": "L6",
       "file_type": "code"
     },
     {
@@ -26484,7 +26466,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\components\\layout\\AdminLayout.tsx",
-      "source_location": "L52",
+      "source_location": "L60",
       "file_type": "code"
     },
     {
@@ -26493,7 +26475,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\components\\layout\\AdminLayout.tsx",
-      "source_location": "L117",
+      "source_location": "L125",
       "file_type": "code"
     },
     {
@@ -29395,6 +29377,87 @@
       "file_type": "code"
     },
     {
+      "id": "_frontEnd.src.features.dashboard.components.DashboardCharts",
+      "label": "DashboardCharts.tsx",
+      "type": "module",
+      "description": "TypeScript module DashboardCharts.tsx",
+      "source_file": "_frontEnd\\src\\features\\dashboard\\components\\DashboardCharts.tsx",
+      "source_location": "L1",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.dashboard.components.DashboardCharts.SalesAreaChart",
+      "label": "SalesAreaChart",
+      "type": "function",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\dashboard\\components\\DashboardCharts.tsx",
+      "source_location": "L33",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.dashboard.components.DashboardCharts.SalesAreaChartGeneric",
+      "label": "SalesAreaChartGeneric",
+      "type": "function",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\dashboard\\components\\DashboardCharts.tsx",
+      "source_location": "L83",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.dashboard.components.DashboardCharts.TopProductsBarChart",
+      "label": "TopProductsBarChart",
+      "type": "function",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\dashboard\\components\\DashboardCharts.tsx",
+      "source_location": "L127",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.dashboard.components.DashboardCharts.StockBarChart",
+      "label": "StockBarChart",
+      "type": "function",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\dashboard\\components\\DashboardCharts.tsx",
+      "source_location": "L158",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.dashboard.components.DashboardCharts.DashboardCharts",
+      "label": "DashboardCharts",
+      "type": "function",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\dashboard\\components\\DashboardCharts.tsx",
+      "source_location": "L195",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.dashboard.components.DashboardCharts.SalesChartProps",
+      "label": "SalesChartProps",
+      "type": "interface",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\dashboard\\components\\DashboardCharts.tsx",
+      "source_location": "L23",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.dashboard.components.DashboardCharts.ProductsChartProps",
+      "label": "ProductsChartProps",
+      "type": "interface",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\dashboard\\components\\DashboardCharts.tsx",
+      "source_location": "L27",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.dashboard.components.DashboardCharts.import_recharts",
+      "label": "recharts",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\dashboard\\components\\DashboardCharts.tsx",
+      "source_location": "L8",
+      "file_type": "code"
+    },
+    {
       "id": "_frontEnd.src.features.dashboard.hooks.useDashboard",
       "label": "useDashboard.ts",
       "type": "module",
@@ -29481,7 +29544,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\dashboard\\pages\\AdminDashboardPage.tsx",
-      "source_location": "L16",
+      "source_location": "L14",
       "file_type": "code"
     },
     {
@@ -29494,8 +29557,8 @@
       "file_type": "code"
     },
     {
-      "id": "_frontEnd.src.features.dashboard.pages.AdminDashboardPage.import_lucide_react",
-      "label": "lucide-react",
+      "id": "_frontEnd.src.features.dashboard.pages.AdminDashboardPage.import_react",
+      "label": "react",
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\dashboard\\pages\\AdminDashboardPage.tsx",
@@ -29503,8 +29566,8 @@
       "file_type": "code"
     },
     {
-      "id": "_frontEnd.src.features.dashboard.pages.AdminDashboardPage.import_recharts",
-      "label": "recharts",
+      "id": "_frontEnd.src.features.dashboard.pages.AdminDashboardPage.import_lucide_react",
+      "label": "lucide-react",
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\dashboard\\pages\\AdminDashboardPage.tsx",
@@ -29517,7 +29580,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\dashboard\\pages\\AdminDashboardPage.tsx",
-      "source_location": "L14",
+      "source_location": "L4",
       "file_type": "code"
     },
     {
@@ -29535,7 +29598,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\dashboard\\pages\\DashboardPage.tsx",
-      "source_location": "L32",
+      "source_location": "L28",
       "file_type": "code"
     },
     {
@@ -29575,21 +29638,12 @@
       "file_type": "code"
     },
     {
-      "id": "_frontEnd.src.features.dashboard.pages.DashboardPage.import_recharts",
-      "label": "recharts",
-      "type": "import",
-      "description": "",
-      "source_file": "_frontEnd\\src\\features\\dashboard\\pages\\DashboardPage.tsx",
-      "source_location": "L14",
-      "file_type": "code"
-    },
-    {
       "id": "_frontEnd.src.features.dashboard.pages.DashboardPage.import_useOrders",
       "label": "@/features/orders/hooks/useOrders",
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\dashboard\\pages\\DashboardPage.tsx",
-      "source_location": "L27",
+      "source_location": "L23",
       "file_type": "code"
     },
     {
@@ -29598,7 +29652,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\dashboard\\pages\\DashboardPage.tsx",
-      "source_location": "L28",
+      "source_location": "L24",
       "file_type": "code"
     },
     {
@@ -29607,7 +29661,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\dashboard\\pages\\DashboardPage.tsx",
-      "source_location": "L29",
+      "source_location": "L25",
       "file_type": "code"
     },
     {
@@ -29616,7 +29670,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\dashboard\\pages\\DashboardPage.tsx",
-      "source_location": "L30",
+      "source_location": "L26",
       "file_type": "code"
     },
     {
@@ -32379,7 +32433,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\products\\components\\HeroSection.tsx",
-      "source_location": "L56",
+      "source_location": "L31",
       "file_type": "code"
     },
     {
@@ -32388,16 +32442,7 @@
       "type": "interface",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\products\\components\\HeroSection.tsx",
-      "source_location": "L21",
-      "file_type": "code"
-    },
-    {
-      "id": "_frontEnd.src.features.products.components.HeroSection.import_framer_motion",
-      "label": "framer-motion",
-      "type": "import",
-      "description": "",
-      "source_file": "_frontEnd\\src\\features\\products\\components\\HeroSection.tsx",
-      "source_location": "L16",
+      "source_location": "L17",
       "file_type": "code"
     },
     {
@@ -32406,7 +32451,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\products\\components\\HeroSection.tsx",
-      "source_location": "L17",
+      "source_location": "L13",
       "file_type": "code"
     },
     {
@@ -36748,87 +36793,6 @@
       "file_type": "code"
     },
     {
-      "id": "_frontEnd.src.types.google.d",
-      "label": "google.d.ts",
-      "type": "module",
-      "description": "TypeScript module google.d.ts",
-      "source_file": "_frontEnd\\src\\types\\google.d.ts",
-      "source_location": "L1",
-      "file_type": "code"
-    },
-    {
-      "id": "_frontEnd.src.types.google.d.initialize",
-      "label": "initialize",
-      "type": "function",
-      "description": "",
-      "source_file": "_frontEnd\\src\\types\\google.d.ts",
-      "source_location": "L34",
-      "file_type": "code"
-    },
-    {
-      "id": "_frontEnd.src.types.google.d.renderButton",
-      "label": "renderButton",
-      "type": "function",
-      "description": "",
-      "source_file": "_frontEnd\\src\\types\\google.d.ts",
-      "source_location": "L35",
-      "file_type": "code"
-    },
-    {
-      "id": "_frontEnd.src.types.google.d.prompt",
-      "label": "prompt",
-      "type": "function",
-      "description": "",
-      "source_file": "_frontEnd\\src\\types\\google.d.ts",
-      "source_location": "L36",
-      "file_type": "code"
-    },
-    {
-      "id": "_frontEnd.src.types.google.d.revoke",
-      "label": "revoke",
-      "type": "function",
-      "description": "",
-      "source_file": "_frontEnd\\src\\types\\google.d.ts",
-      "source_location": "L37",
-      "file_type": "code"
-    },
-    {
-      "id": "_frontEnd.src.types.google.d.disableAutoSelect",
-      "label": "disableAutoSelect",
-      "type": "function",
-      "description": "",
-      "source_file": "_frontEnd\\src\\types\\google.d.ts",
-      "source_location": "L38",
-      "file_type": "code"
-    },
-    {
-      "id": "_frontEnd.src.types.google.d.InitializeConfig",
-      "label": "InitializeConfig",
-      "type": "interface",
-      "description": "",
-      "source_file": "_frontEnd\\src\\types\\google.d.ts",
-      "source_location": "L4",
-      "file_type": "code"
-    },
-    {
-      "id": "_frontEnd.src.types.google.d.CredentialResponse",
-      "label": "CredentialResponse",
-      "type": "interface",
-      "description": "",
-      "source_file": "_frontEnd\\src\\types\\google.d.ts",
-      "source_location": "L18",
-      "file_type": "code"
-    },
-    {
-      "id": "_frontEnd.src.types.google.d.RenderButtonConfig",
-      "label": "RenderButtonConfig",
-      "type": "interface",
-      "description": "",
-      "source_file": "_frontEnd\\src\\types\\google.d.ts",
-      "source_location": "L23",
-      "file_type": "code"
-    },
-    {
       "id": "_frontEnd.src.types.roles",
       "label": "roles.ts",
       "type": "module",
@@ -36865,12 +36829,30 @@
       "file_type": "code"
     },
     {
+      "id": "_frontEnd.vite.config.import_vite_plugin_compression2",
+      "label": "vite-plugin-compression2",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\vite.config.ts",
+      "source_location": "L4",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.vite.config.import_rollup_plugin_visualizer",
+      "label": "rollup-plugin-visualizer",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\vite.config.ts",
+      "source_location": "L5",
+      "file_type": "code"
+    },
+    {
       "id": "_frontEnd.vite.config.import_path",
       "label": "path",
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\vite.config.ts",
-      "source_location": "L4",
+      "source_location": "L6",
       "file_type": "code"
     }
   ],
@@ -50567,11 +50549,6 @@
     },
     {
       "source": "_frontEnd.src.app.providers",
-      "target": "_frontEnd.src.app.providers.import_react_query_devtools",
-      "relation": "imports_from"
-    },
-    {
-      "source": "_frontEnd.src.app.providers",
       "target": "_frontEnd.src.app.providers.import_sonner",
       "relation": "imports_from"
     },
@@ -50628,11 +50605,6 @@
     {
       "source": "_frontEnd.src.app.router",
       "target": "_frontEnd.src.app.router.import_roles",
-      "relation": "imports_from"
-    },
-    {
-      "source": "_frontEnd.src.app.router",
-      "target": "_frontEnd.src.app.router.import_AdminLayout",
       "relation": "imports_from"
     },
     {
@@ -52091,6 +52063,46 @@
       "relation": "imports_from"
     },
     {
+      "source": "_frontEnd.src.features.dashboard.components.DashboardCharts",
+      "target": "_frontEnd.src.features.dashboard.components.DashboardCharts.SalesAreaChart",
+      "relation": "contains"
+    },
+    {
+      "source": "_frontEnd.src.features.dashboard.components.DashboardCharts",
+      "target": "_frontEnd.src.features.dashboard.components.DashboardCharts.SalesAreaChartGeneric",
+      "relation": "contains"
+    },
+    {
+      "source": "_frontEnd.src.features.dashboard.components.DashboardCharts",
+      "target": "_frontEnd.src.features.dashboard.components.DashboardCharts.TopProductsBarChart",
+      "relation": "contains"
+    },
+    {
+      "source": "_frontEnd.src.features.dashboard.components.DashboardCharts",
+      "target": "_frontEnd.src.features.dashboard.components.DashboardCharts.StockBarChart",
+      "relation": "contains"
+    },
+    {
+      "source": "_frontEnd.src.features.dashboard.components.DashboardCharts",
+      "target": "_frontEnd.src.features.dashboard.components.DashboardCharts.DashboardCharts",
+      "relation": "contains"
+    },
+    {
+      "source": "_frontEnd.src.features.dashboard.components.DashboardCharts",
+      "target": "_frontEnd.src.features.dashboard.components.DashboardCharts.SalesChartProps",
+      "relation": "contains"
+    },
+    {
+      "source": "_frontEnd.src.features.dashboard.components.DashboardCharts",
+      "target": "_frontEnd.src.features.dashboard.components.DashboardCharts.ProductsChartProps",
+      "relation": "contains"
+    },
+    {
+      "source": "_frontEnd.src.features.dashboard.components.DashboardCharts",
+      "target": "_frontEnd.src.features.dashboard.components.DashboardCharts.import_recharts",
+      "relation": "imports_from"
+    },
+    {
       "source": "_frontEnd.src.features.dashboard.hooks.useDashboard",
       "target": "_frontEnd.src.features.dashboard.hooks.useDashboard.useDashboardQuery",
       "relation": "contains"
@@ -52132,12 +52144,12 @@
     },
     {
       "source": "_frontEnd.src.features.dashboard.pages.AdminDashboardPage",
-      "target": "_frontEnd.src.features.dashboard.pages.AdminDashboardPage.import_lucide_react",
+      "target": "_frontEnd.src.features.dashboard.pages.AdminDashboardPage.import_react",
       "relation": "imports_from"
     },
     {
       "source": "_frontEnd.src.features.dashboard.pages.AdminDashboardPage",
-      "target": "_frontEnd.src.features.dashboard.pages.AdminDashboardPage.import_recharts",
+      "target": "_frontEnd.src.features.dashboard.pages.AdminDashboardPage.import_lucide_react",
       "relation": "imports_from"
     },
     {
@@ -52168,11 +52180,6 @@
     {
       "source": "_frontEnd.src.features.dashboard.pages.DashboardPage",
       "target": "_frontEnd.src.features.dashboard.pages.DashboardPage.import_framer_motion",
-      "relation": "imports_from"
-    },
-    {
-      "source": "_frontEnd.src.features.dashboard.pages.DashboardPage",
-      "target": "_frontEnd.src.features.dashboard.pages.DashboardPage.import_recharts",
       "relation": "imports_from"
     },
     {
@@ -53564,11 +53571,6 @@
       "source": "_frontEnd.src.features.products.components.HeroSection",
       "target": "_frontEnd.src.features.products.components.HeroSection.HeroSectionProps",
       "relation": "contains"
-    },
-    {
-      "source": "_frontEnd.src.features.products.components.HeroSection",
-      "target": "_frontEnd.src.features.products.components.HeroSection.import_framer_motion",
-      "relation": "imports_from"
     },
     {
       "source": "_frontEnd.src.features.products.components.HeroSection",
@@ -55726,46 +55728,6 @@
       "relation": "contains"
     },
     {
-      "source": "_frontEnd.src.types.google.d",
-      "target": "_frontEnd.src.types.google.d.initialize",
-      "relation": "contains"
-    },
-    {
-      "source": "_frontEnd.src.types.google.d",
-      "target": "_frontEnd.src.types.google.d.renderButton",
-      "relation": "contains"
-    },
-    {
-      "source": "_frontEnd.src.types.google.d",
-      "target": "_frontEnd.src.types.google.d.prompt",
-      "relation": "contains"
-    },
-    {
-      "source": "_frontEnd.src.types.google.d",
-      "target": "_frontEnd.src.types.google.d.revoke",
-      "relation": "contains"
-    },
-    {
-      "source": "_frontEnd.src.types.google.d",
-      "target": "_frontEnd.src.types.google.d.disableAutoSelect",
-      "relation": "contains"
-    },
-    {
-      "source": "_frontEnd.src.types.google.d",
-      "target": "_frontEnd.src.types.google.d.InitializeConfig",
-      "relation": "contains"
-    },
-    {
-      "source": "_frontEnd.src.types.google.d",
-      "target": "_frontEnd.src.types.google.d.CredentialResponse",
-      "relation": "contains"
-    },
-    {
-      "source": "_frontEnd.src.types.google.d",
-      "target": "_frontEnd.src.types.google.d.RenderButtonConfig",
-      "relation": "contains"
-    },
-    {
       "source": "_frontEnd.vite.config",
       "target": "_frontEnd.vite.config.import_vite",
       "relation": "imports_from"
@@ -55773,6 +55735,16 @@
     {
       "source": "_frontEnd.vite.config",
       "target": "_frontEnd.vite.config.import_plugin_react",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.vite.config",
+      "target": "_frontEnd.vite.config.import_vite_plugin_compression2",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.vite.config",
+      "target": "_frontEnd.vite.config.import_rollup_plugin_visualizer",
       "relation": "imports_from"
     },
     {
