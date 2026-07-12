@@ -13,14 +13,52 @@
 
 ---
 
-## 📸 Vista Previa
+## 📸 Vista Previa (Preview)
+
+### 🖥️ Interfaz de Escritorio (Desktop)
+
+#### 🏠 Inicio y Portada Principal
 
 <p align="center">
-  <img src="_docs/assets/inicio.png" alt="Interfaz de Cliente - Frontend" width="48%">
-  <img src="_docs/assets/admin.png" alt="Panel de Administración" width="48%">
+  <img src="_docs/assets/Desktop/inicio.png" alt="Inicio Desktop" width="100%">
+</p>
+
+#### 🛍️ Catálogo de Trufas y Filtros Dinámicos
+
+<p align="center">
+  <img src="_docs/assets/Desktop/catalogo.png" alt="Catálogo Desktop" width="100%">
+</p>
+
+#### 🎁 Packs de Regalo Especiales
+
+<p align="center">
+  <img src="_docs/assets/Desktop/packs.png" alt="Packs Desktop" width="100%">
+</p>
+
+#### 🪙 Club de Fidelización (Puntos CriptoTrufas)
+
+<p align="center">
+  <img src="_docs/assets/Desktop/CriptoTrufas.png" alt="CriptoTrufas Desktop" width="100%">
+</p>
+
+#### 📊 Panel Administrativo (Gestión y Control)
+
+<p align="center">
+  <img src="_docs/assets/Desktop/admin.png" alt="Admin Dashboard Desktop" width="100%">
+</p>
+
+---
+
+### 📱 Interfaz Móvil (Mobile)
+
+<p align="center">
+  <img src="_docs/assets/Mobile/inicio.png" alt="Inicio Mobile" width="31%" style="margin: 0 1%;">
+  <img src="_docs/assets/Mobile/catalogo.png" alt="Catálogo Mobile" width="31%" style="margin: 0 1%;">
+  <img src="_docs/assets/Mobile/packs.png" alt="Packs Mobile" width="31%" style="margin: 0 1%;">
 </p>
 <p align="center">
-  <img src="docs/assets/screenshot-mobile.png" alt="Vista Mobile Responsiva" width="30%">
+  <img src="_docs/assets/Mobile/CriptoTrufas.png" alt="CriptoTrufas Mobile" width="31%" style="margin: 0 1%;">
+  <img src="_docs/assets/Mobile/image.png" alt="Detalle Adicional Mobile" width="31%" style="margin: 0 1%;">
 </p>
 
 ---
