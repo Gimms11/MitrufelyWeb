@@ -1,11 +1,41 @@
 <!doctype html>
-<html lang="en">
+<html lang="es">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>mitrufelyweb</title>
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <meta name="description" content="Mitrufely — Trufería artesanal premium. Gana CriptoTrufas con cada compra y canjéalas por descuentos." />
+    <meta name="theme-color" content="#5c0f1b" />
+    <meta name="color-scheme" content="light" />
+    <title>Mitrufely — Trufería artesanal premium</title>
+
+    <!-- ─── Preconnect a orígenes de terceros ──────────────────────────────── -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- ─── Google Fonts (carga no bloqueante con media swap) ──────────────── -->
+    <!-- Solo 8 pesos (vs 14 antes): Inter 400-800, Outfit 600-900 -->
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@600;700;800;900&display=swap"
+      onload="this.onload=null"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@600;700;800;900&display=swap"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@600;700;800;900&display=swap"
+      />
+    </noscript>
+
+    <!-- ─── Preload del LCP (hero background) ──────────────────────────────── -->
+    <link rel="preload" href="/4.webp" as="image" type="image/webp" fetchpriority="high" />
   </head>
   <body>
     <div id="root"></div>

@@ -36,7 +36,7 @@ const BENEFIT_CARDS = [
     title:       'CriptoTrufas',
     description: <>Gana Puntos y obtén<br />descuentos exclusivos</>,
     cta:         'Obtener',
-    imgSrc:      '/fbb5dddd-a58d-47d8-bf65-20709c212286.png',
+    imgSrc:      '/fbb5dddd-a58d-47d8-bf65-20709c212286.webp',
     imgAlt:      'CriptoTrufas',
     imgFallback: '/fbb5dddd-a58d-47d8-bf65-20709c212286.png',
     onCta:       () => toast.info('Club CriptoTrufas próximamente activo.'),
@@ -47,9 +47,9 @@ const BENEFIT_CARDS = [
     title:       'Tu trufa perfecta',
     description: <>Personaliza para una<br />ocasión especial</>,
     cta:         'Contáctanos',
-    imgSrc:      '/fbb5dddd-a58d-47d8-bf65-20709c212286 (1).png',
+    imgSrc:      '/fbb5dddd-a58d-47d8-bf65-20709c212286-alt.webp',
     imgAlt:      'Personalización',
-    imgFallback: '/fbb5dddd-a58d-47d8-bf65-20709c212286 (1).png',
+    imgFallback: '/fbb5dddd-a58d-47d8-bf65-20709c212286-alt.png',
     onCta:       () => toast.info('Formulario de personalización en desarrollo.'),
   },
 ] as const
@@ -139,6 +139,10 @@ export function BenefitsSection() {
                 <img
                   src={card.imgSrc}
                   alt={card.imgAlt}
+                  width={1024}
+                  height={531}
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-full object-contain object-bottom drop-shadow-xl transition-transform duration-500 ease-out group-hover:scale-[1.07]"
                   onError={(e) => {
                     ;(e.target as HTMLImageElement).src = card.imgFallback

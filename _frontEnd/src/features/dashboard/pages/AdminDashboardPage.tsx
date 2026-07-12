@@ -1,17 +1,15 @@
 import { Link } from 'react-router'
+import { Suspense, lazy } from 'react'
 import { ArrowLeft, Sparkles, Loader2, DollarSign, Package, AlertTriangle, Star, Clock, Undo2 } from 'lucide-react'
-import {
-  AreaChart,
-  Area,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  BarChart,
-  Bar,
-} from 'recharts'
 import { useDashboardQuery } from '../hooks/useDashboard'
+
+// Code-split: recharts (~1.1MB) solo se carga cuando hay datos que graficar
+const SalesAreaChart = lazy(() =>
+  import('../components/DashboardCharts').then((m) => ({ default: m.SalesAreaChart })),
+)
+const TopProductsBarChart = lazy(() =>
+  import('../components/DashboardCharts').then((m) => ({ default: m.TopProductsBarChart })),
+)
 
 export default function AdminDashboardPage() {
   const { data: metrics, isLoading, isError } = useDashboardQuery()
@@ -24,13 +22,14 @@ export default function AdminDashboardPage() {
           <div className="flex items-center gap-4">
             <Link
               to="/dashboard"
+              aria-label="Volver al inicio del dashboard"
               className="inline-flex items-center justify-center p-2.5 rounded-xl border border-stone-200 hover:bg-stone-50 text-stone-600 hover:text-stone-900 transition-all shadow-2xs hover:scale-105 active:scale-95 cursor-pointer"
             >
               <ArrowLeft className="h-4.5 w-4.5" />
             </Link>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-xs font-black bg-[#ff7a45]/12 border border-[#ff7a45]/20 px-2.5 py-1 rounded-full text-[#ff7a45] uppercase tracking-wide">
+                <span className="text-xs font-black bg-[#ff7a45]/12 border border-[#ff7a45]/20 px-2.5 py-1 rounded-full text-[#c44a1a] uppercase tracking-wide">
                   Panel Administrativo
                 </span>
                 <Sparkles className="h-4 w-4 text-[#ff7a45] animate-pulse" />
@@ -64,7 +63,7 @@ export default function AdminDashboardPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <div className="bg-white p-5 rounded-2xl border border-[#5c0f1b]/10 shadow-sm flex items-start justify-between">
                 <div>
-                  <p className="text-xs font-bold text-[#2a1115]/50 uppercase tracking-wider mb-1">Ingresos Totales</p>
+                  <p className="text-xs font-bold text-[#2a1115]/70 uppercase tracking-wider mb-1">Ingresos Totales</p>
                   <p className="text-2xl font-black text-[#5c0f1b]" style={{ fontFamily: "'Outfit', sans-serif" }}>
                     S/. {Number(metrics.ventas_totales_monto || 0).toFixed(2)}
                   </p>
@@ -76,7 +75,7 @@ export default function AdminDashboardPage() {
 
               <div className="bg-white p-5 rounded-2xl border border-[#5c0f1b]/10 shadow-sm flex items-start justify-between">
                 <div>
-                  <p className="text-xs font-bold text-[#2a1115]/50 uppercase tracking-wider mb-1">Total Pedidos</p>
+                  <p className="text-xs font-bold text-[#2a1115]/70 uppercase tracking-wider mb-1">Total Pedidos</p>
                   <p className="text-2xl font-black text-[#5c0f1b]" style={{ fontFamily: "'Outfit', sans-serif" }}>
                     {metrics.pedidos_totales}
                   </p>
@@ -88,7 +87,7 @@ export default function AdminDashboardPage() {
 
               <div className="bg-white p-5 rounded-2xl border border-[#5c0f1b]/10 shadow-sm flex items-start justify-between">
                 <div>
-                  <p className="text-xs font-bold text-[#2a1115]/50 uppercase tracking-wider mb-1">Ticket Promedio</p>
+                  <p className="text-xs font-bold text-[#2a1115]/70 uppercase tracking-wider mb-1">Ticket Promedio</p>
                   <p className="text-2xl font-black text-[#5c0f1b]" style={{ fontFamily: "'Outfit', sans-serif" }}>
                     S/. {Number(metrics.ticket_promedio || 0).toFixed(2)}
                   </p>
@@ -100,7 +99,7 @@ export default function AdminDashboardPage() {
 
               <div className="bg-white p-5 rounded-2xl border border-[#5c0f1b]/10 shadow-sm flex items-start justify-between">
                 <div>
-                  <p className="text-xs font-bold text-[#2a1115]/50 uppercase tracking-wider mb-1">Tiempo de Entrega</p>
+                  <p className="text-xs font-bold text-[#2a1115]/70 uppercase tracking-wider mb-1">Tiempo de Entrega</p>
                   <p className="text-2xl font-black text-[#5c0f1b]" style={{ fontFamily: "'Outfit', sans-serif" }}>
                     {metrics.tiempo_promedio_entrega_minutos ? `${Math.round(metrics.tiempo_promedio_entrega_minutos)} min` : 'N/A'}
                   </p>
@@ -118,10 +117,10 @@ export default function AdminDashboardPage() {
                   <div className="h-8 w-8 rounded-full bg-yellow-50 flex items-center justify-center">
                     <Star className="h-4 w-4 fill-yellow-500 text-yellow-500" />
                   </div>
-                  <h3 className="font-black text-[#2a1115] text-sm">Satisfacción</h3>
+                  <h2 className="font-black text-[#2a1115] text-sm">Satisfacción</h2>
                 </div>
                 <p className="text-3xl font-black text-[#2a1115] mb-1">
-                  {metrics.calificacion_promedio ? Number(metrics.calificacion_promedio).toFixed(1) : 'N/A'} <span className="text-sm text-stone-400">/ 5.0</span>
+                  {metrics.calificacion_promedio ? Number(metrics.calificacion_promedio).toFixed(1) : 'N/A'} <span className="text-sm text-stone-500">/ 5.0</span>
                 </p>
                 <p className="text-xs font-bold text-stone-500">{metrics.total_calificaciones} calificaciones totales</p>
               </div>
@@ -131,7 +130,7 @@ export default function AdminDashboardPage() {
                   <div className="h-8 w-8 rounded-full bg-red-50 flex items-center justify-center">
                     <AlertTriangle className="h-4 w-4 text-red-500" />
                   </div>
-                  <h3 className="font-black text-[#2a1115] text-sm">Incidencias</h3>
+                  <h2 className="font-black text-[#2a1115] text-sm">Incidencias</h2>
                 </div>
                 <p className="text-3xl font-black text-red-600 mb-1">{metrics.incidencias_abiertas}</p>
                 <p className="text-xs font-bold text-stone-500">tickets abiertos requiriendo atención</p>
@@ -142,7 +141,7 @@ export default function AdminDashboardPage() {
                   <div className="h-8 w-8 rounded-full bg-rose-50 flex items-center justify-center">
                     <Undo2 className="h-4 w-4 text-rose-500" />
                   </div>
-                  <h3 className="font-black text-[#2a1115] text-sm">Reembolsos & Devoluciones</h3>
+                  <h2 className="font-black text-[#2a1115] text-sm">Reembolsos & Devoluciones</h2>
                 </div>
                 <p className="text-3xl font-black text-rose-600 mb-1">S/. {Number(metrics.monto_reembolsado || 0).toFixed(2)}</p>
                 <p className="text-xs font-bold text-stone-500">
@@ -156,67 +155,25 @@ export default function AdminDashboardPage() {
               
               {/* Ventas por Día */}
               <div className="bg-white p-6 rounded-2xl border border-[#5c0f1b]/10 shadow-sm">
-                <h3 className="font-black text-[#2a1115] text-sm uppercase tracking-wider mb-6">
+                <h2 className="font-black text-[#2a1115] text-sm uppercase tracking-wider mb-6">
                   Evolución de Ingresos (Últimos 7 días)
-                </h3>
+                </h2>
                 <div className="h-72">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart data={metrics.ventas_por_dia}>
-                      <defs>
-                        <linearGradient id="colorIngresos" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#5c0f1b" stopOpacity={0.3} />
-                          <stop offset="95%" stopColor="#5c0f1b" stopOpacity={0} />
-                        </linearGradient>
-                      </defs>
-                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" />
-                      <XAxis 
-                        dataKey="fecha" 
-                        axisLine={false} 
-                        tickLine={false} 
-                        tick={{ fontSize: 10, fill: '#6b7280' }} 
-                        tickFormatter={(val) => new Date(val).toLocaleDateString('es-PE', { weekday: 'short' })}
-                      />
-                      <YAxis 
-                        axisLine={false} 
-                        tickLine={false} 
-                        tick={{ fontSize: 10, fill: '#6b7280' }}
-                        tickFormatter={(val) => `S/${val}`}
-                      />
-                      <Tooltip 
-                        contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
-                        formatter={(value: number) => [`S/. ${Number(value || 0).toFixed(2)}`, 'Ingresos']}
-                      />
-                      <Area type="monotone" dataKey="total_ingresos" stroke="#5c0f1b" strokeWidth={3} fillOpacity={1} fill="url(#colorIngresos)" />
-                    </AreaChart>
-                  </ResponsiveContainer>
+                  <Suspense fallback={<div className="h-full flex items-center justify-center"><Loader2 className="h-6 w-6 animate-spin text-[#5c0f1b]" /></div>}>
+                    <SalesAreaChart data={metrics.ventas_por_dia} />
+                  </Suspense>
                 </div>
               </div>
 
               {/* Productos más vendidos */}
               <div className="bg-white p-6 rounded-2xl border border-[#5c0f1b]/10 shadow-sm">
-                <h3 className="font-black text-[#2a1115] text-sm uppercase tracking-wider mb-6">
+                <h2 className="font-black text-[#2a1115] text-sm uppercase tracking-wider mb-6">
                   Productos Más Vendidos
-                </h3>
+                </h2>
                 <div className="h-72">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={metrics.productos_mas_vendidos} layout="vertical" margin={{ left: 20 }}>
-                      <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#e5e7eb" />
-                      <XAxis type="number" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#6b7280' }} />
-                      <YAxis 
-                        dataKey="nombre" 
-                        type="category" 
-                        axisLine={false} 
-                        tickLine={false} 
-                        tick={{ fontSize: 10, fill: '#6b7280' }} 
-                        width={100}
-                      />
-                      <Tooltip 
-                        contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
-                        formatter={(value: number) => [`${value} unids.`, 'Vendido']}
-                      />
-                      <Bar dataKey="total_vendido" fill="#ff7a45" radius={[0, 4, 4, 0]} />
-                    </BarChart>
-                  </ResponsiveContainer>
+                  <Suspense fallback={<div className="h-full flex items-center justify-center"><Loader2 className="h-6 w-6 animate-spin text-[#5c0f1b]" /></div>}>
+                    <TopProductsBarChart data={metrics.productos_mas_vendidos} />
+                  </Suspense>
                 </div>
               </div>
 

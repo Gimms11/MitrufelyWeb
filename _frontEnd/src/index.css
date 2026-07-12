@@ -1,6 +1,5 @@
-/* ─── Custom fonts ─────────────────────────────────────────────────────────── */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
-
+/* ─── Tailwind CSS v4 ──────────────────────────────────────────────────────── */
+/* Las fuentes se cargan vía <link> en index.html (preconnect + preload) */
 @import 'tailwindcss';
 
 /* ─── Tailwind CSS v4 — Design tokens ─────────────────────────────────────── */
@@ -217,4 +216,39 @@ body {
   position: relative;
   z-index: 1;
   border-radius: 9999px;
+}
+
+/* ─── Hero animations (CSS, reemplaza framer-motion en critical path) ─────── */
+@keyframes hero-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-stagger .hero-item {
+  opacity: 0;
+  animation: hero-fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Stagger: cada hijo se anima con un delay incremental */
+.hero-stagger .hero-item:nth-child(1) { animation-delay: 0.05s; }
+.hero-stagger .hero-item:nth-child(2) { animation-delay: 0.13s; }
+.hero-stagger .hero-item:nth-child(3) { animation-delay: 0.21s; }
+.hero-stagger .hero-item:nth-child(4) { animation-delay: 0.29s; }
+.hero-stagger .hero-item:nth-child(5) { animation-delay: 0.37s; }
+
+/* Respeta prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .hero-stagger .hero-item {
+    opacity: 1;
+    animation: none;
+  }
+  html {
+    scroll-behavior: auto;
+  }
 }

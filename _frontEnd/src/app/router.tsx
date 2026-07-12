@@ -3,7 +3,9 @@ import { Suspense, lazy } from 'react'
 import { useAuthStore } from '@/app/store'
 import type { Permission } from '@/types/roles'
 import { PERMISSIONS } from '@/types/roles'
-import AdminLayout from '@/components/layout/AdminLayout'
+
+// ─── Lazy imports ────────────────────────────────────────────────────────────
+const AdminLayout = lazy(() => import('@/components/layout/AdminLayout'))
 
 // ─── Lazy imports ────────────────────────────────────────────────────────────
 const LoginPage    = lazy(() => import('@/features/auth/pages/LoginPage'))

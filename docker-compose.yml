@@ -46,6 +46,19 @@ services:
       - mifrufely-net
     restart: on-failure
 
+  # ── Frontend (Vite build → nginx serve) ─────────────────────────────────────
+  frontend:
+    build:
+      context: ./_frontEnd
+      dockerfile: Dockerfile
+    ports:
+      - "127.0.0.1:5173:80"   # nginx en :80 del container, expuesto en :5173 del host
+    depends_on:
+      - api
+    networks:
+      - mifrufely-net
+    restart: on-failure
+
   # ── Delivery Microservice ──────────────────────────────────────────────────
   delivery-service:
     build:
