@@ -14,6 +14,7 @@ import {
 } from 'lucide-react'
 
 import { useAuthStore } from '@/app/store'
+import { useLogout } from '@/features/auth/hooks/useLogout'
 import { PublicHeader } from '@/shared/components/layout/PublicHeader'
 
 import { PublicFooter } from '@/shared/components/layout/PublicFooter'
@@ -45,7 +46,8 @@ function formatDate(iso: string) {
 }
 
 export default function CustomerOrdersPage() {
-  const { user, isAuthenticated, logout } = useAuthStore()
+  const { user, isAuthenticated } = useAuthStore()
+  const logout = useLogout()
   const navigate = useNavigate()
   const cartCount = useCartItemCount()
 
@@ -55,7 +57,7 @@ export default function CustomerOrdersPage() {
   const { data: orders, isLoading, isError } = useOrdersQuery({ limit: 50 })
 
   const handleSearch = (e: React.FormEvent) => { e.preventDefault() }
-  const handleLogout = () => { logout(); setUserMenuOpen(false); toast.success('Sesión cerrada.') }
+  const handleLogout = async () => { await logout(); setUserMenuOpen(false); toast.success('Sesión cerrada.') }
 
   return (
     <div className="min-h-screen bg-[#faf8f5] text-[#2a1115] font-sans antialiased">

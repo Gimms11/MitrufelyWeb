@@ -14,6 +14,7 @@ import { toast } from 'sonner'
 import { motion, AnimatePresence } from 'framer-motion'
 import { AlertTriangle } from 'lucide-react'
 import { useAuthStore } from '@/app/store'
+import { useLogout } from '@/features/auth/hooks/useLogout'
 
 import { PublicHeader }  from '@/shared/components/layout/PublicHeader'
 
@@ -69,7 +70,8 @@ function sortProducts(products: Producto[], sortBy: string): Producto[] {
 // ─── Página ────────────────────────────────────────────────────────────────────
 
 export default function CatalogPage() {
-  const { user, isAuthenticated, logout } = useAuthStore()
+  const { user, isAuthenticated } = useAuthStore()
+  const logout = useLogout()
 
   const [searchQuery,  setSearchQuery]  = useState('')
   const [userMenuOpen, setUserMenuOpen] = useState(false)
@@ -212,8 +214,8 @@ export default function CatalogPage() {
     toast.info(`Buscando: "${searchQuery}"`)
   }
 
-  const handleLogout = () => {
-    logout()
+  const handleLogout = async () => {
+    await logout()
     setUserMenuOpen(false)
     toast.success('Sesión cerrada correctamente.')
   }

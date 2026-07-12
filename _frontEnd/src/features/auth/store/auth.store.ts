@@ -8,8 +8,14 @@ interface AuthState {
   user: User | null
   isAuthenticated: boolean
   isLoading: boolean
+  /**
+   * Refresh token en memoria (NO persistido en sessionStorage).
+   * Se mantiene solo mientras la pestaña está abierta.
+   * En un diseño completo, este token debería vivir en una cookie httpOnly
+   * gestionada por el backend; lo mantenemos en memoria como mitigación
+   * intermedia (C-03: CWE-922).
+   */
   refreshToken: string | null
-  accessToken: string | null
 }
 
 interface AuthActions {
@@ -30,16 +36,15 @@ export const useAuthStore = create<AuthStore>()(
       isAuthenticated: false,
       isLoading: false,
       refreshToken: null,
-      accessToken: null,
 
       // ─── Actions ───────────────────────────────────────────────────────────
       setUser: (user, accessToken, refreshToken) => {
+        // El access token vive SOLO en memoria (axios.ts), nunca en sessionStorage
         setAccessToken(accessToken)
         set((state) => {
           state.user = user
           state.isAuthenticated = true
           state.isLoading = false
-          state.accessToken = accessToken
           if (refreshToken) {
             state.refreshToken = refreshToken
           }
@@ -67,7 +72,6 @@ export const useAuthStore = create<AuthStore>()(
           state.isAuthenticated = false
           state.isLoading = false
           state.refreshToken = null
-          state.accessToken = null
         })
       },
 
@@ -80,12 +84,15 @@ export const useAuthStore = create<AuthStore>()(
     {
       name: 'mitrufely-auth',
       storage: createJSONStorage(() => sessionStorage),
-      // Persistimos datos de usuario e identidad, access_token y refresh_token
+      // ── C-03 (CWE-922): SOLO persistimos datos no sensibles del usuario.
+      // El access_token y refresh_token NO se persisten en sessionStorage:
+      //   - access_token → solo en memoria (axios.ts, variable de módulo)
+      //   - refresh_token → solo en memoria (state del store, no partialized)
+      // Antes ambos tokens se guardaban en sessionStorage, lo que los exponía
+      // a robo por XSS. Ahora sessionStorage solo guarda user/isAuthenticated.
       partialize: (state) => ({
         user: state.user,
         isAuthenticated: state.isAuthenticated,
-        refreshToken: state.refreshToken,
-        accessToken: state.accessToken,
       }),
     },
   ),
@@ -96,17 +103,4 @@ export const useAuthStore = create<AuthStore>()(
 registerLogoutCallback(() => {
   useAuthStore.getState().logout()
 })
-
-// Sincronizar el token con Axios inmediatamente al cargar el módulo si ya existe en sessionStorage
-try {
-  const persisted = sessionStorage.getItem('mitrufely-auth')
-  if (persisted) {
-    const parsed = JSON.parse(persisted)
-    if (parsed?.state?.accessToken) {
-      setAccessToken(parsed.state.accessToken)
-    }
-  }
-} catch {
-  // Ignorar errores de parseo o SSR
-}
 

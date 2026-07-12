@@ -25,6 +25,7 @@ import {
 import { useCartStore } from '@/stores/cart.store'
 import { useCriptoTrufaStore } from '@/stores/criptotrufa.store'
 import { useAuthStore } from '@/app/store'
+import { useLogout } from '@/features/auth/hooks/useLogout'
 import { useShippingCost } from '@/features/config/hooks/useConfig'
 import { useActiveCategories } from '@/features/products/hooks/useCategories'
 
@@ -36,7 +37,8 @@ function normalizeName(name: string): string {
 }
 
 export default function CartView() {
-  const { user, isAuthenticated, logout } = useAuthStore()
+  const { user, isAuthenticated } = useAuthStore()
+  const logout = useLogout()
 
   const [searchQuery, setSearchQuery] = useState('')
   const [userMenuOpen, setUserMenuOpen] = useState(false)
@@ -122,8 +124,8 @@ export default function CartView() {
     toast.info(`Buscando: "${searchQuery}"`)
   }
 
-  const handleLogout = () => {
-    logout()
+  const handleLogout = async () => {
+    await logout()
     setUserMenuOpen(false)
     toast.success('Sesión cerrada correctamente.')
   }

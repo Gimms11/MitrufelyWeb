@@ -10,6 +10,7 @@ import { motion } from 'framer-motion'
 import { toast } from 'sonner'
 import { ShoppingCart, ShoppingBag, Package, ArrowLeft, Plus, Minus, Loader2, AlertTriangle } from 'lucide-react'
 import { useAuthStore } from '@/app/store'
+import { useLogout } from '@/features/auth/hooks/useLogout'
 import { PublicHeader } from '@/shared/components/layout/PublicHeader'
 
 import { PublicFooter } from '@/shared/components/layout/PublicFooter'
@@ -21,7 +22,8 @@ import { usePackageBySlug } from '@/features/products/hooks/usePackages'
 export default function PackDetailView() {
   const { slug } = useParams<{ slug: string }>()
   const navigate = useNavigate()
-  const { user, isAuthenticated, logout } = useAuthStore()
+  const { user, isAuthenticated } = useAuthStore()
+  const logout = useLogout()
   const cartCount = useCartItemCount()
   const addCartItem = useAddCartItem()
 
@@ -75,8 +77,8 @@ export default function PackDetailView() {
     toast.info(`Buscando: "${searchQuery}"`)
   }
 
-  const handleLogout = () => {
-    logout()
+  const handleLogout = async () => {
+    await logout()
     setUserMenuOpen(false)
     toast.success('Sesión cerrada correctamente.')
   }

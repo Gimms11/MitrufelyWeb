@@ -71,9 +71,15 @@ def create_refresh_token(subject: str) -> str:
 
 
 def create_verification_token(subject: str) -> str:
+    """
+    Creates a single-use email verification token with a unique JTI.
+    The JTI is tracked in Redis by the service to enforce one-time use
+    (prevents replay — same pattern as refresh/reset tokens).
+    """
+    jti = str(uuid.uuid4())
     payload = _build_payload(
         subject=subject,
-        extra={"type": "verification"},
+        extra={"type": "verification", "jti": jti},
         expires_delta=timedelta(hours=2),  # Verification token expires in 2 hours (security)
     )
     return jwt.encode(payload, settings.SECRET_KEY, algorithm=settings.ALGORITHM)

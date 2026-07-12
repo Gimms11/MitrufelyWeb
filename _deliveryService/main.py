@@ -27,7 +27,11 @@ from pydantic import BaseModel
 
 # ── Configuración ──────────────────────────────────────────────────────────────
 BACKEND_URL = os.getenv("BACKEND_URL", "http://localhost:8000")
-DELIVERY_WEBHOOK_TOKEN = os.getenv("DELIVERY_WEBHOOK_TOKEN", "dev-webhook-token")
+# ── M-12 (CWE-330): el token de webhook NO tiene un valor por defecto débil.
+# Antes era "dev-webhook-token" (trivialmente adivinable). Ahora debe
+# proveerse obligatoriamente vía variable de entorno; si no se establece,
+# el servicio arranca pero los webhooks salientes se rechazan en el backend.
+DELIVERY_WEBHOOK_TOKEN = os.getenv("DELIVERY_WEBHOOK_TOKEN", "")
 PREPARATION_DELAY_SECONDS = int(os.getenv("PREPARATION_DELAY_SECONDS", "5"))
 DELIVERY_DELAY_SECONDS = int(os.getenv("DELIVERY_DELAY_SECONDS", "10"))
 

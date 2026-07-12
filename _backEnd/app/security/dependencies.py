@@ -62,6 +62,13 @@ async def get_current_user(
 
     payload = decode_token(token_str)
 
+    # ── M-03 (CWE-347): verificar explícitamente que el token sea de tipo "access".
+    # Antes se confiaba en que solo los access tokens tenían "role", pero era
+    # una protección implícita. Un refresh/verification/reset token NO debe
+    # poder usarse como bearer token de autenticación.
+    if payload.get("type") != "access":
+        raise UnauthorizedError("Tipo de token inválido para autenticación")
+
     user_id = payload.get("sub")
     role_str = payload.get("role")
     email = payload.get("email", "")
