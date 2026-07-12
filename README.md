@@ -1,51 +1,68 @@
 # 🎂 Mitrufely Web — Plataforma Transaccional y de Gestión para Pastelería
 
+<p align="center">
+  <img src="_docs/assets/banner.jpeg" alt="Mitrufely Web Banner" width="100%">
+</p>
+
 [![React](https://img.shields.io/badge/FrontEnd-React%2019%20%2B%20TS-61DAFB?logo=react&style=flat-square)](https://react.dev/)
 [![FastAPI](https://img.shields.io/badge/BackEnd-FastAPI%20%28Python%29-009688?logo=fastapi&style=flat-square)](https://fastapi.tiangolo.com/)
 [![Docker](https://img.shields.io/badge/DevOps-Docker%20%26%20Compose-2496ED?logo=docker&style=flat-square)](https://www.docker.com/)
 [![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
 
-**Mitrufely Web** es una solución informática transaccional de nivel empresarial (*Enterprise-scale*) diseñada para la digitalización de la cadena de suministro, fidelización de clientes y ventas online de una pastelería artesanal. El proyecto adopta una **Arquitectura Limpia (Clean Architecture)** altamente desacoplada y principios de diseño robustos y seguros.
-
-Este repositorio ha sido desarrollado como el proyecto integrador principal para el curso **Integrador de Sistemas** (Ciclo VI - UTP). Aunque el sílabo académico plantea el uso de Java, esta solución ha sido implementada en **Python (FastAPI)** y **TypeScript (React)**, mapeando y adaptando rigurosamente todos los estándares y patrones de ingeniería exigidos por la cátedra.
+**Mitrufely Web** es una solución informática transaccional de nivel empresarial (_Enterprise-scale_) diseñada para la digitalización de la cadena de suministro, fidelización de clientes y ventas online de la marca. El proyecto adopta una **Arquitectura Limpia (Clean Architecture)** altamente desacoplada y principios de diseño robustos y seguros, garantizando escalabilidad, estabilidad y alta disponibilidad en entornos de producción.
 
 ---
 
-## 🗺️ Mapeo del Sílabo Académico: De Java a FastAPI (Enterprise)
+## 📸 Vista Previa
 
-Para cumplir con las competencias del curso, los conceptos y recursos de la pila tecnológica tradicional de Java se adaptaron a la pila moderna de Python/FastAPI:
+<p align="center">
+  <img src="_docs/assets/inicio.png" alt="Interfaz de Cliente - Frontend" width="48%">
+  <img src="_docs/assets/admin.png" alt="Panel de Administración" width="48%">
+</p>
+<p align="center">
+  <img src="docs/assets/screenshot-mobile.png" alt="Vista Mobile Responsiva" width="30%">
+</p>
 
-| Concepto en Sílabo (Java) | Implementación Equivalente en Mitrufely Web (FastAPI / Python) | Justificación de Ingeniería |
-| :--- | :--- | :--- |
-| **Arquitectura MVC / DAO** | **Routers, Services y Repositories** | Separación clara de responsabilidades. La lógica de negocio está aislada de la infraestructura de base de datos y de la capa HTTP. |
-| **Google Guava** | **Pydantic V2 & Tenacity** | Validación robusta de tipos de datos a nivel de runtime y políticas de reintento transaccional automáticas ante fallos transitorios. |
-| **Apache POI** | **OpenPyXL & XlsxWriter** | Generación y formateo en memoria de reportes tabulares complejos y exportaciones de inventario a archivos de hoja de cálculo Excel. |
-| **Apache Commons** | **Cryptography & Pillow** | Utilidades de encriptación de datos sensibles y procesamiento asíncrono y redimensionado óptimo de imágenes para pastelería. |
-| **Logback / SLF4J** | **Structlog & Python-JSON-Logger** | Registro de logs estructurados en formato JSON listos para su ingesta en sistemas APM, con trazabilidad inyectando `request_id`. |
-| **Maven / Spring Boot** | **Pip + Uvicorn + Pydantic-Settings** | Gestión estricta de dependencias y de la configuración a través de variables de entorno con validación estática de tipos. |
+---
+
+## 📦 Arquitectura de Software y Librerías Implementadas
+
+El proyecto utiliza un conjunto seleccionado de librerías y componentes robustos para garantizar la mantenibilidad, rendimiento y estabilidad de nivel empresarial:
+
+| Librería / Componente                | Propósito / Implementación en Mitrufely Web | Justificación de Ingeniería                                                                                                          |
+| :----------------------------------- | :------------------------------------------ | :----------------------------------------------------------------------------------------------------------------------------------- |
+| **Routers, Services y Repositories** | Capas de abstracción modular                | Separación clara de responsabilidades. La lógica de negocio está aislada de la infraestructura de base de datos y de la capa HTTP.   |
+| **Pydantic V2 & Tenacity**           | Validación y políticas de reintento         | Validación robusta de tipos de datos a nivel de runtime y políticas de reintento transaccional automáticas ante fallos transitorios. |
+| **OpenPyXL & XlsxWriter**            | Exportación de datos a Excel                | Generación y formateo en memoria de reportes tabulares complejos y exportaciones de inventario a archivos de hoja de cálculo Excel.  |
+| **Cryptography & Pillow**            | Seguridad y procesamiento de imágenes       | Utilidades de encriptación de datos sensibles y procesamiento asíncrono y redimensionado óptimo de imágenes para pastelería.         |
+| **Structlog & Python-JSON-Logger**   | Logs estructurados                          | Registro de logs estructurados en formato JSON listos para su ingesta en sistemas APM, con trazabilidad inyectando `request_id`.     |
+| **Pip, Uvicorn & Pydantic-Settings** | Entorno y gestión de configuración          | Gestión estricta de dependencias y de la configuración a través de variables de entorno con validación estática de tipos.            |
 
 ---
 
 ## 🛠️ Stack Tecnológico
 
 ### Frontend (SPA)
-*   **Core:** React 19 (TypeScript) + Vite
-*   **Estilos:** Tailwind CSS + Framer Motion (para micro-animaciones premium)
-*   **Client State:** Zustand (gestión ligera del estado de autenticación y carrito)
-*   **Server State & Cache:** TanStack Query V5 (React Query)
-*   **Comunicación:** Axios (con interceptores para refresh token automático y control de errores)
+
+- **Core:** React 19 (TypeScript) + Vite
+- **Estilos:** Tailwind CSS + Framer Motion (para micro-animaciones premium)
+- **Client State:** Zustand (gestión ligera del estado de autenticación y carrito)
+- **Server State & Cache:** TanStack Query V5 (React Query)
+- **Comunicación:** Axios (con interceptores para refresh token automático y control de errores)
 
 ### Backend (REST API)
-*   **Framework:** FastAPI (Python 3.11+)
-*   **Base de Datos ORM:** SQLAlchemy 2.0 (Capa asíncrona mediante `asyncpg` y pools optimizados)
-*   **Motor de Base de Datos:** PostgreSQL (Neon Serverless DB en producción)
-*   **Cola de Tareas y Planificador:** Celery + Celery Beat (ejecución periódica de tareas de mantenimiento)
-*   **Broker de Mensajería & Cache:** Redis / Valkey
+
+- **Framework:** FastAPI (Python 3.11+)
+- **Base de Datos ORM:** SQLAlchemy 2.0 (Capa asíncrona mediante `asyncpg` y pools optimizados)
+- **Motor de Base de Datos:** PostgreSQL (Neon Serverless DB en producción)
+- **Cola de Tareas y Planificador:** Celery + Celery Beat (ejecución periódica de tareas de mantenimiento)
+- **Broker de Mensajería & Cache:** Redis / Valkey
 
 ### DevOps y Despliegue
-*   **Contenedores:** Docker & Docker Compose (ambientes idénticos para desarrollo y pruebas)
-*   **Servidor Web Frontend:** Nginx (dentro del contenedor, configurado con gzip estático y SPA routing)
-*   **Plataformas Cloud:** **Vercel** (Frontend con SPA routing fallback) y **Render** (Backend FastAPI + Valkey KeyValue)
+
+- **Contenedores:** Docker & Docker Compose (ambientes idénticos para desarrollo y pruebas)
+- **Servidor Web Frontend:** Nginx (dentro del contenedor, configurado con gzip estático y SPA routing)
+- **Plataformas Cloud:** **Vercel** (Frontend con SPA routing fallback) y **Render** (Backend FastAPI + Valkey KeyValue)
 
 ---
 
@@ -64,10 +81,12 @@ El sistema fue sometido a auditorías de seguridad dinámicas (DAST) utilizando 
 ## 🧪 Pruebas de Software (QA)
 
 El backend cuenta con una suite de pruebas automatizadas construida sobre `pytest` y `pytest-asyncio`. Se abarcan:
-*   **Pruebas Unitarias:** Validación aislada de las reglas de negocio, conversión de SweetCoins y generación de reportes.
-*   **Pruebas de Integración:** Llamadas HTTP simuladas a los endpoints utilizando base de datos en memoria para verificar flujos transaccionales completos.
+
+- **Pruebas Unitarias:** Validación aislada de las reglas de negocio, conversión de SweetCoins y generación de reportes.
+- **Pruebas de Integración:** Llamadas HTTP simuladas a los endpoints utilizando base de datos en memoria para verificar flujos transaccionales completos.
 
 Para ejecutar los tests locales:
+
 ```bash
 cd _backEnd
 pytest
@@ -77,11 +96,11 @@ pytest
 
 ## ⚙️ Plan de Monitoreo y Mantenimiento
 
-*   **Monitoreo de Salud:** Endpoint dedicado `/api/v1/health` que realiza verificaciones activas sobre la conexión a la base de datos PostgreSQL y al cliente Redis/Valkey.
-*   **Mantenimiento Programado (Celery Beat):** 
-    - `expire-pending-ventas`: Libera el stock reservado de compras no concretadas cada 5 minutos.
-    - `expire-lots-daily`: Marca lotes de insumos vencidos en el inventario diariamente.
-    - `expire-coupons-daily`: Caduca automáticamente cupones de fidelización no utilizados.
+- **Monitoreo de Salud:** Endpoint dedicado `/api/v1/health` que realiza verificaciones activas sobre la conexión a la base de datos PostgreSQL y al cliente Redis/Valkey.
+- **Mantenimiento Programado (Celery Beat):**
+  - `expire-pending-ventas`: Libera el stock reservado de compras no concretadas cada 5 minutos.
+  - `expire-lots-daily`: Marca lotes de insumos vencidos en el inventario diariamente.
+  - `expire-coupons-daily`: Caduca automáticamente cupones de fidelización no utilizados.
 
 ---
 
@@ -90,9 +109,11 @@ pytest
 El proyecto está completamente Dockerizado y listo para correr localmente con un único comando:
 
 ### Requisitos Previos
-*   Docker y Docker Desktop instalados en el sistema.
+
+- Docker y Docker Desktop instalados en el sistema.
 
 ### Pasos para iniciar:
+
 1.  Clona el repositorio.
 2.  Crea un archivo `.env` en la carpeta `_backEnd/` tomando como referencia `_backEnd/.env.example`.
 3.  Crea un archivo `.env` en la carpeta `_frontEnd/` tomando como referencia `_frontEnd/.env.example`.
@@ -101,9 +122,9 @@ El proyecto está completamente Dockerizado y listo para correr localmente con u
     docker compose up --build
     ```
 5.  Accede a los servicios locales:
-    *   **Frontend:** `http://localhost:5173`
-    *   **Backend API:** `http://localhost:8000`
-    *   **FastAPI Swagger Docs:** `http://localhost:8000/api/docs`
+    - **Frontend:** `http://localhost:5173`
+    - **Backend API:** `http://localhost:8000`
+    - **FastAPI Swagger Docs:** `http://localhost:8000/api/docs`
 
 ---
 
@@ -112,16 +133,19 @@ El proyecto está completamente Dockerizado y listo para correr localmente con u
 Para realizar el despliegue del ecosistema Mitrufely en producción:
 
 ### 1. Backend en Render (Blueprint)
+
 El repositorio incluye un archivo `render.yaml` en la raíz. Al conectarlo con Render, se creará el servicio API y la base KeyValue (Valkey) gratis de manera automática:
+
 1.  Crea un **Blueprint** en Render apuntando a este repositorio.
 2.  Rellena las variables secretas requeridas en la interfaz de Render (`DATABASE_URL`, `SMTP_*`, `CLOUDINARY_*`, `GOOGLE_CLIENT_ID`).
 3.  Copia la URL provista por Render (ej. `https://mifrufely-backend.onrender.com`).
 
 ### 2. Frontend en Vercel
+
 1.  Crea un nuevo proyecto en Vercel e importa el repositorio.
 2.  Configura el **Root Directory** del proyecto en la carpeta **`_frontEnd`**.
 3.  Configura las variables de entorno:
-    *   `VITE_API_BASE_URL` apuntando a `https://mifrufely-backend.onrender.com/api/v1`.
-    *   `VITE_GOOGLE_CLIENT_ID` con tu credencial de Google OAuth.
+    - `VITE_API_BASE_URL` apuntando a `https://mifrufely-backend.onrender.com/api/v1`.
+    - `VITE_GOOGLE_CLIENT_ID` con tu credencial de Google OAuth.
 4.  Realiza el despliegue. Vercel utilizará el archivo `vercel.json` para gestionar el routing de la SPA de forma nativa.
 5.  Actualiza las variables `FRONTEND_URL` y `ALLOWED_ORIGINS` en el dashboard de Render con tu URL de Vercel para autorizar el intercambio CORS de producción.

@@ -7,7 +7,7 @@
  *
  * UI REFACTOR: Fondo claro crema, sin borde superior, parte del bloque sticky.
  */
-import { Search, Star, User, ShoppingCart, Heart, LogOut, LayoutDashboard } from 'lucide-react'
+import { Search, Star, User, ShoppingCart, Heart, LogOut, LayoutDashboard, Menu, X, BookOpen, Users, Award, Home } from 'lucide-react'
 import { Link, useNavigate } from 'react-router'
 import { motion, AnimatePresence } from 'framer-motion'
 import { toast } from 'sonner'
@@ -70,6 +70,7 @@ export function PublicHeader({
 
   // ── Auto-hide al scroll ───────────────────────────────────────────────
   const [visible, setVisible] = useState(true)
+  const [mobileNavOpen, setMobileNavOpen] = useState(false)
   const lastY = useRef(0)
 
   useEffect(() => {
@@ -141,6 +142,15 @@ export function PublicHeader({
     >
     <header className="bg-[#5c0f1b]">
       <div className="max-w-7xl mx-auto px-4 md:px-8 py-3 flex items-center justify-between gap-4">
+        {/* Hamburger Menu Toggle (mobile only) */}
+        <button
+          id="hp-hamburger-btn"
+          onClick={() => setMobileNavOpen(true)}
+          className="md:hidden p-2 text-white/80 hover:text-white transition-colors cursor-pointer mr-1 -ml-2 border-none bg-[#5c0f1b] outline-none"
+          aria-label="Menú de navegación"
+        >
+          <Menu className="h-6 w-6" />
+        </button>
 
         {/* Logo */}
         <Link to="/" className="shrink-0 select-none group">
@@ -300,6 +310,146 @@ export function PublicHeader({
       </div>
     </header>
     <PublicNav />
+    {/* ── Drawer de Navegación Móvil ── */}
+    <AnimatePresence>
+      {mobileNavOpen && (
+        <div className="fixed inset-0 z-50 md:hidden flex">
+          {/* Backdrop */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setMobileNavOpen(false)}
+            className="fixed inset-0 bg-black/45 backdrop-blur-xs"
+          />
+          {/* Sliding Panel */}
+          <motion.aside
+            initial={{ x: '-100%' }}
+            animate={{ x: 0 }}
+            exit={{ x: '-100%' }}
+            transition={{ type: 'tween', duration: 0.25 }}
+            className="relative w-72 max-w-full bg-[#faf8f5] h-full flex flex-col p-6 shadow-2xl overflow-y-auto"
+          >
+            {/* Header del drawer */}
+            <div className="flex items-center justify-between pb-4 border-b border-[#5c0f1b]/10 mb-6">
+              <span className="font-black text-[#5c0f1b] text-xl" style={{ fontFamily: "'Outfit', sans-serif" }}>
+                Mitrufely
+              </span>
+              <button
+                onClick={() => setMobileNavOpen(false)}
+                className="p-1 rounded-full hover:bg-stone-100 text-stone-400 hover:text-stone-700 transition-colors"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            {/* Buscador Móvil */}
+            <form onSubmit={(e) => { onSearchSubmit(e); setMobileNavOpen(false); }} className="relative mb-6">
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[#2a1115]/40 pointer-events-none" />
+              <input
+                type="text"
+                className="w-full bg-[#f0ede8] border border-stone-200 rounded-full px-4 pl-9 py-2.5 text-[#2a1115] text-sm font-medium placeholder:text-[#2a1115]/40 outline-none focus:border-[#5c0f1b]/30 focus:ring-2 focus:ring-[#5c0f1b]/10 transition-all"
+                placeholder="Buscar trufas, sabores..."
+                value={searchQuery}
+                onChange={(e) => onSearchChange(e.target.value)}
+              />
+            </form>
+
+            {/* Enlaces de navegación */}
+            <nav className="flex-1 space-y-2">
+              {[
+                { to: '/', label: 'Inicio', icon: Home },
+                { to: '/catalogo', label: 'Catálogo', icon: BookOpen },
+                { to: '/nosotros', label: 'Nosotros', icon: Users },
+                { to: '/puntos', label: 'Tus puntos', icon: Award },
+              ].map((link) => {
+                const Icon = link.icon
+                const isActive = window.location.pathname === link.to
+                return (
+                  <Link
+                    key={link.to}
+                    to={link.to}
+                    onClick={() => setMobileNavOpen(false)}
+                    className={`flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-extrabold transition-all decoration-none ${
+                      isActive
+                        ? 'bg-[#5c0f1b] text-white shadow-md shadow-[#5c0f1b]/15'
+                        : 'text-[#2a1115]/75 hover:text-[#5c0f1b] hover:bg-[#5c0f1b]/5'
+                    }`}
+                  >
+                    <Icon className="h-5 w-5 shrink-0" />
+                    <span>{link.label}</span>
+                  </Link>
+                );
+              })}
+            </nav>
+
+            {/* Footer del Drawer (Info de cuenta o login) */}
+            <div className="pt-4 border-t border-[#5c0f1b]/10 flex flex-col gap-3">
+              {isAuthenticated ? (
+                <>
+                  <div className="flex items-center gap-3 p-3 bg-white border border-[#5c0f1b]/10 rounded-2xl shadow-xs">
+                    <div className="h-10 w-10 rounded-lg bg-[#5c0f1b]/5 border border-[#5c0f1b]/10 flex items-center justify-center text-[#5c0f1b] font-black text-sm">
+                      {userName ? userName.charAt(0).toUpperCase() : <User className="h-5 w-5" />}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-black text-[#2a1115] truncate leading-snug">{userName}</p>
+                      <span className="text-[10px] font-black text-[#ff7a45]">
+                        {saldoActual.toLocaleString()} pts
+                      </span>
+                    </div>
+                  </div>
+
+                  {user && user.role !== 'customer' && (
+                    <button
+                      onClick={() => {
+                        navigate('/dashboard')
+                        setMobileNavOpen(false)
+                      }}
+                      className="w-full flex items-center gap-2.5 px-4 py-3 text-sm font-bold text-[#5c0f1b] hover:bg-[#5c0f1b]/5 transition-colors border-b border-[#5c0f1b]/8 cursor-pointer"
+                    >
+                      <LayoutDashboard className="h-4 w-4 text-[#ff7a45]" />
+                      Panel de Administración
+                    </button>
+                  )}
+
+                  <button
+                    onClick={() => {
+                      navigate('/mi-cuenta/pedidos')
+                      setMobileNavOpen(false)
+                    }}
+                    className="w-full flex items-center gap-2.5 px-4 py-3 text-sm font-bold text-[#5c0f1b] hover:bg-[#5c0f1b]/5 transition-colors cursor-pointer"
+                  >
+                    <ShoppingCart className="h-4 w-4" />
+                    Mis Pedidos
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      onLogout()
+                      setMobileNavOpen(false)
+                    }}
+                    className="w-full flex items-center gap-2.5 px-4 py-3 text-sm font-bold text-[#5c0f1b] hover:bg-[#5c0f1b]/5 transition-colors cursor-pointer"
+                  >
+                    <LogOut className="h-4 w-4" />
+                    Cerrar sesión
+                  </button>
+                </>
+              ) : (
+                <button
+                  onClick={() => {
+                    navigate('/login')
+                    setMobileNavOpen(false)
+                  }}
+                  className="w-full bg-[#5c0f1b] text-white hover:bg-[#7a1525] py-3 rounded-xl font-black text-sm transition-colors text-center block border-none cursor-pointer"
+                >
+                  Ingresar a mi cuenta
+                </button>
+              )}
+            </div>
+          </motion.aside>
+        </div>
+      )}
+    </AnimatePresence>
     </motion.div>
   )
 }

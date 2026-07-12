@@ -55,6 +55,22 @@ class SQLAlchemyAuthRepository(AbstractAuthRepository):
         result = await self._session.execute(stmt)
         return result.scalar_one_or_none()
 
+    async def get_by_google_sub(self, google_sub: str) -> Usuario | None:
+        """
+        Retrieve a user by their Google unique sub identifier,
+        eagerly loading the related Rol and Cliente.
+        """
+        stmt = (
+            select(Usuario)
+            .options(
+                selectinload(Usuario.rol),
+                selectinload(Usuario.cliente),
+            )
+            .where(Usuario.google_sub == google_sub)
+        )
+        result = await self._session.execute(stmt)
+        return result.scalar_one_or_none()
+
     async def get_all(self, *, limit: int = 100, offset: int = 0) -> list[Usuario]:
         """
         Retrieve a paginated list of all users.

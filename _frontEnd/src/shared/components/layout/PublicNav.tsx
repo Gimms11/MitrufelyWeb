@@ -29,13 +29,13 @@ export function PublicNav() {
     'text-white/65 font-normal border-b-[3px] border-transparent hover:text-white hover:border-white/40 transition-colors'
 
   return (
-    <nav className="bg-[#5c0f1b] border-b border-[#4a0a14]">
-      <div className="max-w-7xl mx-auto px-2 md:px-12 justify-center flex items-center gap-8 md:gap-10">
+    <nav className="bg-[#5c0f1b] border-b border-[#4a0a14] hidden md:block">
+      <div className="max-w-7xl mx-auto px-4 md:px-12 flex items-center justify-start md:justify-center gap-6 md:gap-10 overflow-x-auto whitespace-nowrap scrollbar-none">
 
         {/* Inicio */}
         <Link
           to="/"
-          className={`flex items-center gap-2 text-sm py-3 transition-all ${
+          className={`flex items-center gap-2 text-sm py-3 transition-all shrink-0 ${
             isHome ? activeClass : inactiveClass
           }`}
         >
@@ -46,7 +46,7 @@ export function PublicNav() {
         {/* Catálogo — ruta real */}
         <Link
           to="/catalogo"
-          className={`flex items-center gap-2 text-sm py-3 transition-all ${
+          className={`flex items-center gap-2 text-sm py-3 transition-all shrink-0 ${
             isCatalog ? activeClass : inactiveClass
           }`}
         >
@@ -57,7 +57,7 @@ export function PublicNav() {
         {/* Nosotros */}
         <Link
           to="/nosotros"
-          className={`flex items-center gap-2 text-sm py-3 transition-all ${
+          className={`flex items-center gap-2 text-sm py-3 transition-all shrink-0 ${
             isNosotros ? activeClass : inactiveClass
           }`}
         >
@@ -68,7 +68,7 @@ export function PublicNav() {
         {/* Tus puntos */}
         <Link
           to="/puntos"
-          className={`flex items-center gap-2 text-sm py-3 transition-all ${
+          className={`flex items-center gap-2 text-sm py-3 transition-all shrink-0 ${
             isPuntos ? activeClass : inactiveClass
           }`}
         >
