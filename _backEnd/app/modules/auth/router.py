@@ -8,6 +8,8 @@ from typing import Annotated
 from fastapi import APIRouter, BackgroundTasks, Depends, Request, status
 from fastapi.responses import JSONResponse
 from redis.asyncio import Redis
+from slowapi import Limiter
+from slowapi.util import get_remote_address
 
 from app.core.config import settings
 from app.infrastructure.cache.redis_client import get_redis
@@ -30,6 +32,11 @@ from app.modules.auth.service import AuthService
 from app.security.dependencies import AuthUser
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
+
+# Limiter local para aplicar límites específicos a endpoints sensibles de auth.
+# El limiter global está registrado en main.py; aquí añadimos límites más
+# estrictos para register/google/refresh (superan el default).
+_limiter = Limiter(key_func=get_remote_address, storage_uri=settings.REDIS_URL)
 
 AuthServiceDep = Annotated[AuthService, Depends(get_auth_service)]
 RedisDep = Annotated[Redis, Depends(get_redis)]
@@ -80,7 +87,9 @@ async def login(
     status_code=status.HTTP_201_CREATED,
     summary="Registrar nuevo cliente",
 )
+@_limiter.limit("5 per minute")
 async def register(
+    request: Request,
     payload: RegisterRequest,
     service: AuthServiceDep,
     background_tasks: BackgroundTasks,
@@ -95,7 +104,9 @@ async def register(
     status_code=status.HTTP_200_OK,
     summary="Iniciar sesión o registrarse con Google",
 )
+@_limiter.limit("10 per minute")
 async def google_auth(
+    request: Request,
     payload: GoogleLoginRequest,
     service: AuthServiceDep,
 ) -> TokenResponse:
@@ -117,7 +128,9 @@ async def google_auth(
     status_code=status.HTTP_200_OK,
     summary="Renovar access token",
 )
+@_limiter.limit("30 per minute")
 async def refresh_token(
+    request: Request,
     payload: RefreshTokenRequest,
     service: AuthServiceDep,
 ) -> TokenResponse:

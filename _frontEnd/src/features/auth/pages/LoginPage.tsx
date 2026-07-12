@@ -24,7 +24,7 @@ export default function LoginPage() {
       toast.error('Google Client ID no está configurado en el frontend.')
       return
     }
-    const redirectUri = 'http://localhost:5173/auth/callback'
+    const redirectUri = `${window.location.origin}/auth/callback`
     const scope = 'openid email profile'
     const nonce = Math.random().toString(36).substring(2) + Date.now().toString(36)
 

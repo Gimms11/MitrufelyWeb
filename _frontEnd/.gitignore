@@ -12,6 +12,13 @@ dist
 dist-ssr
 *.local
 
+# ── Environment files (C-04: CWE-540) ──────────────────────────────────────
+# .env contiene valores sensibles (VITE_GOOGLE_CLIENT_ID, etc.) y NUNCA debe
+# commitearse. Usar .env.local para valores de desarrollo local.
+.env
+.env.*
+!.env.example
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

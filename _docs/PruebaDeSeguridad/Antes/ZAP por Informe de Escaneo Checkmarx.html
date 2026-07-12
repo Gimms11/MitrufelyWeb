@@ -1,0 +1,2040 @@
+<!DOCTYPE html>
+<!-- saved from url=(0060)file:///C:/Users/conde/Downloads/2026-07-11-ZAP-Report-.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ZAP por Informe de Escaneo Checkmarx</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+:root {
+    --bg-main: #0d1117;
+    --bg-card: #161b22;
+    --bg-accent: #21262d;
+    --text-main: #c9d1d9;
+    --text-heading: #f0f6fc;
+    --text-muted: #8b949e;
+    --border-color: #30363d;
+    --border-hover: #8b949e;
+    
+    --risk-high: #f85149;
+    --risk-high-bg: rgba(248, 81, 73, 0.15);
+    --risk-high-border: rgba(248, 81, 73, 0.4);
+    
+    --risk-medium: #f0883e;
+    --risk-medium-bg: rgba(240, 136, 62, 0.15);
+    --risk-medium-border: rgba(240, 136, 62, 0.4);
+    
+    --risk-low: #d29922;
+    --risk-low-bg: rgba(210, 153, 34, 0.15);
+    --risk-low-border: rgba(210, 153, 34, 0.4);
+    
+    --risk-info: #58a6ff;
+    --risk-info-bg: rgba(88, 166, 255, 0.15);
+    --risk-info-border: rgba(88, 166, 255, 0.4);
+
+    --primary-color: #58a6ff;
+    --primary-glow: rgba(88, 166, 255, 0.15);
+    
+    --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Reset and base styles */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Scrollbars */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+::-webkit-scrollbar-track {
+    background: var(--bg-main);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--border-hover);
+}
+
+/* Header */
+header {
+    background: linear-gradient(180deg, #161b22 0%, #0d1117 100%);
+    border-bottom: 1px solid var(--border-color);
+    padding: 2.5rem 3rem;
+    position: relative;
+}
+
+header h1 {
+    margin: 0 0 0.75rem 0;
+    font-size: 2.25rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--text-heading);
+    background: linear-gradient(90deg, #58a6ff, #bc8cff, #ff7b72);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+header p {
+    margin: 0.4rem 0;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+header p span {
+    color: var(--text-muted);
+}
+
+header p a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    transition: var(--transition);
+}
+
+header p a:hover {
+    color: #85c2ff;
+    text-decoration: underline;
+}
+
+.zap-logo {
+    height: 20px;
+    width: 20px;
+    vertical-align: middle;
+    margin-right: 0.25rem;
+    filter: drop-shadow(0 0 4px rgba(240, 136, 62, 0.4));
+}
+
+/* Main Layout */
+main {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 2.5rem;
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 2.5rem 3rem;
+}
+
+/* Sticky Navigation Sidebar */
+section#contents {
+    grid-column: 1;
+    grid-row: 1 / span 20;
+    position: sticky;
+    top: 2rem;
+    height: calc(100vh - 4rem);
+    overflow-y: auto;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+
+section#contents h2 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-heading);
+    margin-top: 0;
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+section#contents nav ol {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+section#contents nav ol ol {
+    padding-left: 1rem;
+    border-left: 1px solid var(--border-color);
+    margin: 0.25rem 0 0.5rem 0.5rem;
+}
+
+section#contents nav li {
+    margin: 0.5rem 0;
+}
+
+section#contents nav a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.88rem;
+    transition: var(--transition);
+    display: block;
+    line-height: 1.4;
+}
+
+section#contents nav a:hover {
+    color: var(--primary-color);
+    transform: translateX(4px);
+}
+
+/* Main Content Blocks */
+main > section:not(#contents) {
+    grid-column: 2;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 2.25rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+main > section h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text-heading);
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+main > section h3 {
+    font-size: 1.35rem;
+    font-weight: 600;
+    color: var(--text-heading);
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+main > section h4 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-heading);
+    margin-top: 1.25rem;
+    margin-bottom: 0.75rem;
+}
+
+/* Lists styling inside content */
+ul, ol {
+    padding-left: 1.5rem;
+}
+
+li {
+    margin-bottom: 0.4rem;
+}
+
+/* Tables styling */
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 1.5rem 0;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: rgba(0,0,0,0.1);
+}
+
+caption {
+    text-align: left;
+    padding: 0.85rem 1.25rem;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    font-style: italic;
+    background-color: rgba(22, 27, 34, 0.8);
+    border-bottom: 1px solid var(--border-color);
+}
+
+caption p {
+    margin: 0.25rem 0;
+}
+
+th, td {
+    padding: 0.85rem 1.25rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+    border-right: 1px solid var(--border-color);
+    font-size: 0.9rem;
+}
+
+th:last-child, td:last-child {
+    border-right: none;
+}
+
+tr:last-child th, tr:last-child td {
+    border-bottom: none;
+}
+
+th {
+    background-color: rgba(255, 255, 255, 0.04);
+    color: var(--text-heading);
+    font-weight: 600;
+}
+
+thead th {
+    background-color: rgba(33, 38, 45, 0.8);
+    color: var(--text-heading);
+}
+
+tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.02);
+}
+
+/* Alert tags list in details */
+.alert-tags-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    list-style: none !important;
+    padding-left: 0 !important;
+    margin: 0;
+}
+
+.alert-tags-list li {
+    margin: 0 !important;
+}
+
+.alert-tags-list a, .alert-tags-list span {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.2rem 0.6rem;
+    background-color: var(--bg-accent);
+    color: var(--text-main);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.alert-tags-list a:hover {
+    background-color: var(--primary-glow);
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+/* Badges / Dynamic Coloring for Risk and Confidence */
+[data-risk], [data-confidence] {
+    display: inline-block;
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 0.85em;
+    text-transform: capitalize;
+}
+
+[data-risk="high"], .risk-level[data-risk="high"], .risk-3 {
+    color: var(--risk-high) !important;
+    background-color: var(--risk-high-bg) !important;
+    border: 1px solid var(--risk-high-border) !important;
+}
+
+[data-risk="medium"], .risk-level[data-risk="medium"], .risk-2 {
+    color: var(--risk-medium) !important;
+    background-color: var(--risk-medium-bg) !important;
+    border: 1px solid var(--risk-medium-border) !important;
+}
+
+[data-risk="low"], .risk-level[data-risk="low"], .risk-1 {
+    color: var(--risk-low) !important;
+    background-color: var(--risk-low-bg) !important;
+    border: 1px solid var(--risk-low-border) !important;
+}
+
+[data-risk="info"], .risk-level[data-risk="info"], .risk-0 {
+    color: var(--risk-info) !important;
+    background-color: var(--risk-info-bg) !important;
+    border: 1px solid var(--risk-info-border) !important;
+}
+
+[data-confidence="high"] {
+    color: #34d399;
+    background-color: rgba(52, 211, 153, 0.1);
+    border: 1px solid rgba(52, 211, 153, 0.2);
+}
+[data-confidence="medium"] {
+    color: #fbbf24;
+    background-color: rgba(251, 191, 36, 0.1);
+    border: 1px solid rgba(251, 191, 36, 0.2);
+}
+[data-confidence="low"] {
+    color: #9ca3af;
+    background-color: rgba(156, 163, 175, 0.1);
+    border: 1px solid rgba(156, 163, 175, 0.2);
+}
+[data-confidence="confirmed"] {
+    color: #58a6ff;
+    background-color: rgba(88, 166, 255, 0.1);
+    border: 1px solid rgba(88, 166, 255, 0.2);
+}
+[data-confidence="false-positive"] {
+    color: #f85149;
+    background-color: rgba(248, 81, 73, 0.1);
+    border: 1px solid rgba(248, 81, 73, 0.2);
+}
+
+/* Accordions (Details & Summary) */
+details {
+    background-color: rgba(0, 0, 0, 0.15);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    margin: 0.75rem 0;
+    overflow: hidden;
+    transition: var(--transition);
+}
+
+summary {
+    padding: 0.85rem 1.25rem;
+    background-color: rgba(33, 38, 45, 0.4);
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.95rem;
+    user-select: none;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    outline: none;
+}
+
+summary:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+details[open] {
+    border-color: rgba(88, 166, 255, 0.4);
+    box-shadow: 0 4px 12px rgba(88, 166, 255, 0.05);
+}
+
+details[open] > summary {
+    background-color: rgba(88, 166, 255, 0.1);
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* Nested details block styling */
+details.request-body, details.response-body {
+    margin-top: 0.5rem;
+    border-radius: 6px;
+    border-color: var(--border-color);
+}
+
+/* Pre / Code Blocks styling */
+pre, code {
+    font-family: 'JetBrains Mono', 'Fira Code', Consolas, Monaco, monospace;
+    font-size: 0.88rem;
+}
+
+pre {
+    margin: 0;
+    padding: 1.25rem;
+    background-color: #0d1117;
+    overflow-x: auto;
+    color: #e6edf3;
+    border-radius: 0 0 6px 6px;
+}
+
+/* Code block inside a table details */
+.alerts-table pre {
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+}
+
+/* Alerts List styling */
+.alerts ol {
+    list-style: none;
+    padding-left: 0;
+}
+
+.alerts > ol > li {
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    background-color: rgba(255,255,255,0.01);
+}
+
+.alerts > ol > li > h3 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    font-size: 1.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.alerts--site-li {
+    margin-bottom: 1.5rem;
+}
+
+.alerts--site-li h4 {
+    margin-top: 0.5rem;
+    margin-bottom: 1.25rem;
+    color: var(--primary-color);
+    font-size: 1.15rem;
+    border-bottom: 1px dashed var(--border-color);
+    padding-bottom: 0.5rem;
+}
+
+.alerts--site-li h5 {
+    font-size: 1rem;
+    margin-top: 1rem;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.alerts--site-li h5 a {
+    color: var(--text-heading);
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.alerts--site-li h5 a:hover {
+    color: var(--primary-color);
+}
+
+.request-method-n-url {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.9rem;
+    color: #e6edf3;
+}
+
+/* Dashboard summary widgets styling */
+#dashboard-stats {
+    grid-column: 2;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.stat-card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+    border-color: var(--border-hover);
+}
+
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+}
+
+.stat-card[data-risk="high"]::before { background-color: var(--risk-high); }
+.stat-card[data-risk="medium"]::before { background-color: var(--risk-medium); }
+.stat-card[data-risk="low"]::before { background-color: var(--risk-low); }
+.stat-card[data-risk="info"]::before { background-color: var(--risk-info); }
+
+.stat-value {
+    font-size: 2.75rem;
+    font-weight: 800;
+    margin-bottom: 0.25rem;
+    line-height: 1.1;
+}
+
+.stat-card[data-risk="high"] .stat-value { color: var(--risk-high); text-shadow: 0 0 10px rgba(248, 81, 73, 0.2); }
+.stat-card[data-risk="medium"] .stat-value { color: var(--risk-medium); text-shadow: 0 0 10px rgba(240, 136, 62, 0.2); }
+.stat-card[data-risk="low"] .stat-value { color: var(--risk-low); text-shadow: 0 0 10px rgba(210, 153, 34, 0.2); }
+.stat-card[data-risk="info"] .stat-value { color: var(--risk-info); text-shadow: 0 0 10px rgba(88, 166, 255, 0.2); }
+
+.stat-label {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+/* Responsive Styles */
+@media (max-width: 1024px) {
+    main {
+        grid-template-columns: 1fr;
+        padding: 1.5rem;
+        gap: 1.5rem;
+    }
+    
+    section#contents {
+        position: relative;
+        height: auto;
+        top: 0;
+        grid-column: 1;
+        grid-row: auto;
+    }
+    
+    main > section:not(#contents) {
+        grid-column: 1;
+    }
+    
+    #dashboard-stats {
+        grid-column: 1;
+    }
+}
+
+/* Print Styles */
+@media print {
+    body {
+        background-color: #ffffff;
+        color: #000000;
+    }
+    main {
+        display: block;
+        padding: 0;
+    }
+    section#contents {
+        display: none;
+    }
+    main > section:not(#contents) {
+        border: none;
+        box-shadow: none;
+        padding: 0;
+        margin-bottom: 3rem;
+        page-break-inside: avoid;
+    }
+    details {
+        border: 1px solid #ccc;
+        page-break-inside: avoid;
+    }
+    details[open] {
+        border-color: #000;
+    }
+    pre {
+        border: 1px solid #ccc;
+        background-color: #f8f8f8;
+        color: #000000;
+    }
+}
+</style>
+</head>
+<body>
+	<header>
+		<h1>ZAP por Informe de Escaneo Checkmarx</h1>
+		<p>
+			<span>Generated with</span> <a href="https://zaproxy.org/"><img src="./ZAP por Informe de Escaneo Checkmarx_files/zap32x32.png" alt="The ZAP logo" class="zap-logo">ZAP</a>
+			<span>on sáb 11 jul 2026, at 14:32:00</span>
+		</p>
+		<p>ZAP Versión: 2.17.0</p>
+		<p>
+			ZAP by <a href="https://checkmarx.com/">Checkmarx</a>
+		</p>
+	</header>
+
+	<main>
+
+		<section id="contents" class="contents">
+			<h2>Contents</h2>
+			<nav>
+				<ol>
+					<li><a href="file:///C:/Users/conde/Downloads/2026-07-11-ZAP-Report-.html#about-this-report">About This Report</a>
+						<ol>
+							
+							<li><a href="file:///C:/Users/conde/Downloads/2026-07-11-ZAP-Report-.html#report-parameters">Report Parameters</a></li>
+						</ol></li>
+					<data-th-block>
+					<li><a href="file:///C:/Users/conde/Downloads/2026-07-11-ZAP-Report-.html#summaries">Summaries</a>
+						<ol>
+							<li><a href="file:///C:/Users/conde/Downloads/2026-07-11-ZAP-Report-.html#risk-confidence-counts">Alert Counts by Risk and Confidence</a></li>
+							<li><a href="file:///C:/Users/conde/Downloads/2026-07-11-ZAP-Report-.html#site-risk-counts">Alert Counts by Site and Risk</a></li>
+							<li><a href="file:///C:/Users/conde/Downloads/2026-07-11-ZAP-Report-.html#alert-type-counts">Alert Counts by Alert Type</a></li>
+							<li><a href="file:///C:/Users/conde/Downloads/2026-07-11-ZAP-Report-.html#insights">Insights</a></li>
+						</ol></li>
+					<li><a href="file:///C:/Users/conde/Downloads/2026-07-11-ZAP-Report-.html#alerts">Alerts</a>
+						<ol>
+							
+							 
+							
+							
+							
+							
+							
+							
+							<li><a href="file:///C:/Users/conde/Downloads/2026-07-11-ZAP-Report-.html#alerts--risk-2-confidence-2"><span>Risk</span>=<span class="risk-level">Medio</span>, <span>Confidence</span>=<span class="confidence-level">Media</span> <span>(1)</span></a></li>
+							
+							
+							
+							
+							  
+							
+							
+							
+							
+							
+							
+							<li><a href="file:///C:/Users/conde/Downloads/2026-07-11-ZAP-Report-.html#alerts--risk-1-confidence-2"><span>Risk</span>=<span class="risk-level">Bajo</span>, <span>Confidence</span>=<span class="confidence-level">Media</span> <span>(1)</span></a></li>
+							
+							
+							
+							
+							  
+							
+							
+							
+							
+							<li><a href="file:///C:/Users/conde/Downloads/2026-07-11-ZAP-Report-.html#alerts--risk-0-confidence-3"><span>Risk</span>=<span class="risk-level">Informativo</span>, <span>Confidence</span>=<span class="confidence-level">Alta</span> <span>(1)</span></a></li>
+							
+							<li><a href="file:///C:/Users/conde/Downloads/2026-07-11-ZAP-Report-.html#alerts--risk-0-confidence-2"><span>Risk</span>=<span class="risk-level">Informativo</span>, <span>Confidence</span>=<span class="confidence-level">Media</span> <span>(1)</span></a></li>
+							
+							
+							
+							
+							  
+						</ol></li>
+					<li><a href="file:///C:/Users/conde/Downloads/2026-07-11-ZAP-Report-.html#appendix">Appendix</a>
+						<ol>
+							<li><a href="file:///C:/Users/conde/Downloads/2026-07-11-ZAP-Report-.html#alert-types">Alert Types</a></li>
+						</ol></li>
+					</data-th-block>
+				</ol>
+			</nav>
+		</section>
+
+		<section id="about-this-report" class="about-this-report">
+			<h2>About This Report</h2>
+
+			
+
+			<section id="report-parameters">
+				<h3>Report Parameters</h3>
+				<div class="report-parameters--container">
+					<h4>Contexts</h4>
+					
+					
+					<p>No contexts were selected, so all contexts were included by default.</p>
+					  
+
+					<h4>Sites</h4>
+					
+					<p>The following sites were included:</p>
+					<ul class="sites-list">
+						<li><span class="site">http://localhost:8000</span></li>
+					</ul>
+					
+					<p>(If no sites were selected, all sites were included by default.)</p>
+					<p>An included site must also be within one of the included contexts for its data to be included in the report.</p>
+
+					<h4>Risk levels</h4>
+					<p>
+						<span>Included</span>:
+						 
+						<span class="included-risk-codes"><span class="risk-level">Alto</span>, <span class="risk-level">Medio</span>, <span class="risk-level">Bajo</span>, <span class="risk-level">Informativo</span></span>
+					</p>
+					<p>
+						<span>Excluded</span>:
+						 <span>None</span>
+						
+					</p>
+
+					<h4>Confidence levels</h4>
+					<p>
+						<span>Included</span>:
+						
+						
+						<span class="included-confidence-codes"><span class="confidence-level">Confirmado por Usuario</span>, <span class="confidence-level">Alta</span>, <span class="confidence-level">Media</span>, <span class="confidence-level">Baja</span>, <span class="confidence-level">Falso positivo</span></span>
+					</p>
+					<p>
+						<span>Excluded</span>:
+						
+						<span>None</span>
+						
+					</p>
+				</div>
+			</section>
+		</section>
+
+		
+		<section>
+			
+		</section>
+		
+		<section id="summaries" class="summaries">
+			<h2>Summaries</h2>
+
+			<section id="risk-confidence-counts">
+				<h3>Alert Counts by Risk and Confidence</h3>
+				<table class="risk-confidence-counts-table">
+					<caption>
+						<p>This table shows the number of alerts for each level of risk and confidence included in the report.</p>
+						<p>(The percentages in brackets represent the count as a percentage of the total number of alerts included in the report, rounded to one decimal place.)</p>
+					</caption>
+					<colgroup>
+						<col>
+						<col>
+					</colgroup>
+					<colgroup>
+						<col style="width: 11.666666666666666%"><col style="width: 11.666666666666666%"><col style="width: 11.666666666666666%"><col style="width: 11.666666666666666%"><col style="width: 11.666666666666666%">
+						<col style="width: 11.666666666666666%">
+					</colgroup>
+					<thead>
+						<tr>
+							<td colspan="2" rowspan="2"></td>
+							<th scope="colgroup" colspan="6">Confidence</th>
+						</tr>
+						<tr>
+							<th scope="col">Confirmado por Usuario</th>
+							<th scope="col">Alta</th>
+							<th scope="col">Media</th>
+							<th scope="col">Baja</th>
+							<th scope="col">Falso positivo</th>
+							<th scope="col">Total</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<th scope="rowgroup" rowspan="5">Risk</th>
+							<th scope="row">Alto</th>
+							<td><span>0</span><br> <span class="additional-info-percentages">(0,0&nbsp;%)</span></td>
+							<td><span>0</span><br> <span class="additional-info-percentages">(0,0&nbsp;%)</span></td>
+							<td><span>0</span><br> <span class="additional-info-percentages">(0,0&nbsp;%)</span></td>
+							<td><span>0</span><br> <span class="additional-info-percentages">(0,0&nbsp;%)</span></td>
+							<td><span>0</span><br> <span class="additional-info-percentages">(0,0&nbsp;%)</span></td>
+							<td><span>0</span><br> <span class="additional-info-percentages">(0,0&nbsp;%)</span></td>
+						</tr>
+						<tr>
+							
+							<th scope="row">Medio</th>
+							<td><span>0</span><br> <span class="additional-info-percentages">(0,0&nbsp;%)</span></td>
+							<td><span>0</span><br> <span class="additional-info-percentages">(0,0&nbsp;%)</span></td>
+							<td><span>1</span><br> <span class="additional-info-percentages">(25,0&nbsp;%)</span></td>
+							<td><span>0</span><br> <span class="additional-info-percentages">(0,0&nbsp;%)</span></td>
+							<td><span>0</span><br> <span class="additional-info-percentages">(0,0&nbsp;%)</span></td>
+							<td><span>1</span><br> <span class="additional-info-percentages">(25,0&nbsp;%)</span></td>
+						</tr>
+						<tr>
+							
+							<th scope="row">Bajo</th>
+							<td><span>0</span><br> <span class="additional-info-percentages">(0,0&nbsp;%)</span></td>
+							<td><span>0</span><br> <span class="additional-info-percentages">(0,0&nbsp;%)</span></td>
+							<td><span>1</span><br> <span class="additional-info-percentages">(25,0&nbsp;%)</span></td>
+							<td><span>0</span><br> <span class="additional-info-percentages">(0,0&nbsp;%)</span></td>
+							<td><span>0</span><br> <span class="additional-info-percentages">(0,0&nbsp;%)</span></td>
+							<td><span>1</span><br> <span class="additional-info-percentages">(25,0&nbsp;%)</span></td>
+						</tr>
+						<tr>
+							
+							<th scope="row">Informativo</th>
+							<td><span>0</span><br> <span class="additional-info-percentages">(0,0&nbsp;%)</span></td>
+							<td><span>1</span><br> <span class="additional-info-percentages">(25,0&nbsp;%)</span></td>
+							<td><span>1</span><br> <span class="additional-info-percentages">(25,0&nbsp;%)</span></td>
+							<td><span>0</span><br> <span class="additional-info-percentages">(0,0&nbsp;%)</span></td>
+							<td><span>0</span><br> <span class="additional-info-percentages">(0,0&nbsp;%)</span></td>
+							<td><span>2</span><br> <span class="additional-info-percentages">(50,0&nbsp;%)</span></td>
+						</tr>
+						<tr>
+							<th scope="row">Total</th>
+							<td><span>0</span><br> <span class="additional-info-percentages">(0,0&nbsp;%)</span></td>
+							<td><span>1</span><br> <span class="additional-info-percentages">(25,0&nbsp;%)</span></td>
+							<td><span>3</span><br> <span class="additional-info-percentages">(75,0&nbsp;%)</span></td>
+							<td><span>0</span><br> <span class="additional-info-percentages">(0,0&nbsp;%)</span></td>
+							<td><span>0</span><br> <span class="additional-info-percentages">(0,0&nbsp;%)</span></td>
+							<td><span>4</span><br> <span class="additional-info-percentages">(100%)</span></td>
+						</tr>
+					</tbody>
+				</table>
+			</section>
+
+			<section id="site-risk-counts">
+				<h3>Alert Counts by Site and Risk</h3>
+				<table class="site-risk-counts-table">
+					<caption>
+						<p>This table shows, for each site for which one or more alerts were raised, the number of alerts raised at each risk level.</p>
+						<p>Alerts with a confidence level of "False Positive" have been excluded from these counts.</p>
+						<p>(The numbers in brackets are the number of alerts raised for the site at or above that risk level.)</p>
+					</caption>
+					<colgroup>
+						<col>
+						<col>
+					</colgroup>
+					<colgroup>
+						<col style="width: 16.25%"><col style="width: 16.25%"><col style="width: 16.25%"><col style="width: 16.25%">
+					</colgroup>
+					<thead>
+						<tr>
+							<td colspan="2" rowspan="2"></td>
+							<th scope="colgroup" colspan="4">Risk</th>
+						</tr>
+						<tr>
+							<th scope="col">
+								<span>Alto</span><br>  <span class="additional-info-percentages">(= Alto)</span>  
+							</th>
+							<th scope="col">
+								<span>Medio</span><br>   <span class="additional-info-percentages">(&gt;= Medio)</span> 
+							</th>
+							<th scope="col">
+								<span>Bajo</span><br>   <span class="additional-info-percentages">(&gt;= Bajo)</span> 
+							</th>
+							<th scope="col">
+								<span>Informativo</span><br>   <span class="additional-info-percentages">(&gt;= Informativo)</span> 
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<th scope="rowgroup" rowspan="1">Site</th>
+							<th scope="row">http://localhost:8000</th>
+							
+							<td><span>0</span><br> <span class="additional-info-percentages">(0)</span></td>
+							<td><span>1</span><br> <span class="additional-info-percentages">(1)</span></td>
+							<td><span>1</span><br> <span class="additional-info-percentages">(2)</span></td>
+							<td><span>2</span><br> <span class="additional-info-percentages">(4)</span></td>
+							
+						</tr>
+					</tbody>
+				</table>
+			</section>
+
+			<section id="alert-type-counts">
+				<h3>Alert Counts by Alert Type</h3>
+				<table class="alert-type-counts-table">
+					<caption>
+						<p>This table shows the number of alerts of each alert type, together with the alert type's risk level.</p>
+						<p>(The percentages in brackets represent each count as a percentage, rounded to one decimal place, of the total number of alerts included in this report.)</p>
+					</caption>
+					<thead>
+						<tr>
+							<th scope="col">Alert type</th>
+							<th scope="col">Risk</th>
+							<th scope="col">Count</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<th scope="row"><a href="file:///C:/Users/conde/Downloads/2026-07-11-ZAP-Report-.html#alert-type-0">Format String Error (Error de formato de cadena)</a></th>
+							<td class="risk-level">Medio</td>
+							<td><span>1</span><br> <span class="additional-info-percentages">(25,0&nbsp;%)</span></td>
+						</tr>
+						<tr>
+							<th scope="row"><a href="file:///C:/Users/conde/Downloads/2026-07-11-ZAP-Report-.html#alert-type-1">Falta encabezado X-Content-Type-Options</a></th>
+							<td class="risk-level">Bajo</td>
+							<td><span>5</span><br> <span class="additional-info-percentages">(125,0&nbsp;%)</span></td>
+						</tr>
+						<tr>
+							<th scope="row"><a href="file:///C:/Users/conde/Downloads/2026-07-11-ZAP-Report-.html#alert-type-2">Divulgación de Información - Información sensible en URL</a></th>
+							<td class="risk-level">Informativo</td>
+							<td><span>1</span><br> <span class="additional-info-percentages">(25,0&nbsp;%)</span></td>
+						</tr>
+						<tr>
+							<th scope="row"><a href="file:///C:/Users/conde/Downloads/2026-07-11-ZAP-Report-.html#alert-type-3">Petición de Autenticación Identificada</a></th>
+							<td class="risk-level">Informativo</td>
+							<td><span>1</span><br> <span class="additional-info-percentages">(25,0&nbsp;%)</span></td>
+						</tr>
+					</tbody>
+					<tfoot>
+						<tr>
+							<th scope="row">Total</th>
+							<td></td>
+							<td>4</td>
+						</tr>
+					</tfoot>
+				</table>
+			</section>
+			
+			<section id="insights">
+				<h3 class="left-header">Insights</h3>
+				
+				<table class="insights-table">
+						<caption>
+						<p>This table shows information that is likely to be very relevant to you, but which is not related to vulnerabilities, or potentially even related to the application in question.</p>
+					</caption>
+					<thead>
+					<tr>
+						<th scope="col">Level</th>
+						<th scope="col">Razón</th>
+						<th scope="col">Site</th>
+						<th scope="col">Descripción</th>
+						<th scope="col">Statistic</th>
+					</tr>
+					</thead>
+					<tbody>
+					
+						<tr>
+						<td class="risk-1">
+							<div>Bajo</div>
+						</td>
+						<td>
+							<div>Advertencia</div>
+						</td>
+						<td>
+							<div></div>
+						</td>
+						<td>
+							<div>ZAP errors logged - see the zap.log file for details</div>
+						</td>
+						<td align="center">
+							<div>6   </div>
+						</td>
+						</tr>
+					
+						<tr>
+						<td class="risk-1">
+							<div>Bajo</div>
+						</td>
+						<td>
+							<div>Advertencia</div>
+						</td>
+						<td>
+							<div></div>
+						</td>
+						<td>
+							<div>ZAP warnings logged - see the zap.log file for details</div>
+						</td>
+						<td align="center">
+							<div>36   </div>
+						</td>
+						</tr>
+					
+						<tr>
+						<td class="risk-1">
+							<div>Bajo</div>
+						</td>
+						<td>
+							<div>Exceeded High</div>
+						</td>
+						<td>
+							<div>http://localhost:8000</div>
+						</td>
+						<td>
+							<div>Percentage of responses with status code 4xx</div>
+						</td>
+						<td align="center">
+							<div>97 %</div>
+						</td>
+						</tr>
+					
+						<tr>
+						<td class="risk-0">
+							<div>Información</div>
+						</td>
+						<td>
+							<div>Informativo</div>
+						</td>
+						<td>
+							<div>http://localhost:8000</div>
+						</td>
+						<td>
+							<div>Percentage of responses with status code 2xx</div>
+						</td>
+						<td align="center">
+							<div>1 %</div>
+						</td>
+						</tr>
+					
+						<tr>
+						<td class="risk-0">
+							<div>Información</div>
+						</td>
+						<td>
+							<div>Informativo</div>
+						</td>
+						<td>
+							<div>http://localhost:8000</div>
+						</td>
+						<td>
+							<div>Percentage of responses with status code 3xx</div>
+						</td>
+						<td align="center">
+							<div>1 %</div>
+						</td>
+						</tr>
+					
+						<tr>
+						<td class="risk-0">
+							<div>Información</div>
+						</td>
+						<td>
+							<div>Informativo</div>
+						</td>
+						<td>
+							<div>http://localhost:8000</div>
+						</td>
+						<td>
+							<div>Percentage of responses with status code 5xx</div>
+						</td>
+						<td align="center">
+							<div>2 %</div>
+						</td>
+						</tr>
+					
+						<tr>
+						<td class="risk-0">
+							<div>Información</div>
+						</td>
+						<td>
+							<div>Informativo</div>
+						</td>
+						<td>
+							<div>http://localhost:8000</div>
+						</td>
+						<td>
+							<div>Percentage of endpoints with content type application/json</div>
+						</td>
+						<td align="center">
+							<div>100 %</div>
+						</td>
+						</tr>
+					
+						<tr>
+						<td class="risk-0">
+							<div>Información</div>
+						</td>
+						<td>
+							<div>Informativo</div>
+						</td>
+						<td>
+							<div>http://localhost:8000</div>
+						</td>
+						<td>
+							<div>Percentage of endpoints with method DELETE</div>
+						</td>
+						<td align="center">
+							<div>4 %</div>
+						</td>
+						</tr>
+					
+						<tr>
+						<td class="risk-0">
+							<div>Información</div>
+						</td>
+						<td>
+							<div>Informativo</div>
+						</td>
+						<td>
+							<div>http://localhost:8000</div>
+						</td>
+						<td>
+							<div>Percentage of endpoints with method GET</div>
+						</td>
+						<td align="center">
+							<div>48 %</div>
+						</td>
+						</tr>
+					
+						<tr>
+						<td class="risk-0">
+							<div>Información</div>
+						</td>
+						<td>
+							<div>Informativo</div>
+						</td>
+						<td>
+							<div>http://localhost:8000</div>
+						</td>
+						<td>
+							<div>Percentage of endpoints with method PATCH</div>
+						</td>
+						<td align="center">
+							<div>2 %</div>
+						</td>
+						</tr>
+					
+						<tr>
+						<td class="risk-0">
+							<div>Información</div>
+						</td>
+						<td>
+							<div>Informativo</div>
+						</td>
+						<td>
+							<div>http://localhost:8000</div>
+						</td>
+						<td>
+							<div>Percentage of endpoints with method POST</div>
+						</td>
+						<td align="center">
+							<div>16 %</div>
+						</td>
+						</tr>
+					
+						<tr>
+						<td class="risk-0">
+							<div>Información</div>
+						</td>
+						<td>
+							<div>Informativo</div>
+						</td>
+						<td>
+							<div>http://localhost:8000</div>
+						</td>
+						<td>
+							<div>Percentage of endpoints with method PUT</div>
+						</td>
+						<td align="center">
+							<div>27 %</div>
+						</td>
+						</tr>
+					
+						<tr>
+						<td class="risk-0">
+							<div>Información</div>
+						</td>
+						<td>
+							<div>Informativo</div>
+						</td>
+						<td>
+							<div>http://localhost:8000</div>
+						</td>
+						<td>
+							<div>Count of total endpoints</div>
+						</td>
+						<td align="center">
+							<div>131   </div>
+						</td>
+						</tr>
+					
+						<tr>
+						<td class="risk-0">
+							<div>Información</div>
+						</td>
+						<td>
+							<div>Exceeded Low</div>
+						</td>
+						<td>
+							<div>http://localhost:8000</div>
+						</td>
+						<td>
+							<div>Percentage of slow responses</div>
+						</td>
+						<td align="center">
+							<div>12 %</div>
+						</td>
+						</tr>
+					
+					</tbody>
+				</table>
+			</section>
+		</section>
+
+		<section id="alerts" class="alerts">
+			<h2>Alerts</h2>
+			<ol>
+				
+				 
+				 
+				
+				
+				
+				
+				<li id="alerts--risk-2-confidence-2">
+					<h3>
+						<span>Risk</span>=<span class="risk-level">Medio</span>, <span>Confidence</span>=<span class="confidence-level">Media</span> <span>(1)</span>
+					</h3>
+					<ol>
+						
+						<li class="alerts--site-li">
+							<h4>
+								<span class="site">http://localhost:8000</span> <span>(1)</span>
+							</h4>
+							<ol>
+								
+								<li>
+									<h5>
+										<a href="file:///C:/Users/conde/Downloads/2026-07-11-ZAP-Report-.html#alert-type-0">Format String Error (Error de formato de cadena)</a> <span>(1)</span>
+									</h5>
+									<ol>
+										<li><details>
+												<summary>
+													<span class="request-method-n-url">POST http://localhost:8000/api/v1/auth/google</span>
+												</summary>
+												
+<table class="alerts-table">
+	<tbody><tr>
+		<th scope="row">Alert tags</th>
+		<td>
+			<ul class="alert-tags-list">
+				<li>
+					<span><a href="https://owasp.org/Top10/2025/A05_2025-Injection/">OWASP_2025_A05</a></span> 
+				</li>
+				<li>
+					<span><a href="https://owasp.org/Top10/A03_2021-Injection/">OWASP_2021_A03</a></span> 
+				</li>
+				<li>
+					 <span>POLICY_API = </span>
+				</li>
+				<li>
+					 <span>POLICY_QA_FULL = </span>
+				</li>
+				<li>
+					 <span>POLICY_PENTEST = </span>
+				</li>
+				<li>
+					<span><a href="https://owasp.org/www-project-top-ten/2017/A1_2017-Injection.html">OWASP_2017_A01</a></span> 
+				</li>
+				<li>
+					<span><a href="https://owasp.org/API-Security/editions/2023/en/0xaa-unsafe-consumption-of-apis/">API_2023_API10</a></span> 
+				</li>
+				<li>
+					<span><a href="https://owasp.org/Top10/2025/A10_2025-Mishandling_of_Exceptional_Conditions/">OWASP_2025_A10</a></span> 
+				</li>
+				<li>
+					<span><a href="https://cwe.mitre.org/data/definitions/134.html">CWE-134</a></span> 
+				</li>
+			</ul>
+		</td>
+	</tr>
+	<tr>
+		<th scope="row">Alert description</th>
+		<td> 
+<p>Un error de formato de cadena ocurre cuando los datos enviados en una cadena de entrada se interpretan y se evalúan como un comando por la aplicación.</p>
+ </td>
+	</tr>
+	<tr>
+		<th scope="row">Other info</th>
+		<td> 
+<p>Posible error de formato de cadena. El script cerró la conexión en un /%s.</p>
+ </td>
+	</tr>
+	<tr>
+		<th scope="row">Request</th>
+		<td><details open="open">
+				<summary>Request line and header section (327 bytes)</summary>
+				
+				<pre><code>POST http://localhost:8000/api/v1/auth/google HTTP/1.1
+host: localhost:8000
+user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36
+pragma: no-cache
+cache-control: no-cache
+accept: application/json
+content-type: application/json
+content-length: 100
+
+</code></pre>
+				
+				
+			</details> <details class="request-body" open="open">
+				<summary>Request body (100 bytes)</summary>
+				
+				<pre><code>{"id_token":"ZAP%n%s%n%s%n%s%n%s%n%s%n%s%n%s%n%s%n%s%n%s%n%s%n%s%n%s%n%s%n%s%n%s%n%s%n%s%n%s%n%s\n"}</code></pre>
+				
+				
+			</details></td>
+	</tr>
+	<tr>
+		<th scope="row">Response</th>
+		<td><details open="open">
+				<summary>Status line and header section (145 bytes)</summary>
+				
+				<pre><code>HTTP/1.1 500 Internal Server Error
+date: Sat, 11 Jul 2026 19:17:26 GMT
+server: uvicorn
+content-length: 142
+content-type: application/json
+
+</code></pre>
+				
+				
+			</details> <details class="response-body" open="open">
+				<summary>Response body (142 bytes)</summary>
+				
+				<pre><code>{"success":false,"error":{"code":"INTERNAL_ERROR","message":"Error interno del servidor"},"request_id":"d2e91778-5140-47f2-8bf0-5dda0d659cb2"}</code></pre>
+				
+				
+			</details></td>
+	</tr>
+	<tr>
+		<th scope="row">Parameter</th>
+		<td><pre><code>id_token</code></pre></td>
+	</tr>
+	<tr>
+		<th scope="row">Attack</th>
+		<td><pre><code>ZAP%n%s%n%s%n%s%n%s%n%s%n%s%n%s%n%s%n%s%n%s%n%s%n%s%n%s%n%s%n%s%n%s%n%s%n%s%n%s%n%s
+</code></pre></td>
+	</tr>
+	
+	<tr>
+		<th scope="row">Solution</th>
+		<td> 
+<p>Reescribe el programa en segundo plano utilizando la eliminación adecuada de cadenas de caracteres no deseados. Esto requerirá recompilar el ejecutable en segundo plano.</p>
+ </td>
+	</tr>
+</tbody></table>
+
+											</details></li>
+									</ol>
+								</li>
+								
+							</ol>
+						</li>
+						
+					</ol>
+				</li>
+				
+				
+				
+				
+				  
+				 
+				
+				
+				
+				
+				<li id="alerts--risk-1-confidence-2">
+					<h3>
+						<span>Risk</span>=<span class="risk-level">Bajo</span>, <span>Confidence</span>=<span class="confidence-level">Media</span> <span>(1)</span>
+					</h3>
+					<ol>
+						
+						<li class="alerts--site-li">
+							<h4>
+								<span class="site">http://localhost:8000</span> <span>(1)</span>
+							</h4>
+							<ol>
+								
+								<li>
+									<h5>
+										<a href="file:///C:/Users/conde/Downloads/2026-07-11-ZAP-Report-.html#alert-type-1">Falta encabezado X-Content-Type-Options</a> <span>(1)</span>
+									</h5>
+									<ol>
+										<li><details>
+												<summary>
+													<span class="request-method-n-url">GET http://localhost:8000/api/openapi.json</span>
+												</summary>
+												
+<table class="alerts-table">
+	<tbody><tr>
+		<th scope="row">Alert tags</th>
+		<td>
+			<ul class="alert-tags-list">
+				<li>
+					<span><a href="https://owasp.org/Top10/A05_2021-Security_Misconfiguration/">OWASP_2021_A05</a></span> 
+				</li>
+				<li>
+					 <span>POLICY_QA_STD = </span>
+				</li>
+				<li>
+					 <span>POLICY_PENTEST = </span>
+				</li>
+				<li>
+					<span><a href="https://www.zaproxy.org/docs/desktop/addons/common-library/alerttags/#systemic">SYSTEMIC</a></span> 
+				</li>
+				<li>
+					<span><a href="https://cwe.mitre.org/data/definitions/693.html">CWE-693</a></span> 
+				</li>
+				<li>
+					<span><a href="https://owasp.org/www-project-top-ten/2017/A6_2017-Security_Misconfiguration.html">OWASP_2017_A06</a></span> 
+				</li>
+				<li>
+					<span><a href="https://owasp.org/Top10/2025/A02_2025-Security_Misconfiguration/">OWASP_2025_A02</a></span> 
+				</li>
+			</ul>
+		</td>
+	</tr>
+	<tr>
+		<th scope="row">Alert description</th>
+		<td> 
+<p>La cabecera Anti-MIME-Sniffing X-Content-Type-Options no se ha establecido en 'nosniff'. Esto permite que las versiones anteriores de Internet Explorer y Chrome realicen MIME-sniffing en el cuerpo de la respuesta, lo que puede provocar que el cuerpo dé la respuesta se interprete y se muestre como un tipo de contenido distinto del tipo de contenido declarado. Las versiones actuales (principios de 2014) y heredadas de Firefox utilizarán el tipo de contenido declarado (si se establece uno), en lugar de realizar MIME-sniffing.</p>
+ </td>
+	</tr>
+	<tr>
+		<th scope="row">Other info</th>
+		<td> 
+<p>Este problema aún se aplica a las páginas de tipo error (401, 403, 500, etc.), ya que esas páginas a menudo se ven afectadas por problemas de inyección, en cuyo caso aún existe la preocupación de que los navegadores husmeen las páginas lejos de su tipo de contenido real.</p>
+
+<p>En el umbral «Alto» esta regla de análisis no alertará sobre respuestas de error del cliente o servidor.</p>
+ </td>
+	</tr>
+	<tr>
+		<th scope="row">Request</th>
+		<td><details open="open">
+				<summary>Request line and header section (275 bytes)</summary>
+				
+				<pre><code>GET http://localhost:8000/api/openapi.json HTTP/1.1
+host: localhost:8000
+user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36
+pragma: no-cache
+cache-control: no-cache
+Accept: application/json,*/*
+
+</code></pre>
+				
+				
+			</details> <details class="request-body" open="open">
+				<summary>Request body (0 bytes)</summary>
+				
+				<pre><code></code></pre>
+				
+				
+			</details></td>
+	</tr>
+	<tr>
+		<th scope="row">Response</th>
+		<td><details open="open">
+				<summary>Status line and header section (204 bytes)</summary>
+				
+				<pre><code>HTTP/1.1 200 OK
+date: Sat, 11 Jul 2026 18:58:04 GMT
+server: uvicorn
+content-length: 130807
+content-type: application/json
+vary: Accept-Encoding
+x-request-id: 120b6d24-152e-4d55-969f-534a2ea4d2a5
+
+</code></pre>
+				
+				
+			</details> <details class="response-body">
+				<summary>Response body (130807 bytes)</summary>
+				
+				<pre><code>{"openapi":"3.1.0","info":{"title":"Mifrufely Web","description":"Plataforma transaccional de pastelería — API REST Enterprise","version":"1.0.0"},"paths":{"/api/v1/health":{"get":{"tags":["Health"],"summary":"Health check","operationId":"health_check_api_v1_health_get","responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"additionalProperties":true,"type":"object","title":"Response Health Check Api V1 Health Get"}}}}}}},"/api/v1/auth/login":{"post":{"tags":["Authentication"],"summary":"Iniciar sesión (email + contraseña)","description":"Authenticate user with email/password and return JWT access + refresh tokens.","operationId":"login_api_v1_auth_login_post","requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/LoginRequest"}}},"required":true},"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/TokenResponse"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/api/v1/auth/register":{"post":{"tags":["Authentication"],"summary":"Registrar nuevo cliente","description":"Create a new client account.","operationId":"register_api_v1_auth_register_post","requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/RegisterRequest"}}},"required":true},"responses":{"201":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/RegisterResponse"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/api/v1/auth/google":{"post":{"tags":["Authentication"],"summary":"Iniciar sesión o registrarse con Google","description":"Verifica un ID Token de Google obtenido en el frontend.\n\n- Si el usuario ya existe: inicia sesión directamente y retorna tokens JWT.\n- Si el usuario no existe: lo registra automáticamente (estado=True, sin email de verificación)\n  y retorna tokens JWT.\n\nEl frontend debe enviar el `credential` devuelto por Google Identity Services.","operationId":"google_auth_api_v1_auth_google_post","requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/GoogleLoginRequest"}}},"required":true},"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/TokenResponse"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/api/v1/auth/refresh":{"post":{"tags":["Authentication"],"summary":"Renovar access token","description":"Exchange a valid refresh token for a new access token.","operationId":"refresh_token_api_v1_auth_refresh_post","requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/RefreshTokenRequest"}}},"required":true},"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/TokenResponse"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/api/v1/auth/verify":{"get":{"tags":["Authentication"],"summary":"Verificar cuenta de usuario","description":"Verify user account using the token sent via email.","operationId":"verify_account_api_v1_auth_verify_get","parameters":[{"name":"token","in":"query","required":true,"schema":{"type":"string","title":"Token"}}],"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"type":"object","additionalProperties":{"type":"string"},"title":"Response Verify Account Api V1 Auth Verify Get"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/api/v1/auth/logout":{"post":{"tags":["Authentication"],"summary":"Cerrar sesión","description":"Log out the user by adding their active JWT to the Redis blocklist.","operationId":"logout_api_v1_auth_logout_post","responses":{"204":{"description":"Successful Response"}},"security":[{"HTTPBearer":[]}]}},"/api/v1/auth/me":{"get":{"tags":["Authentication"],"summary":"Obtener perfil del usuario autenticado","description":"Retrieve the current user profile from the database using JWT subject.","operationId":"get_me_api_v1_auth_me_get","responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/UserMeResponse"}}}}},"security":[{"HTTPBearer":[]}]},"put":{"tags":["Authentication"],"summary":"Actualizar perfil del usuario","description":"Update user profile fields: phone, address, reference.","operationId":"update_me_api_v1_auth_me_put","requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/UserProfileUpdate"}}},"required":true},"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/UserMeResponse"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}},"security":[{"HTTPBearer":[]}]}},"/api/v1/auth/me/datos-fiscales":{"get":{"tags":["Authentication"],"summary":"Obtener datos fiscales del usuario","description":"Retrieve the user's default fiscal data, or None if not set.","operationId":"get_datos_fiscales_api_v1_auth_me_datos_fiscales_get","responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"anyOf":[{"$ref":"#/components/schemas/DatosFiscalesResponse"},{"type":"null"}],"title":"Response Get Datos Fiscales Api V1 Auth Me Datos Fiscales Get"}}}}},"security":[{"HTTPBearer":[]}]},"post":{"tags":["Authentication"],"summary":"Crear o actualizar datos fiscales","description":"Create or update the user's fiscal data (DNI/RUC).","operationId":"upsert_datos_fiscales_api_v1_auth_me_datos_fiscales_post","requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/DatosFiscalesUpsert"}}},"required":true},"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/DatosFiscalesResponse"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}},"security":[{"HTTPBearer":[]}]}},"/api/v1/categorias/":{"get":{"tags":["Categorías"],"summary":"Listar categorías activas","operationId":"list_categorias_api_v1_categorias__get","parameters":[{"name":"search","in":"query","required":false,"schema":{"anyOf":[{"type":"string"},{"type":"null"}],"description":"Buscar por nombre","title":"Search"},"description":"Buscar por nombre"},{"name":"page","in":"query","required":false,"schema":{"type":"integer","minimum":1,"default":1,"title":"Page"}},{"name":"size","in":"query","required":false,"schema":{"type":"integer","maximum":100,"minimum":1,"default":20,"title":"Size"}}],"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/PaginatedResponse_CategoriaResponse_"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}},"post":{"tags":["Categorías"],"summary":"Crear categoría","operationId":"create_categoria_api_v1_categorias__post","security":[{"HTTPBearer":[]}],"requestBody":{"required":true,"content":{"application/json":{"schema":{"$ref":"#/components/schemas/CategoriaCreate"}}}},"responses":{"201":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/CategoriaResponse"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/api/v1/categorias/admin":{"get":{"tags":["Categorías"],"summary":"Listar todas las categorías (Admin)","operationId":"list_categorias_admin_api_v1_categorias_admin_get","security":[{"HTTPBearer":[]}],"parameters":[{"name":"search","in":"query","required":false,"schema":{"anyOf":[{"type":"string"},{"type":"null"}],"description":"Buscar por nombre","title":"Search"},"description":"Buscar por nombre"},{"name":"page","in":"query","required":false,"schema":{"type":"integer","minimum":1,"default":1,"title":"Page"}},{"name":"size","in":"query","required":false,"schema":{"type":"integer","maximum":100,"minimum":1,"default":20,"title":"Size"}}],"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/PaginatedResponse_CategoriaResponse_"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/api/v1/categorias/{id}":{"get":{"tags":["Categorías"],"summary":"Obtener categoría por ID","operationId":"get_categoria_api_v1_categorias__id__get","parameters":[{"name":"id","in":"path","required":true,"schema":{"type":"integer","title":"Id"}}],"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/CategoriaResponse"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}},"put":{"tags":["Categorías"],"summary":"Actualizar categoría","operationId":"update_categoria_api_v1_categorias__id__put","security":[{"HTTPBearer":[]}],"parameters":[{"name":"id","in":"path","required":true,"schema":{"type":"integer","title":"Id"}}],"requestBody":{"required":true,"content":{"application/json":{"schema":{"$ref":"#/components/schemas/CategoriaUpdate"}}}},"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/CategoriaResponse"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}},"delete":{"tags":["Categorías"],"summary":"Eliminar categoría (Soft Delete)","operationId":"delete_categoria_api_v1_categorias__id__delete","security":[{"HTTPBearer":[]}],"parameters":[{"name":"id","in":"path","required":true,"schema":{"type":"integer","title":"Id"}}],"responses":{"204":{"description":"Successful Response"},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/api/v1/products/":{"get":{"tags":["Products"],"summary":"Listar productos disponibles (Cliente)","description":"Retorna únicamente productos con estado=true y stock_actual &gt; 0 para clientes.","operationId":"list_products_api_v1_products__get","parameters":[{"name":"search","in":"query","required":false,"schema":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Search"}},{"name":"categoria","in":"query","required":false,"schema":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Categoria"}},{"name":"page","in":"query","required":false,"schema":{"type":"integer","minimum":1,"default":1,"title":"Page"}},{"name":"size","in":"query","required":false,"schema":{"type":"integer","maximum":100,"minimum":1,"default":20,"title":"Size"}},{"name":"sort","in":"query","required":false,"schema":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Sort"}}],"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/PaginatedResponse_ProductoResponse_"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}},"post":{"tags":["Products"],"summary":"Crear un nuevo producto","operationId":"create_product_api_v1_products__post","security":[{"HTTPBearer":[]}],"requestBody":{"required":true,"content":{"multipart/form-data":{"schema":{"$ref":"#/components/schemas/Body_create_product_api_v1_products__post"}}}},"responses":{"201":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ProductoResponse"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/api/v1/products/admin":{"get":{"tags":["Products"],"summary":"Listar todos los productos (Administración)","description":"Retorna todos los productos sin restricciones automáticas para administradores.","operationId":"list_products_admin_api_v1_products_admin_get","security":[{"HTTPBearer":[]}],"parameters":[{"name":"search","in":"query","required":false,"schema":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Search"}},{"name":"categoria","in":"query","required":false,"schema":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Categoria"}},{"name":"activo","in":"query","required":false,"schema":{"anyOf":[{"type":"boolean"},{"type":"null"}],"title":"Activo"}},{"name":"stock","in":"query","required":false,"schema":{"anyOf":[{"type":"string"},{"type":"null"}],"description":"'available' o 'out_of_stock'","title":"Stock"},"description":"'available' o 'out_of_stock'"},{"name":"page","in":"query","required":false,"schema":{"type":"integer","minimum":1,"default":1,"title":"Page"}},{"name":"size","in":"query","required":false,"schema":{"type":"integer","maximum":100,"minimum":1,"default":20,"title":"Size"}},{"name":"sort","in":"query","required":false,"schema":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Sort"}}],"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/PaginatedResponse_ProductoResponse_"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/api/v1/products/{id}":{"get":{"tags":["Products"],"summary":"Obtener detalle de un producto","operationId":"get_product_api_v1_products__id__get","parameters":[{"name":"id","in":"path","required":true,"schema":{"type":"integer","title":"Id"}}],"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ProductoResponse"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}},"put":{"tags":["Products"],"summary":"Actualizar producto","operationId":"update_product_api_v1_products__id__put","security":[{"HTTPBearer":[]}],"parameters":[{"name":"id","in":"path","required":true,"schema":{"type":"integer","title":"Id"}}],"requestBody":{"content":{"multipart/form-data":{"schema":{"$ref":"#/components/schemas/Body_update_product_api_v1_products__id__put"}}}},"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ProductoResponse"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}},"delete":{"tags":["Products"],"summary":"Eliminar producto (Soft Delete)","operationId":"delete_product_api_v1_products__id__delete","security":[{"HTTPBearer":[]}],"parameters":[{"name":"id","in":"path","required":true,"schema":{"type":"integer","title":"Id"}}],"responses":{"204":{"description":"Successful Response"},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/api/v1/packages/":{"get":{"tags":["Packages"],"summary":"Listar paquetes disponibles","description":"Retorna los paquetes disponibles (con disponibilidad dinámica = True)","operationId":"list_packages_api_v1_packages__get","parameters":[{"name":"limit","in":"query","required":false,"schema":{"type":"integer","default":100,"title":"Limit"}},{"name":"offset","in":"query","required":false,"schema":{"type":"integer","default":0,"title":"Offset"}}],"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"type":"array","items":{"$ref":"#/components/schemas/PaqueteResponse"},"title":"Response List Packages Api V1 Packages  Get"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}},"post":{"tags":["Packages"],"summary":"Crear un nuevo paquete","operationId":"create_package_api_v1_packages__post","security":[{"HTTPBearer":[]}],"requestBody":{"required":true,"content":{"multipart/form-data":{"schema":{"$ref":"#/components/schemas/Body_create_package_api_v1_packages__post"}}}},"responses":{"201":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/PaqueteResponse"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/api/v1/packages/admin":{"get":{"tags":["Packages"],"summary":"Listar todos los paquetes (Admin)","description":"Retorna todos los paquetes, sin importar su disponibilidad, para el panel administrativo","operationId":"list_packages_admin_api_v1_packages_admin_get","security":[{"HTTPBearer":[]}],"parameters":[{"name":"limit","in":"query","required":false,"schema":{"type":"integer","default":100,"title":"Limit"}},{"name":"offset","in":"query","required":false,"schema":{"type":"integer","default":0,"title":"Offset"}}],"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"type":"array","items":{"$ref":"#/components/schemas/PaqueteResponse"},"title":"Response List Packages Admin Api V1 Packages Admin Get"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/api/v1/packages/slug/{slug}":{"get":{"tags":["Packages"],"summary":"Obtener detalle de un paquete por slug","operationId":"get_package_by_slug_api_v1_packages_slug__slug__get","parameters":[{"name":"slug","in":"path","required":true,"schema":{"type":"string","title":"Slug"}}],"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/PaqueteResponse"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/api/v1/packages/{id}":{"get":{"tags":["Packages"],"summary":"Obtener detalle de un paquete","operationId":"get_package_api_v1_packages__id__get","parameters":[{"name":"id","in":"path","required":true,"schema":{"type":"integer","title":"Id"}}],"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/PaqueteResponse"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}},"put":{"tags":["Packages"],"summary":"Actualizar paquete","operationId":"update_package_api_v1_packages__id__put","security":[{"HTTPBearer":[]}],"parameters":[{"name":"id","in":"path","required":true,"schema":{"type":"integer","title":"Id"}}],"requestBody":{"content":{"multipart/form-data":{"schema":{"$ref":"#/components/schemas/Body_update_package_api_v1_packages__id__put"}}}},"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/PaqueteResponse"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}},"delete":{"tags":["Packages"],"summary":"Eliminar paquete (Soft Delete)","operationId":"delete_package_api_v1_packages__id__delete","security":[{"HTTPBearer":[]}],"parameters":[{"name":"id","in":"path","required":true,"schema":{"type":"integer","title":"Id"}}],"responses":{"204":{"description":"Successful Response"},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/api/v1/ventas/checkout":{"post":{"tags":["Ventas"],"summary":"Checkout directo con items explícitos","description":"Crea un nuevo pedido desde un payload explícito de productos/paquetes.","operationId":"checkout_api_v1_ventas_checkout_post","requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/VentaRequest"}}},"required":true},"responses":{"201":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/VentaResponse"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}},"security":[{"HTTPBearer":[]}]}},"/api/v1/ventas/checkout/cart":{"post":{"tags":["Ventas"],"summary":"Checkout desde el carrito Redis","description":"Convierte el carrito Redis del usuario en un pedido. Limpia el carrito al finalizar.","operationId":"checkout_from_cart_api_v1_ventas_checkout_cart_post","security":[{"HTTPBearer":[]}],"parameters":[{"name":"id_cupon_cliente","in":"query","required":false,"schema":{"anyOf":[{"type":"integer"},{"type":"null"}],"title":"Id Cupon Cliente"}}],"responses":{"201":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/CartCheckoutResponse"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/api/v1/ventas":{"get":{"tags":["Ventas"],"summary":"Listar ventas (admin: todas | cliente: propias)","operationId":"list_ventas_api_v1_ventas_get","security":[{"HTTPBearer":[]}],"parameters":[{"name":"limit","in":"query","required":false,"schema":{"type":"integer","maximum":100,"minimum":1,"default":20,"title":"Limit"}},{"name":"offset","in":"query","required":false,"schema":{"type":"integer","minimum":0,"default":0,"title":"Offset"}}],"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"type":"array","items":{"$ref":"#/components/schemas/VentaResponse"},"title":"Response List Ventas Api V1 Ventas Get"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/api/v1/ventas/{id_venta}":{"get":{"tags":["Ventas"],"summary":"Obtener venta por ID","operationId":"get_venta_api_v1_ventas__id_venta__get","security":[{"HTTPBearer":[]}],"parameters":[{"name":"id_venta","in":"path","required":true,"schema":{"type":"integer","title":"Id Venta"}}],"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/VentaResponse"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/api/v1/ventas/{id_venta}/tracking":{"get":{"tags":["Ventas"],"summary":"Tracking público del pedido","description":"Timeline del pedido visible para el cliente y el administrador.","operationId":"get_tracking_api_v1_ventas__id_venta__tracking_get","security":[{"HTTPBearer":[]}],"parameters":[{"name":"id_venta","in":"path","required":true,"schema":{"type":"integer","title":"Id Venta"}}],"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/TrackingResponse"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/api/v1/ventas/{id_venta}/eventos":{"get":{"tags":["Ventas"],"summary":"Historial completo de eventos del pedido (admin)","operationId":"get_eventos_api_v1_ventas__id_venta__eventos_get","security":[{"HTTPBearer":[]}],"parameters":[{"name":"id_venta","in":"path","required":true,"schema":{"type":"integer","title":"Id Venta"}}],"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"type":"array","items":{"$ref":"#/components/schemas/OrderEventResponse"},"title":"Response Get Eventos Api V1 Ventas  Id Venta  Eventos Get"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/api/v1/ventas/{id_venta}/pagar":{"put":{"tags":["Ventas"],"summary":"Confirmar pago (admin) — PENDIENTE → PAGADO","description":"Confirma el pago de un pedido pendiente. Requiere rol ADMIN.","operationId":"confirmar_pago_api_v1_ventas__id_venta__pagar_put","security":[{"HTTPBearer":[]}],"parameters":[{"name":"id_venta","in":"path","required":true,"schema":{"type":"integer","title":"Id Venta"}}],"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/VentaResponse"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/api/v1/ventas/{id_venta}/preparar":{"put":{"tags":["Ventas"],"summary":"Iniciar preparación (admin) — PAGADO → PREPARANDO","description":"Inicia la preparación del pedido y calcula el ETA. Requiere rol ADMIN.","operationId":"iniciar_preparacion_api_v1_ventas__id_venta__preparar_put","security":[{"HTTPBearer":[]}],"parameters":[{"name":"id_venta","in":"path","required":true,"schema":{"type":"integer","title":"Id Venta"}}],"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/VentaResponse"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/api/v1/ventas/{id_venta}/despachar":{"put":{"tags":["Ventas"],"summary":"Despachar pedido (admin) — PREPARANDO → EN_CAMINO","description":"Entrega el pedido al repartidor. Notifica al microservicio delivery-service. Requiere ADMIN.","operationId":"despachar_pedido_api_v1_ventas__id_venta__despachar_put","security":[{"HTTPBearer":[]}],"parameters":[{"name":"id_venta","in":"path","required":true,"schema":{"type":"integer","title":"Id Venta"}}],"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/VentaResponse"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/api/v1/ventas/{id_venta}/reembolso":{"put":{"tags":["Ventas"],"summary":"Procesar reembolso (admin) — CANCELADO/DEVUELTO → REEMBOLSADO","description":"Procesa el reembolso simulado de un pedido cancelado o devuelto. Requiere ADMIN.","operationId":"procesar_reembolso_api_v1_ventas__id_venta__reembolso_put","security":[{"HTTPBearer":[]}],"parameters":[{"name":"id_venta","in":"path","required":true,"schema":{"type":"integer","title":"Id Venta"}}],"requestBody":{"required":true,"content":{"application/json":{"schema":{"$ref":"#/components/schemas/ReembolsoRequest"}}}},"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/VentaResponse"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/api/v1/ventas/{id_venta}/cancelar":{"put":{"tags":["Ventas"],"summary":"Cancelar pedido — PENDIENTE/PAGADO/PREPARANDO → CANCELADO","description":"Cancela el pedido. Devuelve el stock automáticamente.\nDisponible para CLIENTE (sus pedidos propios) y ADMIN (cualquier pedido).","operationId":"cancelar_pedido_api_v1_ventas__id_venta__cancelar_put","security":[{"HTTPBearer":[]}],"parameters":[{"name":"id_venta","in":"path","required":true,"schema":{"type":"integer","title":"Id Venta"}}],"requestBody":{"required":true,"content":{"application/json":{"schema":{"$ref":"#/components/schemas/CancelRequest"}}}},"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/VentaResponse"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/api/v1/ventas/{id_venta}/devolver":{"put":{"tags":["Ventas"],"summary":"Solicitar devolución — ENTREGADO/EN_CAMINO → DEVUELTO","description":"Inicia el proceso de devolución post-entrega o de un pedido en tránsito que retorna.\nVálido para pedidos ENTREGADO o EN_CAMINO. Devuelve el stock.\nDisponible para CLIENTE (sus pedidos propios) y ADMIN (cualquier pedido).","operationId":"solicitar_devolucion_api_v1_ventas__id_venta__devolver_put","security":[{"HTTPBearer":[]}],"parameters":[{"name":"id_venta","in":"path","required":true,"schema":{"type":"integer","title":"Id Venta"}}],"requestBody":{"required":true,"content":{"application/json":{"schema":{"$ref":"#/components/schemas/DevolucionRequest"}}}},"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/VentaResponse"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/api/v1/ventas/{id_venta}/entregar":{"put":{"tags":["Ventas"],"summary":"[DEPRECADO] Marcar venta como entregada (admin)","description":"⚠️ **DEPRECADO**: Usa el flujo completo: `/pagar` → `/preparar` → `/despachar`. Este endpoint marca directamente como ENTREGADO desde cualquier estado para compatibilidad. Será eliminado en la próxima versión mayor.","operationId":"entregar_deprecated_api_v1_ventas__id_venta__entregar_put","security":[{"HTTPBearer":[]}],"parameters":[{"name":"id_venta","in":"path","required":true,"schema":{"type":"integer","title":"Id Venta"}}],"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/VentaResponse"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/api/v1/storage/upload":{"post":{"tags":["Storage"],"summary":"Subir imagen general (Banners / WYSIWYG / CMS)","description":"Endpoint para que los administradores suban recursos multimedia de uso general \n(banners, imágenes de CMS, posts, etc.). \nOptimiza la imagen automáticamente en memoria antes de la subida.","operationId":"upload_general_image_api_v1_storage_upload_post","requestBody":{"content":{"multipart/form-data":{"schema":{"$ref":"#/components/schemas/Body_upload_general_image_api_v1_storage_upload_post"}}},"required":true},"responses":{"201":{"description":"Successful Response","content":{"application/json":{"schema":{"additionalProperties":true,"type":"object","title":"Response Upload General Image Api V1 Storage Upload Post"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}},"security":[{"HTTPBearer":[]}]}},"/api/v1/inventory/lots":{"post":{"tags":["Inventory"],"summary":"Registrar nuevo lote de mercancía","description":"Registra un nuevo lote físico. NeonDB ejecuta automáticamente:\n- Validación y normalización de la fecha de vencimiento.\n- Incremento de `productos.stock_actual`.\n- Inserción del movimiento `INGRESO_COMPRA` en el Kardex.","operationId":"create_lot_api_v1_inventory_lots_post","security":[{"HTTPBearer":[]}],"requestBody":{"required":true,"content":{"application/json":{"schema":{"$ref":"#/components/schemas/LoteCreateRequest"}}}},"responses":{"201":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/LoteResponse"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}},"get":{"tags":["Inventory"],"summary":"Listar lotes de un producto o globales","description":"Retorna los lotes de un producto en orden FEFO (fecha_vencimiento ASC NULLS LAST).","operationId":"list_lots_api_v1_inventory_lots_get","security":[{"HTTPBearer":[]}],"parameters":[{"name":"id_producto","in":"query","required":false,"schema":{"anyOf":[{"type":"integer"},{"type":"null"}],"description":"Filtro opcional por producto","title":"Id Producto"},"description":"Filtro opcional por producto"},{"name":"solo_vigentes","in":"query","required":false,"schema":{"type":"boolean","description":"Si true, retorna solo lotes VIGENTE","default":true,"title":"Solo Vigentes"},"description":"Si true, retorna solo lotes VIGENTE"}],"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"type":"array","items":{"$ref":"#/components/schemas/LoteResponse"},"title":"Response List Lots Api V1 Inventory Lots Get"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/api/v1/inventory/adjustments":{"post":{"tags":["Inventory"],"summary":"Aplicar ajuste manual de inventario","description":"Registra un ajuste manual (AJUSTE_POSITIVO, AJUSTE_NEGATIVO o MERMA).\n\n- `id_lote` es siempre obligatorio.\n- Los lotes VENCIDOS son inmutables (la DB rechaza el intento).\n- El trigger NeonDB actualiza `lotes.cantidad_disponible` y `productos.stock_actual`.","operationId":"apply_adjustment_api_v1_inventory_adjustments_post","requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/AjusteStockRequest"}}},"required":true},"responses":{"201":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/MovimientoStockResponse"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}},"security":[{"HTTPBearer":[]}]}},"/api/v1/inventory/kardex":{"get":{"tags":["Inventory"],"summary":"Kardex de movimientos de un producto o global","description":"Retorna el historial paginado de movimientos (Kardex) de un producto o global.","operationId":"get_kardex_api_v1_inventory_kardex_get","security":[{"HTTPBearer":[]}],"parameters":[{"name":"id_producto","in":"query","required":false,"schema":{"anyOf":[{"type":"integer"},{"type":"null"}],"description":"Filtro opcional por producto","title":"Id Producto"},"description":"Filtro opcional por producto"},{"name":"page","in":"query","required":false,"schema":{"type":"integer","minimum":1,"default":1,"title":"Page"}},{"name":"page_size","in":"query","required":false,"schema":{"type":"integer","maximum":100,"minimum":1,"default":20,"title":"Page Size"}}],"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/PaginatedResponse_MovimientoStockResponse_"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/api/v1/inventory/fefo/{id_producto}":{"get":{"tags":["Inventory"],"summary":"Próximo lote FEFO de un producto (informativo)","description":"**Solo informativo**: retorna el próximo lote que consumirá el algoritmo FEFO.\n\n⚠️ El FEFO real de ventas lo ejecutan los triggers de NeonDB al procesar cada venta.\nEste endpoint es para monitoreo, dashboard y alertas de vencimiento próximo.","operationId":"get_fefo_lot_api_v1_inventory_fefo__id_producto__get","security":[{"HTTPBearer":[]}],"parameters":[{"name":"id_producto","in":"path","required":true,"schema":{"type":"integer","title":"Id Producto"}}],"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/NextLotResponse"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/api/v1/inventory/reconciliation":{"get":{"tags":["Inventory"],"summary":"Conciliación triple de inventario (auditoría)","description":"Compara tres fuentes de inventario:\n- `stock_actual`: cache en tabla `productos`.\n- `stock_calculado_kardex`: suma de movimientos en `movimientos_stock`.\n- `stock_calculado_lotes`: suma de `lotes` VIGENTE con `cantidad_disponible &gt; 0`.\n\nUn descuadre indica corrupción de datos o bypass de los triggers.","operationId":"get_reconciliation_api_v1_inventory_reconciliation_get","security":[{"HTTPBearer":[]}],"parameters":[{"name":"solo_descuadrados","in":"query","required":false,"schema":{"type":"boolean","description":"Si true, retorna solo los productos con stock descuadrado","default":false,"title":"Solo Descuadrados"},"description":"Si true, retorna solo los productos con stock descuadrado"}],"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"type":"array","items":{"$ref":"#/components/schemas/ReconciliationResponse"},"title":"Response Get Reconciliation Api V1 Inventory Reconciliation Get"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/api/v1/inventory/reconciliation/auto-adjust":{"post":{"tags":["Inventory"],"summary":"Alinear inventario (autoajuste)","description":"Corrige automáticamente las discrepancias de inventario para todos los\nproductos desalineados, utilizando como única fuente de verdad\nlos lotes activos (stock_calculado_lotes).","operationId":"auto_adjust_inventory_api_v1_inventory_reconciliation_auto_adjust_post","responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"additionalProperties":true,"type":"object","title":"Response Auto Adjust Inventory Api V1 Inventory Reconciliation Auto Adjust Post"}}}}},"security":[{"HTTPBearer":[]}]}},"/api/v1/cart":{"get":{"tags":["Carrito"],"summary":"Obtener carrito del usuario","operationId":"get_cart_api_v1_cart_get","responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/CartResponse"}}}}},"security":[{"HTTPBearer":[]}]},"delete":{"tags":["Carrito"],"summary":"Vaciar carrito","operationId":"clear_cart_api_v1_cart_delete","responses":{"204":{"description":"Successful Response"}},"security":[{"HTTPBearer":[]}]}},"/api/v1/cart/items":{"post":{"tags":["Carrito"],"summary":"Agregar producto al carrito","operationId":"add_item_api_v1_cart_items_post","requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/AddCartItemRequest"}}},"required":true},"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/CartResponse"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}},"security":[{"HTTPBearer":[]}]}},"/api/v1/cart/items/{id_producto}":{"put":{"tags":["Carrito"],"summary":"Actualizar cantidad de un item en el carrito","operationId":"update_item_api_v1_cart_items__id_producto__put","security":[{"HTTPBearer":[]}],"parameters":[{"name":"id_producto","in":"path","required":true,"schema":{"type":"integer","title":"Id Producto"}}],"requestBody":{"required":true,"content":{"application/json":{"schema":{"$ref":"#/components/schemas/UpdateCartItemRequest"}}}},"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/CartResponse"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}},"delete":{"tags":["Carrito"],"summary":"Eliminar un item del carrito","operationId":"remove_item_api_v1_cart_items__id_producto__delete","security":[{"HTTPBearer":[]}],"parameters":[{"name":"id_producto","in":"path","required":true,"schema":{"type":"integer","title":"Id Producto"}}],"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/CartResponse"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/api/v1/admin/config/shipping":{"get":{"tags":["Configuración del Sistema"],"summary":"Obtener configuración de envío actual","description":"Retorna la configuración de costo de envío y ETA.","operationId":"get_shipping_config_api_v1_admin_config_shipping_get","responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ShippingConfigResponse"}}}}},"security":[{"HTTPBearer":[]}]},"put":{"tags":["Configuración del Sistema"],"summary":"Actualizar configuración de envío","description":"Actualiza uno o más parámetros de configuración de envío.\nSolo campos enviados en el payload serán actualizados.","operationId":"update_shipping_config_api_v1_admin_config_shipping_put","requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/UpdateShippingConfigRequest"}}},"required":true},"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ShippingConfigResponse"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}},"security":[{"HTTPBearer":[]}]}},"/api/v1/admin/dashboard/metrics":{"get":{"tags":["Dashboard Administrativo"],"summary":"Métricas completas del panel administrativo","description":"Retorna KPIs completos del negocio:\nconteo de pedidos por estado, totales financieros, top productos,\ntendencia de 30 días, calificaciones e incidencias activas.","operationId":"get_dashboard_metrics_api_v1_admin_dashboard_metrics_get","responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/DashboardMetricsResponse"}}}}},"security":[{"HTTPBearer":[]}]}},"/api/v1/ventas/{id_venta}/review":{"post":{"tags":["Calificaciones"],"summary":"Calificar un pedido entregado","description":"Crea una calificación de 1-5 estrellas para un pedido en estado ENTREGADO.","operationId":"crear_review_api_v1_ventas__id_venta__review_post","security":[{"HTTPBearer":[]}],"parameters":[{"name":"id_venta","in":"path","required":true,"schema":{"type":"integer","title":"Id Venta"}}],"requestBody":{"required":true,"content":{"application/json":{"schema":{"$ref":"#/components/schemas/CreateReviewRequest"}}}},"responses":{"201":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ReviewResponse"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}},"get":{"tags":["Calificaciones"],"summary":"Obtener calificación de un pedido","operationId":"get_review_api_v1_ventas__id_venta__review_get","security":[{"HTTPBearer":[]}],"parameters":[{"name":"id_venta","in":"path","required":true,"schema":{"type":"integer","title":"Id Venta"}}],"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"anyOf":[{"$ref":"#/components/schemas/ReviewResponse"},{"type":"null"}],"title":"Response Get Review Api V1 Ventas  Id Venta  Review Get"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/api/v1/admin/reviews":{"get":{"tags":["Calificaciones"],"summary":"Listar todas las calificaciones (admin)","operationId":"list_reviews_api_v1_admin_reviews_get","security":[{"HTTPBearer":[]}],"parameters":[{"name":"limit","in":"query","required":false,"schema":{"type":"integer","maximum":200,"minimum":1,"default":50,"title":"Limit"}},{"name":"offset","in":"query","required":false,"schema":{"type":"integer","minimum":0,"default":0,"title":"Offset"}}],"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"type":"array","items":{"$ref":"#/components/schemas/AdminReviewResponse"},"title":"Response List Reviews Api V1 Admin Reviews Get"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/api/v1/admin/reviews/metrics":{"get":{"tags":["Calificaciones"],"summary":"Métricas de calificaciones (admin)","operationId":"get_review_metrics_api_v1_admin_reviews_metrics_get","responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ReviewMetricsResponse"}}}}},"security":[{"HTTPBearer":[]}]}},"/api/v1/ventas/{id_venta}/incidencia":{"post":{"tags":["Incidencias"],"summary":"Reportar una incidencia en un pedido","operationId":"crear_incidencia_api_v1_ventas__id_venta__incidencia_post","security":[{"HTTPBearer":[]}],"parameters":[{"name":"id_venta","in":"path","required":true,"schema":{"type":"integer","title":"Id Venta"}}],"requestBody":{"required":true,"content":{"application/json":{"schema":{"$ref":"#/components/schemas/CreateIssueRequest"}}}},"responses":{"201":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/IssueResponse"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/api/v1/ventas/{id_venta}/incidencias":{"get":{"tags":["Incidencias"],"summary":"Incidencias de un pedido","operationId":"get_incidencias_venta_api_v1_ventas__id_venta__incidencias_get","security":[{"HTTPBearer":[]}],"parameters":[{"name":"id_venta","in":"path","required":true,"schema":{"type":"integer","title":"Id Venta"}}],"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"type":"array","items":{"$ref":"#/components/schemas/IssueResponse"},"title":"Response Get Incidencias Venta Api V1 Ventas  Id Venta  Incidencias Get"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/api/v1/admin/incidencias":{"get":{"tags":["Incidencias"],"summary":"Listar todas las incidencias (admin)","operationId":"list_incidencias_api_v1_admin_incidencias_get","security":[{"HTTPBearer":[]}],"parameters":[{"name":"limit","in":"query","required":false,"schema":{"type":"integer","maximum":200,"minimum":1,"default":50,"title":"Limit"}},{"name":"offset","in":"query","required":false,"schema":{"type":"integer","minimum":0,"default":0,"title":"Offset"}}],"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"type":"array","items":{"$ref":"#/components/schemas/AdminIssueResponse"},"title":"Response List Incidencias Api V1 Admin Incidencias Get"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/api/v1/admin/incidencias/metrics":{"get":{"tags":["Incidencias"],"summary":"Métricas de incidencias (admin)","operationId":"get_incidencias_metrics_api_v1_admin_incidencias_metrics_get","responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/IssueMetricsResponse"}}}}},"security":[{"HTTPBearer":[]}]}},"/api/v1/admin/incidencias/{id_issue}":{"put":{"tags":["Incidencias"],"summary":"Actualizar estado de una incidencia (admin)","operationId":"actualizar_incidencia_api_v1_admin_incidencias__id_issue__put","security":[{"HTTPBearer":[]}],"parameters":[{"name":"id_issue","in":"path","required":true,"schema":{"type":"integer","title":"Id Issue"}}],"requestBody":{"required":true,"content":{"application/json":{"schema":{"$ref":"#/components/schemas/UpdateIssueRequest"}}}},"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/IssueResponse"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/api/v1/notificaciones":{"get":{"tags":["Notificaciones"],"summary":"Obtener mis notificaciones","description":"Retorna las notificaciones del usuario autenticado, ordenadas por fecha desc.","operationId":"get_mis_notificaciones_api_v1_notificaciones_get","security":[{"HTTPBearer":[]}],"parameters":[{"name":"limit","in":"query","required":false,"schema":{"type":"integer","maximum":100,"minimum":1,"default":50,"title":"Limit"}},{"name":"solo_no_leidas","in":"query","required":false,"schema":{"type":"boolean","description":"Filtrar solo no leídas","default":false,"title":"Solo No Leidas"},"description":"Filtrar solo no leídas"}],"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"type":"array","items":{"$ref":"#/components/schemas/NotificationResponse"},"title":"Response Get Mis Notificaciones Api V1 Notificaciones Get"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/api/v1/notificaciones/no-leidas":{"get":{"tags":["Notificaciones"],"summary":"Conteo de notificaciones no leídas","description":"Útil para el badge del bell icon en la navbar.","operationId":"get_unread_count_api_v1_notificaciones_no_leidas_get","responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/UnreadCountResponse"}}}}},"security":[{"HTTPBearer":[]}]}},"/api/v1/notificaciones/{id_notification}/leer":{"put":{"tags":["Notificaciones"],"summary":"Marcar notificación como leída","operationId":"marcar_leida_api_v1_notificaciones__id_notification__leer_put","security":[{"HTTPBearer":[]}],"parameters":[{"name":"id_notification","in":"path","required":true,"schema":{"type":"integer","title":"Id Notification"}}],"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/NotificationResponse"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/api/v1/notificaciones/leer-todas":{"put":{"tags":["Notificaciones"],"summary":"Marcar todas las notificaciones como leídas","operationId":"marcar_todas_leidas_api_v1_notificaciones_leer_todas_put","responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"additionalProperties":true,"type":"object","title":"Response Marcar Todas Leidas Api V1 Notificaciones Leer Todas Put"}}}}},"security":[{"HTTPBearer":[]}]}},"/api/v1/cripto-trufa/dashboard":{"get":{"tags":["CriptoTrufas &amp; Recompensas"],"summary":"Obtiene consolidado de fidelización del cliente","description":"Devuelve el balance actual, los cupones activos y los últimos 5 movimientos en una sola llamada.","operationId":"get_dashboard_api_v1_cripto_trufa_dashboard_get","responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/SweetCoinsDashboardResponse"}}}}},"security":[{"HTTPBearer":[]}]}},"/api/v1/cripto-trufa/balance":{"get":{"tags":["CriptoTrufas &amp; Recompensas"],"summary":"Obtiene el saldo de CriptoTrufas actual del cliente","operationId":"get_balance_api_v1_cripto_trufa_balance_get","responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"type":"integer","title":"Response Get Balance Api V1 Cripto Trufa Balance Get"}}}}},"security":[{"HTTPBearer":[]}]}},"/api/v1/cripto-trufa/history":{"get":{"tags":["CriptoTrufas &amp; Recompensas"],"summary":"Obtiene el historial de movimientos de puntos","operationId":"get_history_api_v1_cripto_trufa_history_get","responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"items":{"$ref":"#/components/schemas/MovimientoPuntosResponse"},"type":"array","title":"Response Get History Api V1 Cripto Trufa History Get"}}}}},"security":[{"HTTPBearer":[]}]}},"/api/v1/cripto-trufa/coupons/available":{"get":{"tags":["CriptoTrufas &amp; Recompensas"],"summary":"Obtiene cupones maestros disponibles para canje","description":"Retorna cupones activos canjeables por puntos. Cacheado en Redis por 5 minutos.","operationId":"get_available_coupons_api_v1_cripto_trufa_coupons_available_get","responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"items":{"$ref":"#/components/schemas/CuponMaestroResponse"},"type":"array","title":"Response Get Available Coupons Api V1 Cripto Trufa Coupons Available Get"}}}}},"security":[{"HTTPBearer":[]}]}},"/api/v1/cripto-trufa/coupons/redeem":{"post":{"tags":["CriptoTrufas &amp; Recompensas"],"summary":"Canjea un cupón de descuento por CriptoTrufas","description":"Valida saldo y genera un cupón del cliente con código único. Soporta cabecera Idempotency-Key.","operationId":"redeem_coupon_api_v1_cripto_trufa_coupons_redeem_post","security":[{"HTTPBearer":[]}],"parameters":[{"name":"Idempotency-Key","in":"header","required":false,"schema":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Idempotency-Key"}}],"requestBody":{"required":true,"content":{"application/json":{"schema":{"$ref":"#/components/schemas/RedeemCouponRequest"}}}},"responses":{"201":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/CuponClienteResponse"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/api/v1/cripto-trufa/coupons/mine":{"get":{"tags":["CriptoTrufas &amp; Recompensas"],"summary":"Obtiene los cupones propios adquiridos por el cliente","operationId":"get_my_coupons_api_v1_cripto_trufa_coupons_mine_get","responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"items":{"$ref":"#/components/schemas/CuponClienteResponse"},"type":"array","title":"Response Get My Coupons Api V1 Cripto Trufa Coupons Mine Get"}}}}},"security":[{"HTTPBearer":[]}]}},"/api/v1/cripto-trufa/public-config":{"get":{"tags":["CriptoTrufas &amp; Recompensas"],"summary":"Obtiene la configuración de recompensas activa en el sistema para clientes","operationId":"get_public_config_api_v1_cripto_trufa_public_config_get","responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ConfigRecompensasResponse"}}}}},"security":[{"HTTPBearer":[]}]}},"/api/v1/cripto-trufa/play-ruleta":{"post":{"tags":["CriptoTrufas &amp; Recompensas"],"summary":"Juega en la Ruleta Dulce y obtiene un premio aleatorio","description":"Deduce 50 CriptoTrufas del saldo del cliente de forma atómica y otorga un premio.","operationId":"play_ruleta_api_v1_cripto_trufa_play_ruleta_post","responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/RuletaResponse"}}}}},"security":[{"HTTPBearer":[]}]}},"/api/v1/cripto-trufa/adjust":{"post":{"tags":["CriptoTrufas &amp; Recompensas"],"summary":"Realiza un ajuste manual de puntos a un cliente","description":"Suma o resta puntos de CriptoTrufas a un cliente. Solo ADMIN. Registra auditoría completa.","operationId":"adjust_points_api_v1_cripto_trufa_adjust_post","requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/AdjustPointsRequest"}}},"required":true},"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/MovimientoPuntosResponse"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}},"security":[{"HTTPBearer":[]}]}},"/api/v1/cripto-trufa/config":{"get":{"tags":["CriptoTrufas &amp; Recompensas"],"summary":"Obtiene la configuración de recompensas activa en el sistema","description":"Permite ver la tasa de conversión y días de expiración. Solo ADMIN.","operationId":"get_active_config_api_v1_cripto_trufa_config_get","responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ConfigRecompensasResponse"}}}}},"security":[{"HTTPBearer":[]}]},"put":{"tags":["CriptoTrufas &amp; Recompensas"],"summary":"Actualiza la configuración de recompensas activa en el sistema","description":"Permite modificar la tasa de conversión, límite de puntos y días de expiración. Solo ADMIN.","operationId":"update_active_config_api_v1_cripto_trufa_config_put","requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/UpdateConfigRecompensasRequest"}}},"required":true},"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ConfigRecompensasResponse"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}},"security":[{"HTTPBearer":[]}]}},"/api/v1/cripto-trufa/admin/clientes":{"get":{"tags":["CriptoTrufas &amp; Recompensas"],"summary":"Lista todos los clientes con sus saldos de CriptoTrufas","description":"Solo ADMIN. Retorna una lista con la información de todos los clientes y sus saldos.","operationId":"get_clientes_con_saldo_api_v1_cripto_trufa_admin_clientes_get","responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"items":{"$ref":"#/components/schemas/ClienteSaldoResponse"},"type":"array","title":"Response Get Clientes Con Saldo Api V1 Cripto Trufa Admin Clientes Get"}}}}},"security":[{"HTTPBearer":[]}]}},"/api/v1/cripto-trufa/admin/history/{id_cliente}":{"get":{"tags":["CriptoTrufas &amp; Recompensas"],"summary":"Obtiene el historial de puntos de un cliente específico","description":"Solo ADMIN. Útil para auditoría y visualización de la cuenta de un cliente.","operationId":"get_cliente_history_admin_api_v1_cripto_trufa_admin_history__id_cliente__get","security":[{"HTTPBearer":[]}],"parameters":[{"name":"id_cliente","in":"path","required":true,"schema":{"type":"integer","title":"Id Cliente"}}],"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"type":"array","items":{"$ref":"#/components/schemas/MovimientoPuntosResponse"},"title":"Response Get Cliente History Admin Api V1 Cripto Trufa Admin History  Id Cliente  Get"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/api/v1/cripto-trufa/admin/coupons":{"get":{"tags":["CriptoTrufas &amp; Recompensas"],"summary":"Obtiene la lista de todos los cupones maestros","description":"Solo ADMIN. Muestra la lista completa de plantillas de cupones, incluyendo las inactivas.","operationId":"get_all_coupons_admin_api_v1_cripto_trufa_admin_coupons_get","responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"items":{"$ref":"#/components/schemas/CuponMaestroResponse"},"type":"array","title":"Response Get All Coupons Admin Api V1 Cripto Trufa Admin Coupons Get"}}}}},"security":[{"HTTPBearer":[]}]},"post":{"tags":["CriptoTrufas &amp; Recompensas"],"summary":"Crea un nuevo cupón maestro","description":"Solo ADMIN. Registra un cupón maestro en el catálogo general.","operationId":"create_cupon_maestro_api_v1_cripto_trufa_admin_coupons_post","requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/CreateCuponMaestroRequest"}}},"required":true},"responses":{"201":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/CuponMaestroResponse"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}},"security":[{"HTTPBearer":[]}]}},"/api/v1/cripto-trufa/admin/coupons/{id_cupon}":{"put":{"tags":["CriptoTrufas &amp; Recompensas"],"summary":"Actualiza un cupón maestro existente","description":"Solo ADMIN. Modifica los parámetros de un cupón maestro.","operationId":"update_cupon_maestro_api_v1_cripto_trufa_admin_coupons__id_cupon__put","security":[{"HTTPBearer":[]}],"parameters":[{"name":"id_cupon","in":"path","required":true,"schema":{"type":"integer","title":"Id Cupon"}}],"requestBody":{"required":true,"content":{"application/json":{"schema":{"$ref":"#/components/schemas/UpdateCuponMaestroRequest"}}}},"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/CuponMaestroResponse"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}},"delete":{"tags":["CriptoTrufas &amp; Recompensas"],"summary":"Desactiva un cupón maestro","description":"Solo ADMIN. Borrado lógico (desactivación) de un cupón maestro.","operationId":"delete_cupon_maestro_api_v1_cripto_trufa_admin_coupons__id_cupon__delete","security":[{"HTTPBearer":[]}],"parameters":[{"name":"id_cupon","in":"path","required":true,"schema":{"type":"integer","title":"Id Cupon"}}],"responses":{"204":{"description":"Successful Response"},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/api/v1/reports/{tipo}":{"get":{"tags":["Reportes y Exportaciones"],"summary":"Obtener reporte en JSON","description":"Devuelve los datos del reporte en JSON para renderizarlo en el frontend. Tipos: ventas, pedidos, catalogo, inventario, usuarios, fidelizacion.","operationId":"get_reporte_json_api_v1_reports__tipo__get","security":[{"HTTPBearer":[]}],"parameters":[{"name":"tipo","in":"path","required":true,"schema":{"enum":["ventas","pedidos","catalogo","inventario","usuarios","fidelizacion"],"type":"string","title":"Tipo"}},{"name":"fecha_desde","in":"query","required":false,"schema":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Fecha Desde"}},{"name":"fecha_hasta","in":"query","required":false,"schema":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Fecha Hasta"}},{"name":"estado","in":"query","required":false,"schema":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Estado"}},{"name":"estado_pago","in":"query","required":false,"schema":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Estado Pago"}},{"name":"search","in":"query","required":false,"schema":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Search"}}],"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/api/v1/reports/{tipo}/pdf":{"get":{"tags":["Reportes y Exportaciones"],"summary":"Descargar reporte en PDF","description":"Genera y descarga el reporte en PDF (generación síncrona en memoria).","operationId":"get_reporte_pdf_api_v1_reports__tipo__pdf_get","security":[{"HTTPBearer":[]}],"parameters":[{"name":"tipo","in":"path","required":true,"schema":{"enum":["ventas","pedidos","catalogo","inventario","usuarios","fidelizacion"],"type":"string","title":"Tipo"}},{"name":"fecha_desde","in":"query","required":false,"schema":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Fecha Desde"}},{"name":"fecha_hasta","in":"query","required":false,"schema":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Fecha Hasta"}},{"name":"estado","in":"query","required":false,"schema":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Estado"}},{"name":"estado_pago","in":"query","required":false,"schema":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Estado Pago"}},{"name":"search","in":"query","required":false,"schema":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Search"}}],"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/api/v1/reports/{tipo}/excel":{"get":{"tags":["Reportes y Exportaciones"],"summary":"Descargar reporte en Excel","description":"Genera y descarga el reporte en .xlsx (generación síncrona en memoria).","operationId":"get_reporte_excel_api_v1_reports__tipo__excel_get","security":[{"HTTPBearer":[]}],"parameters":[{"name":"tipo","in":"path","required":true,"schema":{"enum":["ventas","pedidos","catalogo","inventario","usuarios","fidelizacion"],"type":"string","title":"Tipo"}},{"name":"fecha_desde","in":"query","required":false,"schema":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Fecha Desde"}},{"name":"fecha_hasta","in":"query","required":false,"schema":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Fecha Hasta"}},{"name":"estado","in":"query","required":false,"schema":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Estado"}},{"name":"estado_pago","in":"query","required":false,"schema":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Estado Pago"}},{"name":"search","in":"query","required":false,"schema":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Search"}}],"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/api/v1/reports/ventas/{id_venta}/comprobante.pdf":{"get":{"tags":["Reportes y Exportaciones"],"summary":"Descargar comprobante electrónico (PDF)","description":"Genera y descarga el comprobante de venta (BOLETA/FACTURA) en PDF. Incluye datos del cliente, productos, cantidades y total.","operationId":"get_comprobante_pdf_api_v1_reports_ventas__id_venta__comprobante_pdf_get","security":[{"HTTPBearer":[]}],"parameters":[{"name":"id_venta","in":"path","required":true,"schema":{"type":"integer","title":"Id Venta"}}],"responses":{"200":{"description":"Successful Response"},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/api/v1/admin/users":{"get":{"tags":["Gestión de Usuarios"],"summary":"Reporte de Gestión de Usuarios","description":"Lista los usuarios del sistema con su rol, estado de cuenta y actividad. Permite filtrar por rol (ADMIN/CLIENTE), estado (activo/inactivo) y búsqueda parcial por nombre o email. Requiere rol ADMIN o el permiso `user:read:all`.","operationId":"list_users_api_v1_admin_users_get","security":[{"HTTPBearer":[]}],"parameters":[{"name":"rol","in":"query","required":false,"schema":{"anyOf":[{"type":"string"},{"type":"null"}],"description":"Filtrar por rol: ADMIN o CLIENTE.","title":"Rol"},"description":"Filtrar por rol: ADMIN o CLIENTE."},{"name":"estado","in":"query","required":false,"schema":{"anyOf":[{"type":"boolean"},{"type":"null"}],"description":"True = activos, False = inactivos.","title":"Estado"},"description":"True = activos, False = inactivos."},{"name":"search","in":"query","required":false,"schema":{"anyOf":[{"type":"string"},{"type":"null"}],"description":"Búsqueda parcial por nombre o email.","title":"Search"},"description":"Búsqueda parcial por nombre o email."},{"name":"limit","in":"query","required":false,"schema":{"type":"integer","maximum":500,"minimum":1,"description":"Cantidad máxima de registros.","default":100,"title":"Limit"},"description":"Cantidad máxima de registros."},{"name":"offset","in":"query","required":false,"schema":{"type":"integer","minimum":0,"description":"Desplazamiento de paginación.","default":0,"title":"Offset"},"description":"Desplazamiento de paginación."}],"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"type":"array","items":{"$ref":"#/components/schemas/UserListItemResponse"},"title":"Response List Users Api V1 Admin Users Get"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/api/v1/admin/users/{id_usuario}":{"get":{"tags":["Gestión de Usuarios"],"summary":"Detalle de un usuario","description":"Obtiene el detalle completo de un usuario (incluye datos fiscales).","operationId":"get_user_detail_api_v1_admin_users__id_usuario__get","security":[{"HTTPBearer":[]}],"parameters":[{"name":"id_usuario","in":"path","required":true,"schema":{"type":"integer","title":"Id Usuario"}}],"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/UserDetailResponse"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/api/v1/admin/users/{id_usuario}/estado":{"patch":{"tags":["Gestión de Usuarios"],"summary":"Activar / desactivar usuario","description":"Cambia el estado de la cuenta de un usuario (activo/inactivo). No elimina el registro (borrado lógico). Requiere permiso `user:update`.","operationId":"update_user_estado_api_v1_admin_users__id_usuario__estado_patch","security":[{"HTTPBearer":[]}],"parameters":[{"name":"id_usuario","in":"path","required":true,"schema":{"type":"integer","title":"Id Usuario"}}],"requestBody":{"required":true,"content":{"application/json":{"schema":{"$ref":"#/components/schemas/UserEstadoUpdateRequest"}}}},"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/UserListItemResponse"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}}},"components":{"schemas":{"AddCartItemRequest":{"properties":{"id_producto":{"type":"integer","exclusiveMinimum":0.0,"title":"Id Producto"},"cantidad":{"type":"integer","exclusiveMinimum":0.0,"title":"Cantidad"},"es_paquete":{"type":"boolean","title":"Es Paquete","default":false},"id_paquete":{"anyOf":[{"type":"integer"},{"type":"null"}],"title":"Id Paquete"}},"type":"object","required":["id_producto","cantidad"],"title":"AddCartItemRequest"},"AdjustPointsRequest":{"properties":{"id_cliente":{"type":"integer","title":"Id Cliente"},"cantidad":{"type":"integer","title":"Cantidad","description":"Cantidad de puntos a sumar (positivo) o restar (negativo)"},"justificacion":{"type":"string","maxLength":255,"minLength":5,"title":"Justificacion","description":"Auditoría obligatoria de la justificación del ajuste"}},"type":"object","required":["id_cliente","cantidad","justificacion"],"title":"AdjustPointsRequest","description":"Payload de administrador para modificar manualmente los puntos de un cliente.","example":{"cantidad":500,"id_cliente":8,"justificacion":"Ajuste de cortesía por demoras en la entrega del pedido #2010"}},"AdminIssueResponse":{"properties":{"id_issue":{"type":"integer","title":"Id Issue"},"id_venta":{"type":"integer","title":"Id Venta"},"issue_type":{"type":"string","title":"Issue Type"},"description":{"type":"string","title":"Description"},"status":{"type":"string","title":"Status"},"reported_by":{"anyOf":[{"type":"integer"},{"type":"null"}],"title":"Reported By"},"resolved_by":{"anyOf":[{"type":"integer"},{"type":"null"}],"title":"Resolved By"},"resolution":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Resolution"},"created_at":{"type":"string","format":"date-time","title":"Created At"},"updated_at":{"type":"string","format":"date-time","title":"Updated At"},"cliente_nombre":{"type":"string","title":"Cliente Nombre"},"estado_pedido":{"type":"string","title":"Estado Pedido"}},"type":"object","required":["id_issue","id_venta","issue_type","description","status","created_at","updated_at","cliente_nombre","estado_pedido"],"title":"AdminIssueResponse"},"AdminReviewResponse":{"properties":{"id_review":{"type":"integer","title":"Id Review"},"id_venta":{"type":"integer","title":"Id Venta"},"id_cliente":{"type":"integer","title":"Id Cliente"},"rating":{"type":"integer","title":"Rating"},"comment":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Comment"},"created_at":{"type":"string","format":"date-time","title":"Created At"},"cliente_nombre":{"type":"string","title":"Cliente Nombre"},"estado_pedido":{"type":"string","title":"Estado Pedido"}},"type":"object","required":["id_review","id_venta","id_cliente","rating","created_at","cliente_nombre","estado_pedido"],"title":"AdminReviewResponse"},"AjusteStockRequest":{"properties":{"id_producto":{"type":"integer","exclusiveMinimum":0.0,"title":"Id Producto","description":"ID del producto a ajustar"},"id_lote":{"type":"integer","exclusiveMinimum":0.0,"title":"Id Lote","description":"Lote físico al que aplica el ajuste. Obligatorio para todos los tipos."},"tipo_movimiento":{"$ref":"#/components/schemas/TipoMovimientoStockEnum","description":"Tipo de ajuste: AJUSTE_POSITIVO, AJUSTE_NEGATIVO o MERMA"},"cantidad":{"type":"integer","exclusiveMinimum":0.0,"title":"Cantidad","description":"Cantidad a ajustar (siempre positiva)"},"observacion":{"anyOf":[{"type":"string","maxLength":500},{"type":"null"}],"title":"Observacion","description":"Nota opcional del ajuste"}},"type":"object","required":["id_producto","id_lote","tipo_movimiento","cantidad"],"title":"AjusteStockRequest","description":"Payload para registrar un ajuste manual de inventario.\n\nReglas de negocio:\n  - id_lote es SIEMPRE obligatorio (el trigger BEFORE INSERT lo reafirma en DB).\n  - Solo se permiten tipos: AJUSTE_POSITIVO, AJUSTE_NEGATIVO o MERMA.\n  - Para mercancía nueva sin lote, registrar primero mediante POST /inventory/lots."},"Body_create_package_api_v1_packages__post":{"properties":{"nombre":{"type":"string","title":"Nombre"},"slug":{"type":"string","title":"Slug"},"descripcion":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Descripcion"},"estado":{"type":"boolean","title":"Estado","default":true},"productos_json":{"type":"string","title":"Productos Json"},"image":{"anyOf":[{"type":"string","format":"binary"},{"type":"null"}],"title":"Image"}},"type":"object","required":["nombre","slug","productos_json"],"title":"Body_create_package_api_v1_packages__post"},"Body_create_product_api_v1_products__post":{"properties":{"nombre":{"type":"string","title":"Nombre"},"precio":{"anyOf":[{"type":"number"},{"type":"string"}],"title":"Precio"},"id_categoria":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Id Categoria"},"descripcion":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Descripcion"},"ingredientes":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Ingredientes"},"alergenos":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Alergenos"},"peso_gramos":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Peso Gramos"},"stock_minimo":{"type":"integer","title":"Stock Minimo","default":0},"estado":{"type":"boolean","title":"Estado","default":true},"image":{"anyOf":[{"type":"string","format":"binary"},{"type":"null"}],"title":"Image"}},"type":"object","required":["nombre","precio"],"title":"Body_create_product_api_v1_products__post"},"Body_update_package_api_v1_packages__id__put":{"properties":{"nombre":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Nombre"},"slug":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Slug"},"descripcion":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Descripcion"},"estado":{"anyOf":[{"type":"boolean"},{"type":"null"}],"title":"Estado"},"productos_json":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Productos Json"},"image":{"anyOf":[{"type":"string","format":"binary"},{"type":"null"}],"title":"Image"}},"type":"object","title":"Body_update_package_api_v1_packages__id__put"},"Body_update_product_api_v1_products__id__put":{"properties":{"nombre":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Nombre"},"precio":{"anyOf":[{"type":"number"},{"type":"string"},{"type":"null"}],"title":"Precio"},"id_categoria":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Id Categoria"},"descripcion":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Descripcion"},"ingredientes":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Ingredientes"},"alergenos":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Alergenos"},"peso_gramos":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Peso Gramos"},"stock_minimo":{"anyOf":[{"type":"integer"},{"type":"null"}],"title":"Stock Minimo"},"estado":{"anyOf":[{"type":"boolean"},{"type":"null"}],"title":"Estado"},"image":{"anyOf":[{"type":"string","format":"binary"},{"type":"null"}],"title":"Image"}},"type":"object","title":"Body_update_product_api_v1_products__id__put"},"Body_upload_general_image_api_v1_storage_upload_post":{"properties":{"file":{"type":"string","format":"binary","title":"File"},"folder":{"type":"string","title":"Folder","default":"mitrufely/general"}},"type":"object","required":["file"],"title":"Body_upload_general_image_api_v1_storage_upload_post"},"CancelRequest":{"properties":{"motivo":{"type":"string","maxLength":500,"minLength":5,"title":"Motivo","description":"Motivo de la transición"},"observaciones":{"anyOf":[{"type":"string","maxLength":1000},{"type":"null"}],"title":"Observaciones","description":"Observaciones adicionales"}},"type":"object","required":["motivo"],"title":"CancelRequest","description":"Payload para cancelar un pedido."},"CartCheckoutResponse":{"properties":{"id_venta":{"type":"integer","title":"Id Venta"},"total":{"type":"string","title":"Total"},"estado":{"type":"string","title":"Estado"},"estado_pago":{"type":"string","title":"Estado Pago"},"mensaje":{"type":"string","title":"Mensaje","default":"Venta creada desde el carrito exitosamente."}},"type":"object","required":["id_venta","total","estado","estado_pago"],"title":"CartCheckoutResponse"},"CartItemResponse":{"properties":{"id_producto":{"type":"integer","title":"Id Producto"},"nombre":{"type":"string","title":"Nombre"},"cantidad":{"type":"integer","title":"Cantidad"},"precio_unitario":{"type":"string","title":"Precio Unitario"},"imagen_url":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Imagen Url"},"es_paquete":{"type":"boolean","title":"Es Paquete","default":false},"id_paquete":{"anyOf":[{"type":"integer"},{"type":"null"}],"title":"Id Paquete"},"id_categoria":{"anyOf":[{"type":"integer"},{"type":"null"}],"title":"Id Categoria"},"stock_actual":{"anyOf":[{"type":"integer"},{"type":"null"}],"title":"Stock Actual"},"productos":{"anyOf":[{"items":{"$ref":"#/components/schemas/PackageComponentResponse"},"type":"array"},{"type":"null"}],"title":"Productos"}},"type":"object","required":["id_producto","nombre","cantidad","precio_unitario"],"title":"CartItemResponse"},"CartResponse":{"properties":{"items":{"items":{"$ref":"#/components/schemas/CartItemResponse"},"type":"array","title":"Items"},"total_items":{"type":"integer","title":"Total Items","default":0},"subtotal":{"type":"string","title":"Subtotal","default":"0.00"},"updated_at":{"anyOf":[{"type":"string","format":"date-time"},{"type":"null"}],"title":"Updated At"}},"type":"object","title":"CartResponse"},"CategoriaCreate":{"properties":{"nombre":{"type":"string","maxLength":100,"minLength":2,"title":"Nombre"},"descripcion":{"anyOf":[{"type":"string","maxLength":500},{"type":"null"}],"title":"Descripcion"},"estado":{"type":"boolean","title":"Estado","default":true}},"type":"object","required":["nombre"],"title":"CategoriaCreate"},"CategoriaResponse":{"properties":{"nombre":{"type":"string","maxLength":100,"minLength":2,"title":"Nombre"},"descripcion":{"anyOf":[{"type":"string","maxLength":500},{"type":"null"}],"title":"Descripcion"},"estado":{"type":"boolean","title":"Estado","default":true},"id_categoria":{"type":"integer","title":"Id Categoria"},"slug":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Slug"}},"type":"object","required":["nombre","id_categoria"],"title":"CategoriaResponse"},"CategoriaUpdate":{"properties":{"nombre":{"anyOf":[{"type":"string","maxLength":100,"minLength":2},{"type":"null"}],"title":"Nombre"},"descripcion":{"anyOf":[{"type":"string","maxLength":500},{"type":"null"}],"title":"Descripcion"},"estado":{"anyOf":[{"type":"boolean"},{"type":"null"}],"title":"Estado"}},"type":"object","title":"CategoriaUpdate"},"ClienteInfoResponse":{"properties":{"id_cliente":{"type":"integer","title":"Id Cliente"},"direccion":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Direccion"},"telefono":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Telefono"}},"type":"object","required":["id_cliente"],"title":"ClienteInfoResponse","description":"Información del perfil cliente (si aplica)."},"ClienteResponse":{"properties":{"direccion":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Direccion"},"referencia":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Referencia"},"telefono":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Telefono"}},"type":"object","title":"ClienteResponse"},"ClienteSaldoResponse":{"properties":{"id_cliente":{"type":"integer","title":"Id Cliente"},"id_usuario":{"type":"integer","title":"Id Usuario"},"nombres":{"type":"string","title":"Nombres"},"apellidos":{"type":"string","title":"Apellidos"},"email":{"type":"string","title":"Email"},"saldo":{"type":"integer","title":"Saldo"}},"type":"object","required":["id_cliente","id_usuario","nombres","apellidos","email","saldo"],"title":"ClienteSaldoResponse","description":"Detalle de saldo de puntos de un cliente para la gestión de administración.","example":{"apellidos":"Pérez","email":"pedro.perez@gmail.com","id_cliente":8,"id_usuario":14,"nombres":"Pedro","saldo":1650}},"ConfigRecompensasResponse":{"properties":{"id_config":{"type":"integer","title":"Id Config"},"tasa_conversion":{"type":"string","title":"Tasa Conversion","description":"Porcentaje de retorno de puntos sobre el total gastado (Ej: 0.10 -&gt; 10% de S/.)"},"limite_puntos_billetera":{"type":"integer","title":"Limite Puntos Billetera","description":"Cantidad máxima de puntos que un cliente puede tener acumulados"},"dias_expiracion":{"type":"integer","title":"Dias Expiracion","description":"Días de validez de los puntos acumulados antes de expirar"},"estado":{"type":"boolean","title":"Estado"}},"type":"object","required":["id_config","tasa_conversion","limite_puntos_billetera","dias_expiracion","estado"],"title":"ConfigRecompensasResponse","description":"Parámetros globales activos del programa de fidelización.","example":{"dias_expiracion":365,"estado":true,"id_config":1,"limite_puntos_billetera":50000,"tasa_conversion":0.1}},"CreateCuponMaestroRequest":{"properties":{"nombre":{"type":"string","maxLength":100,"minLength":3,"title":"Nombre"},"descripcion":{"anyOf":[{"type":"string","maxLength":255},{"type":"null"}],"title":"Descripcion"},"porcentaje_descuento":{"anyOf":[{"type":"number","maximum":100.0,"exclusiveMinimum":0.0},{"type":"string"}],"title":"Porcentaje Descuento","description":"Porcentaje de descuento (1-100)"},"costo_puntos":{"anyOf":[{"type":"integer","minimum":0.0},{"type":"null"}],"title":"Costo Puntos","description":"Costo en puntos para canje, o null si no es canjeable por puntos"},"dias_vigencia":{"type":"integer","exclusiveMinimum":0.0,"title":"Dias Vigencia","description":"Días de validez del cupón tras su adquisición"},"estado":{"type":"boolean","title":"Estado","description":"Estado del cupón (activo/inactivo)","default":true},"id_categoria":{"anyOf":[{"type":"integer"},{"type":"null"}],"title":"Id Categoria","description":"Categoría asociada al cupón de fidelización"}},"type":"object","required":["nombre","porcentaje_descuento","dias_vigencia"],"title":"CreateCuponMaestroRequest","description":"Payload para crear un nuevo cupón maestro.","example":{"costo_puntos":700,"descripcion":"Descuento del 15% para compras generales.","dias_vigencia":30,"estado":true,"nombre":"Cupón de Inauguración","porcentaje_descuento":15.0}},"CreateIssueRequest":{"properties":{"issue_type":{"$ref":"#/components/schemas/TipoIncidenciaEnum","description":"Tipo de incidencia"},"description":{"type":"string","maxLength":2000,"minLength":10,"title":"Description"}},"type":"object","required":["issue_type","description"],"title":"CreateIssueRequest"},"CreateReviewRequest":{"properties":{"rating":{"type":"integer","maximum":5.0,"minimum":1.0,"title":"Rating","description":"Calificación de 1 a 5 estrellas"},"comment":{"anyOf":[{"type":"string","maxLength":1000},{"type":"null"}],"title":"Comment","description":"Comentario opcional"}},"type":"object","required":["rating"],"title":"CreateReviewRequest"},"CuponClienteResponse":{"properties":{"id_cupon_cliente":{"type":"integer","title":"Id Cupon Cliente"},"id_cliente":{"type":"integer","title":"Id Cliente"},"id_cupon":{"type":"integer","title":"Id Cupon"},"codigo_unico":{"type":"string","title":"Codigo Unico","description":"Código único alfanumérico generado para aplicar en el Checkout"},"estado":{"$ref":"#/components/schemas/EstadoCuponEnum"},"origen":{"$ref":"#/components/schemas/OrigenCuponEnum"},"fecha_adquisicion":{"type":"string","format":"date-time","title":"Fecha Adquisicion"},"fecha_uso":{"anyOf":[{"type":"string","format":"date-time"},{"type":"null"}],"title":"Fecha Uso"},"fecha_expiracion":{"type":"string","format":"date-time","title":"Fecha Expiracion"},"cupon":{"$ref":"#/components/schemas/CuponMaestroResponse","description":"Información detallada de la plantilla del cupón"}},"type":"object","required":["id_cupon_cliente","id_cliente","id_cupon","codigo_unico","estado","origen","fecha_adquisicion","fecha_expiracion","cupon"],"title":"CuponClienteResponse","description":"Cupón único perteneciente y redimible por un cliente específico.","example":{"codigo_unico":"MTR-XY91","cupon":{"costo_puntos":1000,"descripcion":"Cupón especial de 20% para fans de nuestras trufas de Oreo.","dias_vigencia":15,"estado":true,"id_cupon":2,"nombre":"Locura por el Oreo","porcentaje_descuento":20.0},"estado":"DISPONIBLE","fecha_adquisicion":"2026-06-28T16:00:00Z","fecha_expiracion":"2026-07-13T23:59:59Z","id_cliente":8,"id_cupon":2,"id_cupon_cliente":24,"origen":"COMPRA_PUNTOS"}},"CuponMaestroResponse":{"properties":{"id_cupon":{"type":"integer","title":"Id Cupon"},"id_categoria":{"anyOf":[{"type":"integer"},{"type":"null"}],"title":"Id Categoria","description":"ID de categoría específica a aplicar, o null si aplica a todo el catálogo"},"nombre":{"type":"string","title":"Nombre"},"descripcion":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Descripcion"},"porcentaje_descuento":{"type":"string","title":"Porcentaje Descuento","description":"Porcentaje de descuento sobre el subtotal"},"costo_puntos":{"anyOf":[{"type":"integer"},{"type":"null"}],"title":"Costo Puntos","description":"Costo en puntos para canje. Null si no es canjeable por puntos"},"dias_vigencia":{"type":"integer","title":"Dias Vigencia","description":"Días de validez una vez adquirido por el cliente"},"estado":{"type":"boolean","title":"Estado"}},"type":"object","required":["id_cupon","nombre","porcentaje_descuento","dias_vigencia","estado"],"title":"CuponMaestroResponse","description":"Plantilla o catálogo de cupones de descuento.","example":{"costo_puntos":1000,"descripcion":"Cupón especial de 20% para fans de nuestras trufas de Oreo.","dias_vigencia":15,"estado":true,"id_cupon":2,"nombre":"Locura por el Oreo","porcentaje_descuento":20.0}},"DashboardMetricsResponse":{"properties":{"pedidos_totales":{"type":"integer","title":"Pedidos Totales"},"pedidos_pendientes":{"type":"integer","title":"Pedidos Pendientes"},"pedidos_pagados":{"type":"integer","title":"Pedidos Pagados"},"pedidos_preparando":{"type":"integer","title":"Pedidos Preparando"},"pedidos_en_camino":{"type":"integer","title":"Pedidos En Camino"},"pedidos_entregados":{"type":"integer","title":"Pedidos Entregados"},"pedidos_cancelados":{"type":"integer","title":"Pedidos Cancelados"},"pedidos_reembolsados":{"type":"integer","title":"Pedidos Reembolsados"},"pedidos_devueltos":{"type":"integer","title":"Pedidos Devueltos"},"pedidos_anulados":{"type":"integer","title":"Pedidos Anulados"},"ventas_totales_monto":{"type":"string","title":"Ventas Totales Monto"},"monto_reembolsado":{"type":"string","title":"Monto Reembolsado"},"ticket_promedio":{"type":"string","title":"Ticket Promedio"},"tiempo_promedio_entrega_minutos":{"anyOf":[{"type":"number"},{"type":"null"}],"title":"Tiempo Promedio Entrega Minutos"},"productos_mas_vendidos":{"items":{"$ref":"#/components/schemas/ProductoTopItem"},"type":"array","title":"Productos Mas Vendidos"},"ventas_por_dia":{"items":{"$ref":"#/components/schemas/VentasPorDiaItem"},"type":"array","title":"Ventas Por Dia"},"calificacion_promedio":{"anyOf":[{"type":"number"},{"type":"null"}],"title":"Calificacion Promedio"},"total_calificaciones":{"type":"integer","title":"Total Calificaciones"},"incidencias_abiertas":{"type":"integer","title":"Incidencias Abiertas"}},"type":"object","required":["pedidos_totales","pedidos_pendientes","pedidos_pagados","pedidos_preparando","pedidos_en_camino","pedidos_entregados","pedidos_cancelados","pedidos_reembolsados","pedidos_devueltos","pedidos_anulados","ventas_totales_monto","monto_reembolsado","ticket_promedio","tiempo_promedio_entrega_minutos","productos_mas_vendidos","ventas_por_dia","calificacion_promedio","total_calificaciones","incidencias_abiertas"],"title":"DashboardMetricsResponse"},"DatosFiscalesResponse":{"properties":{"id_dato_fiscal":{"type":"integer","title":"Id Dato Fiscal"},"id_usuario":{"type":"integer","title":"Id Usuario"},"tipo_documento":{"type":"string","title":"Tipo Documento"},"numero_documento":{"type":"string","title":"Numero Documento"},"razon_social":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Razon Social"},"direccion_fiscal":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Direccion Fiscal"},"es_predeterminado":{"type":"boolean","title":"Es Predeterminado"}},"type":"object","required":["id_dato_fiscal","id_usuario","tipo_documento","numero_documento","es_predeterminado"],"title":"DatosFiscalesResponse"},"DatosFiscalesUpsert":{"properties":{"tipo_documento":{"type":"string","pattern":"^(DNI|RUC)$","title":"Tipo Documento"},"numero_documento":{"type":"string","maxLength":20,"minLength":8,"title":"Numero Documento"},"razon_social":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Razon Social"},"direccion_fiscal":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Direccion Fiscal"}},"type":"object","required":["tipo_documento","numero_documento"],"title":"DatosFiscalesUpsert"},"DetalleVentaResponse":{"properties":{"id_detalle":{"anyOf":[{"type":"integer"},{"type":"null"}],"title":"Id Detalle"},"id_venta":{"anyOf":[{"type":"integer"},{"type":"null"}],"title":"Id Venta"},"id_producto":{"type":"integer","title":"Id Producto"},"cantidad":{"type":"integer","title":"Cantidad"},"precio_unitario":{"type":"string","title":"Precio Unitario"},"subtotal":{"type":"string","title":"Subtotal"},"nombre_producto":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Nombre Producto"},"imagen_url_producto":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Imagen Url Producto"}},"type":"object","required":["id_producto","cantidad","precio_unitario","subtotal"],"title":"DetalleVentaResponse"},"DevolucionRequest":{"properties":{"motivo":{"type":"string","maxLength":500,"minLength":5,"title":"Motivo","description":"Motivo de la transición"},"observaciones":{"anyOf":[{"type":"string","maxLength":1000},{"type":"null"}],"title":"Observaciones","description":"Observaciones adicionales"}},"type":"object","required":["motivo"],"title":"DevolucionRequest","description":"Payload para iniciar una devolución post-entrega."},"DocumentoResponse":{"properties":{"id_documento":{"anyOf":[{"type":"integer"},{"type":"null"}],"title":"Id Documento"},"id_venta":{"anyOf":[{"type":"integer"},{"type":"null"}],"title":"Id Venta"},"tipo_documento":{"type":"string","title":"Tipo Documento"},"numero_serie":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Numero Serie"},"numero_correlativo":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Numero Correlativo"},"url_archivo":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Url Archivo"},"fecha_generacion":{"type":"string","format":"date-time","title":"Fecha Generacion"}},"type":"object","required":["tipo_documento","fecha_generacion"],"title":"DocumentoResponse"},"EstadoCuponEnum":{"type":"string","enum":["DISPONIBLE","USADO","EXPIRADO"],"title":"EstadoCuponEnum","description":"Estado del cupón de un cliente específico. Tabla: cupones_cliente."},"EstadoIncidenciaEnum":{"type":"string","enum":["ABIERTA","EN_REVISION","RESUELTA","CERRADA"],"title":"EstadoIncidenciaEnum","description":"Estado del ciclo de vida de una incidencia. Tabla: order_issues."},"EstadoLoteEnum":{"type":"string","enum":["VIGENTE","AGOTADO","VENCIDO"],"title":"EstadoLoteEnum","description":"Estado de vida de un lote de producto. Tabla: lotes."},"EventoTrackingItem":{"properties":{"fecha":{"type":"string","format":"date-time","title":"Fecha"},"evento":{"type":"string","title":"Evento"},"descripcion":{"type":"string","title":"Descripcion"}},"type":"object","required":["fecha","evento","descripcion"],"title":"EventoTrackingItem","description":"Un evento cronológico del pedido para la vista de tracking del cliente."},"GoogleLoginRequest":{"properties":{"id_token":{"type":"string","title":"Id Token","description":"ID Token JWT devuelto por Google Identity Services en el frontend."}},"type":"object","required":["id_token"],"title":"GoogleLoginRequest","description":"Payload enviado por el frontend tras el flujo de Google Sign-In."},"HTTPValidationError":{"properties":{"detail":{"items":{"$ref":"#/components/schemas/ValidationError"},"type":"array","title":"Detail"}},"type":"object","title":"HTTPValidationError"},"IssueMetricsResponse":{"properties":{"total_incidencias":{"type":"integer","title":"Total Incidencias"},"abiertas":{"type":"integer","title":"Abiertas"},"resueltas":{"type":"integer","title":"Resueltas"},"cerradas":{"type":"integer","title":"Cerradas"},"en_revision":{"type":"integer","title":"En Revision"},"por_tipo":{"additionalProperties":{"type":"integer"},"type":"object","title":"Por Tipo"}},"type":"object","required":["total_incidencias","abiertas","resueltas","cerradas","en_revision","por_tipo"],"title":"IssueMetricsResponse"},"IssueResponse":{"properties":{"id_issue":{"type":"integer","title":"Id Issue"},"id_venta":{"type":"integer","title":"Id Venta"},"issue_type":{"type":"string","title":"Issue Type"},"description":{"type":"string","title":"Description"},"status":{"type":"string","title":"Status"},"reported_by":{"anyOf":[{"type":"integer"},{"type":"null"}],"title":"Reported By"},"resolved_by":{"anyOf":[{"type":"integer"},{"type":"null"}],"title":"Resolved By"},"resolution":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Resolution"},"created_at":{"type":"string","format":"date-time","title":"Created At"},"updated_at":{"type":"string","format":"date-time","title":"Updated At"}},"type":"object","required":["id_issue","id_venta","issue_type","description","status","created_at","updated_at"],"title":"IssueResponse"},"ItemPaquete":{"properties":{"id_paquete":{"type":"integer","exclusiveMinimum":0.0,"title":"Id Paquete"},"cantidad":{"type":"integer","exclusiveMinimum":0.0,"title":"Cantidad"}},"type":"object","required":["id_paquete","cantidad"],"title":"ItemPaquete"},"ItemProducto":{"properties":{"id_producto":{"type":"integer","exclusiveMinimum":0.0,"title":"Id Producto"},"cantidad":{"type":"integer","exclusiveMinimum":0.0,"title":"Cantidad"}},"type":"object","required":["id_producto","cantidad"],"title":"ItemProducto"},"LoginRequest":{"properties":{"email":{"type":"string","format":"email","title":"Email"},"password":{"type":"string","maxLength":128,"minLength":8,"title":"Password"}},"type":"object","required":["email","password"],"title":"LoginRequest"},"LoteCreateRequest":{"properties":{"id_producto":{"type":"integer","exclusiveMinimum":0.0,"title":"Id Producto","description":"ID del producto físico"},"cantidad_inicial":{"type":"integer","exclusiveMinimum":0.0,"title":"Cantidad Inicial","description":"Cantidad inicial del lote"},"fecha_vencimiento":{"anyOf":[{"type":"string","format":"date-time"},{"type":"null"}],"title":"Fecha Vencimiento","description":"Fecha de vencimiento (UTC). Debe ser estrictamente futura."}},"type":"object","required":["id_producto","cantidad_inicial"],"title":"LoteCreateRequest","description":"Payload para registrar un nuevo lote físico de mercancía."},"LoteResponse":{"properties":{"id_lote":{"type":"integer","title":"Id Lote"},"id_producto":{"type":"integer","title":"Id Producto"},"fecha_ingreso":{"type":"string","format":"date-time","title":"Fecha Ingreso"},"fecha_vencimiento":{"anyOf":[{"type":"string","format":"date-time"},{"type":"null"}],"title":"Fecha Vencimiento"},"cantidad_inicial":{"type":"integer","title":"Cantidad Inicial"},"cantidad_disponible":{"type":"integer","title":"Cantidad Disponible"},"estado_lote":{"$ref":"#/components/schemas/EstadoLoteEnum"}},"type":"object","required":["id_lote","id_producto","fecha_ingreso","fecha_vencimiento","cantidad_inicial","cantidad_disponible","estado_lote"],"title":"LoteResponse","description":"Representación de un lote físico para respuestas de API."},"MetodoPagoResponse":{"properties":{"id_pago":{"anyOf":[{"type":"integer"},{"type":"null"}],"title":"Id Pago"},"id_venta":{"anyOf":[{"type":"integer"},{"type":"null"}],"title":"Id Venta"},"tipo_pago":{"type":"string","title":"Tipo Pago"},"monto":{"type":"string","title":"Monto"},"codigo_transaccion":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Codigo Transaccion"},"proveedor":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Proveedor"},"estado_transaccion":{"type":"string","title":"Estado Transaccion"},"fecha_pago":{"anyOf":[{"type":"string","format":"date-time"},{"type":"null"}],"title":"Fecha Pago"}},"type":"object","required":["tipo_pago","monto","estado_transaccion"],"title":"MetodoPagoResponse"},"MovimientoPuntosResponse":{"properties":{"id_movimiento_punto":{"type":"integer","title":"Id Movimiento Punto"},"id_cliente":{"type":"integer","title":"Id Cliente"},"tipo_movimiento":{"$ref":"#/components/schemas/TipoMovimientoPuntosEnum"},"cantidad":{"type":"integer","title":"Cantidad","description":"Cantidad de puntos modificados (positivo para acumulación, negativo para canjes/débitos)"},"saldo_puntos_resultante":{"type":"integer","title":"Saldo Puntos Resultante","description":"Saldo acumulado resultante tras el movimiento"},"fecha_movimiento":{"type":"string","format":"date-time","title":"Fecha Movimiento"},"justificacion":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Justificacion"}},"type":"object","required":["id_movimiento_punto","id_cliente","tipo_movimiento","cantidad","saldo_puntos_resultante","fecha_movimiento"],"title":"MovimientoPuntosResponse","description":"Registro atómico en el ledger de puntos del cliente.","example":{"cantidad":150,"fecha_movimiento":"2026-06-28T16:30:00Z","id_cliente":8,"id_movimiento_punto":42,"justificacion":"Puntos acumulados en Venta #2087 — S/ 150.00","saldo_puntos_resultante":1650,"tipo_movimiento":"ACUMULACION_VENTA"}},"MovimientoStockResponse":{"properties":{"id_movimiento_stock":{"type":"integer","title":"Id Movimiento Stock"},"id_producto":{"type":"integer","title":"Id Producto"},"id_lote":{"anyOf":[{"type":"integer"},{"type":"null"}],"title":"Id Lote"},"id_venta":{"anyOf":[{"type":"integer"},{"type":"null"}],"title":"Id Venta"},"id_usuario":{"anyOf":[{"type":"integer"},{"type":"null"}],"title":"Id Usuario"},"tipo_movimiento":{"$ref":"#/components/schemas/TipoMovimientoStockEnum"},"cantidad":{"type":"integer","title":"Cantidad"},"stock_resultante":{"type":"integer","title":"Stock Resultante"},"costo_unitario":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Costo Unitario"},"fecha_movimiento":{"type":"string","format":"date-time","title":"Fecha Movimiento"},"observacion":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Observacion"}},"type":"object","required":["id_movimiento_stock","id_producto","id_lote","id_venta","id_usuario","tipo_movimiento","cantidad","stock_resultante","costo_unitario","fecha_movimiento","observacion"],"title":"MovimientoStockResponse","description":"Representación de un movimiento en el Kardex para respuestas de API."},"NextLotResponse":{"properties":{"id_lote":{"type":"integer","title":"Id Lote"},"id_producto":{"type":"integer","title":"Id Producto"},"fecha_vencimiento":{"anyOf":[{"type":"string","format":"date-time"},{"type":"null"}],"title":"Fecha Vencimiento"},"cantidad_disponible":{"type":"integer","title":"Cantidad Disponible"},"dias_restantes":{"anyOf":[{"type":"integer"},{"type":"null"}],"title":"Dias Restantes"}},"type":"object","required":["id_lote","id_producto","fecha_vencimiento","cantidad_disponible","dias_restantes"],"title":"NextLotResponse","description":"Información del próximo lote que consumirá el algoritmo FEFO.\n\n⚠️ SOLO INFORMATIVO: este endpoint es para monitoreo, dashboard y alertas\nde vencimiento. El algoritmo FEFO real de ventas se ejecuta exclusivamente\ndentro de los triggers de PostgreSQL (NeonDB)."},"NotificationResponse":{"properties":{"id_notification":{"type":"integer","title":"Id Notification"},"id_usuario":{"type":"integer","title":"Id Usuario"},"id_venta":{"anyOf":[{"type":"integer"},{"type":"null"}],"title":"Id Venta"},"type":{"type":"string","title":"Type"},"title":{"type":"string","title":"Title"},"message":{"type":"string","title":"Message"},"is_read":{"type":"boolean","title":"Is Read"},"created_at":{"type":"string","format":"date-time","title":"Created At"},"read_at":{"anyOf":[{"type":"string","format":"date-time"},{"type":"null"}],"title":"Read At"}},"type":"object","required":["id_notification","id_usuario","type","title","message","is_read","created_at"],"title":"NotificationResponse"},"OrderEventResponse":{"properties":{"id_event":{"type":"integer","title":"Id Event"},"event_type":{"type":"string","title":"Event Type"},"description":{"type":"string","title":"Description"},"detail_json":{"anyOf":[{},{"type":"null"}],"title":"Detail Json"},"created_at":{"type":"string","format":"date-time","title":"Created At"},"created_by":{"anyOf":[{"type":"integer"},{"type":"null"}],"title":"Created By"}},"type":"object","required":["id_event","event_type","description","created_at"],"title":"OrderEventResponse","description":"Evento completo del historial de auditoría (admin)."},"OrigenCuponEnum":{"type":"string","enum":["COMPRA_PUNTOS","REGALO_ADMIN","PREMIO_JUEGO","REGISTRO_NUEVO"],"title":"OrigenCuponEnum","description":"Forma en que el cliente obtuvo un cupón. Tabla: cupones_cliente."},"OrigenVentaEnum":{"type":"string","enum":["WEB"],"title":"OrigenVentaEnum","description":"Canal de origen de una venta. Tabla: ventas."},"PackageComponentResponse":{"properties":{"id_producto":{"type":"integer","title":"Id Producto"},"nombre":{"type":"string","title":"Nombre"},"cantidad":{"type":"integer","title":"Cantidad"},"precio_unitario":{"type":"string","title":"Precio Unitario"},"id_categoria":{"type":"integer","title":"Id Categoria"}},"type":"object","required":["id_producto","nombre","cantidad","precio_unitario","id_categoria"],"title":"PackageComponentResponse"},"PaginatedResponse_CategoriaResponse_":{"properties":{"items":{"items":{"$ref":"#/components/schemas/CategoriaResponse"},"type":"array","title":"Items"},"page":{"type":"integer","title":"Page"},"size":{"type":"integer","title":"Size"},"total":{"type":"integer","title":"Total"},"pages":{"type":"integer","title":"Pages"}},"type":"object","required":["items","page","size","total","pages"],"title":"PaginatedResponse[CategoriaResponse]"},"PaginatedResponse_MovimientoStockResponse_":{"properties":{"items":{"items":{"$ref":"#/components/schemas/MovimientoStockResponse"},"type":"array","title":"Items"},"total":{"type":"integer","title":"Total"},"page":{"type":"integer","title":"Page"},"page_size":{"type":"integer","title":"Page Size"},"total_pages":{"type":"integer","title":"Total Pages"}},"type":"object","required":["items","total","page","page_size","total_pages"],"title":"PaginatedResponse[MovimientoStockResponse]"},"PaginatedResponse_ProductoResponse_":{"properties":{"items":{"items":{"$ref":"#/components/schemas/ProductoResponse"},"type":"array","title":"Items"},"page":{"type":"integer","title":"Page"},"size":{"type":"integer","title":"Size"},"total":{"type":"integer","title":"Total"},"pages":{"type":"integer","title":"Pages"}},"type":"object","required":["items","page","size","total","pages"],"title":"PaginatedResponse[ProductoResponse]"},"PaqueteProductoResponse":{"properties":{"id_producto":{"type":"integer","exclusiveMinimum":0.0,"title":"Id Producto"},"cantidad":{"type":"integer","exclusiveMinimum":0.0,"title":"Cantidad"},"id_paquete_producto":{"type":"integer","title":"Id Paquete Producto"},"id_paquete":{"type":"integer","title":"Id Paquete"}},"type":"object","required":["id_producto","cantidad","id_paquete_producto","id_paquete"],"title":"PaqueteProductoResponse"},"PaqueteResponse":{"properties":{"nombre":{"type":"string","maxLength":150,"title":"Nombre"},"slug":{"type":"string","maxLength":150,"title":"Slug"},"descripcion":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Descripcion"},"imagen_url":{"anyOf":[{"type":"string","maxLength":255},{"type":"null"}],"title":"Imagen Url"},"cloudinary_public_id":{"anyOf":[{"type":"string","maxLength":255},{"type":"null"}],"title":"Cloudinary Public Id"},"estado":{"type":"boolean","title":"Estado","default":true},"id_paquete":{"type":"integer","title":"Id Paquete"},"fecha_creacion":{"type":"string","format":"date-time","title":"Fecha Creacion"},"fecha_actualizacion":{"type":"string","format":"date-time","title":"Fecha Actualizacion"},"productos":{"items":{"$ref":"#/components/schemas/PaqueteProductoResponse"},"type":"array","title":"Productos"},"disponible":{"type":"boolean","title":"Disponible","default":true},"precio":{"type":"string","title":"Precio","default":0}},"type":"object","required":["nombre","slug","id_paquete","fecha_creacion","fecha_actualizacion","productos"],"title":"PaqueteResponse"},"ProductoResponse":{"properties":{"id_categoria":{"anyOf":[{"type":"integer"},{"type":"null"}],"title":"Id Categoria"},"nombre":{"type":"string","maxLength":150,"title":"Nombre"},"descripcion":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Descripcion"},"ingredientes":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Ingredientes"},"alergenos":{"anyOf":[{"type":"string","maxLength":255},{"type":"null"}],"title":"Alergenos"},"peso_gramos":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Peso Gramos"},"precio":{"type":"string","title":"Precio"},"stock_minimo":{"type":"integer","minimum":0.0,"title":"Stock Minimo","default":0},"imagen_url":{"anyOf":[{"type":"string","maxLength":255},{"type":"null"}],"title":"Imagen Url"},"estado":{"type":"boolean","title":"Estado","default":true},"id_producto":{"type":"integer","title":"Id Producto"},"slug":{"type":"string","title":"Slug"},"stock_actual":{"type":"integer","title":"Stock Actual"},"cloudinary_public_id":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Cloudinary Public Id"},"fecha_creacion":{"type":"string","format":"date-time","title":"Fecha Creacion"},"fecha_actualizacion":{"type":"string","format":"date-time","title":"Fecha Actualizacion"},"disponible":{"type":"boolean","title":"Disponible","default":true}},"type":"object","required":["nombre","precio","id_producto","slug","stock_actual","fecha_creacion","fecha_actualizacion"],"title":"ProductoResponse"},"ProductoTopItem":{"properties":{"id_producto":{"type":"integer","title":"Id Producto"},"nombre":{"type":"string","title":"Nombre"},"total_vendido":{"type":"integer","title":"Total Vendido"},"total_ingresos":{"type":"string","title":"Total Ingresos"}},"type":"object","required":["id_producto","nombre","total_vendido","total_ingresos"],"title":"ProductoTopItem"},"ReconciliationResponse":{"properties":{"id_producto":{"type":"integer","title":"Id Producto"},"nombre":{"type":"string","title":"Nombre"},"stock_actual":{"type":"integer","title":"Stock Actual"},"stock_calculado_kardex":{"type":"integer","title":"Stock Calculado Kardex"},"stock_calculado_lotes":{"type":"integer","title":"Stock Calculado Lotes"},"descuadrado":{"type":"boolean","title":"Descuadrado"}},"type":"object","required":["id_producto","nombre","stock_actual","stock_calculado_kardex","stock_calculado_lotes","descuadrado"],"title":"ReconciliationResponse","description":"Resultado de conciliar el stock desde tres fuentes independientes:\n  - stock_actual: caché en tabla productos.\n  - stock_calculado_kardex: suma de movimientos en movimientos_stock.\n  - stock_calculado_lotes: suma de lotes VIGENTE con cantidad_disponible &gt; 0."},"RedeemCouponRequest":{"properties":{"id_cupon":{"type":"integer","title":"Id Cupon","description":"ID de la plantilla de cupón maestro a canjear"}},"type":"object","required":["id_cupon"],"title":"RedeemCouponRequest","description":"Payload para canjear un cupón usando puntos acumulados.","example":{"id_cupon":2}},"ReembolsoRequest":{"properties":{"monto":{"anyOf":[{"type":"number","exclusiveMinimum":0.0},{"type":"string"}],"title":"Monto","description":"Monto a reembolsar en S/"},"motivo":{"type":"string","maxLength":500,"minLength":5,"title":"Motivo"},"observaciones":{"anyOf":[{"type":"string","maxLength":1000},{"type":"null"}],"title":"Observaciones"},"id_solicitante":{"anyOf":[{"type":"integer"},{"type":"null"}],"title":"Id Solicitante","description":"ID del usuario que lo solicitó"}},"type":"object","required":["monto","motivo"],"title":"ReembolsoRequest","description":"Payload para procesar un reembolso simulado (ADMIN)."},"RefreshTokenRequest":{"properties":{"refresh_token":{"type":"string","title":"Refresh Token"}},"type":"object","required":["refresh_token"],"title":"RefreshTokenRequest"},"RegisterRequest":{"properties":{"first_name":{"type":"string","maxLength":100,"minLength":2,"title":"First Name"},"last_name":{"type":"string","maxLength":100,"minLength":2,"title":"Last Name"},"email":{"type":"string","format":"email","title":"Email"},"password":{"type":"string","maxLength":128,"minLength":8,"title":"Password"},"phone":{"anyOf":[{"type":"string","pattern":"^\\+?[\\d\\s\\-]{7,20}$"},{"type":"null"}],"title":"Phone"}},"type":"object","required":["first_name","last_name","email","password"],"title":"RegisterRequest"},"RegisterResponse":{"properties":{"user_id":{"type":"integer","title":"User Id"},"email":{"type":"string","title":"Email"},"message":{"type":"string","title":"Message","default":"Cuenta creada exitosamente"}},"type":"object","required":["user_id","email"],"title":"RegisterResponse"},"ReviewMetricsResponse":{"properties":{"total_reviews":{"type":"integer","title":"Total Reviews"},"promedio_calificacion":{"type":"number","title":"Promedio Calificacion"},"distribucion_estrellas":{"additionalProperties":{"type":"integer"},"type":"object","title":"Distribucion Estrellas"}},"type":"object","required":["total_reviews","promedio_calificacion","distribucion_estrellas"],"title":"ReviewMetricsResponse"},"ReviewResponse":{"properties":{"id_review":{"type":"integer","title":"Id Review"},"id_venta":{"type":"integer","title":"Id Venta"},"id_cliente":{"type":"integer","title":"Id Cliente"},"rating":{"type":"integer","title":"Rating"},"comment":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Comment"},"created_at":{"type":"string","format":"date-time","title":"Created At"}},"type":"object","required":["id_review","id_venta","id_cliente","rating","created_at"],"title":"ReviewResponse"},"RolResponse":{"properties":{"id_rol":{"type":"integer","title":"Id Rol"},"nombre":{"type":"string","title":"Nombre"}},"type":"object","required":["id_rol","nombre"],"title":"RolResponse"},"RolUsuarioResponse":{"properties":{"id_rol":{"type":"integer","title":"Id Rol","description":"Identificador único del rol."},"nombre":{"type":"string","title":"Nombre","description":"Nombre del rol (ADMIN / CLIENTE)."}},"type":"object","required":["id_rol","nombre"],"title":"RolUsuarioResponse","description":"Rol del usuario en el sistema."},"RuletaResponse":{"properties":{"resultado":{"type":"string","title":"Resultado","description":"Tipo de resultado: 'mala_suerte', 'puntos_extra', 'cupon_sorpresa'"},"mensaje":{"type":"string","title":"Mensaje","description":"Mensaje descriptivo del premio"},"puntos_ganados":{"type":"integer","title":"Puntos Ganados","description":"Cantidad de puntos ganados (100 o 0)"},"cupon_ganado":{"anyOf":[{"$ref":"#/components/schemas/CuponClienteResponse"},{"type":"null"}],"description":"Cupón ganado (en caso de cupon_sorpresa)"}},"type":"object","required":["resultado","mensaje","puntos_ganados"],"title":"RuletaResponse","description":"Respuesta tras girar la Ruleta Dulce."},"ShippingConfigResponse":{"properties":{"shipping_cost":{"type":"string","title":"Shipping Cost","description":"Costo de envío en S/"},"free_shipping_threshold":{"type":"string","title":"Free Shipping Threshold","description":"Monto mínimo para envío gratis (S/)"},"delivery_base_time_minutes":{"type":"integer","title":"Delivery Base Time Minutes","description":"Tiempo base de entrega en minutos"},"preparation_base_time_minutes":{"type":"integer","title":"Preparation Base Time Minutes","description":"Tiempo base de preparación en minutos"},"eta_factor_per_product":{"type":"integer","title":"Eta Factor Per Product","description":"Minutos extra de ETA por producto"}},"type":"object","required":["shipping_cost","free_shipping_threshold","delivery_base_time_minutes","preparation_base_time_minutes","eta_factor_per_product"],"title":"ShippingConfigResponse","description":"Configuración de envío consolidada."},"SweetCoinsDashboardResponse":{"properties":{"balance":{"type":"integer","title":"Balance","description":"Saldo de SweetCoins actual disponible del cliente"},"cupones_activos":{"items":{"$ref":"#/components/schemas/CuponClienteResponse"},"type":"array","title":"Cupones Activos","description":"Lista de cupones propios en estado DISPONIBLE"},"historial_reciente":{"items":{"$ref":"#/components/schemas/MovimientoPuntosResponse"},"type":"array","title":"Historial Reciente","description":"Últimos 5 movimientos en el historial de puntos"}},"type":"object","required":["balance","cupones_activos","historial_reciente"],"title":"SweetCoinsDashboardResponse","description":"Consolidado de fidelización para reducir latencia y llamadas en el cliente.","example":{"balance":1650,"cupones_activos":[{"codigo_unico":"MTR-XY91","cupon":{"costo_puntos":1000,"dias_vigencia":15,"estado":true,"id_cupon":2,"nombre":"Locura por el Oreo","porcentaje_descuento":20.0},"estado":"DISPONIBLE","fecha_adquisicion":"2026-06-28T16:00:00Z","fecha_expiracion":"2026-07-13T23:59:59Z","id_cliente":8,"id_cupon":2,"id_cupon_cliente":24,"origen":"COMPRA_PUNTOS"}],"historial_reciente":[{"cantidad":150,"fecha_movimiento":"2026-06-28T16:30:00Z","id_cliente":8,"id_movimiento_punto":42,"justificacion":"Puntos acumulados en Venta #2087","saldo_puntos_resultante":1650,"tipo_movimiento":"ACUMULACION_VENTA"}]}},"TipoIncidenciaEnum":{"type":"string","enum":["PEDIDO_PERDIDO","PEDIDO_DANADO","PEDIDO_INCOMPLETO","ERROR_ENTREGA"],"title":"TipoIncidenciaEnum","description":"Tipo de incidencia reportable sobre un pedido. Tabla: order_issues."},"TipoMovimientoPuntosEnum":{"type":"string","enum":["ACUMULACION_VENTA","COMPRA_CUPON","PAGO_JUEGO","PREMIO_JUEGO","EXPIRACION","AJUSTE_ADMIN"],"title":"TipoMovimientoPuntosEnum","description":"Tipo de movimiento en el saldo de puntos SweetCoins. Tabla: movimientos_puntos."},"TipoMovimientoStockEnum":{"type":"string","enum":["INGRESO_COMPRA","VENTA","AJUSTE_POSITIVO","AJUSTE_NEGATIVO","MERMA","VENCIMIENTO","DEVOLUCION"],"title":"TipoMovimientoStockEnum","description":"Tipo de movimiento en el Kardex de stock. Tabla: movimientos_stock."},"TipoPagoEnum":{"type":"string","enum":["TARJETA"],"title":"TipoPagoEnum","description":"Método/tipo de pago registrado. Tabla: metodos_pago."},"TipoResolucionEnum":{"type":"string","enum":["SOLO_INFO","DEVOLUCION","REEMBOLSO"],"title":"TipoResolucionEnum","description":"Tipo de resolución para una incidencia."},"TokenResponse":{"properties":{"access_token":{"type":"string","title":"Access Token"},"refresh_token":{"type":"string","title":"Refresh Token"},"token_type":{"type":"string","title":"Token Type","default":"bearer"},"expires_in":{"type":"integer","title":"Expires In"}},"type":"object","required":["access_token","refresh_token","expires_in"],"title":"TokenResponse"},"TrackingResponse":{"properties":{"id_venta":{"type":"integer","title":"Id Venta"},"estado":{"type":"string","title":"Estado"},"progreso_pct":{"type":"integer","maximum":100.0,"minimum":0.0,"title":"Progreso Pct","description":"Porcentaje visual de progreso"},"eta":{"anyOf":[{"type":"string","format":"date-time"},{"type":"null"}],"title":"Eta","description":"Timestamp estimado de entrega"},"delivery_completed_at":{"anyOf":[{"type":"string","format":"date-time"},{"type":"null"}],"title":"Delivery Completed At","description":"Timestamp real de entrega"},"eventos":{"items":{"$ref":"#/components/schemas/EventoTrackingItem"},"type":"array","title":"Eventos"}},"type":"object","required":["id_venta","estado","progreso_pct"],"title":"TrackingResponse","description":"Respuesta pública del tracking de un pedido."},"UnreadCountResponse":{"properties":{"unread_count":{"type":"integer","title":"Unread Count"}},"type":"object","required":["unread_count"],"title":"UnreadCountResponse"},"UpdateCartItemRequest":{"properties":{"cantidad":{"type":"integer","exclusiveMinimum":0.0,"title":"Cantidad"}},"type":"object","required":["cantidad"],"title":"UpdateCartItemRequest"},"UpdateConfigRecompensasRequest":{"properties":{"tasa_conversion":{"anyOf":[{"type":"number","maximum":1.0,"minimum":0.0},{"type":"string"}],"title":"Tasa Conversion","description":"Porcentaje de retorno de puntos (Ej: 0.10 -&gt; 10%)"},"limite_puntos_billetera":{"type":"integer","exclusiveMinimum":0.0,"title":"Limite Puntos Billetera","description":"Cantidad máxima de puntos que un cliente puede acumular"},"dias_expiracion":{"type":"integer","exclusiveMinimum":0.0,"title":"Dias Expiracion","description":"Días de validez de los puntos acumulados"},"estado":{"type":"boolean","title":"Estado","description":"Estado de la configuración (activa/inactiva)","default":true}},"type":"object","required":["tasa_conversion","limite_puntos_billetera","dias_expiracion"],"title":"UpdateConfigRecompensasRequest","description":"Payload para actualizar la configuración global del programa de recompensas.","example":{"dias_expiracion":365,"estado":true,"limite_puntos_billetera":50000,"tasa_conversion":0.1}},"UpdateCuponMaestroRequest":{"properties":{"nombre":{"type":"string","maxLength":100,"minLength":3,"title":"Nombre"},"descripcion":{"anyOf":[{"type":"string","maxLength":255},{"type":"null"}],"title":"Descripcion"},"porcentaje_descuento":{"anyOf":[{"type":"number","maximum":100.0,"exclusiveMinimum":0.0},{"type":"string"}],"title":"Porcentaje Descuento"},"costo_puntos":{"anyOf":[{"type":"integer","minimum":0.0},{"type":"null"}],"title":"Costo Puntos"},"dias_vigencia":{"type":"integer","exclusiveMinimum":0.0,"title":"Dias Vigencia"},"estado":{"type":"boolean","title":"Estado"},"id_categoria":{"anyOf":[{"type":"integer"},{"type":"null"}],"title":"Id Categoria"}},"type":"object","required":["nombre","porcentaje_descuento","dias_vigencia","estado"],"title":"UpdateCuponMaestroRequest","description":"Payload para actualizar un cupón maestro existente.","example":{"costo_puntos":800,"descripcion":"Descuento del 18% para compras generales.","dias_vigencia":45,"estado":true,"nombre":"Cupón de Inauguración Renovado","porcentaje_descuento":18.0}},"UpdateIssueRequest":{"properties":{"status":{"$ref":"#/components/schemas/EstadoIncidenciaEnum","description":"Nuevo estado de la incidencia"},"resolution":{"anyOf":[{"type":"string","maxLength":2000},{"type":"null"}],"title":"Resolution","description":"Resolución aplicada"},"resolution_type":{"anyOf":[{"$ref":"#/components/schemas/TipoResolucionEnum"},{"type":"null"}],"description":"Tipo de resolución contable"},"monto_reembolso":{"anyOf":[{"type":"number"},{"type":"null"}],"title":"Monto Reembolso","description":"Monto a reembolsar si aplica"}},"type":"object","required":["status"],"title":"UpdateIssueRequest"},"UpdateShippingConfigRequest":{"properties":{"shipping_cost":{"anyOf":[{"type":"number","minimum":0.0},{"type":"string"},{"type":"null"}],"title":"Shipping Cost","description":"Costo de envío en S/ (0 = envío siempre gratis)"},"free_shipping_threshold":{"anyOf":[{"type":"number","minimum":0.0},{"type":"string"},{"type":"null"}],"title":"Free Shipping Threshold","description":"Subtotal mínimo para envío gratis. 0 = siempre cobra."},"delivery_base_time_minutes":{"anyOf":[{"type":"integer","maximum":1440.0,"minimum":1.0},{"type":"null"}],"title":"Delivery Base Time Minutes","description":"Tiempo base de entrega en minutos (1-1440)"},"preparation_base_time_minutes":{"anyOf":[{"type":"integer","maximum":480.0,"minimum":1.0},{"type":"null"}],"title":"Preparation Base Time Minutes","description":"Tiempo base de preparación en minutos (1-480)"},"eta_factor_per_product":{"anyOf":[{"type":"integer","maximum":60.0,"minimum":0.0},{"type":"null"}],"title":"Eta Factor Per Product","description":"Minutos extra de ETA por producto (0-60)"}},"type":"object","title":"UpdateShippingConfigRequest","description":"Payload para actualizar la configuración de envío desde el panel admin."},"UserDetailResponse":{"properties":{"id_usuario":{"type":"integer","title":"Id Usuario","description":"ID del usuario."},"nombres":{"type":"string","title":"Nombres"},"apellidos":{"type":"string","title":"Apellidos"},"email":{"type":"string","title":"Email","description":"Email único de la cuenta."},"telefono":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Telefono"},"estado":{"type":"boolean","title":"Estado","description":"Cuenta activa (True) o inactiva (False)."},"auth_provider":{"type":"string","title":"Auth Provider","description":"Origen de autenticación (local / google)."},"rol":{"$ref":"#/components/schemas/RolUsuarioResponse"},"cliente":{"anyOf":[{"$ref":"#/components/schemas/ClienteInfoResponse"},{"type":"null"}]},"total_ventas":{"type":"integer","title":"Total Ventas","description":"Número de ventas asociadas (clientes).","default":0},"ultima_actividad":{"anyOf":[{"type":"string","format":"date-time"},{"type":"null"}],"title":"Ultima Actividad","description":"Fecha del último log registrado para el usuario."},"documento_fiscal":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Documento Fiscal","description":"Número de documento fiscal (DNI/RUC) si existe."},"tipo_documento_fiscal":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Tipo Documento Fiscal"},"razon_social":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Razon Social"}},"type":"object","required":["id_usuario","nombres","apellidos","email","estado","auth_provider","rol"],"title":"UserDetailResponse","description":"Detalle extendido de un usuario (incluye datos fiscales)."},"UserEstadoUpdateRequest":{"properties":{"estado":{"type":"boolean","title":"Estado","description":"Nuevo estado de la cuenta."}},"type":"object","required":["estado"],"title":"UserEstadoUpdateRequest","description":"Payload para activar / desactivar una cuenta de usuario."},"UserListItemResponse":{"properties":{"id_usuario":{"type":"integer","title":"Id Usuario","description":"ID del usuario."},"nombres":{"type":"string","title":"Nombres"},"apellidos":{"type":"string","title":"Apellidos"},"email":{"type":"string","title":"Email","description":"Email único de la cuenta."},"telefono":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Telefono"},"estado":{"type":"boolean","title":"Estado","description":"Cuenta activa (True) o inactiva (False)."},"auth_provider":{"type":"string","title":"Auth Provider","description":"Origen de autenticación (local / google)."},"rol":{"$ref":"#/components/schemas/RolUsuarioResponse"},"cliente":{"anyOf":[{"$ref":"#/components/schemas/ClienteInfoResponse"},{"type":"null"}]},"total_ventas":{"type":"integer","title":"Total Ventas","description":"Número de ventas asociadas (clientes).","default":0},"ultima_actividad":{"anyOf":[{"type":"string","format":"date-time"},{"type":"null"}],"title":"Ultima Actividad","description":"Fecha del último log registrado para el usuario."}},"type":"object","required":["id_usuario","nombres","apellidos","email","estado","auth_provider","rol"],"title":"UserListItemResponse","description":"Item del Reporte de Gestión de Usuarios.\nReúne datos de identidad, rol, estado de cuenta y actividad básica."},"UserMeResponse":{"properties":{"id_usuario":{"type":"integer","title":"Id Usuario"},"nombres":{"type":"string","title":"Nombres"},"apellidos":{"type":"string","title":"Apellidos"},"email":{"type":"string","title":"Email"},"telefono":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Telefono"},"estado":{"type":"boolean","title":"Estado"},"auth_provider":{"type":"string","title":"Auth Provider"},"rol":{"$ref":"#/components/schemas/RolResponse"},"cliente":{"anyOf":[{"$ref":"#/components/schemas/ClienteResponse"},{"type":"null"}]}},"type":"object","required":["id_usuario","nombres","apellidos","email","telefono","estado","auth_provider","rol"],"title":"UserMeResponse"},"UserProfileUpdate":{"properties":{"telefono":{"anyOf":[{"type":"string","pattern":"^\\+?[\\d\\s\\-]{7,20}$"},{"type":"null"}],"title":"Telefono"},"direccion":{"anyOf":[{"type":"string","maxLength":255,"minLength":5},{"type":"null"}],"title":"Direccion"},"referencia":{"anyOf":[{"type":"string","maxLength":255,"minLength":3},{"type":"null"}],"title":"Referencia"}},"type":"object","title":"UserProfileUpdate"},"ValidationError":{"properties":{"loc":{"items":{"anyOf":[{"type":"string"},{"type":"integer"}]},"type":"array","title":"Location"},"msg":{"type":"string","title":"Message"},"type":{"type":"string","title":"Error Type"}},"type":"object","required":["loc","msg","type"],"title":"ValidationError"},"VentaPaqueteResponse":{"properties":{"id_venta_paquete":{"anyOf":[{"type":"integer"},{"type":"null"}],"title":"Id Venta Paquete"},"id_venta":{"anyOf":[{"type":"integer"},{"type":"null"}],"title":"Id Venta"},"id_paquete":{"type":"integer","title":"Id Paquete"},"cantidad":{"type":"integer","title":"Cantidad"},"nombre_paquete_snapshot":{"type":"string","title":"Nombre Paquete Snapshot"},"composicion_snapshot_json":{"title":"Composicion Snapshot Json"},"fecha_registro":{"anyOf":[{"type":"string","format":"date-time"},{"type":"null"}],"title":"Fecha Registro"}},"type":"object","required":["id_paquete","cantidad","nombre_paquete_snapshot","composicion_snapshot_json"],"title":"VentaPaqueteResponse"},"VentaRequest":{"properties":{"origen_venta":{"$ref":"#/components/schemas/OrigenVentaEnum","default":"WEB"},"id_cupon_cliente":{"anyOf":[{"type":"integer"},{"type":"null"}],"title":"Id Cupon Cliente"},"productos":{"anyOf":[{"items":{"$ref":"#/components/schemas/ItemProducto"},"type":"array"},{"type":"null"}],"title":"Productos"},"paquetes":{"anyOf":[{"items":{"$ref":"#/components/schemas/ItemPaquete"},"type":"array"},{"type":"null"}],"title":"Paquetes"},"tipo_pago":{"$ref":"#/components/schemas/TipoPagoEnum","default":"TARJETA"}},"type":"object","title":"VentaRequest","description":"Payload para crear una nueva venta desde el carrito de compras."},"VentaResponse":{"properties":{"id_venta":{"anyOf":[{"type":"integer"},{"type":"null"}],"title":"Id Venta"},"id_cliente":{"type":"integer","title":"Id Cliente"},"cliente_nombre":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Cliente Nombre"},"id_cupon_cliente":{"anyOf":[{"type":"integer"},{"type":"null"}],"title":"Id Cupon Cliente"},"cupon_codigo":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Cupon Codigo"},"estado":{"type":"string","title":"Estado"},"estado_pago":{"type":"string","title":"Estado Pago"},"total":{"type":"string","title":"Total"},"puntos_ganados":{"type":"integer","title":"Puntos Ganados","default":0},"fecha_venta":{"anyOf":[{"type":"string","format":"date-time"},{"type":"null"}],"title":"Fecha Venta"},"subtotal_productos":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Subtotal Productos"},"costo_envio":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Costo Envio"},"monto_descuento_cupon":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Monto Descuento Cupon"},"base_imponible":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Base Imponible"},"igv":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Igv"},"total_final":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Total Final"},"shipping_cost_applied":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Shipping Cost Applied"},"free_shipping_applied":{"anyOf":[{"type":"boolean"},{"type":"null"}],"title":"Free Shipping Applied"},"delivery_eta":{"anyOf":[{"type":"string","format":"date-time"},{"type":"null"}],"title":"Delivery Eta"},"delivery_completed_at":{"anyOf":[{"type":"string","format":"date-time"},{"type":"null"}],"title":"Delivery Completed At"},"cancelled_at":{"anyOf":[{"type":"string","format":"date-time"},{"type":"null"}],"title":"Cancelled At"},"cancellation_reason":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Cancellation Reason"},"refund_amount":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Refund Amount"},"refund_date":{"anyOf":[{"type":"string","format":"date-time"},{"type":"null"}],"title":"Refund Date"},"detalles":{"anyOf":[{"items":{"$ref":"#/components/schemas/DetalleVentaResponse"},"type":"array"},{"type":"null"}],"title":"Detalles"},"paquetes_vendidos":{"anyOf":[{"items":{"$ref":"#/components/schemas/VentaPaqueteResponse"},"type":"array"},{"type":"null"}],"title":"Paquetes Vendidos"},"metodos_pago":{"anyOf":[{"items":{"$ref":"#/components/schemas/MetodoPagoResponse"},"type":"array"},{"type":"null"}],"title":"Metodos Pago"},"documentos":{"anyOf":[{"items":{"$ref":"#/components/schemas/DocumentoResponse"},"type":"array"},{"type":"null"}],"title":"Documentos"},"has_review":{"type":"boolean","title":"Has Review","default":false}},"type":"object","required":["id_cliente","estado","estado_pago","total"],"title":"VentaResponse","description":"Respuesta estándar de una venta. Compatible con v1 + campos M14."},"VentasPorDiaItem":{"properties":{"fecha":{"type":"string","format":"date","title":"Fecha"},"cantidad_pedidos":{"type":"integer","title":"Cantidad Pedidos"},"total_ingresos":{"type":"string","title":"Total Ingresos"}},"type":"object","required":["fecha","cantidad_pedidos","total_ingresos"],"title":"VentasPorDiaItem"}},"securitySchemes":{"HTTPBearer":{"type":"http","scheme":"bearer"}}}}</code></pre>
+				
+				
+			</details></td>
+	</tr>
+	<tr>
+		<th scope="row">Parameter</th>
+		<td><pre><code>x-content-type-options</code></pre></td>
+	</tr>
+	
+	
+	<tr>
+		<th scope="row">Solution</th>
+		<td> 
+<p>Asegúrese de que la aplicación/servidor web establece el encabezado Content-Type adecuadamente, y que establece el encabezado X-Content-Type-Options a 'nosniff' para todas las páginas web.</p>
+
+<p>Si es posible, asegúrese de que el usuario final utiliza un navegador web moderno y compatible con los estándares que no realiza MIME-sniffing en absoluto, o que puede ser dirigido por la aplicación web/servidor web para que no realice MIME-sniffing.</p>
+ </td>
+	</tr>
+</tbody></table>
+
+											</details></li>
+									</ol>
+								</li>
+								
+							</ol>
+						</li>
+						
+					</ol>
+				</li>
+				
+				
+				
+				
+				  
+				 
+				
+				
+				<li id="alerts--risk-0-confidence-3">
+					<h3>
+						<span>Risk</span>=<span class="risk-level">Informativo</span>, <span>Confidence</span>=<span class="confidence-level">Alta</span> <span>(1)</span>
+					</h3>
+					<ol>
+						
+						<li class="alerts--site-li">
+							<h4>
+								<span class="site">http://localhost:8000</span> <span>(1)</span>
+							</h4>
+							<ol>
+								
+								<li>
+									<h5>
+										<a href="file:///C:/Users/conde/Downloads/2026-07-11-ZAP-Report-.html#alert-type-3">Petición de Autenticación Identificada</a> <span>(1)</span>
+									</h5>
+									<ol>
+										<li><details>
+												<summary>
+													<span class="request-method-n-url">POST http://localhost:8000/api/v1/auth/login</span>
+												</summary>
+												
+<table class="alerts-table">
+	<tbody><tr>
+		<th scope="row">Alert tags</th>
+		<td>
+			<ul class="alert-tags-list">
+				
+			</ul>
+		</td>
+	</tr>
+	<tr>
+		<th scope="row">Alert description</th>
+		<td> 
+<p>La petición en cuestión se ha identificado como una petición de autenticación. El campo "Otra información" contiene un conjunto de líneas key=vvalue que identifican cualquier campo relevante. Si la solicitud está en un contexto que tiene un método de autenticación configurado como "Detección automática", esta regla cambiará la autenticación para que coincida con la petición identificada.</p>
+ </td>
+	</tr>
+	<tr>
+		<th scope="row">Other info</th>
+		<td> 
+<p>userParam=email</p>
+
+<p>userValue=zaproxy@example.com</p>
+
+<p>passwordParam=password</p>
+ </td>
+	</tr>
+	<tr>
+		<th scope="row">Request</th>
+		<td><details open="open">
+				<summary>Request line and header section (325 bytes)</summary>
+				
+				<pre><code>POST http://localhost:8000/api/v1/auth/login HTTP/1.1
+host: localhost:8000
+user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36
+pragma: no-cache
+cache-control: no-cache
+accept: application/json
+content-type: application/json
+content-length: 48
+
+</code></pre>
+				
+				
+			</details> <details class="request-body" open="open">
+				<summary>Request body (48 bytes)</summary>
+				
+				<pre><code>{"email":"zaproxy@example.com","password":"ZAP"}</code></pre>
+				
+				
+			</details></td>
+	</tr>
+	<tr>
+		<th scope="row">Response</th>
+		<td><details open="open">
+				<summary>Status line and header section (196 bytes)</summary>
+				
+				<pre><code>HTTP/1.1 422 Unprocessable Entity
+date: Sat, 11 Jul 2026 18:58:04 GMT
+server: uvicorn
+content-length: 275
+content-type: application/json
+x-request-id: 2f2ad66d-d888-4809-8bb5-c06479afafae
+
+</code></pre>
+				
+				
+			</details> <details class="response-body" open="open">
+				<summary>Response body (275 bytes)</summary>
+				
+				<pre><code>{"success":false,"error":{"code":"VALIDATION_ERROR","message":"Error de validación en los datos enviados","details":[{"loc":["body","password"],"msg":"String should have at least 8 characters","type":"string_too_short"}]},"request_id":"2f2ad66d-d888-4809-8bb5-c06479afafae"}</code></pre>
+				
+				
+			</details></td>
+	</tr>
+	<tr>
+		<th scope="row">Parameter</th>
+		<td><pre><code>email</code></pre></td>
+	</tr>
+	
+	<tr>
+		<th scope="row">Evidence</th>
+		<td><pre><code>password</code></pre></td>
+	</tr>
+	<tr>
+		<th scope="row">Solution</th>
+		<td> 
+<p>Se trata de una alerta informativa y no de una vulnerabilidad, por lo que no hay nada que corregir.</p>
+ </td>
+	</tr>
+</tbody></table>
+
+											</details></li>
+									</ol>
+								</li>
+								
+							</ol>
+						</li>
+						
+					</ol>
+				</li>
+				
+				<li id="alerts--risk-0-confidence-2">
+					<h3>
+						<span>Risk</span>=<span class="risk-level">Informativo</span>, <span>Confidence</span>=<span class="confidence-level">Media</span> <span>(1)</span>
+					</h3>
+					<ol>
+						
+						<li class="alerts--site-li">
+							<h4>
+								<span class="site">http://localhost:8000</span> <span>(1)</span>
+							</h4>
+							<ol>
+								
+								<li>
+									<h5>
+										<a href="file:///C:/Users/conde/Downloads/2026-07-11-ZAP-Report-.html#alert-type-2">Divulgación de Información - Información sensible en URL</a> <span>(1)</span>
+									</h5>
+									<ol>
+										<li><details>
+												<summary>
+													<span class="request-method-n-url">GET http://localhost:8000/api/v1/auth/verify?token=token</span>
+												</summary>
+												
+<table class="alerts-table">
+	<tbody><tr>
+		<th scope="row">Alert tags</th>
+		<td>
+			<ul class="alert-tags-list">
+				<li>
+					<span><a href="https://cwe.mitre.org/data/definitions/598.html">CWE-598</a></span> 
+				</li>
+				<li>
+					<span><a href="https://owasp.org/Top10/A01_2021-Broken_Access_Control/">OWASP_2021_A01</a></span> 
+				</li>
+				<li>
+					 <span>POLICY_QA_STD = </span>
+				</li>
+				<li>
+					 <span>POLICY_PENTEST = </span>
+				</li>
+				<li>
+					<span><a href="https://www.zaproxy.org/docs/desktop/addons/common-library/alerttags/#systemic">SYSTEMIC</a></span> 
+				</li>
+				<li>
+					<span><a href="https://owasp.org/www-project-top-ten/2017/A3_2017-Sensitive_Data_Exposure.html">OWASP_2017_A03</a></span> 
+				</li>
+				<li>
+					<span><a href="https://owasp.org/Top10/2025/A01_2025-Broken_Access_Control/">OWASP_2025_A01</a></span> 
+				</li>
+				<li>
+					 <span>POLICY_DEV_STD = </span>
+				</li>
+			</ul>
+		</td>
+	</tr>
+	<tr>
+		<th scope="row">Alert description</th>
+		<td> 
+<p>La solicitud parecía contener información sensible filtrada en la URL. Esto puede violar las políticas de cumplimiento de PCI y de la mayoría de las organizaciones. Puede configurar la lista de cadenas de esta comprobación para añadir o eliminar valores específicos de su entorno.</p>
+ </td>
+	</tr>
+	<tr>
+		<th scope="row">Other info</th>
+		<td> 
+<p>La URL contiene información potencialmente sensible. La siguiente cadena fue encontrada a través del patrón: token</p>
+
+<p>token</p>
+ </td>
+	</tr>
+	<tr>
+		<th scope="row">Request</th>
+		<td><details open="open">
+				<summary>Request line and header section (304 bytes)</summary>
+				
+				<pre><code>GET http://localhost:8000/api/v1/auth/verify?token=token HTTP/1.1
+host: localhost:8000
+user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36
+pragma: no-cache
+cache-control: no-cache
+accept: application/json
+content-length: 0
+
+</code></pre>
+				
+				
+			</details> <details class="request-body" open="open">
+				<summary>Request body (0 bytes)</summary>
+				
+				<pre><code></code></pre>
+				
+				
+			</details></td>
+	</tr>
+	<tr>
+		<th scope="row">Response</th>
+		<td><details open="open">
+				<summary>Status line and header section (188 bytes)</summary>
+				
+				<pre><code>HTTP/1.1 401 Unauthorized
+date: Sat, 11 Jul 2026 18:58:05 GMT
+server: uvicorn
+content-length: 141
+content-type: application/json
+x-request-id: f3968902-5090-486e-9eeb-272cc3b43a95
+
+</code></pre>
+				
+				
+			</details> <details class="response-body" open="open">
+				<summary>Response body (141 bytes)</summary>
+				
+				<pre><code>{"success":false,"error":{"code":"INVALID_TOKEN","message":"Token inválido o expirado"},"request_id":"f3968902-5090-486e-9eeb-272cc3b43a95"}</code></pre>
+				
+				
+			</details></td>
+	</tr>
+	<tr>
+		<th scope="row">Parameter</th>
+		<td><pre><code>token</code></pre></td>
+	</tr>
+	
+	<tr>
+		<th scope="row">Evidence</th>
+		<td><pre><code>token</code></pre></td>
+	</tr>
+	<tr>
+		<th scope="row">Solution</th>
+		<td> 
+<p>No pase información sensible en URIs.</p>
+ </td>
+	</tr>
+</tbody></table>
+
+											</details></li>
+									</ol>
+								</li>
+								
+							</ol>
+						</li>
+						
+					</ol>
+				</li>
+				
+				
+				
+				
+				  
+			</ol>
+		</section>
+
+		<section id="appendix" class="appendix">
+			<h2>Appendix</h2>
+
+			<section id="alert-types" class="alert-types">
+				<h3>Alert Types</h3>
+				<p class="alert-types-intro">This section contains additional information on the types of alerts in the report.</p>
+				<ol>
+					<li id="alert-type-0">
+						<h4>Format String Error (Error de formato de cadena)</h4>
+						<table class="alert-types-table">
+							<tbody><tr>
+								<th scope="row">Source</th>
+								<td>
+									
+									   <span>raised by an active scanner</span> <span>(<a href="https://www.zaproxy.org/docs/alerts/30002/">Format String Error (Error de formato de cadena)</a>)
+									</span>   
+								</td>
+							</tr>
+							<tr>
+								<th scope="row">CWE ID</th>
+								<td><a href="https://cwe.mitre.org/data/definitions/134.html">134</a></td>
+							</tr>
+							<tr>
+								<th scope="row">WASC ID</th>
+								<td>6</td>
+							</tr>
+							<tr>
+								<th scope="row">Reference</th>
+								<td>
+									<ol>
+										<li><a href="https://owasp.org/www-community/attacks/Format_string_attack">https://owasp.org/www-community/attacks/Format_string_attack</a></li>
+									</ol>
+								</td>
+							</tr>
+						</tbody></table>
+					</li>
+					<li id="alert-type-1">
+						<h4>Falta encabezado X-Content-Type-Options</h4>
+						<table class="alert-types-table">
+							<tbody><tr>
+								<th scope="row">Source</th>
+								<td>
+									
+									   <span>raised by a passive scanner</span> <span>(<a href="https://www.zaproxy.org/docs/alerts/10021/">Falta encabezado X-Content-Type-Options</a>)
+									</span>   
+								</td>
+							</tr>
+							<tr>
+								<th scope="row">CWE ID</th>
+								<td><a href="https://cwe.mitre.org/data/definitions/693.html">693</a></td>
+							</tr>
+							<tr>
+								<th scope="row">WASC ID</th>
+								<td>15</td>
+							</tr>
+							<tr>
+								<th scope="row">Reference</th>
+								<td>
+									<ol>
+										<li><a href="https://learn.microsoft.com/en-us/previous-versions/windows/internet-explorer/ie-developer/compatibility/gg622941(v=vs.85)">https://learn.microsoft.com/en-us/previous-versions/windows/internet-explorer/ie-developer/compatibility/gg622941(v=vs.85)</a></li>
+										<li><a href="https://owasp.org/www-community/Security_Headers">https://owasp.org/www-community/Security_Headers</a></li>
+									</ol>
+								</td>
+							</tr>
+						</tbody></table>
+					</li>
+					<li id="alert-type-2">
+						<h4>Divulgación de Información - Información sensible en URL</h4>
+						<table class="alert-types-table">
+							<tbody><tr>
+								<th scope="row">Source</th>
+								<td>
+									
+									   <span>raised by a passive scanner</span> <span>(<a href="https://www.zaproxy.org/docs/alerts/10024/">Divulgación de Información - Información sensible en URL</a>)
+									</span>   
+								</td>
+							</tr>
+							<tr>
+								<th scope="row">CWE ID</th>
+								<td><a href="https://cwe.mitre.org/data/definitions/598.html">598</a></td>
+							</tr>
+							<tr>
+								<th scope="row">WASC ID</th>
+								<td>13</td>
+							</tr>
+							
+						</tbody></table>
+					</li>
+					<li id="alert-type-3">
+						<h4>Petición de Autenticación Identificada</h4>
+						<table class="alert-types-table">
+							<tbody><tr>
+								<th scope="row">Source</th>
+								<td>
+									
+									   <span>raised by a passive scanner</span> <span>(<a href="https://www.zaproxy.org/docs/alerts/10111/">Petición de Autenticación Identificada</a>)
+									</span>   
+								</td>
+							</tr>
+							
+							
+							<tr>
+								<th scope="row">Reference</th>
+								<td>
+									<ol>
+										<li><a href="https://www.zaproxy.org/docs/desktop/addons/authentication-helper/auth-req-id/">https://www.zaproxy.org/docs/desktop/addons/authentication-helper/auth-req-id/</a></li>
+									</ol>
+								</td>
+							</tr>
+						</tbody></table>
+					</li>
+				</ol>
+			</section>
+		</section>
+		 
+	</main>
+
+
+
+
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    // 1. Tag risk & confidence elements for CSS styling
+    const riskMap = {
+        'alto': 'high',
+        'high': 'high',
+        'medio': 'medium',
+        'medium': 'medium',
+        'bajo': 'low',
+        'low': 'low',
+        'informativo': 'info',
+        'informational': 'info',
+        'información': 'info',
+        'informacion': 'info'
+    };
+    const confidenceMap = {
+        'confirmado por usuario': 'confirmed',
+        'user confirmed': 'confirmed',
+        'alta': 'high',
+        'high': 'high',
+        'media': 'medium',
+        'medium': 'medium',
+        'baja': 'low',
+        'low': 'low',
+        'falso positivo': 'false-positive',
+        'false positive': 'false-positive'
+    };
+
+    document.querySelectorAll('.risk-level, .confidence-level, td, th, span, div, h3').forEach(el => {
+        if (el.children.length === 0 || (el.children.length === 1 && el.firstElementChild.tagName === 'DIV')) {
+            const text = el.textContent.trim().toLowerCase();
+            if (riskMap[text]) {
+                el.setAttribute('data-risk', riskMap[text]);
+            }
+            if (confidenceMap[text]) {
+                el.setAttribute('data-confidence', confidenceMap[text]);
+            }
+        }
+        
+        // Match ZAP class prefixes if they exist
+        for (let i = 0; i <= 3; i++) {
+            if (el.classList.contains(`risk-${i}`)) {
+                const map = ['info', 'low', 'medium', 'high'];
+                el.setAttribute('data-risk', map[i]);
+            }
+        }
+    });
+
+    // 2. Build and inject dynamic KPI Dashboard
+    const main = document.querySelector('main');
+    if (main) {
+        let altoCount = 0, medioCount = 0, bajoCount = 0, infoCount = 0;
+        
+        const countTable = document.querySelector('.risk-confidence-counts-table');
+        if (countTable) {
+            const rows = countTable.querySelectorAll('tbody tr');
+            rows.forEach(row => {
+                const riskHeader = row.querySelector('th[scope="row"]');
+                if (riskHeader) {
+                    const text = riskHeader.textContent.trim().toLowerCase();
+                    const totalCell = row.querySelector('td:last-child span');
+                    const count = totalCell ? parseInt(totalCell.textContent.trim(), 10) : 0;
+                    
+                    if (text === 'alto' || text === 'high') altoCount = count;
+                    else if (text === 'medio' || text === 'medium') medioCount = count;
+                    else if (text === 'bajo' || text === 'low') bajoCount = count;
+                    else if (text === 'informativo' || text === 'informational' || text === 'información' || text === 'informacion') infoCount = count;
+                }
+            });
+        }
+
+        const statsDiv = document.createElement('section');
+        statsDiv.id = 'dashboard-stats';
+        statsDiv.innerHTML = `
+            <div class="stat-card" data-risk="high">
+                <div class="stat-value">${altoCount}</div>
+                <div class="stat-label">Riesgo Alto</div>
+            </div>
+            <div class="stat-card" data-risk="medium">
+                <div class="stat-value">${medioCount}</div>
+                <div class="stat-label">Riesgo Medio</div>
+            </div>
+            <div class="stat-card" data-risk="low">
+                <div class="stat-value">${bajoCount}</div>
+                <div class="stat-label">Riesgo Bajo</div>
+            </div>
+            <div class="stat-card" data-risk="info">
+                <div class="stat-value">${infoCount}</div>
+                <div class="stat-label">Informativo</div>
+            </div>
+        `;
+        
+        const firstContentSection = Array.from(main.children).find(sec => sec.id !== 'contents');
+        if (firstContentSection) {
+            main.insertBefore(statsDiv, firstContentSection);
+        } else {
+            main.appendChild(statsDiv);
+        }
+    }
+});
+</script>
+</body></html>

@@ -82,8 +82,13 @@ class EmailService:
         frontend_url = settings.FRONTEND_URL
         reset_link = f"{frontend_url}/reset-password?token={token}"
 
-        # Log reset link to standard out for easy local copy-paste development
-        logger.info("email.password_reset_link_generated", link=reset_link)
+        # ── M-07 (CWE-532): solo loguear el enlace de reset en desarrollo.
+        # En producción, loguear el token completo es una fuga de credencial:
+        # quien tenga acceso a logs podría secuestrar resets de contraseña.
+        if settings.is_development:
+            logger.info("email.password_reset_link_generated", link=reset_link)
+        else:
+            logger.info("email.password_reset_link_generated", recipient=to_email)
 
         # Expiry text — derived from the configured token validity
         expiry_minutes = settings.PASSWORD_RESET_TOKEN_EXPIRE_MINUTES

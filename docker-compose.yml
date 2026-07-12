@@ -51,6 +51,9 @@ services:
     build:
       context: ./_frontEnd
       dockerfile: Dockerfile
+      args:
+        - VITE_GOOGLE_CLIENT_ID=${VITE_GOOGLE_CLIENT_ID:-264198079598-tt28nvaod4f740q778ivtvueubgi0iel.apps.googleusercontent.com}
+        - VITE_API_BASE_URL=${VITE_API_BASE_URL:-http://localhost:8000/api/v1}
     ports:
       - "127.0.0.1:5173:80"   # nginx en :80 del container, expuesto en :5173 del host
     depends_on:
@@ -78,7 +81,9 @@ services:
       - "127.0.0.1:8001:8001"
     environment:
       - BACKEND_URL=http://api:8000
-      - DELIVERY_WEBHOOK_TOKEN=dev-webhook-token
+      # M-12: Token de webhook — en desarrollo se usa un valor aleatorio.
+      # En producción, establecer via variable de entorno o secrets manager.
+      - DELIVERY_WEBHOOK_TOKEN=${DELIVERY_WEBHOOK_TOKEN:-change-me-in-prod-7f3a9b2e}
       - PREPARATION_DELAY_SECONDS=5
       - DELIVERY_DELAY_SECONDS=10
     networks:

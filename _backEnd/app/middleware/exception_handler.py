@@ -64,7 +64,14 @@ def register_exception_handlers(app: FastAPI) -> None:
         exc: RequestValidationError,
     ) -> ORJSONResponse:
         request_id = getattr(request.state, "request_id", None)
-        details = [
+
+        # ── M-04 (CWE-209): en producción, no exponer detalles internos del
+        # esquema Pydantic (nombres de atributos "loc", tipos "type") al
+        # cliente — facilitan el mapeo del esquema a atacantes. En desarrollo
+        # sí se retornan para facilitar el debugging.
+        from app.core.config import settings
+
+        full_details = [
             {
                 "loc": list(error["loc"]),
                 "msg": error["msg"],
@@ -75,15 +82,26 @@ def register_exception_handlers(app: FastAPI) -> None:
         logger.warning(
             "validation.error",
             path=request.url.path,
-            errors=details,
+            errors=full_details,
             request_id=request_id,
         )
+
+        if settings.is_production:
+            # En producción: mensaje genérico, sin detalles internos
+            return _error_response(
+                status_code=422,
+                error_code="VALIDATION_ERROR",
+                message="Los datos enviados no son válidos. Revisa los campos e intenta nuevamente.",
+                request_id=request_id,
+            )
+
+        # En desarrollo: detalles completos para debugging
         return _error_response(
             status_code=422,
             error_code="VALIDATION_ERROR",
             message="Error de validación en los datos enviados",
             request_id=request_id,
-            details=details,
+            details=full_details,
         )
 
     @app.exception_handler(Exception)

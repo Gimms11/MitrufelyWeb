@@ -12,6 +12,13 @@ RUN npm ci
 # Copiar el código fuente
 COPY . .
 
+# Declarar variables de entorno requeridas en tiempo de build por Vite
+ARG VITE_GOOGLE_CLIENT_ID
+ARG VITE_API_BASE_URL
+
+ENV VITE_GOOGLE_CLIENT_ID=$VITE_GOOGLE_CLIENT_ID
+ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
+
 # Build de producción (genera dist/ con chunks minificados + .br + .gz)
 RUN npm run build
 

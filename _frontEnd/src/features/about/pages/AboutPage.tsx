@@ -13,6 +13,7 @@
 import { useState, useEffect } from 'react'
 import { toast } from 'sonner'
 import { useAuthStore } from '@/app/store'
+import { useLogout } from '@/features/auth/hooks/useLogout'
 import { useCartItemCount } from '@/features/cart/hooks/useCart'
 
 // Layout compartido
@@ -28,7 +29,8 @@ import { PhilosophySection }   from '@/features/about/components/PhilosophySecti
 // ─── Página ───────────────────────────────────────────────────────────────────
 
 export default function AboutPage() {
-  const { user, isAuthenticated, logout } = useAuthStore()
+  const { user, isAuthenticated } = useAuthStore()
+  const logout = useLogout()
 
   // ── Estado de UI ──────────────────────────────────────────────────────────
   const [searchQuery,  setSearchQuery]  = useState('')
@@ -55,8 +57,8 @@ export default function AboutPage() {
     toast.info(`Buscando: "${searchQuery}"`)
   }
 
-  const handleLogout = () => {
-    logout()
+  const handleLogout = async () => {
+    await logout()
     setUserMenuOpen(false)
     toast.success('Sesión cerrada correctamente.')
   }

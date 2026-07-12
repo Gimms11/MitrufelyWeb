@@ -33,6 +33,7 @@ import { PublicFooter } from '@/shared/components/layout/PublicFooter'
 
 // ── Stores ─────────────────────────────────────────────────────────────────────
 import { useAuthStore } from '@/app/store'
+import { useLogout } from '@/features/auth/hooks/useLogout'
 import { useCartItemCount } from '@/features/cart/hooks/useCart'
 import { useCriptoTrufaStore } from '@/stores/criptotrufa.store'
 
@@ -54,7 +55,8 @@ function formatDate(iso: string) {
 export default function PointsView() {
 
   // Stores
-  const { user, isAuthenticated, logout } = useAuthStore()
+  const { user, isAuthenticated } = useAuthStore()
+  const logout = useLogout()
   const cartCount       = useCartItemCount()
   const saldoActual     = useCriptoTrufaStore((s) => s.saldoActual)
   const cuponesCliente  = useCriptoTrufaStore((s) => s.cuponesCliente)
@@ -96,7 +98,7 @@ export default function PointsView() {
   }, [])
 
   const handleSearch = (e: React.FormEvent) => { e.preventDefault() }
-  const handleLogout = () => { logout(); setUserMenuOpen(false); toast.success('Sesión cerrada.') }
+  const handleLogout = async () => { await logout(); setUserMenuOpen(false); toast.success('Sesión cerrada.') }
 
   // Canje con feedback
   const handleCanjear = async (id_cupon: number) => {

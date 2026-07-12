@@ -41,6 +41,7 @@ import { PublicFooter } from '@/shared/components/layout/PublicFooter'
 // ── Store ──────────────────────────────────────────────────────────────────────
 import { useCartItemCount, useAddCartItem } from '@/features/cart/hooks/useCart'
 import { useAuthStore } from '@/app/store'
+import { useLogout } from '@/features/auth/hooks/useLogout'
 
 // ── Datos y hooks ──────────────────────────────────────────────────────────────
 import { useActiveProducts } from '../hooks/useCatalogAdmin'
@@ -82,7 +83,8 @@ export default function ProductDetailView() {
   const { slug } = useParams<{ slug: string }>()
   const navigate  = useNavigate()
 
-  const { user, isAuthenticated, logout } = useAuthStore()
+  const { user, isAuthenticated } = useAuthStore()
+  const logout = useLogout()
   const addToCartMutation = useAddCartItem()
   const cartCount  = useCartItemCount()
 
@@ -122,8 +124,8 @@ export default function ProductDetailView() {
     toast.info(`Buscando: "${searchQuery}"`)
   }
 
-  const handleLogout = () => {
-    logout()
+  const handleLogout = async () => {
+    await logout()
     setUserMenuOpen(false)
     toast.success('Sesión cerrada correctamente.')
   }

@@ -11,6 +11,7 @@ import { toast } from 'sonner'
 import { Loader2, ArrowLeft, ShoppingBag, Clock, Package, Receipt, CreditCard, Coins, Star, AlertTriangle, Download, Ban, AlertCircle, XCircle } from 'lucide-react'
 
 import { useAuthStore } from '@/app/store'
+import { useLogout } from '@/features/auth/hooks/useLogout'
 import { PublicHeader } from '@/shared/components/layout/PublicHeader'
 import { PublicFooter } from '@/shared/components/layout/PublicFooter'
 import { useCartItemCount } from '@/features/cart/hooks/useCart'
@@ -48,7 +49,8 @@ function formatDate(iso: string) {
 
 export default function CustomerOrderDetailPage() {
   const { id } = useParams<{ id: string }>()
-  const { user, isAuthenticated, logout } = useAuthStore()
+  const { user, isAuthenticated } = useAuthStore()
+  const logout = useLogout()
   const cartCount = useCartItemCount()
   const queryClient = useQueryClient()
 
@@ -121,7 +123,7 @@ export default function CustomerOrderDetailPage() {
   })
 
   const handleSearch = (e: React.FormEvent) => { e.preventDefault() }
-  const handleLogout = () => { logout(); setUserMenuOpen(false); toast.success('Sesión cerrada.') }
+  const handleLogout = async () => { await logout(); setUserMenuOpen(false); toast.success('Sesión cerrada.') }
 
   const handleModalSuccess = () => {
     queryClient.invalidateQueries({ queryKey: ['orders', 'detail', orderId] })

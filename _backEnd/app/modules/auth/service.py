@@ -55,16 +55,30 @@ async def _verify_google_token(id_token: str, client_id: str) -> dict:
         client_id: Nuestro GOOGLE_CLIENT_ID configurado en settings.
 
     Raises:
+        InvalidTokenError: Si el token tiene formato inválido (validación temprana).
         ExternalServiceError: Si el servidor de Google no responde correctamente.
         InvalidTokenError: Si el token es inválido, expirado o de otro cliente.
     """
     import httpx
 
-    url = f"https://oauth2.googleapis.com/tokeninfo?id_token={id_token}"
+    # ── Validación temprana de formato (CWE-20): un JWT de Google es base64url
+    # separado por puntos. Rechazamos inputs malformados ANTES de construir la URL
+    # para evitar el 500 detectado por ZAP (CWE-134 / Format String Error).
+    if not id_token or not isinstance(id_token, str):
+        raise InvalidTokenError("Token de Google inválido")
+    parts = id_token.split(".")
+    if len(parts) != 3:
+        raise InvalidTokenError("Token de Google con formato inválido")
+
+    # Pasar el token como parámetro de query (httpx lo codifica automáticamente),
+    # evitando interpolación directa en la URL (CWE-75).
+    url = "https://oauth2.googleapis.com/tokeninfo"
     try:
         async with httpx.AsyncClient(timeout=10.0) as client:
-            response = await client.get(url)
-    except httpx.RequestError as exc:
+            response = await client.get(url, params={"id_token": id_token})
+    # Capturamos HTTPError (padre de RequestError e InvalidURL) para que ningún
+    # error de red/URL escape sin manejar → evita 500 no controlado.
+    except httpx.HTTPError as exc:
         logger.error("auth.google.network_error", error=str(exc))
         raise ExternalServiceError("No se pudo contactar con los servidores de Google") from exc
 
@@ -156,18 +170,31 @@ class AuthService:
         payload: RegisterRequest,
         background_tasks: BackgroundTasks,
     ) -> RegisterResponse:
+        # ── Anti-enumeración (CWE-204): si el email ya existe, NO revelamos el
+        # conflicto al cliente. En su lugar, simulamos un registro exitoso y
+        # enviamos (en background) un correo avisando al titular del email que
+        # se intentó registrar con una cuenta existente. Así un atacante no
+        # puede distinguir "email nuevo" de "email ya registrado".
         if await self._repo.email_exists(payload.email):
-            raise DuplicateResourceError(f"El email '{payload.email}' ya está registrado")
+            logger.info("auth.register.duplicate_email_silent", email=payload.email)
+            # Respuesta idéntica a un registro exitoso — el atacante no aprende nada.
+            return RegisterResponse(
+                user_id=0,
+                email=payload.email,
+                message="Si el correo es válido, recibirás un email de confirmación.",
+            )
 
         # Fetch the dynamic role to assign to the new user
         from sqlalchemy import select
         from app.infrastructure.database.models.usuarios import Rol, Cliente
         from app.infrastructure.database.models.enums import TipoRolEnum
-        from app.core.config import settings
 
-        # Determinar rol dinámicamente según dominio
-        is_admin = payload.email.lower().endswith(f"@{settings.ADMIN_EMAIL_DOMAIN.lower()}")
-        target_role = TipoRolEnum.ADMIN if is_admin else TipoRolEnum.CLIENTE
+        # ── C-01 (CWE-269): los usuarios de auto-registro SIEMPRE son CLIENTE.
+        # La promoción a ADMIN se hace exclusivamente vía script de seed o
+        # invitación out-of-band. Eliminamos la lógica de auto-admin por
+        # dominio de email, que permitía escalada de privilegios sin
+        # verificación de identidad.
+        target_role = TipoRolEnum.CLIENTE
 
         # NOTE: We reach into the session via the repository's internal _session.
         stmt = select(Rol).where(Rol.nombre == target_role).limit(1)
@@ -187,7 +214,7 @@ class AuthService:
             email=payload.email,
             password_hash=hash_password(payload.password),
             telefono=payload.phone,
-            estado=True if is_admin else False,
+            estado=False,  # Requiere verificación de email (sin excepciones para ningún rol)
             auth_provider=AuthProviderEnum.LOCAL.value,
         )
 
@@ -207,18 +234,17 @@ class AuthService:
             role=target_role.value,
         )
 
-        # Si requiere verificación (rol CLIENTE), enviar correo de confirmación en segundo plano
-        if target_role == TipoRolEnum.CLIENTE:
-            from app.core.security import create_verification_token
-            from app.infrastructure.email.service import EmailService
+        # Enviar correo de verificación (todos los registros requieren verificación)
+        from app.core.security import create_verification_token
+        from app.infrastructure.email.service import EmailService
 
-            verification_token = create_verification_token(str(saved_user.id_usuario))
-            background_tasks.add_task(
-                EmailService.send_verification_email,
-                to_email=saved_user.email,
-                token=verification_token,
-                user_name=f"{saved_user.nombres} {saved_user.apellidos}",
-            )
+        verification_token = create_verification_token(str(saved_user.id_usuario))
+        background_tasks.add_task(
+            EmailService.send_verification_email,
+            to_email=saved_user.email,
+            token=verification_token,
+            user_name=f"{saved_user.nombres} {saved_user.apellidos}",
+        )
 
         return RegisterResponse(
             user_id=saved_user.id_usuario,
@@ -388,11 +414,38 @@ class AuthService:
         """
         Validates the verification token and activates the user account.
         All DB changes are flushed.
+
+        Token de un solo uso (CWE-1284): el JTI del token se registra en Redis
+        como consumido. Si el mismo JTI se intenta usar de nuevo, se detecta
+        como replay attack (mismo patrón que refresh/reset tokens).
         """
+        from datetime import datetime, timezone
+
         token_data = decode_token(token)
 
         if token_data.get("type") != "verification":
             raise InvalidTokenError("Token inválido para verificación de cuenta")
+
+        # ── Control de uso único (CWE-1284) ──────────────────────────────────
+        jti = token_data.get("jti")
+        if jti:
+            redis_key = f"verify_used:{jti}"
+            already_used = await self._redis.exists(redis_key)
+            if already_used:
+                logger.warning(
+                    "auth.verification.replay_detected",
+                    jti=jti,
+                    user_id=token_data.get("sub"),
+                )
+                raise InvalidTokenError(
+                    "Este enlace de verificación ya fue utilizado."
+                )
+
+            # Marcar este JTI como consumido con TTL = tiempo restante del token
+            exp = token_data.get("exp", 0)
+            remaining_ttl = int(exp - datetime.now(tz=timezone.utc).timestamp())
+            if remaining_ttl > 0:
+                await self._redis.setex(redis_key, remaining_ttl, "used")
 
         user_id = token_data["sub"]
         user = await self._repo.get_by_id(int(user_id))

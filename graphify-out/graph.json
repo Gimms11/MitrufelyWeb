@@ -123,7 +123,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\core\\config.py",
-      "source_location": "L118",
+      "source_location": "L124",
       "file_type": "code"
     },
     {
@@ -132,7 +132,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\core\\config.py",
-      "source_location": "L123",
+      "source_location": "L129",
       "file_type": "code"
     },
     {
@@ -141,7 +141,34 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\core\\config.py",
-      "source_location": "L145",
+      "source_location": "L151",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.core.config.Settings.validate_cors_safety",
+      "label": "validate_cors_safety",
+      "type": "function",
+      "description": "",
+      "source_file": "_backEnd\\app\\core\\config.py",
+      "source_location": "L158",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.core.config.Settings.validate_cors_safety.import_warnings",
+      "label": "warnings",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\core\\config.py",
+      "source_location": "L170",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.core.config.Settings.expose_docs",
+      "label": "expose_docs",
+      "type": "function",
+      "description": "",
+      "source_file": "_backEnd\\app\\core\\config.py",
+      "source_location": "L180",
       "file_type": "code"
     },
     {
@@ -150,7 +177,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\core\\config.py",
-      "source_location": "L152",
+      "source_location": "L189",
       "file_type": "code"
     },
     {
@@ -159,7 +186,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\core\\config.py",
-      "source_location": "L156",
+      "source_location": "L193",
       "file_type": "code"
     },
     {
@@ -168,7 +195,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\core\\config.py",
-      "source_location": "L161",
+      "source_location": "L198",
       "file_type": "code"
     },
     {
@@ -681,7 +708,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\core\\security.py",
-      "source_location": "L82",
+      "source_location": "L88",
       "file_type": "code"
     },
     {
@@ -690,7 +717,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\core\\security.py",
-      "source_location": "L97",
+      "source_location": "L103",
       "file_type": "code"
     },
     {
@@ -4267,12 +4294,48 @@
       "file_type": "code"
     },
     {
+      "id": "_backEnd.app.main.import_slowapi_Limiter",
+      "label": "slowapi.Limiter",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\main.py",
+      "source_location": "L14",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.main.import_slowapi__rate_limit_exceeded_handler",
+      "label": "slowapi._rate_limit_exceeded_handler",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\main.py",
+      "source_location": "L14",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.main.import_slowapi_errors_RateLimitExceeded",
+      "label": "slowapi.errors.RateLimitExceeded",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\main.py",
+      "source_location": "L15",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.main.import_slowapi_util_get_remote_address",
+      "label": "slowapi.util.get_remote_address",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\main.py",
+      "source_location": "L16",
+      "file_type": "code"
+    },
+    {
       "id": "_backEnd.app.main.import_app_core_config_settings",
       "label": "app.core.config.settings",
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\main.py",
-      "source_location": "L15",
+      "source_location": "L18",
       "file_type": "code"
     },
     {
@@ -4281,7 +4344,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\main.py",
-      "source_location": "L16",
+      "source_location": "L19",
       "file_type": "code"
     },
     {
@@ -4290,7 +4353,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\main.py",
-      "source_location": "L17",
+      "source_location": "L20",
       "file_type": "code"
     },
     {
@@ -4299,7 +4362,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\main.py",
-      "source_location": "L18",
+      "source_location": "L21",
       "file_type": "code"
     },
     {
@@ -4308,7 +4371,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\main.py",
-      "source_location": "L19",
+      "source_location": "L22",
       "file_type": "code"
     },
     {
@@ -4317,7 +4380,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\main.py",
-      "source_location": "L20",
+      "source_location": "L23",
       "file_type": "code"
     },
     {
@@ -4326,7 +4389,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\main.py",
-      "source_location": "L26",
+      "source_location": "L38",
       "file_type": "code"
     },
     {
@@ -4335,7 +4398,16 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\main.py",
-      "source_location": "L41",
+      "source_location": "L53",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.main.create_application.import_app_middleware_security_headers_SecurityHeadersMiddleware",
+      "label": "app.middleware.security_headers.SecurityHeadersMiddleware",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\main.py",
+      "source_location": "L81",
       "file_type": "code"
     },
     {
@@ -4456,12 +4528,21 @@
       "file_type": "code"
     },
     {
+      "id": "_backEnd.app.middleware.exception_handler.register_exception_handlers.validation_exception_handler.import_app_core_config_settings",
+      "label": "app.core.config.settings",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\middleware\\exception_handler.py",
+      "source_location": "L72",
+      "file_type": "code"
+    },
+    {
       "id": "_backEnd.app.middleware.exception_handler.register_exception_handlers.unhandled_exception_handler",
       "label": "unhandled_exception_handler",
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\middleware\\exception_handler.py",
-      "source_location": "L90",
+      "source_location": "L108",
       "file_type": "code"
     },
     {
@@ -4543,6 +4624,78 @@
       "description": "",
       "source_file": "_backEnd\\app\\middleware\\request_id.py",
       "source_location": "L22",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.middleware.security_headers",
+      "label": "security_headers",
+      "type": "module",
+      "description": "Python module security_headers.py",
+      "source_file": "_backEnd\\app\\middleware\\security_headers.py",
+      "source_location": "L1",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.middleware.security_headers.import_starlette_middleware_base_BaseHTTPMiddleware",
+      "label": "starlette.middleware.base.BaseHTTPMiddleware",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\middleware\\security_headers.py",
+      "source_location": "L18",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.middleware.security_headers.import_starlette_middleware_base_RequestResponseEndpoint",
+      "label": "starlette.middleware.base.RequestResponseEndpoint",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\middleware\\security_headers.py",
+      "source_location": "L18",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.middleware.security_headers.import_starlette_requests_Request",
+      "label": "starlette.requests.Request",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\middleware\\security_headers.py",
+      "source_location": "L19",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.middleware.security_headers.import_starlette_responses_Response",
+      "label": "starlette.responses.Response",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\middleware\\security_headers.py",
+      "source_location": "L20",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.middleware.security_headers.SecurityHeadersMiddleware",
+      "label": "SecurityHeadersMiddleware",
+      "type": "class",
+      "description": "",
+      "source_file": "_backEnd\\app\\middleware\\security_headers.py",
+      "source_location": "L23",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.middleware.security_headers.SecurityHeadersMiddleware.dispatch",
+      "label": "dispatch",
+      "type": "function",
+      "description": "",
+      "source_file": "_backEnd\\app\\middleware\\security_headers.py",
+      "source_location": "L31",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.middleware.security_headers.SecurityHeadersMiddleware.dispatch.import_app_core_config_settings",
+      "label": "app.core.config.settings",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\middleware\\security_headers.py",
+      "source_location": "L55",
       "file_type": "code"
     },
     {
@@ -4960,12 +5113,30 @@
       "file_type": "code"
     },
     {
+      "id": "_backEnd.app.modules.auth.router.import_slowapi_Limiter",
+      "label": "slowapi.Limiter",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\auth\\router.py",
+      "source_location": "L11",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.auth.router.import_slowapi_util_get_remote_address",
+      "label": "slowapi.util.get_remote_address",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\auth\\router.py",
+      "source_location": "L12",
+      "file_type": "code"
+    },
+    {
       "id": "_backEnd.app.modules.auth.router.import_app_core_config_settings",
       "label": "app.core.config.settings",
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L12",
+      "source_location": "L14",
       "file_type": "code"
     },
     {
@@ -4974,7 +5145,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L13",
+      "source_location": "L15",
       "file_type": "code"
     },
     {
@@ -4983,7 +5154,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L14",
+      "source_location": "L16",
       "file_type": "code"
     },
     {
@@ -4992,7 +5163,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L15",
+      "source_location": "L17",
       "file_type": "code"
     },
     {
@@ -5001,7 +5172,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L15",
+      "source_location": "L17",
       "file_type": "code"
     },
     {
@@ -5010,7 +5181,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L15",
+      "source_location": "L17",
       "file_type": "code"
     },
     {
@@ -5019,7 +5190,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L15",
+      "source_location": "L17",
       "file_type": "code"
     },
     {
@@ -5028,7 +5199,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L15",
+      "source_location": "L17",
       "file_type": "code"
     },
     {
@@ -5037,7 +5208,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L15",
+      "source_location": "L17",
       "file_type": "code"
     },
     {
@@ -5046,7 +5217,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L15",
+      "source_location": "L17",
       "file_type": "code"
     },
     {
@@ -5055,7 +5226,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L15",
+      "source_location": "L17",
       "file_type": "code"
     },
     {
@@ -5064,7 +5235,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L15",
+      "source_location": "L17",
       "file_type": "code"
     },
     {
@@ -5073,7 +5244,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L15",
+      "source_location": "L17",
       "file_type": "code"
     },
     {
@@ -5082,7 +5253,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L15",
+      "source_location": "L17",
       "file_type": "code"
     },
     {
@@ -5091,7 +5262,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L15",
+      "source_location": "L17",
       "file_type": "code"
     },
     {
@@ -5100,7 +5271,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L29",
+      "source_location": "L31",
       "file_type": "code"
     },
     {
@@ -5109,7 +5280,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L30",
+      "source_location": "L32",
       "file_type": "code"
     },
     {
@@ -5118,7 +5289,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L44",
+      "source_location": "L51",
       "file_type": "code"
     },
     {
@@ -5127,7 +5298,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L83",
+      "source_location": "L91",
       "file_type": "code"
     },
     {
@@ -5136,7 +5307,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L98",
+      "source_location": "L108",
       "file_type": "code"
     },
     {
@@ -5145,7 +5316,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L120",
+      "source_location": "L132",
       "file_type": "code"
     },
     {
@@ -5154,7 +5325,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L133",
+      "source_location": "L146",
       "file_type": "code"
     },
     {
@@ -5163,7 +5334,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L147",
+      "source_location": "L160",
       "file_type": "code"
     },
     {
@@ -5172,7 +5343,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L194",
+      "source_location": "L207",
       "file_type": "code"
     },
     {
@@ -5181,7 +5352,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L211",
+      "source_location": "L224",
       "file_type": "code"
     },
     {
@@ -5190,7 +5361,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L218",
+      "source_location": "L231",
       "file_type": "code"
     },
     {
@@ -5199,7 +5370,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L218",
+      "source_location": "L231",
       "file_type": "code"
     },
     {
@@ -5208,7 +5379,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L235",
+      "source_location": "L248",
       "file_type": "code"
     },
     {
@@ -5217,7 +5388,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L250",
+      "source_location": "L263",
       "file_type": "code"
     },
     {
@@ -5226,7 +5397,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L264",
+      "source_location": "L277",
       "file_type": "code"
     },
     {
@@ -5235,7 +5406,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L279",
+      "source_location": "L292",
       "file_type": "code"
     },
     {
@@ -5388,7 +5559,7 @@
       "type": "class",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\schemas.py",
-      "source_location": "L78",
+      "source_location": "L80",
       "file_type": "code"
     },
     {
@@ -5397,7 +5568,7 @@
       "type": "class",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\schemas.py",
-      "source_location": "L85",
+      "source_location": "L87",
       "file_type": "code"
     },
     {
@@ -5406,7 +5577,7 @@
       "type": "class",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\schemas.py",
-      "source_location": "L93",
+      "source_location": "L95",
       "file_type": "code"
     },
     {
@@ -5415,7 +5586,7 @@
       "type": "class",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\schemas.py",
-      "source_location": "L110",
+      "source_location": "L112",
       "file_type": "code"
     },
     {
@@ -5424,7 +5595,7 @@
       "type": "class",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\schemas.py",
-      "source_location": "L122",
+      "source_location": "L124",
       "file_type": "code"
     },
     {
@@ -5433,7 +5604,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\schemas.py",
-      "source_location": "L130",
+      "source_location": "L132",
       "file_type": "code"
     },
     {
@@ -5442,7 +5613,7 @@
       "type": "class",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\schemas.py",
-      "source_location": "L140",
+      "source_location": "L142",
       "file_type": "code"
     },
     {
@@ -5712,7 +5883,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L61",
+      "source_location": "L62",
       "file_type": "code"
     },
     {
@@ -5721,7 +5892,7 @@
       "type": "class",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L104",
+      "source_location": "L118",
       "file_type": "code"
     },
     {
@@ -5730,7 +5901,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L111",
+      "source_location": "L125",
       "file_type": "code"
     },
     {
@@ -5739,7 +5910,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L115",
+      "source_location": "L129",
       "file_type": "code"
     },
     {
@@ -5748,7 +5919,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L154",
+      "source_location": "L168",
       "file_type": "code"
     },
     {
@@ -5757,7 +5928,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L163",
+      "source_location": "L188",
       "file_type": "code"
     },
     {
@@ -5766,7 +5937,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L164",
+      "source_location": "L189",
       "file_type": "code"
     },
     {
@@ -5775,7 +5946,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L164",
+      "source_location": "L189",
       "file_type": "code"
     },
     {
@@ -5784,16 +5955,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L165",
-      "file_type": "code"
-    },
-    {
-      "id": "_backEnd.app.modules.auth.service.AuthService.register.import_app_core_config_settings",
-      "label": "app.core.config.settings",
-      "type": "import",
-      "description": "",
-      "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L166",
+      "source_location": "L190",
       "file_type": "code"
     },
     {
@@ -5802,7 +5964,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L212",
+      "source_location": "L238",
       "file_type": "code"
     },
     {
@@ -5811,7 +5973,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L213",
+      "source_location": "L239",
       "file_type": "code"
     },
     {
@@ -5820,7 +5982,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L228",
+      "source_location": "L254",
       "file_type": "code"
     },
     {
@@ -5829,7 +5991,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L239",
+      "source_location": "L265",
       "file_type": "code"
     },
     {
@@ -5838,7 +6000,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L240",
+      "source_location": "L266",
       "file_type": "code"
     },
     {
@@ -5847,7 +6009,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L241",
+      "source_location": "L267",
       "file_type": "code"
     },
     {
@@ -5856,7 +6018,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L241",
+      "source_location": "L267",
       "file_type": "code"
     },
     {
@@ -5865,7 +6027,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L242",
+      "source_location": "L268",
       "file_type": "code"
     },
     {
@@ -5874,7 +6036,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L326",
+      "source_location": "L352",
       "file_type": "code"
     },
     {
@@ -5883,7 +6045,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L335",
+      "source_location": "L361",
       "file_type": "code"
     },
     {
@@ -5892,7 +6054,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L335",
+      "source_location": "L361",
       "file_type": "code"
     },
     {
@@ -5901,7 +6063,25 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L387",
+      "source_location": "L413",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.auth.service.AuthService.verify_email.import_datetime_datetime",
+      "label": "datetime.datetime",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\auth\\service.py",
+      "source_location": "L422",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.auth.service.AuthService.verify_email.import_datetime_timezone",
+      "label": "datetime.timezone",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\auth\\service.py",
+      "source_location": "L422",
       "file_type": "code"
     },
     {
@@ -5910,7 +6090,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L412",
+      "source_location": "L465",
       "file_type": "code"
     },
     {
@@ -5919,7 +6099,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L422",
+      "source_location": "L475",
       "file_type": "code"
     },
     {
@@ -5928,7 +6108,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L427",
+      "source_location": "L480",
       "file_type": "code"
     },
     {
@@ -5937,7 +6117,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L428",
+      "source_location": "L481",
       "file_type": "code"
     },
     {
@@ -5946,7 +6126,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L429",
+      "source_location": "L482",
       "file_type": "code"
     },
     {
@@ -5955,7 +6135,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L442",
+      "source_location": "L495",
       "file_type": "code"
     },
     {
@@ -5964,7 +6144,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L447",
+      "source_location": "L500",
       "file_type": "code"
     },
     {
@@ -5973,7 +6153,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L448",
+      "source_location": "L501",
       "file_type": "code"
     },
     {
@@ -5982,7 +6162,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L448",
+      "source_location": "L501",
       "file_type": "code"
     },
     {
@@ -5991,7 +6171,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L493",
+      "source_location": "L546",
       "file_type": "code"
     },
     {
@@ -6000,7 +6180,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L497",
+      "source_location": "L550",
       "file_type": "code"
     },
     {
@@ -6009,7 +6189,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L498",
+      "source_location": "L551",
       "file_type": "code"
     },
     {
@@ -6018,7 +6198,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L528",
+      "source_location": "L581",
       "file_type": "code"
     },
     {
@@ -6027,7 +6207,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L549",
+      "source_location": "L602",
       "file_type": "code"
     },
     {
@@ -6036,7 +6216,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L567",
+      "source_location": "L620",
       "file_type": "code"
     },
     {
@@ -6045,7 +6225,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L575",
+      "source_location": "L628",
       "file_type": "code"
     },
     {
@@ -6054,7 +6234,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L575",
+      "source_location": "L628",
       "file_type": "code"
     },
     {
@@ -19869,7 +20049,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\security\\dependencies.py",
-      "source_location": "L83",
+      "source_location": "L90",
       "file_type": "code"
     },
     {
@@ -19878,7 +20058,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\security\\dependencies.py",
-      "source_location": "L92",
+      "source_location": "L99",
       "file_type": "code"
     },
     {
@@ -19887,7 +20067,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\security\\dependencies.py",
-      "source_location": "L100",
+      "source_location": "L107",
       "file_type": "code"
     },
     {
@@ -26115,7 +26295,7 @@
       "type": "class",
       "description": "",
       "source_file": "_deliveryService\\main.py",
-      "source_location": "L55",
+      "source_location": "L59",
       "file_type": "code"
     },
     {
@@ -26124,7 +26304,7 @@
       "type": "class",
       "description": "",
       "source_file": "_deliveryService\\main.py",
-      "source_location": "L60",
+      "source_location": "L64",
       "file_type": "code"
     },
     {
@@ -26133,7 +26313,7 @@
       "type": "function",
       "description": "",
       "source_file": "_deliveryService\\main.py",
-      "source_location": "L71",
+      "source_location": "L75",
       "file_type": "code"
     },
     {
@@ -26142,7 +26322,7 @@
       "type": "function",
       "description": "",
       "source_file": "_deliveryService\\main.py",
-      "source_location": "L76",
+      "source_location": "L80",
       "file_type": "code"
     },
     {
@@ -26151,7 +26331,7 @@
       "type": "function",
       "description": "",
       "source_file": "_deliveryService\\main.py",
-      "source_location": "L100",
+      "source_location": "L104",
       "file_type": "code"
     },
     {
@@ -26160,7 +26340,7 @@
       "type": "import",
       "description": "",
       "source_file": "_deliveryService\\main.py",
-      "source_location": "L102",
+      "source_location": "L106",
       "file_type": "code"
     },
     {
@@ -26169,7 +26349,7 @@
       "type": "function",
       "description": "",
       "source_file": "_deliveryService\\main.py",
-      "source_location": "L109",
+      "source_location": "L113",
       "file_type": "code"
     },
     {
@@ -26178,7 +26358,7 @@
       "type": "function",
       "description": "",
       "source_file": "_deliveryService\\main.py",
-      "source_location": "L137",
+      "source_location": "L141",
       "file_type": "code"
     },
     {
@@ -26448,7 +26628,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\components\\layout\\AdminLayout.tsx",
-      "source_location": "L33",
+      "source_location": "L34",
       "file_type": "code"
     },
     {
@@ -26457,7 +26637,7 @@
       "type": "interface",
       "description": "",
       "source_file": "_frontEnd\\src\\components\\layout\\AdminLayout.tsx",
-      "source_location": "L26",
+      "source_location": "L27",
       "file_type": "code"
     },
     {
@@ -26466,7 +26646,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\components\\layout\\AdminLayout.tsx",
-      "source_location": "L60",
+      "source_location": "L62",
       "file_type": "code"
     },
     {
@@ -26475,7 +26655,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\components\\layout\\AdminLayout.tsx",
-      "source_location": "L125",
+      "source_location": "L127",
       "file_type": "code"
     },
     {
@@ -26506,12 +26686,21 @@
       "file_type": "code"
     },
     {
+      "id": "_frontEnd.src.components.layout.AdminLayout.import_useLogout",
+      "label": "@/features/auth/hooks/useLogout",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\components\\layout\\AdminLayout.tsx",
+      "source_location": "L4",
+      "file_type": "code"
+    },
+    {
       "id": "_frontEnd.src.components.layout.AdminLayout.import_roles",
       "label": "@/types/roles",
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\components\\layout\\AdminLayout.tsx",
-      "source_location": "L4",
+      "source_location": "L5",
       "file_type": "code"
     },
     {
@@ -26520,7 +26709,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\components\\layout\\AdminLayout.tsx",
-      "source_location": "L5",
+      "source_location": "L6",
       "file_type": "code"
     },
     {
@@ -26529,7 +26718,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\components\\layout\\AdminLayout.tsx",
-      "source_location": "L23",
+      "source_location": "L24",
       "file_type": "code"
     },
     {
@@ -26538,7 +26727,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\components\\layout\\AdminLayout.tsx",
-      "source_location": "L24",
+      "source_location": "L25",
       "file_type": "code"
     },
     {
@@ -26682,7 +26871,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\about\\pages\\AboutPage.tsx",
-      "source_location": "L30",
+      "source_location": "L31",
       "file_type": "code"
     },
     {
@@ -26691,7 +26880,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\about\\pages\\AboutPage.tsx",
-      "source_location": "L52",
+      "source_location": "L54",
       "file_type": "code"
     },
     {
@@ -26700,7 +26889,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\about\\pages\\AboutPage.tsx",
-      "source_location": "L58",
+      "source_location": "L60",
       "file_type": "code"
     },
     {
@@ -26731,12 +26920,21 @@
       "file_type": "code"
     },
     {
+      "id": "_frontEnd.src.features.about.pages.AboutPage.import_useLogout",
+      "label": "@/features/auth/hooks/useLogout",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\about\\pages\\AboutPage.tsx",
+      "source_location": "L16",
+      "file_type": "code"
+    },
+    {
       "id": "_frontEnd.src.features.about.pages.AboutPage.import_useCart",
       "label": "@/features/cart/hooks/useCart",
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\about\\pages\\AboutPage.tsx",
-      "source_location": "L16",
+      "source_location": "L17",
       "file_type": "code"
     },
     {
@@ -26745,7 +26943,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\about\\pages\\AboutPage.tsx",
-      "source_location": "L19",
+      "source_location": "L20",
       "file_type": "code"
     },
     {
@@ -26754,7 +26952,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\about\\pages\\AboutPage.tsx",
-      "source_location": "L21",
+      "source_location": "L22",
       "file_type": "code"
     },
     {
@@ -26763,7 +26961,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\about\\pages\\AboutPage.tsx",
-      "source_location": "L24",
+      "source_location": "L25",
       "file_type": "code"
     },
     {
@@ -26772,7 +26970,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\about\\pages\\AboutPage.tsx",
-      "source_location": "L25",
+      "source_location": "L26",
       "file_type": "code"
     },
     {
@@ -26781,7 +26979,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\about\\pages\\AboutPage.tsx",
-      "source_location": "L26",
+      "source_location": "L27",
       "file_type": "code"
     },
     {
@@ -27142,6 +27340,51 @@
       "description": "",
       "source_file": "_frontEnd\\src\\features\\auth\\hooks\\useLogin.ts",
       "source_location": "L8",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.auth.hooks.useLogout",
+      "label": "useLogout.ts",
+      "type": "module",
+      "description": "TypeScript module useLogout.ts",
+      "source_file": "_frontEnd\\src\\features\\auth\\hooks\\useLogout.ts",
+      "source_location": "L1",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.auth.hooks.useLogout.useLogout",
+      "label": "useLogout",
+      "type": "function",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\auth\\hooks\\useLogout.ts",
+      "source_location": "L20",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.auth.hooks.useLogout.import_react",
+      "label": "react",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\auth\\hooks\\useLogout.ts",
+      "source_location": "L16",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.auth.hooks.useLogout.import_auth_store",
+      "label": "@/features/auth/store/auth.store",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\auth\\hooks\\useLogout.ts",
+      "source_location": "L17",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.auth.hooks.useLogout.import_auth_api",
+      "label": "@/features/auth/api/auth.api",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\auth\\hooks\\useLogout.ts",
+      "source_location": "L18",
       "file_type": "code"
     },
     {
@@ -27906,7 +28149,7 @@
       "type": "interface",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\auth\\store\\auth.store.ts",
-      "source_location": "L15",
+      "source_location": "L21",
       "file_type": "code"
     },
     {
@@ -28050,7 +28293,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\cart\\components\\CartView.tsx",
-      "source_location": "L33",
+      "source_location": "L34",
       "file_type": "code"
     },
     {
@@ -28059,7 +28302,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\cart\\components\\CartView.tsx",
-      "source_location": "L38",
+      "source_location": "L39",
       "file_type": "code"
     },
     {
@@ -28068,7 +28311,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\cart\\components\\CartView.tsx",
-      "source_location": "L119",
+      "source_location": "L121",
       "file_type": "code"
     },
     {
@@ -28077,7 +28320,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\cart\\components\\CartView.tsx",
-      "source_location": "L125",
+      "source_location": "L127",
       "file_type": "code"
     },
     {
@@ -28086,7 +28329,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\cart\\components\\CartView.tsx",
-      "source_location": "L131",
+      "source_location": "L133",
       "file_type": "code"
     },
     {
@@ -28095,7 +28338,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\cart\\components\\CartView.tsx",
-      "source_location": "L142",
+      "source_location": "L144",
       "file_type": "code"
     },
     {
@@ -28198,12 +28441,21 @@
       "file_type": "code"
     },
     {
+      "id": "_frontEnd.src.features.cart.components.CartView.import_useLogout",
+      "label": "@/features/auth/hooks/useLogout",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\cart\\components\\CartView.tsx",
+      "source_location": "L28",
+      "file_type": "code"
+    },
+    {
       "id": "_frontEnd.src.features.cart.components.CartView.import_useConfig",
       "label": "@/features/config/hooks/useConfig",
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\cart\\components\\CartView.tsx",
-      "source_location": "L28",
+      "source_location": "L29",
       "file_type": "code"
     },
     {
@@ -28212,7 +28464,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\cart\\components\\CartView.tsx",
-      "source_location": "L29",
+      "source_location": "L30",
       "file_type": "code"
     },
     {
@@ -28221,7 +28473,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\cart\\components\\CartView.tsx",
-      "source_location": "L31",
+      "source_location": "L32",
       "file_type": "code"
     },
     {
@@ -28968,7 +29220,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\catalog\\pages\\CatalogPage.tsx",
-      "source_location": "L33",
+      "source_location": "L34",
       "file_type": "code"
     },
     {
@@ -28977,7 +29229,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\catalog\\pages\\CatalogPage.tsx",
-      "source_location": "L38",
+      "source_location": "L39",
       "file_type": "code"
     },
     {
@@ -28986,7 +29238,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\catalog\\pages\\CatalogPage.tsx",
-      "source_location": "L50",
+      "source_location": "L51",
       "file_type": "code"
     },
     {
@@ -28995,7 +29247,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\catalog\\pages\\CatalogPage.tsx",
-      "source_location": "L71",
+      "source_location": "L72",
       "file_type": "code"
     },
     {
@@ -29004,7 +29256,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\catalog\\pages\\CatalogPage.tsx",
-      "source_location": "L209",
+      "source_location": "L211",
       "file_type": "code"
     },
     {
@@ -29013,7 +29265,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\catalog\\pages\\CatalogPage.tsx",
-      "source_location": "L215",
+      "source_location": "L217",
       "file_type": "code"
     },
     {
@@ -29062,12 +29314,21 @@
       "file_type": "code"
     },
     {
+      "id": "_frontEnd.src.features.catalog.pages.CatalogPage.import_useLogout",
+      "label": "@/features/auth/hooks/useLogout",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\catalog\\pages\\CatalogPage.tsx",
+      "source_location": "L17",
+      "file_type": "code"
+    },
+    {
       "id": "_frontEnd.src.features.catalog.pages.CatalogPage.import_PublicHeader",
       "label": "@/shared/components/layout/PublicHeader",
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\catalog\\pages\\CatalogPage.tsx",
-      "source_location": "L18",
+      "source_location": "L19",
       "file_type": "code"
     },
     {
@@ -29076,7 +29337,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\catalog\\pages\\CatalogPage.tsx",
-      "source_location": "L20",
+      "source_location": "L21",
       "file_type": "code"
     },
     {
@@ -29085,7 +29346,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\catalog\\pages\\CatalogPage.tsx",
-      "source_location": "L22",
+      "source_location": "L23",
       "file_type": "code"
     },
     {
@@ -29094,7 +29355,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\catalog\\pages\\CatalogPage.tsx",
-      "source_location": "L23",
+      "source_location": "L24",
       "file_type": "code"
     },
     {
@@ -29103,7 +29364,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\catalog\\pages\\CatalogPage.tsx",
-      "source_location": "L24",
+      "source_location": "L25",
       "file_type": "code"
     },
     {
@@ -29112,7 +29373,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\catalog\\pages\\CatalogPage.tsx",
-      "source_location": "L26",
+      "source_location": "L27",
       "file_type": "code"
     },
     {
@@ -29121,7 +29382,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\catalog\\pages\\CatalogPage.tsx",
-      "source_location": "L27",
+      "source_location": "L28",
       "file_type": "code"
     },
     {
@@ -29130,7 +29391,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\catalog\\pages\\CatalogPage.tsx",
-      "source_location": "L28",
+      "source_location": "L29",
       "file_type": "code"
     },
     {
@@ -29139,7 +29400,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\catalog\\pages\\CatalogPage.tsx",
-      "source_location": "L29",
+      "source_location": "L30",
       "file_type": "code"
     },
     {
@@ -31182,7 +31443,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\orders\\pages\\CustomerOrderDetailPage.tsx",
-      "source_location": "L42",
+      "source_location": "L43",
       "file_type": "code"
     },
     {
@@ -31191,7 +31452,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\orders\\pages\\CustomerOrderDetailPage.tsx",
-      "source_location": "L49",
+      "source_location": "L50",
       "file_type": "code"
     },
     {
@@ -31200,7 +31461,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\orders\\pages\\CustomerOrderDetailPage.tsx",
-      "source_location": "L72",
+      "source_location": "L74",
       "file_type": "code"
     },
     {
@@ -31209,7 +31470,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\orders\\pages\\CustomerOrderDetailPage.tsx",
-      "source_location": "L99",
+      "source_location": "L101",
       "file_type": "code"
     },
     {
@@ -31218,7 +31479,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\orders\\pages\\CustomerOrderDetailPage.tsx",
-      "source_location": "L123",
+      "source_location": "L125",
       "file_type": "code"
     },
     {
@@ -31227,7 +31488,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\orders\\pages\\CustomerOrderDetailPage.tsx",
-      "source_location": "L124",
+      "source_location": "L126",
       "file_type": "code"
     },
     {
@@ -31236,7 +31497,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\orders\\pages\\CustomerOrderDetailPage.tsx",
-      "source_location": "L126",
+      "source_location": "L128",
       "file_type": "code"
     },
     {
@@ -31294,12 +31555,21 @@
       "file_type": "code"
     },
     {
+      "id": "_frontEnd.src.features.orders.pages.CustomerOrderDetailPage.import_useLogout",
+      "label": "@/features/auth/hooks/useLogout",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\orders\\pages\\CustomerOrderDetailPage.tsx",
+      "source_location": "L14",
+      "file_type": "code"
+    },
+    {
       "id": "_frontEnd.src.features.orders.pages.CustomerOrderDetailPage.import_PublicHeader",
       "label": "@/shared/components/layout/PublicHeader",
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\orders\\pages\\CustomerOrderDetailPage.tsx",
-      "source_location": "L14",
+      "source_location": "L15",
       "file_type": "code"
     },
     {
@@ -31308,7 +31578,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\orders\\pages\\CustomerOrderDetailPage.tsx",
-      "source_location": "L15",
+      "source_location": "L16",
       "file_type": "code"
     },
     {
@@ -31317,7 +31587,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\orders\\pages\\CustomerOrderDetailPage.tsx",
-      "source_location": "L16",
+      "source_location": "L17",
       "file_type": "code"
     },
     {
@@ -31326,7 +31596,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\orders\\pages\\CustomerOrderDetailPage.tsx",
-      "source_location": "L17",
+      "source_location": "L18",
       "file_type": "code"
     },
     {
@@ -31335,7 +31605,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\orders\\pages\\CustomerOrderDetailPage.tsx",
-      "source_location": "L18",
+      "source_location": "L19",
       "file_type": "code"
     },
     {
@@ -31344,7 +31614,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\orders\\pages\\CustomerOrderDetailPage.tsx",
-      "source_location": "L19",
+      "source_location": "L20",
       "file_type": "code"
     },
     {
@@ -31353,7 +31623,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\orders\\pages\\CustomerOrderDetailPage.tsx",
-      "source_location": "L20",
+      "source_location": "L21",
       "file_type": "code"
     },
     {
@@ -31362,7 +31632,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\orders\\pages\\CustomerOrderDetailPage.tsx",
-      "source_location": "L21",
+      "source_location": "L22",
       "file_type": "code"
     },
     {
@@ -31371,7 +31641,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\orders\\pages\\CustomerOrderDetailPage.tsx",
-      "source_location": "L22",
+      "source_location": "L23",
       "file_type": "code"
     },
     {
@@ -31380,7 +31650,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\orders\\pages\\CustomerOrderDetailPage.tsx",
-      "source_location": "L23",
+      "source_location": "L24",
       "file_type": "code"
     },
     {
@@ -31398,7 +31668,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\orders\\pages\\CustomerOrdersPage.tsx",
-      "source_location": "L40",
+      "source_location": "L41",
       "file_type": "code"
     },
     {
@@ -31407,7 +31677,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\orders\\pages\\CustomerOrdersPage.tsx",
-      "source_location": "L47",
+      "source_location": "L48",
       "file_type": "code"
     },
     {
@@ -31416,7 +31686,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\orders\\pages\\CustomerOrdersPage.tsx",
-      "source_location": "L57",
+      "source_location": "L59",
       "file_type": "code"
     },
     {
@@ -31425,7 +31695,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\orders\\pages\\CustomerOrdersPage.tsx",
-      "source_location": "L58",
+      "source_location": "L60",
       "file_type": "code"
     },
     {
@@ -31483,12 +31753,21 @@
       "file_type": "code"
     },
     {
+      "id": "_frontEnd.src.features.orders.pages.CustomerOrdersPage.import_useLogout",
+      "label": "@/features/auth/hooks/useLogout",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\orders\\pages\\CustomerOrdersPage.tsx",
+      "source_location": "L17",
+      "file_type": "code"
+    },
+    {
       "id": "_frontEnd.src.features.orders.pages.CustomerOrdersPage.import_PublicHeader",
       "label": "@/shared/components/layout/PublicHeader",
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\orders\\pages\\CustomerOrdersPage.tsx",
-      "source_location": "L17",
+      "source_location": "L18",
       "file_type": "code"
     },
     {
@@ -31497,7 +31776,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\orders\\pages\\CustomerOrdersPage.tsx",
-      "source_location": "L19",
+      "source_location": "L20",
       "file_type": "code"
     },
     {
@@ -31506,7 +31785,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\orders\\pages\\CustomerOrdersPage.tsx",
-      "source_location": "L20",
+      "source_location": "L21",
       "file_type": "code"
     },
     {
@@ -31515,7 +31794,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\orders\\pages\\CustomerOrdersPage.tsx",
-      "source_location": "L21",
+      "source_location": "L22",
       "file_type": "code"
     },
     {
@@ -33495,7 +33774,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\products\\pages\\PackDetailView.tsx",
-      "source_location": "L21",
+      "source_location": "L22",
       "file_type": "code"
     },
     {
@@ -33504,7 +33783,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\products\\pages\\PackDetailView.tsx",
-      "source_location": "L40",
+      "source_location": "L42",
       "file_type": "code"
     },
     {
@@ -33513,7 +33792,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\products\\pages\\PackDetailView.tsx",
-      "source_location": "L49",
+      "source_location": "L51",
       "file_type": "code"
     },
     {
@@ -33522,7 +33801,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\products\\pages\\PackDetailView.tsx",
-      "source_location": "L72",
+      "source_location": "L74",
       "file_type": "code"
     },
     {
@@ -33531,7 +33810,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\products\\pages\\PackDetailView.tsx",
-      "source_location": "L78",
+      "source_location": "L80",
       "file_type": "code"
     },
     {
@@ -33589,12 +33868,21 @@
       "file_type": "code"
     },
     {
+      "id": "_frontEnd.src.features.products.pages.PackDetailView.import_useLogout",
+      "label": "@/features/auth/hooks/useLogout",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\products\\pages\\PackDetailView.tsx",
+      "source_location": "L13",
+      "file_type": "code"
+    },
+    {
       "id": "_frontEnd.src.features.products.pages.PackDetailView.import_PublicHeader",
       "label": "@/shared/components/layout/PublicHeader",
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\products\\pages\\PackDetailView.tsx",
-      "source_location": "L13",
+      "source_location": "L14",
       "file_type": "code"
     },
     {
@@ -33603,7 +33891,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\products\\pages\\PackDetailView.tsx",
-      "source_location": "L15",
+      "source_location": "L16",
       "file_type": "code"
     },
     {
@@ -33612,7 +33900,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\products\\pages\\PackDetailView.tsx",
-      "source_location": "L16",
+      "source_location": "L17",
       "file_type": "code"
     },
     {
@@ -33621,7 +33909,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\products\\pages\\PackDetailView.tsx",
-      "source_location": "L18",
+      "source_location": "L19",
       "file_type": "code"
     },
     {
@@ -33630,7 +33918,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\products\\pages\\PackDetailView.tsx",
-      "source_location": "L19",
+      "source_location": "L20",
       "file_type": "code"
     },
     {
@@ -33648,7 +33936,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\products\\pages\\ProductDetailView.tsx",
-      "source_location": "L57",
+      "source_location": "L58",
       "file_type": "code"
     },
     {
@@ -33657,7 +33945,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\products\\pages\\ProductDetailView.tsx",
-      "source_location": "L81",
+      "source_location": "L82",
       "file_type": "code"
     },
     {
@@ -33666,7 +33954,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\products\\pages\\ProductDetailView.tsx",
-      "source_location": "L119",
+      "source_location": "L121",
       "file_type": "code"
     },
     {
@@ -33675,7 +33963,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\products\\pages\\ProductDetailView.tsx",
-      "source_location": "L125",
+      "source_location": "L127",
       "file_type": "code"
     },
     {
@@ -33684,7 +33972,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\products\\pages\\ProductDetailView.tsx",
-      "source_location": "L131",
+      "source_location": "L133",
       "file_type": "code"
     },
     {
@@ -33693,7 +33981,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\products\\pages\\ProductDetailView.tsx",
-      "source_location": "L134",
+      "source_location": "L136",
       "file_type": "code"
     },
     {
@@ -33702,7 +33990,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\products\\pages\\ProductDetailView.tsx",
-      "source_location": "L139",
+      "source_location": "L141",
       "file_type": "code"
     },
     {
@@ -33711,7 +33999,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\products\\pages\\ProductDetailView.tsx",
-      "source_location": "L165",
+      "source_location": "L167",
       "file_type": "code"
     },
     {
@@ -33720,7 +34008,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\products\\pages\\ProductDetailView.tsx",
-      "source_location": "L173",
+      "source_location": "L175",
       "file_type": "code"
     },
     {
@@ -33805,12 +34093,21 @@
       "file_type": "code"
     },
     {
+      "id": "_frontEnd.src.features.products.pages.ProductDetailView.import_useLogout",
+      "label": "@/features/auth/hooks/useLogout",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\products\\pages\\ProductDetailView.tsx",
+      "source_location": "L44",
+      "file_type": "code"
+    },
+    {
       "id": "_frontEnd.src.features.products.pages.ProductDetailView.import_useCatalogAdmin",
       "label": "../hooks/useCatalogAdmin",
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\products\\pages\\ProductDetailView.tsx",
-      "source_location": "L46",
+      "source_location": "L47",
       "file_type": "code"
     },
     {
@@ -33819,7 +34116,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\products\\pages\\ProductDetailView.tsx",
-      "source_location": "L49",
+      "source_location": "L50",
       "file_type": "code"
     },
     {
@@ -35097,7 +35394,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\sweetcoins\\pages\\PointsView.tsx",
-      "source_location": "L45",
+      "source_location": "L46",
       "file_type": "code"
     },
     {
@@ -35106,7 +35403,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\sweetcoins\\pages\\PointsView.tsx",
-      "source_location": "L54",
+      "source_location": "L55",
       "file_type": "code"
     },
     {
@@ -35115,7 +35412,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\sweetcoins\\pages\\PointsView.tsx",
-      "source_location": "L87",
+      "source_location": "L89",
       "file_type": "code"
     },
     {
@@ -35124,7 +35421,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\sweetcoins\\pages\\PointsView.tsx",
-      "source_location": "L98",
+      "source_location": "L100",
       "file_type": "code"
     },
     {
@@ -35133,7 +35430,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\sweetcoins\\pages\\PointsView.tsx",
-      "source_location": "L99",
+      "source_location": "L101",
       "file_type": "code"
     },
     {
@@ -35142,7 +35439,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\sweetcoins\\pages\\PointsView.tsx",
-      "source_location": "L102",
+      "source_location": "L104",
       "file_type": "code"
     },
     {
@@ -35209,12 +35506,21 @@
       "file_type": "code"
     },
     {
+      "id": "_frontEnd.src.features.sweetcoins.pages.PointsView.import_useLogout",
+      "label": "@/features/auth/hooks/useLogout",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\sweetcoins\\pages\\PointsView.tsx",
+      "source_location": "L36",
+      "file_type": "code"
+    },
+    {
       "id": "_frontEnd.src.features.sweetcoins.pages.PointsView.import_useCart",
       "label": "@/features/cart/hooks/useCart",
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\sweetcoins\\pages\\PointsView.tsx",
-      "source_location": "L36",
+      "source_location": "L37",
       "file_type": "code"
     },
     {
@@ -35223,7 +35529,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\sweetcoins\\pages\\PointsView.tsx",
-      "source_location": "L37",
+      "source_location": "L38",
       "file_type": "code"
     },
     {
@@ -35232,7 +35538,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\sweetcoins\\pages\\PointsView.tsx",
-      "source_location": "L40",
+      "source_location": "L41",
       "file_type": "code"
     },
     {
@@ -35241,7 +35547,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\sweetcoins\\pages\\PointsView.tsx",
-      "source_location": "L41",
+      "source_location": "L42",
       "file_type": "code"
     },
     {
@@ -35250,7 +35556,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\sweetcoins\\pages\\PointsView.tsx",
-      "source_location": "L42",
+      "source_location": "L43",
       "file_type": "code"
     },
     {
@@ -35844,7 +36150,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\pages\\public\\HomePage.tsx",
-      "source_location": "L30",
+      "source_location": "L31",
       "file_type": "code"
     },
     {
@@ -35853,7 +36159,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\pages\\public\\HomePage.tsx",
-      "source_location": "L55",
+      "source_location": "L57",
       "file_type": "code"
     },
     {
@@ -35862,7 +36168,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\pages\\public\\HomePage.tsx",
-      "source_location": "L61",
+      "source_location": "L63",
       "file_type": "code"
     },
     {
@@ -35871,7 +36177,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\pages\\public\\HomePage.tsx",
-      "source_location": "L67",
+      "source_location": "L69",
       "file_type": "code"
     },
     {
@@ -35902,12 +36208,21 @@
       "file_type": "code"
     },
     {
+      "id": "_frontEnd.src.pages.public.HomePage.import_useLogout",
+      "label": "@/features/auth/hooks/useLogout",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\pages\\public\\HomePage.tsx",
+      "source_location": "L15",
+      "file_type": "code"
+    },
+    {
       "id": "_frontEnd.src.pages.public.HomePage.import_useCart",
       "label": "@/features/cart/hooks/useCart",
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\pages\\public\\HomePage.tsx",
-      "source_location": "L15",
+      "source_location": "L16",
       "file_type": "code"
     },
     {
@@ -35916,7 +36231,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\pages\\public\\HomePage.tsx",
-      "source_location": "L18",
+      "source_location": "L19",
       "file_type": "code"
     },
     {
@@ -35925,7 +36240,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\pages\\public\\HomePage.tsx",
-      "source_location": "L20",
+      "source_location": "L21",
       "file_type": "code"
     },
     {
@@ -35934,7 +36249,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\pages\\public\\HomePage.tsx",
-      "source_location": "L23",
+      "source_location": "L24",
       "file_type": "code"
     },
     {
@@ -35943,7 +36258,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\pages\\public\\HomePage.tsx",
-      "source_location": "L24",
+      "source_location": "L25",
       "file_type": "code"
     },
     {
@@ -35952,7 +36267,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\pages\\public\\HomePage.tsx",
-      "source_location": "L25",
+      "source_location": "L26",
       "file_type": "code"
     },
     {
@@ -35961,7 +36276,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\pages\\public\\HomePage.tsx",
-      "source_location": "L26",
+      "source_location": "L27",
       "file_type": "code"
     },
     {
@@ -36367,78 +36682,6 @@
       "description": "TypeScript module roles.ts",
       "source_file": "_frontEnd\\src\\shared\\types\\roles.ts",
       "source_location": "L1",
-      "file_type": "code"
-    },
-    {
-      "id": "_frontEnd.src.stores.auth.store",
-      "label": "auth.store.ts",
-      "type": "module",
-      "description": "TypeScript module auth.store.ts",
-      "source_file": "_frontEnd\\src\\stores\\auth.store.ts",
-      "source_location": "L1",
-      "file_type": "code"
-    },
-    {
-      "id": "_frontEnd.src.stores.auth.store.AuthState",
-      "label": "AuthState",
-      "type": "interface",
-      "description": "",
-      "source_file": "_frontEnd\\src\\stores\\auth.store.ts",
-      "source_location": "L7",
-      "file_type": "code"
-    },
-    {
-      "id": "_frontEnd.src.stores.auth.store.AuthActions",
-      "label": "AuthActions",
-      "type": "interface",
-      "description": "",
-      "source_file": "_frontEnd\\src\\stores\\auth.store.ts",
-      "source_location": "L14",
-      "file_type": "code"
-    },
-    {
-      "id": "_frontEnd.src.stores.auth.store.import_zustand",
-      "label": "zustand",
-      "type": "import",
-      "description": "",
-      "source_file": "_frontEnd\\src\\stores\\auth.store.ts",
-      "source_location": "L1",
-      "file_type": "code"
-    },
-    {
-      "id": "_frontEnd.src.stores.auth.store.import_middleware",
-      "label": "zustand/middleware",
-      "type": "import",
-      "description": "",
-      "source_file": "_frontEnd\\src\\stores\\auth.store.ts",
-      "source_location": "L2",
-      "file_type": "code"
-    },
-    {
-      "id": "_frontEnd.src.stores.auth.store.import_immer",
-      "label": "zustand/middleware/immer",
-      "type": "import",
-      "description": "",
-      "source_file": "_frontEnd\\src\\stores\\auth.store.ts",
-      "source_location": "L3",
-      "file_type": "code"
-    },
-    {
-      "id": "_frontEnd.src.stores.auth.store.import_auth",
-      "label": "@/types/auth",
-      "type": "import",
-      "description": "",
-      "source_file": "_frontEnd\\src\\stores\\auth.store.ts",
-      "source_location": "L4",
-      "file_type": "code"
-    },
-    {
-      "id": "_frontEnd.src.stores.auth.store.import_axios",
-      "label": "@/lib/axios",
-      "type": "import",
-      "description": "",
-      "source_file": "_frontEnd\\src\\stores\\auth.store.ts",
-      "source_location": "L5",
       "file_type": "code"
     },
     {
@@ -36920,6 +37163,21 @@
     {
       "source": "_backEnd.app.core.config.Settings",
       "target": "_backEnd.app.core.config.Settings.validate_cloudinary_in_production",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.app.core.config.Settings",
+      "target": "_backEnd.app.core.config.Settings.validate_cors_safety",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.app.core.config.Settings.validate_cors_safety",
+      "target": "_backEnd.app.core.config.Settings.validate_cors_safety.import_warnings",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.core.config.Settings",
+      "target": "_backEnd.app.core.config.Settings.expose_docs",
       "relation": "contains"
     },
     {
@@ -39034,6 +39292,26 @@
     },
     {
       "source": "_backEnd.app.main",
+      "target": "_backEnd.app.main.import_slowapi_Limiter",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.main",
+      "target": "_backEnd.app.main.import_slowapi__rate_limit_exceeded_handler",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.main",
+      "target": "_backEnd.app.main.import_slowapi_errors_RateLimitExceeded",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.main",
+      "target": "_backEnd.app.main.import_slowapi_util_get_remote_address",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.main",
       "target": "_backEnd.app.main.import_app_core_config_settings",
       "relation": "imports_from"
     },
@@ -39071,6 +39349,11 @@
       "source": "_backEnd.app.main",
       "target": "_backEnd.app.main.create_application",
       "relation": "contains"
+    },
+    {
+      "source": "_backEnd.app.main.create_application",
+      "target": "_backEnd.app.main.create_application.import_app_middleware_security_headers_SecurityHeadersMiddleware",
+      "relation": "imports_from"
     },
     {
       "source": "_backEnd.app.middleware.exception_handler",
@@ -39128,6 +39411,11 @@
       "relation": "contains"
     },
     {
+      "source": "_backEnd.app.middleware.exception_handler.register_exception_handlers.validation_exception_handler",
+      "target": "_backEnd.app.middleware.exception_handler.register_exception_handlers.validation_exception_handler.import_app_core_config_settings",
+      "relation": "imports_from"
+    },
+    {
       "source": "_backEnd.app.middleware.exception_handler.register_exception_handlers",
       "target": "_backEnd.app.middleware.exception_handler.register_exception_handlers.unhandled_exception_handler",
       "relation": "contains"
@@ -39171,6 +39459,41 @@
       "source": "_backEnd.app.middleware.request_id.RequestIDMiddleware",
       "target": "_backEnd.app.middleware.request_id.RequestIDMiddleware.dispatch",
       "relation": "contains"
+    },
+    {
+      "source": "_backEnd.app.middleware.security_headers",
+      "target": "_backEnd.app.middleware.security_headers.import_starlette_middleware_base_BaseHTTPMiddleware",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.middleware.security_headers",
+      "target": "_backEnd.app.middleware.security_headers.import_starlette_middleware_base_RequestResponseEndpoint",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.middleware.security_headers",
+      "target": "_backEnd.app.middleware.security_headers.import_starlette_requests_Request",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.middleware.security_headers",
+      "target": "_backEnd.app.middleware.security_headers.import_starlette_responses_Response",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.middleware.security_headers",
+      "target": "_backEnd.app.middleware.security_headers.SecurityHeadersMiddleware",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.app.middleware.security_headers.SecurityHeadersMiddleware",
+      "target": "_backEnd.app.middleware.security_headers.SecurityHeadersMiddleware.dispatch",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.app.middleware.security_headers.SecurityHeadersMiddleware.dispatch",
+      "target": "_backEnd.app.middleware.security_headers.SecurityHeadersMiddleware.dispatch.import_app_core_config_settings",
+      "relation": "imports_from"
     },
     {
       "source": "_backEnd.app.modules.auth.dependencies",
@@ -39370,6 +39693,16 @@
     {
       "source": "_backEnd.app.modules.auth.router",
       "target": "_backEnd.app.modules.auth.router.import_redis_asyncio_Redis",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.auth.router",
+      "target": "_backEnd.app.modules.auth.router.import_slowapi_Limiter",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.auth.router",
+      "target": "_backEnd.app.modules.auth.router.import_slowapi_util_get_remote_address",
       "relation": "imports_from"
     },
     {
@@ -39824,11 +40157,6 @@
     },
     {
       "source": "_backEnd.app.modules.auth.service.AuthService.register",
-      "target": "_backEnd.app.modules.auth.service.AuthService.register.import_app_core_config_settings",
-      "relation": "imports_from"
-    },
-    {
-      "source": "_backEnd.app.modules.auth.service.AuthService.register",
       "target": "_backEnd.app.modules.auth.service.AuthService.register.import_app_core_security_create_verification_token",
       "relation": "imports_from"
     },
@@ -39886,6 +40214,16 @@
       "source": "_backEnd.app.modules.auth.service.AuthService",
       "target": "_backEnd.app.modules.auth.service.AuthService.verify_email",
       "relation": "contains"
+    },
+    {
+      "source": "_backEnd.app.modules.auth.service.AuthService.verify_email",
+      "target": "_backEnd.app.modules.auth.service.AuthService.verify_email.import_datetime_datetime",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.auth.service.AuthService.verify_email",
+      "target": "_backEnd.app.modules.auth.service.AuthService.verify_email.import_datetime_timezone",
+      "relation": "imports_from"
     },
     {
       "source": "_backEnd.app.modules.auth.service.AuthService",
@@ -50649,6 +50987,11 @@
     },
     {
       "source": "_frontEnd.src.components.layout.AdminLayout",
+      "target": "_frontEnd.src.components.layout.AdminLayout.import_useLogout",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.components.layout.AdminLayout",
       "target": "_frontEnd.src.components.layout.AdminLayout.import_roles",
       "relation": "imports_from"
     },
@@ -50750,6 +51093,11 @@
     {
       "source": "_frontEnd.src.features.about.pages.AboutPage",
       "target": "_frontEnd.src.features.about.pages.AboutPage.import_store",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.about.pages.AboutPage",
+      "target": "_frontEnd.src.features.about.pages.AboutPage.import_useLogout",
       "relation": "imports_from"
     },
     {
@@ -50955,6 +51303,26 @@
     {
       "source": "_frontEnd.src.features.auth.hooks.useLogin",
       "target": "_frontEnd.src.features.auth.hooks.useLogin.import_axios",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.auth.hooks.useLogout",
+      "target": "_frontEnd.src.features.auth.hooks.useLogout.useLogout",
+      "relation": "contains"
+    },
+    {
+      "source": "_frontEnd.src.features.auth.hooks.useLogout",
+      "target": "_frontEnd.src.features.auth.hooks.useLogout.import_react",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.auth.hooks.useLogout",
+      "target": "_frontEnd.src.features.auth.hooks.useLogout.import_auth_store",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.auth.hooks.useLogout",
+      "target": "_frontEnd.src.features.auth.hooks.useLogout.import_auth_api",
       "relation": "imports_from"
     },
     {
@@ -51474,6 +51842,11 @@
     },
     {
       "source": "_frontEnd.src.features.cart.components.CartView",
+      "target": "_frontEnd.src.features.cart.components.CartView.import_useLogout",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.cart.components.CartView",
       "target": "_frontEnd.src.features.cart.components.CartView.import_useConfig",
       "relation": "imports_from"
     },
@@ -51905,6 +52278,11 @@
     {
       "source": "_frontEnd.src.features.catalog.pages.CatalogPage",
       "target": "_frontEnd.src.features.catalog.pages.CatalogPage.import_store",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.catalog.pages.CatalogPage",
+      "target": "_frontEnd.src.features.catalog.pages.CatalogPage.import_useLogout",
       "relation": "imports_from"
     },
     {
@@ -53004,6 +53382,11 @@
     },
     {
       "source": "_frontEnd.src.features.orders.pages.CustomerOrderDetailPage",
+      "target": "_frontEnd.src.features.orders.pages.CustomerOrderDetailPage.import_useLogout",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.orders.pages.CustomerOrderDetailPage",
       "target": "_frontEnd.src.features.orders.pages.CustomerOrderDetailPage.import_PublicHeader",
       "relation": "imports_from"
     },
@@ -53100,6 +53483,11 @@
     {
       "source": "_frontEnd.src.features.orders.pages.CustomerOrdersPage",
       "target": "_frontEnd.src.features.orders.pages.CustomerOrdersPage.import_store",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.orders.pages.CustomerOrdersPage",
+      "target": "_frontEnd.src.features.orders.pages.CustomerOrdersPage.import_useLogout",
       "relation": "imports_from"
     },
     {
@@ -54159,6 +54547,11 @@
     },
     {
       "source": "_frontEnd.src.features.products.pages.PackDetailView",
+      "target": "_frontEnd.src.features.products.pages.PackDetailView.import_useLogout",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.products.pages.PackDetailView",
       "target": "_frontEnd.src.features.products.pages.PackDetailView.import_PublicHeader",
       "relation": "imports_from"
     },
@@ -54270,6 +54663,11 @@
     {
       "source": "_frontEnd.src.features.products.pages.ProductDetailView",
       "target": "_frontEnd.src.features.products.pages.ProductDetailView.import_store",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.products.pages.ProductDetailView",
+      "target": "_frontEnd.src.features.products.pages.ProductDetailView.import_useLogout",
       "relation": "imports_from"
     },
     {
@@ -54984,6 +55382,11 @@
     },
     {
       "source": "_frontEnd.src.features.sweetcoins.pages.PointsView",
+      "target": "_frontEnd.src.features.sweetcoins.pages.PointsView.import_useLogout",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.sweetcoins.pages.PointsView",
       "target": "_frontEnd.src.features.sweetcoins.pages.PointsView.import_useCart",
       "relation": "imports_from"
     },
@@ -55309,6 +55712,11 @@
     },
     {
       "source": "_frontEnd.src.pages.public.HomePage",
+      "target": "_frontEnd.src.pages.public.HomePage.import_useLogout",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.pages.public.HomePage",
       "target": "_frontEnd.src.pages.public.HomePage.import_useCart",
       "relation": "imports_from"
     },
@@ -55525,41 +55933,6 @@
     {
       "source": "_frontEnd.src.shared.types.auth.types",
       "target": "_frontEnd.src.shared.types.auth.types.import_roles",
-      "relation": "imports_from"
-    },
-    {
-      "source": "_frontEnd.src.stores.auth.store",
-      "target": "_frontEnd.src.stores.auth.store.AuthState",
-      "relation": "contains"
-    },
-    {
-      "source": "_frontEnd.src.stores.auth.store",
-      "target": "_frontEnd.src.stores.auth.store.AuthActions",
-      "relation": "contains"
-    },
-    {
-      "source": "_frontEnd.src.stores.auth.store",
-      "target": "_frontEnd.src.stores.auth.store.import_zustand",
-      "relation": "imports_from"
-    },
-    {
-      "source": "_frontEnd.src.stores.auth.store",
-      "target": "_frontEnd.src.stores.auth.store.import_middleware",
-      "relation": "imports_from"
-    },
-    {
-      "source": "_frontEnd.src.stores.auth.store",
-      "target": "_frontEnd.src.stores.auth.store.import_immer",
-      "relation": "imports_from"
-    },
-    {
-      "source": "_frontEnd.src.stores.auth.store",
-      "target": "_frontEnd.src.stores.auth.store.import_auth",
-      "relation": "imports_from"
-    },
-    {
-      "source": "_frontEnd.src.stores.auth.store",
-      "target": "_frontEnd.src.stores.auth.store.import_axios",
       "relation": "imports_from"
     },
     {

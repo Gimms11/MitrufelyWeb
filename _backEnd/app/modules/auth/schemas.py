@@ -19,7 +19,7 @@ class TokenResponse(BaseModel):
 
 
 class RefreshTokenRequest(BaseModel):
-    refresh_token: str
+    refresh_token: str = Field(..., min_length=10, max_length=4096)
 
 
 # ── Recuperación de Contraseña ──────────────────────────────────────────────────
@@ -30,7 +30,7 @@ class ForgotPasswordRequest(BaseModel):
 
 
 class ResetPasswordRequest(BaseModel):
-    token: str
+    token: str = Field(..., min_length=10, max_length=4096)
     new_password: str = Field(..., min_length=8, max_length=128)
 
     @field_validator("new_password")
@@ -71,6 +71,8 @@ class GoogleLoginRequest(BaseModel):
 
     id_token: str = Field(
         ...,
+        min_length=10,
+        max_length=4096,
         description="ID Token JWT devuelto por Google Identity Services en el frontend.",
     )
 

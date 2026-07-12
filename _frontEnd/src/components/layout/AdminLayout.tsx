@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Outlet, Link, useLocation, useNavigate } from 'react-router'
 import { useAuthStore } from '@/app/store'
+import { useLogout } from '@/features/auth/hooks/useLogout'
 import { PERMISSIONS, type Role } from '@/types/roles'
 import {
   LayoutDashboard,
@@ -31,7 +32,8 @@ interface NavigationItem {
 }
 
 export default function AdminLayout() {
-  const { user, logout } = useAuthStore()
+  const { user } = useAuthStore()
+  const logout = useLogout()
   const location = useLocation()
   const navigate = useNavigate()
   
@@ -57,8 +59,8 @@ export default function AdminLayout() {
     )
   }
 
-  const handleLogout = () => {
-    logout()
+  const handleLogout = async () => {
+    await logout()
     toast.success('Sesión cerrada correctamente.')
     navigate('/login')
   }
