@@ -4879,12 +4879,21 @@
       "file_type": "code"
     },
     {
+      "id": "_backEnd.app.modules.auth.repository.AbstractAuthRepository.get_by_google_sub",
+      "label": "get_by_google_sub",
+      "type": "function",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\auth\\repository.py",
+      "source_location": "L25",
+      "file_type": "code"
+    },
+    {
       "id": "_backEnd.app.modules.auth.repository.AbstractAuthRepository.email_exists",
       "label": "email_exists",
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\repository.py",
-      "source_location": "L25",
+      "source_location": "L30",
       "file_type": "code"
     },
     {
@@ -4978,12 +4987,21 @@
       "file_type": "code"
     },
     {
+      "id": "_backEnd.app.modules.auth.repository_impl.SQLAlchemyAuthRepository.get_by_google_sub",
+      "label": "get_by_google_sub",
+      "type": "function",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\auth\\repository_impl.py",
+      "source_location": "L58",
+      "file_type": "code"
+    },
+    {
       "id": "_backEnd.app.modules.auth.repository_impl.SQLAlchemyAuthRepository.get_all",
       "label": "get_all",
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\repository_impl.py",
-      "source_location": "L58",
+      "source_location": "L74",
       "file_type": "code"
     },
     {
@@ -4992,7 +5010,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\repository_impl.py",
-      "source_location": "L72",
+      "source_location": "L88",
       "file_type": "code"
     },
     {
@@ -5001,7 +5019,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\repository_impl.py",
-      "source_location": "L81",
+      "source_location": "L97",
       "file_type": "code"
     },
     {
@@ -5010,7 +5028,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\repository_impl.py",
-      "source_location": "L89",
+      "source_location": "L105",
       "file_type": "code"
     },
     {
@@ -5019,7 +5037,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\repository_impl.py",
-      "source_location": "L99",
+      "source_location": "L115",
       "file_type": "code"
     },
     {
@@ -5028,7 +5046,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\repository_impl.py",
-      "source_location": "L108",
+      "source_location": "L124",
       "file_type": "code"
     },
     {
@@ -6036,7 +6054,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L352",
+      "source_location": "L356",
       "file_type": "code"
     },
     {
@@ -6045,7 +6063,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L361",
+      "source_location": "L365",
       "file_type": "code"
     },
     {
@@ -6054,7 +6072,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L361",
+      "source_location": "L365",
       "file_type": "code"
     },
     {
@@ -6063,7 +6081,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L413",
+      "source_location": "L417",
       "file_type": "code"
     },
     {
@@ -6072,7 +6090,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L422",
+      "source_location": "L426",
       "file_type": "code"
     },
     {
@@ -6081,7 +6099,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L422",
+      "source_location": "L426",
       "file_type": "code"
     },
     {
@@ -6090,7 +6108,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L465",
+      "source_location": "L469",
       "file_type": "code"
     },
     {
@@ -6099,7 +6117,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L475",
+      "source_location": "L479",
       "file_type": "code"
     },
     {
@@ -6108,7 +6126,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L480",
+      "source_location": "L484",
       "file_type": "code"
     },
     {
@@ -6117,7 +6135,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L481",
+      "source_location": "L485",
       "file_type": "code"
     },
     {
@@ -6126,7 +6144,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L482",
+      "source_location": "L486",
       "file_type": "code"
     },
     {
@@ -6135,7 +6153,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L495",
+      "source_location": "L499",
       "file_type": "code"
     },
     {
@@ -6144,7 +6162,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L500",
+      "source_location": "L504",
       "file_type": "code"
     },
     {
@@ -6153,7 +6171,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L501",
+      "source_location": "L505",
       "file_type": "code"
     },
     {
@@ -6162,7 +6180,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L501",
+      "source_location": "L505",
       "file_type": "code"
     },
     {
@@ -6171,7 +6189,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L546",
+      "source_location": "L550",
       "file_type": "code"
     },
     {
@@ -6180,7 +6198,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L550",
+      "source_location": "L554",
       "file_type": "code"
     },
     {
@@ -6189,7 +6207,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L551",
+      "source_location": "L555",
       "file_type": "code"
     },
     {
@@ -6198,7 +6216,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L581",
+      "source_location": "L585",
       "file_type": "code"
     },
     {
@@ -6207,7 +6225,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L602",
+      "source_location": "L606",
       "file_type": "code"
     },
     {
@@ -6216,7 +6234,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L620",
+      "source_location": "L624",
       "file_type": "code"
     },
     {
@@ -6225,7 +6243,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L628",
+      "source_location": "L632",
       "file_type": "code"
     },
     {
@@ -6234,7 +6252,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L628",
+      "source_location": "L632",
       "file_type": "code"
     },
     {
@@ -29256,7 +29274,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\catalog\\pages\\CatalogPage.tsx",
-      "source_location": "L211",
+      "source_location": "L212",
       "file_type": "code"
     },
     {
@@ -29265,7 +29283,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\catalog\\pages\\CatalogPage.tsx",
-      "source_location": "L217",
+      "source_location": "L218",
       "file_type": "code"
     },
     {
@@ -36348,7 +36366,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\shared\\components\\layout\\PublicHeader.tsx",
-      "source_location": "L76",
+      "source_location": "L77",
       "file_type": "code"
     },
     {
@@ -39577,6 +39595,11 @@
     },
     {
       "source": "_backEnd.app.modules.auth.repository.AbstractAuthRepository",
+      "target": "_backEnd.app.modules.auth.repository.AbstractAuthRepository.get_by_google_sub",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.app.modules.auth.repository.AbstractAuthRepository",
       "target": "_backEnd.app.modules.auth.repository.AbstractAuthRepository.email_exists",
       "relation": "contains"
     },
@@ -39623,6 +39646,11 @@
     {
       "source": "_backEnd.app.modules.auth.repository_impl.SQLAlchemyAuthRepository",
       "target": "_backEnd.app.modules.auth.repository_impl.SQLAlchemyAuthRepository.get_by_email",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.app.modules.auth.repository_impl.SQLAlchemyAuthRepository",
+      "target": "_backEnd.app.modules.auth.repository_impl.SQLAlchemyAuthRepository.get_by_google_sub",
       "relation": "contains"
     },
     {

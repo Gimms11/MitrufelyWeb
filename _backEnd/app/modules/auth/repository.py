@@ -22,6 +22,11 @@ class AbstractAuthRepository(AbstractRepository):
         ...
 
     @abstractmethod
+    async def get_by_google_sub(self, google_sub: str) -> Usuario | None:
+        """Retrieve a user by their Google unique sub identifier."""
+        ...
+
+    @abstractmethod
     async def email_exists(self, email: str) -> bool:
         """Check whether an email is already registered."""
         ...

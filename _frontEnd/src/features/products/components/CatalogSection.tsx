@@ -105,7 +105,7 @@ export const CatalogSection = forwardRef<HTMLElement, CatalogSectionProps>(
                       variants={tabsContainer}
                       initial="hidden"
                       animate="show"
-                      className="flex flex-wrap justify-center p-1.5 gap-1 max-w-full"
+                      className="flex items-center justify-start sm:justify-center p-1.5 gap-2 max-w-full overflow-x-auto whitespace-nowrap scrollbar-none"
                     >
                       {categories.map((cat) => (
                         <motion.button
@@ -115,7 +115,7 @@ export const CatalogSection = forwardRef<HTMLElement, CatalogSectionProps>(
                           onClick={() => onTabChange(cat.nombre)}
                           whileHover={{ scale: activeTab !== cat.nombre ? 1.04 : 1 }}
                           whileTap={{ scale: 0.96 }}
-                          className={`px-5 py-2.5 rounded-full text-sm font-black tracking-wide transition-colors cursor-pointer border-none ${
+                          className={`px-5 py-2.5 rounded-full text-sm font-black tracking-wide transition-colors cursor-pointer border-none shrink-0 ${
                             activeTab === cat.nombre
                               ? 'bg-white text-[#5c0f1b] shadow-md'
                               : 'text-white hover:bg-white/15'

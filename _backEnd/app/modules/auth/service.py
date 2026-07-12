@@ -278,8 +278,12 @@ class AuthService:
         if not email or not google_sub:
             raise InvalidTokenError("El token de Google no contiene email o sub válido")
 
-        # 2. Buscar usuario existente por email
-        user = await self._repo.get_by_email(email)
+        # 2. Buscar usuario existente por google_sub primero
+        user = await self._repo.get_by_google_sub(google_sub)
+
+        # Si no existe por google_sub, buscar por email para vincular la cuenta existente
+        if not user:
+            user = await self._repo.get_by_email(email)
 
         if user:
             # 2a. Actualizar google_sub si aún no lo tiene (vinculación de cuenta)

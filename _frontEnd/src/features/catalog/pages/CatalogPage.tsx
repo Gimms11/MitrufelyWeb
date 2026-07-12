@@ -12,7 +12,7 @@
 import { useMemo, useState, useEffect, useRef } from 'react'
 import { toast } from 'sonner'
 import { motion, AnimatePresence } from 'framer-motion'
-import { AlertTriangle } from 'lucide-react'
+import { AlertTriangle, SlidersHorizontal, X } from 'lucide-react'
 import { useAuthStore } from '@/app/store'
 import { useLogout } from '@/features/auth/hooks/useLogout'
 
@@ -75,6 +75,7 @@ export default function CatalogPage() {
 
   const [searchQuery,  setSearchQuery]  = useState('')
   const [userMenuOpen, setUserMenuOpen] = useState(false)
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
   const cartCount = useCartItemCount()
 
   const { filters, pagination, sortBy, setPriceRange } = useCatalogStore()
@@ -335,11 +336,20 @@ export default function CatalogPage() {
                   )}
                 </p>
               </div>
-              {totalPages > 1 && (
-                <span className="text-xs font-bold text-stone-400">
-                  Página {safePage} de {totalPages}
-                </span>
-              )}
+              <div className="flex items-center gap-4">
+                <button
+                  onClick={() => setMobileFiltersOpen(true)}
+                  className="lg:hidden flex items-center gap-2 px-4 py-2 border border-stone-200 bg-white hover:bg-stone-50 text-stone-700 font-bold text-xs rounded-xl shadow-xs transition-colors cursor-pointer"
+                >
+                  <SlidersHorizontal className="h-4 w-4 text-[#5c0f1b]" />
+                  <span>Filtrar y Ordenar</span>
+                </button>
+                {totalPages > 1 && (
+                  <span className="text-xs font-bold text-stone-400">
+                    Página {safePage} de {totalPages}
+                  </span>
+                )}
+              </div>
             </div>
 
             {/* Error API */}
@@ -372,6 +382,49 @@ export default function CatalogPage() {
       </main>
 
       <PublicFooter />
+      {/* ── Drawer de Filtros Móvil ── */}
+      <AnimatePresence>
+        {mobileFiltersOpen && (
+          <div className="fixed inset-0 z-50 lg:hidden flex justify-end">
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setMobileFiltersOpen(false)}
+              className="fixed inset-0 bg-black/40 backdrop-blur-xs"
+            />
+            {/* Contenedor lateral derecho */}
+            <motion.div
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: 'tween', duration: 0.25 }}
+              className="relative w-80 max-w-full bg-[#faf8f5] h-full flex flex-col p-6 shadow-2xl overflow-y-auto"
+            >
+              {/* Header del drawer */}
+              <div className="flex items-center justify-between mb-6 pb-4 border-b border-stone-200">
+                <span className="text-base font-black text-[#5c0f1b]" style={{ fontFamily: "'Outfit', sans-serif" }}>
+                  Filtros del Catálogo
+                </span>
+                <button
+                  onClick={() => setMobileFiltersOpen(false)}
+                  className="p-1 rounded-full hover:bg-stone-100 text-stone-400 hover:text-stone-700 transition-colors cursor-pointer"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+              
+              {/* Sidebar de filtros */}
+              <CatalogSidebar
+                resultCount={filteredProducts.length}
+                maxPrice={maxPrice}
+                isLoading={isLoading}
+              />
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
       <ProductModal />
     </div>
   )
