@@ -86,7 +86,7 @@ export const useCartStore = create<CartStore>()(
         // 1. Productos individuales que coinciden con la categoría
         const subtotalIndividuales = items
           .filter((item: any) => !item.es_paquete && item.id_categoria === idCatRestr)
-          .reduce((sum: number, item: any) => sum + Number(item.precio_unitario) * item.cantidad, 0)
+          .reduce((sum: number, item: any) => sum + (Number(item.precio_unitario) / 1.18) * item.cantidad, 0)
 
         // 2. Componentes de paquetes que coinciden con la categoría
         const subtotalPaquetes = items
@@ -94,14 +94,14 @@ export const useCartStore = create<CartStore>()(
           .reduce((sum: number, item: any) => {
             const sumComponentes = (item.productos || [])
               .filter((comp: any) => comp.id_categoria === idCatRestr)
-              .reduce((compSum: number, comp: any) => compSum + Number(comp.precio_unitario) * comp.cantidad, 0)
+              .reduce((compSum: number, comp: any) => compSum + (Number(comp.precio_unitario) / 1.18) * comp.cantidad, 0)
             return sum + sumComponentes * item.cantidad
           }, 0)
 
         subtotalElegible = subtotalIndividuales + subtotalPaquetes
       } else {
         subtotalElegible = items.reduce(
-          (sum: number, item: any) => sum + Number(item.precio_unitario) * item.cantidad,
+          (sum: number, item: any) => sum + (Number(item.precio_unitario) / 1.18) * item.cantidad,
           0
         )
       }

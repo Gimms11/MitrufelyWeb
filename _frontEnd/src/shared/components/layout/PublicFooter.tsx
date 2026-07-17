@@ -12,7 +12,7 @@ const NAV_LINKS = [
   { label: 'Inicio',     href: '/'          },
   { label: 'Catálogo',   href: '/catalogo'  },
   { label: 'Nosotros',   href: '/nosotros'  },
-  { label: 'Tus puntos', href: '/puntos'    },
+  { label: 'Criptotrufas', href: '/puntos'    },
 ] as const
 
 // ─── Componente ───────────────────────────────────────────────────────────

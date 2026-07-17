@@ -18,9 +18,17 @@ export interface DatosFiscalesUpsert {
 }
 
 export interface UserProfileUpdate {
+  nombres?: string | null
+  apellidos?: string | null
+  email?: string | null
   telefono?: string | null
   direccion?: string | null
   referencia?: string | null
+}
+
+export interface ChangePasswordPayload {
+  current_password: string
+  new_password: string
 }
 
 export const profileApi = {
@@ -36,5 +44,20 @@ export const profileApi = {
 
   updateProfile: async (payload: UserProfileUpdate): Promise<void> => {
     await api.put('/auth/me', payload)
+  },
+
+  changePassword: async (payload: { current_password: string; new_password: string }): Promise<void> => {
+    await api.post('/auth/me/password', payload)
+  },
+
+  uploadAvatar: async (file: File): Promise<{ avatar_url: string }> => {
+    const formData = new FormData()
+    formData.append('file', file)
+    const { data } = await api.post('/auth/me/avatar', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
+    return data
   },
 }

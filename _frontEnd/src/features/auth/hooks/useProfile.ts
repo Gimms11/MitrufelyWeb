@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
-import { profileApi, type DatosFiscalesUpsert, type UserProfileUpdate } from '../api/profileApi'
+import { useAuthStore } from '@/app/store'
+import { profileApi, type DatosFiscalesUpsert, type UserProfileUpdate, type ChangePasswordPayload } from '../api/profileApi'
 import { authApi } from '../api/auth.api'
 
 export const FISCAL_QUERY_KEY = ['datos-fiscales'] as const
@@ -49,6 +50,33 @@ export function useUpdateProfile() {
     },
     onError: () => {
       toast.error('No se pudo actualizar el perfil.')
+    },
+  })
+}
+
+export function useChangePassword() {
+  return useMutation({
+    mutationFn: (data: ChangePasswordPayload) => profileApi.changePassword(data),
+    onSuccess: () => {
+      toast.success('Contraseña actualizada correctamente.')
+    },
+    onError: (error: any) => {
+      const msg = error.response?.data?.error?.message || 'Error al cambiar la contraseña.'
+      toast.error(msg)
+    },
+  })
+}
+
+export function useUploadAvatar() {
+  const queryClient = useQueryClient()
+  const updateUser = useAuthStore((s) => s.updateUser)
+
+  return useMutation({
+    mutationFn: (file: File) => profileApi.uploadAvatar(file),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: PROFILE_QUERY_KEY })
+      queryClient.invalidateQueries({ queryKey: ['auth'] })
+      updateUser({ avatarUrl: data.avatar_url })
     },
   })
 }

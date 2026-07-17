@@ -10,11 +10,6 @@ import { motion } from 'framer-motion'
 import { toast } from 'sonner'
 import { Loader2, ArrowLeft, ShoppingBag, Clock, Package, Receipt, CreditCard, Coins, Star, AlertTriangle, Download, Ban, AlertCircle, XCircle } from 'lucide-react'
 
-import { useAuthStore } from '@/app/store'
-import { useLogout } from '@/features/auth/hooks/useLogout'
-import { PublicHeader } from '@/shared/components/layout/PublicHeader'
-import { PublicFooter } from '@/shared/components/layout/PublicFooter'
-import { useCartItemCount } from '@/features/cart/hooks/useCart'
 import { useOrderDetailQuery, useTransitionVentaMutation } from '@/features/orders/hooks/useOrders'
 import { OrderTrackingTimeline } from '@/features/orders/components/OrderTrackingTimeline'
 import { ReviewModal } from '@/features/reviews/components/ReviewModal'
@@ -49,13 +44,7 @@ function formatDate(iso: string) {
 
 export default function CustomerOrderDetailPage() {
   const { id } = useParams<{ id: string }>()
-  const { user, isAuthenticated } = useAuthStore()
-  const logout = useLogout()
-  const cartCount = useCartItemCount()
   const queryClient = useQueryClient()
-
-  const [searchQuery, setSearchQuery] = useState('')
-  const [userMenuOpen, setUserMenuOpen] = useState(false)
   
   // Modals state
   const [reviewModalOpen, setReviewModalOpen] = useState(false)
@@ -122,8 +111,7 @@ export default function CustomerOrderDetailPage() {
     enabled: !!orderId && order?.estado === 'ENTREGADO',
   })
 
-  const handleSearch = (e: React.FormEvent) => { e.preventDefault() }
-  const handleLogout = async () => { await logout(); setUserMenuOpen(false); toast.success('Sesión cerrada.') }
+
 
   const handleModalSuccess = () => {
     queryClient.invalidateQueries({ queryKey: ['orders', 'detail', orderId] })
@@ -133,25 +121,18 @@ export default function CustomerOrderDetailPage() {
   // ─── Loading ──────────────────────────────────────────────────────────────
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#faf8f5] text-[#2a1115] font-sans antialiased">
-        <PublicHeader cartCount={cartCount} favoriteCount={0} coinsBalance={null} userName={null}
-          userMenuOpen={false} onUserMenuToggle={() => {}} searchQuery="" onSearchChange={() => {}}
-          onSearchSubmit={(e) => e.preventDefault()} onLogout={() => {}} />
+      <div className="w-full">
         <div className="flex flex-col items-center justify-center py-32 gap-4">
           <Loader2 className="h-8 w-8 text-[#5c0f1b] animate-spin" />
           <span className="text-[#2a1115]/50 font-bold text-sm">Cargando pedido...</span>
         </div>
-        <PublicFooter />
       </div>
     )
   }
 
   if (isError || !order) {
     return (
-      <div className="min-h-screen bg-[#faf8f5] text-[#2a1115] font-sans antialiased">
-        <PublicHeader cartCount={cartCount} favoriteCount={0} coinsBalance={null} userName={null}
-          userMenuOpen={false} onUserMenuToggle={() => {}} searchQuery="" onSearchChange={() => {}}
-          onSearchSubmit={(e) => e.preventDefault()} onLogout={() => {}} />
+      <div className="w-full">
         <div className="flex flex-col items-center justify-center py-32 gap-6 text-center max-w-md mx-auto">
           <div className="h-16 w-16 rounded-2xl bg-red-50 border border-red-200 flex items-center justify-center">
             <Package className="h-8 w-8 text-red-400" />
@@ -161,22 +142,12 @@ export default function CustomerOrderDetailPage() {
             Volver a mis pedidos
           </Link>
         </div>
-        <PublicFooter />
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-[#faf8f5] text-[#2a1115] font-sans antialiased">
-      <PublicHeader
-        cartCount={cartCount} favoriteCount={0}
-        coinsBalance={isAuthenticated && user ? user.sweetCoinsBalance : null}
-        userName={isAuthenticated && user ? user.name : null}
-        userMenuOpen={userMenuOpen} onUserMenuToggle={() => setUserMenuOpen((o) => !o)}
-        searchQuery={searchQuery} onSearchChange={setSearchQuery}
-        onSearchSubmit={handleSearch} onLogout={handleLogout}
-      />
-      <main className="max-w-5xl mx-auto px-4 md:px-8 py-10">
+    <div className="w-full">
         <Link to="/mi-cuenta/pedidos" className="inline-flex items-center gap-2 text-sm font-bold text-[#5c0f1b]/60 hover:text-[#5c0f1b] transition-colors mb-6">
           <ArrowLeft className="h-4 w-4" /> Volver a mis pedidos
         </Link>
@@ -381,7 +352,7 @@ export default function CustomerOrderDetailPage() {
                   <div className="flex justify-between text-sm font-semibold">
                     <span className="text-[#2a1115]/60 flex items-center gap-1">
                       <Coins className="h-3.5 w-3.5 text-[#ff7a45]" />
-                      SweetCoins
+                      Criptotrufas
                     </span>
                     <span className="text-[#ff7a45] font-black">+{order.puntos_ganados}</span>
                   </div>
@@ -438,9 +409,7 @@ export default function CustomerOrderDetailPage() {
             </div>
           </div>
         </motion.div>
-      </main>
 
-      <PublicFooter />
 
       {/* Modals M14 */}
       <ReviewModal 

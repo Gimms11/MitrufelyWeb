@@ -185,11 +185,9 @@ export default function PackDetailView() {
               {pack.nombre}
             </h1>
 
-            {pack.descripcion && (
-              <p className="text-[#2a1115]/70 font-medium leading-relaxed mb-6 text-base">
-                {pack.descripcion}
-              </p>
-            )}
+            <p className="text-[#2a1115]/70 font-medium leading-relaxed mb-6 text-base">
+              {pack.descripcion || 'Exclusivo paquete de trufas gourmet seleccionadas artesanalmente para regalar o disfrutar.'}
+            </p>
 
             {/* Productos incluidos */}
             <div className="mb-6">

@@ -15,27 +15,34 @@ import { Link, useLocation } from 'react-router'
 
 export function PublicNav() {
   const location = useLocation()
-  const isHome     = location.pathname === '/'
-  const isCatalog  = location.pathname === '/catalogo'
+  const isHome = location.pathname === '/'
+  const isCatalog = location.pathname === '/catalogo'
   const isNosotros = location.pathname === '/nosotros'
-  const isPuntos   = location.pathname === '/puntos'
+  const isPuntos = location.pathname === '/puntos'
 
-  /** Clases de un ítem activo: bold + underline blanco grueso */
+  /** Clases de un ítem activo: permanente, línea completa abajo */
   const activeClass =
-    'text-white font-bold border-b-[3px] border-white'
+    "text-[#5c0f1b] font-black after:content-[''] after:absolute after:bottom-0 after:left-0 after:h-[3px] after:w-full after:bg-[#5c0f1b]"
 
-  /** Clases de un ítem inactivo: peso normal, sin underline */
+  /** Clases de un ítem inactivo: línea empieza en 0 desde la izquierda y crece a la derecha al hacer hover */
   const inactiveClass =
-    'text-white/65 font-normal border-b-[3px] border-transparent hover:text-white hover:border-white/40 transition-colors'
+    "text-[#2a1115]/70 font-bold hover:text-[#5c0f1b] after:content-[''] after:absolute after:bottom-0 after:left-0 after:h-[3px] after:w-0 hover:after:w-full after:bg-[#5c0f1b] after:transition-all after:duration-300"
 
   return (
-    <nav className="bg-[#5c0f1b] border-b border-[#4a0a14] hidden md:block">
-      <div className="max-w-7xl mx-auto px-4 md:px-12 flex items-center justify-start md:justify-center gap-6 md:gap-10 overflow-x-auto whitespace-nowrap scrollbar-none">
-
+    <nav className="relative hidden md:block">
+      {/* Fondo glassy con degradado (mask para que el blur termine suavemente) */}
+      <div
+        className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent backdrop-blur-md pointer-events-none"
+        style={{
+          WebkitMaskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)',
+          maskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)',
+        }}
+      />
+      <div className="relative max-w-7xl mx-auto px-4 md:px-12 flex items-center justify-start md:justify-center gap-6 md:gap-10 overflow-x-auto whitespace-nowrap scrollbar-none">
         {/* Inicio */}
         <Link
           to="/"
-          className={`flex items-center gap-2 text-sm py-3 transition-all shrink-0 ${
+          className={`relative flex items-center gap-2 text-l py-3 transition-colors shrink-0 group ${
             isHome ? activeClass : inactiveClass
           }`}
         >
@@ -46,7 +53,7 @@ export function PublicNav() {
         {/* Catálogo — ruta real */}
         <Link
           to="/catalogo"
-          className={`flex items-center gap-2 text-sm py-3 transition-all shrink-0 ${
+          className={`relative flex items-center gap-2 text-l py-3 transition-colors shrink-0 group ${
             isCatalog ? activeClass : inactiveClass
           }`}
         >
@@ -57,7 +64,7 @@ export function PublicNav() {
         {/* Nosotros */}
         <Link
           to="/nosotros"
-          className={`flex items-center gap-2 text-sm py-3 transition-all shrink-0 ${
+          className={`relative flex items-center gap-2 text-l py-3 transition-colors shrink-0 group ${
             isNosotros ? activeClass : inactiveClass
           }`}
         >
@@ -65,15 +72,15 @@ export function PublicNav() {
           <span>Nosotros</span>
         </Link>
 
-        {/* Tus puntos */}
+        {/* Criptotrufas */}
         <Link
           to="/puntos"
-          className={`flex items-center gap-2 text-sm py-3 transition-all shrink-0 ${
+          className={`relative flex items-center gap-2 text-l py-3 transition-colors shrink-0 group ${
             isPuntos ? activeClass : inactiveClass
           }`}
         >
           <Award className="h-4 w-4 shrink-0" strokeWidth={isPuntos ? 2.5 : 2} />
-          <span>Tus puntos</span>
+          <span>Criptotrufas</span>
         </Link>
       </div>
     </nav>

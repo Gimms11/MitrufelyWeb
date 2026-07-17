@@ -57,3 +57,13 @@ class ShippingCalculationResult(BaseModel):
     free_shipping_threshold: Decimal
     total_final: Decimal
     mensaje: str
+
+
+class PublicShippingCostResponse(BaseModel):
+    """Respuesta pública para el cálculo del costo de envío."""
+    subtotal: Decimal
+    costo_envio: Decimal
+    total: Decimal
+    aplica_envio_gratis: bool
+    mensaje: str
+    free_shipping_threshold: Decimal

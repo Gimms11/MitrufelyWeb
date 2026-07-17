@@ -4,21 +4,18 @@
  * Ruta: /mi-cuenta/pedidos
  * Consume: GET /api/v1/ventas (filtrado por cliente automáticamente)
  */
-import { useState } from 'react'
 import { Link, useNavigate } from 'react-router'
 import { motion } from 'framer-motion'
-import { toast } from 'sonner'
 import {
-  ShoppingBag, Clock, Star,
-  Loader2, ChevronRight, ArrowLeft, Package, XCircle,
+  ShoppingBag,
+  Clock,
+  Star,
+  Loader2,
+  ChevronRight,
+  Package,
+  XCircle,
 } from 'lucide-react'
 
-import { useAuthStore } from '@/app/store'
-import { useLogout } from '@/features/auth/hooks/useLogout'
-import { PublicHeader } from '@/shared/components/layout/PublicHeader'
-
-import { PublicFooter } from '@/shared/components/layout/PublicFooter'
-import { useCartItemCount } from '@/features/cart/hooks/useCart'
 import { useOrdersQuery } from '@/features/orders/hooks/useOrders'
 
 const ESTADO_LABELS: Record<string, { label: string; color: string }> = {
@@ -40,43 +37,34 @@ const PAGO_LABELS: Record<string, { label: string; color: string }> = {
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString('es-PE', {
-    day: 'numeric', month: 'short', year: 'numeric',
-    hour: '2-digit', minute: '2-digit',
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
   })
 }
 
 export default function CustomerOrdersPage() {
-  const { user, isAuthenticated } = useAuthStore()
-  const logout = useLogout()
   const navigate = useNavigate()
-  const cartCount = useCartItemCount()
-
-  const [searchQuery, setSearchQuery] = useState('')
-  const [userMenuOpen, setUserMenuOpen] = useState(false)
 
   const { data: orders, isLoading, isError } = useOrdersQuery({ limit: 50 })
 
-  const handleSearch = (e: React.FormEvent) => { e.preventDefault() }
-  const handleLogout = async () => { await logout(); setUserMenuOpen(false); toast.success('Sesión cerrada.') }
+
 
   return (
-    <div className="min-h-screen bg-[#faf8f5] text-[#2a1115] font-sans antialiased">
-      <PublicHeader
-        cartCount={cartCount} favoriteCount={0}
-        coinsBalance={isAuthenticated && user ? user.sweetCoinsBalance : null}
-        userName={isAuthenticated && user ? user.name : null}
-        userMenuOpen={userMenuOpen} onUserMenuToggle={() => setUserMenuOpen((o) => !o)}
-        searchQuery={searchQuery} onSearchChange={setSearchQuery}
-        onSearchSubmit={handleSearch} onLogout={handleLogout}
-      />
-      <main className="max-w-4xl mx-auto px-4 md:px-8 py-10">
-        <Link to="/" className="inline-flex items-center gap-2 text-sm font-bold text-[#5c0f1b]/60 hover:text-[#5c0f1b] transition-colors mb-6">
-          <ArrowLeft className="h-4 w-4" /> Volver al inicio
-        </Link>
-
-        <h1 className="font-black text-[#2a1115] text-3xl mb-8" style={{ fontFamily: "'Outfit', sans-serif" }}>
+    <div className="w-full">
+      <div className="mb-6">
+        <h1
+          className="font-black text-[#2a1115] text-2xl md:text-3xl"
+          style={{ fontFamily: "'Outfit', sans-serif" }}
+        >
           Mis Pedidos
         </h1>
+        <p className="text-sm text-[#2a1115]/60 font-medium mt-1">
+          Historial completo de tus compras
+        </p>
+      </div>
 
         {isLoading && (
           <div className="flex flex-col items-center justify-center py-20 gap-4">
@@ -95,19 +83,29 @@ export default function CustomerOrdersPage() {
         )}
 
         {!isLoading && !isError && (!orders || orders.length === 0) && (
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col items-center justify-center py-20 gap-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex flex-col items-center justify-center py-20 gap-6"
+          >
             <div className="h-28 w-28 rounded-full bg-[#5c0f1b]/6 flex items-center justify-center">
               <Package className="h-14 w-14 text-[#5c0f1b]/25" />
             </div>
             <div className="text-center">
-              <p className="font-black text-[#2a1115] text-xl mb-2" style={{ fontFamily: "'Outfit', sans-serif" }}>
+              <p
+                className="font-black text-[#2a1115] text-xl mb-2"
+                style={{ fontFamily: "'Outfit', sans-serif" }}
+              >
                 Aún no tienes pedidos
               </p>
               <p className="text-sm text-[#2a1115]/50 font-medium">
                 Explora nuestro catálogo y haz tu primer pedido.
               </p>
             </div>
-            <Link to="/catalogo" className="inline-flex items-center gap-2 px-8 py-3 rounded-full bg-[#5c0f1b] text-white font-black text-sm hover:bg-[#7a1525] transition-all active:scale-95 shadow-md">
+            <Link
+              to="/catalogo"
+              className="inline-flex items-center gap-2 px-8 py-3 rounded-full bg-[#5c0f1b] text-white font-black text-sm hover:bg-[#7a1525] transition-all active:scale-95 shadow-md"
+            >
               <ShoppingBag className="h-4 w-4" />
               Ir al catálogo
             </Link>
@@ -136,7 +134,10 @@ export default function CustomerOrdersPage() {
                     </div>
                     <div>
                       <div className="flex flex-wrap items-center gap-2">
-                        <p className="font-black text-[#2a1115] text-lg" style={{ fontFamily: "'Outfit', sans-serif" }}>
+                        <p
+                          className="font-black text-[#2a1115] text-lg"
+                          style={{ fontFamily: "'Outfit', sans-serif" }}
+                        >
                           Pedido #{order.id_venta}
                         </p>
                         {order.estado === 'ENTREGADO' && !order.has_review && (
@@ -156,14 +157,21 @@ export default function CustomerOrdersPage() {
                   <div className="flex items-center gap-3">
                     <div className="text-right hidden sm:block">
                       <div className="flex items-center gap-2 justify-end mb-1">
-                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${ESTADO_LABELS[order.estado]?.color || 'bg-stone-100 text-stone-700'}`}>
+                        <span
+                          className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${ESTADO_LABELS[order.estado]?.color || 'bg-stone-100 text-stone-700'}`}
+                        >
                           {ESTADO_LABELS[order.estado]?.label || order.estado}
                         </span>
-                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${PAGO_LABELS[order.estado_pago]?.color || 'bg-stone-50 text-stone-600'}`}>
+                        <span
+                          className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${PAGO_LABELS[order.estado_pago]?.color || 'bg-stone-50 text-stone-600'}`}
+                        >
                           {PAGO_LABELS[order.estado_pago]?.label || order.estado_pago}
                         </span>
                       </div>
-                      <p className="font-black text-[#5c0f1b] text-lg" style={{ fontFamily: "'Outfit', sans-serif" }}>
+                      <p
+                        className="font-black text-[#5c0f1b] text-lg"
+                        style={{ fontFamily: "'Outfit', sans-serif" }}
+                      >
                         S/. {Number(order.total).toFixed(2)}
                       </p>
                     </div>
@@ -173,14 +181,21 @@ export default function CustomerOrdersPage() {
 
                 <div className="sm:hidden flex items-center gap-2 mt-3 justify-between">
                   <div className="flex items-center gap-2">
-                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${ESTADO_LABELS[order.estado]?.color || 'bg-stone-100 text-stone-700'}`}>
+                    <span
+                      className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${ESTADO_LABELS[order.estado]?.color || 'bg-stone-100 text-stone-700'}`}
+                    >
                       {ESTADO_LABELS[order.estado]?.label || order.estado}
                     </span>
-                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${PAGO_LABELS[order.estado_pago]?.color || 'bg-stone-50 text-stone-600'}`}>
+                    <span
+                      className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${PAGO_LABELS[order.estado_pago]?.color || 'bg-stone-50 text-stone-600'}`}
+                    >
                       {PAGO_LABELS[order.estado_pago]?.label || order.estado_pago}
                     </span>
                   </div>
-                  <p className="font-black text-[#5c0f1b] text-lg" style={{ fontFamily: "'Outfit', sans-serif" }}>
+                  <p
+                    className="font-black text-[#5c0f1b] text-lg"
+                    style={{ fontFamily: "'Outfit', sans-serif" }}
+                  >
                     S/. {Number(order.total).toFixed(2)}
                   </p>
                 </div>
@@ -188,9 +203,6 @@ export default function CustomerOrdersPage() {
             ))}
           </div>
         )}
-      </main>
-
-      <PublicFooter />
     </div>
   )
 }

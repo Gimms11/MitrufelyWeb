@@ -108,12 +108,7 @@ export function SharedMomentsSection() {
               }}
             >
               Momentos{' '}
-              <span
-                style={{
-                  WebkitTextStroke: '1.5px rgba(255,255,255,0.6)',
-                  color: 'transparent',
-                }}
-              >
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#ff7a45] to-[#ffab8a]">
                 Compartidos
               </span>
             </h2>

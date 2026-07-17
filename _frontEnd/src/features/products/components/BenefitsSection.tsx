@@ -12,8 +12,9 @@
  *   - Bordes sutiles 1 px reemplazan el relleno gris sólido pesado
  */
 
-import { toast } from 'sonner'
+import { useState } from 'react'
 import { motion, type Variants } from 'framer-motion'
+import { CustomizationModal } from './CustomizationModal'
 
 // ─── Variantes ────────────────────────────────────────────────────────────
 
@@ -27,36 +28,39 @@ const cardVariants: Variants = {
   show:   { opacity: 1, y: 0, transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] } },
 }
 
-// ─── Datos de las tarjetas ─────────────────────────────────────────────────
-
-const BENEFIT_CARDS = [
-  {
-    id:          'hp-criptotrufa-btn',
-    label:       'Beneficios',
-    title:       'CriptoTrufas',
-    description: <>Gana Puntos y obtén<br />descuentos exclusivos</>,
-    cta:         'Obtener',
-    imgSrc:      '/fbb5dddd-a58d-47d8-bf65-20709c212286.webp',
-    imgAlt:      'CriptoTrufas',
-    imgFallback: '/fbb5dddd-a58d-47d8-bf65-20709c212286.png',
-    onCta:       () => toast.info('Club CriptoTrufas próximamente activo.'),
-  },
-  {
-    id:          'hp-personalizacion-btn',
-    label:       'Personalización',
-    title:       'Tu trufa perfecta',
-    description: <>Personaliza para una<br />ocasión especial</>,
-    cta:         'Contáctanos',
-    imgSrc:      '/fbb5dddd-a58d-47d8-bf65-20709c212286-alt.webp',
-    imgAlt:      'Personalización',
-    imgFallback: '/fbb5dddd-a58d-47d8-bf65-20709c212286-alt.png',
-    onCta:       () => toast.info('Formulario de personalización en desarrollo.'),
-  },
-] as const
-
 // ─── Componente ───────────────────────────────────────────────────────────
 
-export function BenefitsSection() {
+interface BenefitsSectionProps {
+  onCriptotrufasClick: () => void
+}
+
+export function BenefitsSection({ onCriptotrufasClick }: BenefitsSectionProps) {
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
+  const BENEFIT_CARDS = [
+    {
+      id:          'hp-criptotrufa-btn',
+      label:       'Beneficios',
+      title:       'CriptoTrufas',
+      description: <>Gana Puntos y obtén<br />descuentos exclusivos</>,
+      cta:         'Obtener',
+      imgSrc:      '/fbb5dddd-a58d-47d8-bf65-20709c212286.webp',
+      imgAlt:      'CriptoTrufas',
+      imgFallback: '/fbb5dddd-a58d-47d8-bf65-20709c212286.png',
+      onCta:       onCriptotrufasClick,
+    },
+    {
+      id:          'hp-personalizacion-btn',
+      label:       'Personalización',
+      title:       'Tu trufa perfecta',
+      description: <>Personaliza para una<br />ocasión especial</>,
+      cta:         'Contáctanos',
+      imgSrc:      '/fbb5dddd-a58d-47d8-bf65-20709c212286-alt.webp',
+      imgAlt:      'Personalización',
+      imgFallback: '/fbb5dddd-a58d-47d8-bf65-20709c212286-alt.png',
+      onCta:       () => setIsModalOpen(true),
+    },
+  ]
   return (
     <section className="py-24 px-4 bg-[#faf8f5]">
       <div className="max-w-7xl mx-auto">
@@ -103,8 +107,9 @@ export function BenefitsSection() {
                 y: -8,
                 boxShadow: '0px 20px 40px rgba(62, 39, 35, 0.08)',
               }}
-              className="relative overflow-hidden rounded-[28px]  bg-gradient-to-br from-[#f4f1ec] via-[#ede8e0] to-[#e2d9cc] min-h-[280px] flex group cursor-default transition-shadow"
+              className="relative overflow-hidden rounded-[28px] bg-gradient-to-br from-[#f4f1ec] via-[#ede8e0] to-[#e2d9cc] min-h-[280px] flex group cursor-pointer transition-shadow select-none"
               style={{ boxShadow: '0 2px 12px rgba(92,15,27,0.05)' }}
+              onClick={card.onCta}
             >
               {/* Contenido textual */}
               <div className="relative z-10 flex flex-col justify-center p-9 w-[62%] sm:w-[58%]">
@@ -122,7 +127,10 @@ export function BenefitsSection() {
                 </p>
                 <motion.button
                   id={card.id}
-                  onClick={card.onCta}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    card.onCta()
+                  }}
                   whileHover={{
                     scale: 1.04,
                     boxShadow: '0 8px 22px rgba(255,122,69,0.30)',
@@ -153,6 +161,7 @@ export function BenefitsSection() {
           ))}
         </div>
       </div>
+      <CustomizationModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </section>
   )
 }

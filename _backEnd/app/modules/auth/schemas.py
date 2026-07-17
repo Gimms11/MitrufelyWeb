@@ -100,6 +100,7 @@ class UserMeResponse(BaseModel):
     telefono: str | None
     estado: bool
     auth_provider: str
+    avatar_url: str | None = None
     rol: RolResponse
     cliente: ClienteResponse | None = None
 
@@ -140,6 +141,22 @@ class DatosFiscalesUpsert(BaseModel):
 
 
 class UserProfileUpdate(BaseModel):
+    nombres: str | None = Field(None, min_length=2, max_length=100)
+    apellidos: str | None = Field(None, min_length=2, max_length=100)
+    email: EmailStr | None = None
     telefono: str | None = Field(None, pattern=r"^\+?[\d\s\-]{7,20}$")
     direccion: str | None = Field(None, min_length=5, max_length=255)
     referencia: str | None = Field(None, min_length=3, max_length=255)
+
+class ChangePasswordRequest(BaseModel):
+    current_password: str = Field(...)
+    new_password: str = Field(..., min_length=8, max_length=128)
+
+    @field_validator("new_password")
+    @classmethod
+    def validate_password_strength(cls, v: str) -> str:
+        if not any(c.isupper() for c in v):
+            raise ValueError("La contraseña debe contener al menos una mayúscula")
+        if not any(c.isdigit() for c in v):
+            raise ValueError("La contraseña debe contener al menos un número")
+        return v

@@ -24,12 +24,15 @@ import {
   Clock,
   Gift,
   TicketCheck,
+  Loader2,
 } from 'lucide-react'
 import { toast } from 'sonner'
 
 // ── Layout ─────────────────────────────────────────────────────────────────────
 import { PublicHeader } from '@/shared/components/layout/PublicHeader'
 import { PublicFooter } from '@/shared/components/layout/PublicFooter'
+import { useNavigate } from 'react-router'
+import { AuthRequireModal } from '@/features/auth/components/AuthRequireModal'
 
 // ── Stores ─────────────────────────────────────────────────────────────────────
 import { useAuthStore } from '@/app/store'
@@ -53,6 +56,7 @@ function formatDate(iso: string) {
 // ─── Vista ────────────────────────────────────────────────────────────────────
 
 export default function PointsView() {
+  const navigate = useNavigate()
 
   // Stores
   const { user, isAuthenticated } = useAuthStore()
@@ -73,6 +77,7 @@ export default function PointsView() {
   
   // Estado responsivo para el carrusel
   const [visibleCount, setVisibleCount] = useState(3)
+  const [redeemLoading, setRedeemLoading] = useState(false)
 
   // Fondo claro y carga inicial
   useEffect(() => {
@@ -102,15 +107,21 @@ export default function PointsView() {
 
   // Canje con feedback
   const handleCanjear = async (id_cupon: number) => {
+    setRedeemLoading(true)
     try {
       const result = await canjearCupon(id_cupon)
       if (result.success) {
+        // Actualizar el saldo del auth store (parte superior / header) con el saldo real obtenido
+        const nuevoSaldo = useCriptoTrufaStore.getState().saldoActual
+        useAuthStore.getState().updateUser({ sweetCoinsBalance: nuevoSaldo })
         toast.success(result.message)
       } else {
         toast.error(result.message)
       }
     } catch (error) {
       toast.error('Ocurrió un error inesperado al canjear el cupón.')
+    } finally {
+      setRedeemLoading(false)
     }
   }
 
@@ -183,7 +194,7 @@ export default function PointsView() {
                   {saldoActual.toLocaleString()}
                 </div>
                 <p className="text-white/50 text-sm font-semibold">
-                  Puntos de fidelización acumulados
+                  Criptotrufas de fidelización acumuladas
                 </p>
               </div>
 
@@ -404,6 +415,36 @@ export default function PointsView() {
       </main>
 
       <PublicFooter />
+
+      {/* ── Modal de Carga para el Canje ── */}
+      <AnimatePresence>
+        {redeemLoading && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/65 backdrop-blur-xs">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="bg-white rounded-2xl p-8 flex flex-col items-center text-center gap-4 max-w-xs shadow-2xl relative"
+            >
+              <div className="h-14 w-14 rounded-full bg-[#5c0f1b]/5 flex items-center justify-center animate-pulse">
+                <Loader2 className="h-7 w-7 text-[#5c0f1b] animate-spin" />
+              </div>
+              <div>
+                <h3
+                  className="text-lg font-black text-[#2a1115] mb-1"
+                  style={{ fontFamily: "'Outfit', sans-serif" }}
+                >
+                  Procesando Canje
+                </h3>
+                <p className="text-xs text-stone-500 font-medium leading-relaxed">
+                  Por favor, no cierres esta ventana ni refresques la página mientras generamos tu cupón.
+                </p>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+      <AuthRequireModal isOpen={!isAuthenticated} onClose={() => navigate('/')} />
     </div>
   )
 }

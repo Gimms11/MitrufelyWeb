@@ -45,6 +45,7 @@ import { useLogout } from '@/features/auth/hooks/useLogout'
 
 // ── Datos y hooks ──────────────────────────────────────────────────────────────
 import { useActiveProducts } from '../hooks/useCatalogAdmin'
+import { useActiveCategories } from '../hooks/useCategories'
 
 // ── InfoModal ─────────────────────────────────────────────────────────────────
 import { InfoModal } from '../components/InfoModal'
@@ -81,33 +82,38 @@ function StarRating({ rating }: { rating: number }) {
 
 export default function ProductDetailView() {
   const { slug } = useParams<{ slug: string }>()
-  const navigate  = useNavigate()
+  const navigate = useNavigate()
 
   const { user, isAuthenticated } = useAuthStore()
   const logout = useLogout()
   const addToCartMutation = useAddCartItem()
-  const cartCount  = useCartItemCount()
+  const cartCount = useCartItemCount()
 
   // UI state
-  const [searchQuery,   setSearchQuery]   = useState('')
-  const [userMenuOpen,  setUserMenuOpen]  = useState(false)
-  const [quantity,      setQuantity]      = useState(1)
-  const [infoOpen,      setInfoOpen]      = useState(false)
-  const [addedAnim,     setAddedAnim]     = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [userMenuOpen, setUserMenuOpen] = useState(false)
+  const [quantity, setQuantity] = useState(1)
+  const [infoOpen, setInfoOpen] = useState(false)
+  const [addedAnim, setAddedAnim] = useState(false)
 
   // Buscar producto por slug desde backend
   const { data: productsRes, isLoading: productLoading } = useActiveProducts({ size: 100 })
   const product = productsRes?.items?.find((p) => p.slug === slug) ?? null
 
+  // Obtener categorías para resolver el nombre
+  const { data: categoriesRes } = useActiveCategories({ size: 100 })
+  const categories = categoriesRes?.items || []
+  const categoryName = product?.categoria_nombre || categories.find((c) => c.id_categoria === product?.id_categoria)?.nombre || 'General'
+
   // Fondo claro consistente
   useEffect(() => {
-    const prevBg    = document.body.style.backgroundColor
+    const prevBg = document.body.style.backgroundColor
     const prevColor = document.body.style.color
     document.body.style.backgroundColor = '#faf8f5'
-    document.body.style.color           = '#2a1115'
+    document.body.style.color = '#2a1115'
     return () => {
       document.body.style.backgroundColor = prevBg
-      document.body.style.color           = prevColor
+      document.body.style.color = prevColor
     }
   }, [])
 
@@ -130,8 +136,7 @@ export default function ProductDetailView() {
     toast.success('Sesión cerrada correctamente.')
   }
 
-  const handleDecrement = () =>
-    setQuantity((q) => Math.max(1, q - 1))
+  const handleDecrement = () => setQuantity((q) => Math.max(1, q - 1))
 
   const handleIncrement = () => {
     if (!product) return
@@ -246,14 +251,13 @@ export default function ProductDetailView() {
   }
 
   const isAvailable = product.disponible
-  const isLowStock  = isAvailable && product.stock_actual <= 10
-  const totalPrice  = (Number(product.precio) * quantity).toFixed(2)
+  const isLowStock = isAvailable && product.stock_actual <= 10
+  const totalPrice = (Number(product.precio) * quantity).toFixed(2)
 
   // ─── Render principal ─────────────────────────────────────────────────────
 
   return (
     <div className="min-h-screen bg-[#faf8f5] text-[#2a1115] font-sans antialiased overflow-x-hidden">
-
       {/* ── Header ── */}
       <PublicHeader
         cartCount={cartCount}
@@ -271,9 +275,13 @@ export default function ProductDetailView() {
       {/* ── Breadcrumb ── */}
       <div className="max-w-7xl mx-auto px-4 md:px-8 pt-5 pb-2">
         <nav className="flex items-center gap-2 text-xs font-semibold text-[#2a1115]/40">
-          <Link to="/" className="hover:text-[#5c0f1b] transition-colors">Inicio</Link>
+          <Link to="/" className="hover:text-[#5c0f1b] transition-colors">
+            Inicio
+          </Link>
           <span>/</span>
-          <Link to="/catalogo" className="hover:text-[#5c0f1b] transition-colors">Catálogo</Link>
+          <Link to="/catalogo" className="hover:text-[#5c0f1b] transition-colors">
+            Catálogo
+          </Link>
           <span>/</span>
           <span className="text-[#5c0f1b] font-black truncate max-w-48">{product.nombre}</span>
         </nav>
@@ -283,35 +291,33 @@ export default function ProductDetailView() {
       <main className="max-w-7xl mx-auto px-4 md:px-8 py-6">
         <div className="bg-[#e8e4df] rounded-[32px] overflow-hidden shadow-[0_4px_32px_rgba(42,17,21,0.08)]">
           <div className="grid grid-cols-1 md:grid-cols-2 min-h-[480px]">
-
             {/* ══════════════════════════════════════════════════════════════
                 COLUMNA IZQUIERDA — Imagen + botón cotización
             ══════════════════════════════════════════════════════════════ */}
-            <div className="relative flex flex-col items-center justify-center p-10 md:p-14">
-
+            <div className=" md:bg-[#fff7ec] relative flex flex-col items-center justify-center p-10 md:p-14">
               {/* Imagen */}
               <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.5, ease: 'easeOut' }}
-                className="relative w-full max-w-sm aspect-square"
+                className="relative w-full max-w-[440px] aspect-square flex items-center justify-center"
               >
                 {product.imagen_url ? (
                   <img
                     src={product.imagen_url}
                     alt={product.nombre}
-                    className="w-full h-full object-cover rounded-[24px] shadow-[0_8px_40px_rgba(92,15,27,0.18)]"
+                    className="w-full h-full object-contain mix-blend-multiply drop-shadow-[0_20px_35px_rgba(42,17,21,0.22)]"
                     loading="eager"
                   />
                 ) : (
-                  <div className="w-full h-full rounded-[24px] bg-[#d4cfc8] flex items-center justify-center">
-                    <ShoppingBag className="h-24 w-24 text-[#5c0f1b]/20" />
+                  <div className="w-full h-full flex items-center justify-center">
+                    <ShoppingBag className="h-32 w-32 text-[#5c0f1b]/20" />
                   </div>
                 )}
 
                 {/* Badge agotado */}
                 {!isAvailable && (
-                  <div className="absolute inset-0 rounded-[24px] bg-white/60 backdrop-blur-[2px] flex items-center justify-center">
+                  <div className="absolute inset-0 flex items-center justify-center">
                     <span className="bg-stone-700/90 text-white text-sm font-extrabold uppercase tracking-widest px-5 py-2 rounded-full shadow-lg">
                       Agotado
                     </span>
@@ -357,7 +363,7 @@ export default function ProductDetailView() {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5, delay: 0.1 }}
-              className="bg-[#d8d3cd] md:bg-[#e0dbd5] flex flex-col justify-center px-8 md:px-12 py-10"
+              className="bg-[#130c01] md:bg-[#fff7] flex flex-col justify-center px-8 md:px-12 py-10"
             >
               {/* Nombre */}
               <h1
@@ -371,36 +377,37 @@ export default function ProductDetailView() {
               </h1>
 
               {/* Categoría */}
-              {product.categoria_nombre && (
-                <p className="text-sm font-semibold text-[#2a1115]/50 mb-4">
-                  {product.categoria_nombre}
-                </p>
-              )}
+              <p className="text-xs font-black text-[#5c0f1b] bg-[#5c0f1b]/5 border border-[#5c0f1b]/10 rounded-full px-3 py-1 w-fit uppercase tracking-wider mb-4">
+                Categoría: {categoryName}
+              </p>
 
               {/* Precio + Rating */}
-              <div className="flex items-center gap-6 mb-5">
+              <div className="flex items-center gap-6 mb-4">
                 <span
                   className="font-black text-[#5c0f1b]"
                   style={{ fontFamily: "'Outfit', sans-serif", fontSize: '2rem' }}
                 >
                   S/ {Number(product.precio).toFixed(2)}
                 </span>
-                {product.rating !== undefined && (
-                  <StarRating rating={product.rating} />
-                )}
+                {product.rating !== undefined && <StarRating rating={product.rating} />}
+              </div>
+
+              {/* Mensaje de envío gratis */}
+              <div className="flex items-center gap-2.5 text-xs font-bold text-emerald-800 bg-emerald-50 border border-emerald-200/60 rounded-2xl px-4 py-3.5 mb-5 select-none w-full">
+                <span className="text-sm animate-pulse">🚚</span>
+                <span>¡Envío GRATIS en compras a partir de S/ 15.00!</span>
               </div>
 
               {/* Descripción */}
-              {product.descripcion && (
-                <p className="text-sm text-[#2a1115]/70 font-medium leading-relaxed mb-6 text-justify">
-                  {product.descripcion}
-                </p>
-              )}
+              <p className="text-sm text-[#2a1115]/70 font-medium leading-relaxed mb-6 text-justify">
+                {product.descripcion ||
+                  'Deliciosa trufa artesanal elaborada con ingredientes seleccionados de la más alta calidad, perfecta para endulzar tus momentos especiales.'}
+              </p>
 
               {/* Badges de stock */}
               <div className="flex flex-wrap gap-2 mb-6">
                 <span
-                  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-extrabold border ${
+                  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-extrabold  ${
                     isAvailable
                       ? 'text-emerald-700 bg-emerald-50 border-emerald-200'
                       : 'text-red-600 bg-red-50 border-red-200'
@@ -517,11 +524,7 @@ export default function ProductDetailView() {
       <PublicFooter />
 
       {/* ── InfoModal ── */}
-      <InfoModal
-        product={product}
-        isOpen={infoOpen}
-        onClose={() => setInfoOpen(false)}
-      />
+      <InfoModal product={product} isOpen={infoOpen} onClose={() => setInfoOpen(false)} />
     </div>
   )
 }

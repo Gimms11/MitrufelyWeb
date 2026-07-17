@@ -42,8 +42,11 @@ class UserListItemResponse(BaseModel):
     apellidos: str
     email: str = Field(..., description="Email único de la cuenta.")
     telefono: Optional[str] = None
-    estado: bool = Field(..., description="Cuenta activa (True) o inactiva (False).")
+    estado: bool = Field(..., description="Estado activo o inactivo del usuario.")
     auth_provider: str = Field(..., description="Origen de autenticación (local / google).")
+    avatar_url: str | None = Field(None, description="URL de la foto de perfil.")
+
+    model_config = ConfigDict(from_attributes=True)
     rol: RolUsuarioResponse
     cliente: Optional[ClienteInfoResponse] = None
     # Métricas de actividad (calculadas, no persistidas directamente)

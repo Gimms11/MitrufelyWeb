@@ -6,6 +6,7 @@ export interface ShippingCostResponse {
   total: number
   aplica_envio_gratis: boolean
   mensaje: string
+  free_shipping_threshold: number
 }
 
 export interface SystemConfigResponse {
@@ -29,7 +30,13 @@ export const configApi = {
     const { data } = await api.get<ShippingCostResponse>('/config/shipping-cost', {
       params: { subtotal },
     })
-    return data
+    return {
+      ...data,
+      subtotal: Number(data.subtotal),
+      costo_envio: Number(data.costo_envio),
+      total: Number(data.total),
+      free_shipping_threshold: Number(data.free_shipping_threshold),
+    }
   },
 
   getSystemConfig: async (): Promise<SystemConfigResponse> => {

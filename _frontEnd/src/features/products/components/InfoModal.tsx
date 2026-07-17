@@ -181,14 +181,15 @@ export function InfoModal({ product, isOpen, onClose }: InfoModalProps) {
             <div className="overflow-y-auto flex-1 px-6 py-5 space-y-3">
 
               {/* Descripción */}
-              {product.descripcion && (
-                <InfoRow
-                  icon={CheckCircle}
-                  label="Descripción"
-                  value={product.descripcion}
-                  accent
-                />
-              )}
+              <InfoRow
+                icon={CheckCircle}
+                label="Descripción"
+                value={
+                  product.descripcion ||
+                  'Deliciosa trufa artesanal elaborada con ingredientes seleccionados de la más alta calidad, perfecta para endulzar tus momentos especiales.'
+                }
+                accent
+              />
 
               {/* Ingredientes */}
               {product.ingredientes && (

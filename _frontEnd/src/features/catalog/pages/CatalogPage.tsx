@@ -13,6 +13,7 @@ import { useMemo, useState, useEffect, useRef } from 'react'
 import { toast } from 'sonner'
 import { motion, AnimatePresence } from 'framer-motion'
 import { AlertTriangle, SlidersHorizontal, X } from 'lucide-react'
+import { useSearchParams } from 'react-router'
 import { useAuthStore } from '@/app/store'
 import { useLogout } from '@/features/auth/hooks/useLogout'
 
@@ -72,11 +73,18 @@ function sortProducts(products: Producto[], sortBy: string): Producto[] {
 export default function CatalogPage() {
   const { user, isAuthenticated } = useAuthStore()
   const logout = useLogout()
+  const [searchParams] = useSearchParams()
 
-  const [searchQuery,  setSearchQuery]  = useState('')
+  const [searchQuery,  setSearchQuery]  = useState(() => searchParams.get('search') ?? '')
   const [userMenuOpen, setUserMenuOpen] = useState(false)
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
   const cartCount = useCartItemCount()
+
+  // Sincronizar con cambios en el query param (por si el usuario navega desde el hero)
+  useEffect(() => {
+    const q = searchParams.get('search') ?? ''
+    setSearchQuery(q)
+  }, [searchParams])
 
   const { filters, pagination, sortBy, setPriceRange } = useCatalogStore()
 

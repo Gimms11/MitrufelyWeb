@@ -146,11 +146,10 @@ export function ProductModal() {
                 </h3>
 
                 {/* Descripción */}
-                {selectedProduct.descripcion && (
-                  <p className="text-sm text-[#2a1115]/70 font-medium leading-relaxed mb-4">
-                    {selectedProduct.descripcion}
-                  </p>
-                )}
+                <p className="text-sm text-[#2a1115]/70 font-medium leading-relaxed mb-4">
+                  {selectedProduct.descripcion ||
+                    'Deliciosa trufa artesanal elaborada con ingredientes seleccionados de la más alta calidad, perfecta para endulzar tus momentos especiales.'}
+                </p>
 
                 {/* Detalles: stock + peso */}
                 <div className="flex flex-wrap gap-2 mb-4">

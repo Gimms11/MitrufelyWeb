@@ -40,12 +40,16 @@ export function NotificationBell() {
     <div className="relative" ref={menuRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="relative p-2.5 rounded-full bg-white shadow-sm border border-[#5c0f1b]/10 text-[#5c0f1b] hover:bg-[#5c0f1b]/5 hover:scale-105 active:scale-95 transition-all cursor-pointer group"
+        className={`relative p-2 rounded-full transition-colors cursor-pointer ${
+          isOpen
+            ? 'text-white bg-white/20'
+            : 'text-white/70 hover:text-white'
+        }`}
         aria-label="Notificaciones"
       >
-        <Bell className="h-5 w-5 group-hover:text-[#ff7a45] transition-colors" />
+        <Bell className="h-5 w-5" />
         {unreadCount > 0 && (
-          <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-[#ff7a45] text-[10px] font-black text-white shadow-sm">
+          <span className="absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-[#ff7a45] text-[10px] font-black text-white">
             {unreadCount > 9 ? '9+' : unreadCount}
           </span>
         )}

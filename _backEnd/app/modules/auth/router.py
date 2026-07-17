@@ -5,7 +5,7 @@ FastAPI APIRouter for /auth endpoints
 
 from typing import Annotated
 
-from fastapi import APIRouter, BackgroundTasks, Depends, Request, status
+from fastapi import APIRouter, BackgroundTasks, Depends, Request, status, UploadFile, File, HTTPException
 from fastapi.responses import JSONResponse
 from redis.asyncio import Redis
 from slowapi import Limiter
@@ -13,8 +13,10 @@ from slowapi.util import get_remote_address
 
 from app.core.config import settings
 from app.infrastructure.cache.redis_client import get_redis
+from app.infrastructure.storage.cloudinary_service import CloudinaryService, get_storage_service
 from app.modules.auth.dependencies import get_auth_service
 from app.modules.auth.schemas import (
+    ChangePasswordRequest,
     DatosFiscalesResponse,
     DatosFiscalesUpsert,
     ForgotPasswordRequest,
@@ -297,3 +299,56 @@ async def update_me(
     """Update user profile fields: phone, address, reference."""
     db_user = await service.update_me(current_user.user_id, payload)
     return db_user
+
+@router.post(
+    "/me/password",
+    status_code=status.HTTP_200_OK,
+    summary="Cambiar contraseña del usuario autenticado",
+)
+async def change_password(
+    payload: ChangePasswordRequest,
+    current_user: AuthUser,
+    service: AuthServiceDep,
+):
+    """Change user password. Requires current password validation."""
+    await service.change_password(current_user.user_id, payload)
+    return {"message": "Contraseña actualizada exitosamente."}
+
+@router.post(
+    "/me/avatar",
+    response_model=UserMeResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Subir o actualizar foto de perfil",
+)
+async def upload_avatar(
+    current_user: AuthUser,
+    service: AuthServiceDep,
+    file: UploadFile = File(...),
+    storage_service: CloudinaryService = Depends(get_storage_service),
+) -> UserMeResponse:
+    """Upload user avatar to storage and update user profile."""
+    # Read file bytes
+    file_bytes = await file.read()
+    
+    # Validation is mostly handled by storage_service.upload_image (5MB limit and format)
+    # But let's add an explicit content-type check here just in case
+    allowed_types = ["image/jpeg", "image/png", "image/webp", "image/jpg"]
+    if file.content_type not in allowed_types:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Formato de archivo no soportado. Usa JPG, PNG o WEBP."
+        )
+        
+    upload_res = await storage_service.upload_image(
+        file_bytes=file_bytes,
+        filename=file.filename or f"avatar_{current_user.user_id}",
+        content_type=file.content_type,
+        folder="mitrufely/avatars"
+    )
+    
+    avatar_url = upload_res["secure_url"]
+    
+    # Update user in DB
+    updated_user = await service.update_avatar(current_user.user_id, avatar_url)
+    
+    return updated_user

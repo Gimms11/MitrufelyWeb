@@ -95,6 +95,8 @@ class Usuario(Base):
     )
     # ID único del usuario en Google (sub del ID Token). Solo present en cuentas Google.
     google_sub: Mapped[str | None] = mapped_column(String(255), nullable=True, unique=True)
+    # URL de la foto de perfil (avatar) alojada en Cloudinary o proveedor externo.
+    avatar_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
 
     # ── Relaciones ─────────────────────────────────────────────────────────
     rol: Mapped["Rol"] = relationship("Rol", back_populates="usuarios", lazy="select")

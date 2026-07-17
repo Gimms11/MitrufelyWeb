@@ -9,13 +9,13 @@ interface AuthState {
   isAuthenticated: boolean
   isLoading: boolean
   /**
-   * Refresh token en memoria (NO persistido en sessionStorage).
-   * Se mantiene solo mientras la pestaña está abierta.
-   * En un diseño completo, este token debería vivir en una cookie httpOnly
-   * gestionada por el backend; lo mantenemos en memoria como mitigación
-   * intermedia (C-03: CWE-922).
+   * Refresh token persistido en sessionStorage para sobrevivir recargas de página.
+   * El access_token NO se persiste (vive solo en memoria en axios.ts).
+   * En producción ideal el refresh token viviría en una cookie httpOnly del backend.
    */
   refreshToken: string | null
+  /** true una vez que el proceso de rehidratación del accessToken terminó */
+  isInitialized: boolean
 }
 
 interface AuthActions {
@@ -24,6 +24,7 @@ interface AuthActions {
   updateUser: (partial: Partial<User>) => void
   logout: () => void
   setLoading: (loading: boolean) => void
+  setInitialized: (value: boolean) => void
 }
 
 type AuthStore = AuthState & AuthActions
@@ -36,6 +37,7 @@ export const useAuthStore = create<AuthStore>()(
       isAuthenticated: false,
       isLoading: false,
       refreshToken: null,
+      isInitialized: false,
 
       // ─── Actions ───────────────────────────────────────────────────────────
       setUser: (user, accessToken, refreshToken) => {
@@ -45,6 +47,7 @@ export const useAuthStore = create<AuthStore>()(
           state.user = user
           state.isAuthenticated = true
           state.isLoading = false
+          state.isInitialized = true
           if (refreshToken) {
             state.refreshToken = refreshToken
           }
@@ -72,6 +75,7 @@ export const useAuthStore = create<AuthStore>()(
           state.isAuthenticated = false
           state.isLoading = false
           state.refreshToken = null
+          state.isInitialized = true
         })
       },
 
@@ -80,27 +84,36 @@ export const useAuthStore = create<AuthStore>()(
           state.isLoading = loading
         })
       },
+
+      setInitialized: (value) => {
+        set((state) => {
+          state.isInitialized = value
+        })
+      },
     })),
     {
       name: 'mitrufely-auth',
       storage: createJSONStorage(() => sessionStorage),
-      // ── C-03 (CWE-922): SOLO persistimos datos no sensibles del usuario.
-      // El access_token y refresh_token NO se persisten en sessionStorage:
-      //   - access_token → solo en memoria (axios.ts, variable de módulo)
-      //   - refresh_token → solo en memoria (state del store, no partialized)
-      // Antes ambos tokens se guardaban en sessionStorage, lo que los exponía
-      // a robo por XSS. Ahora sessionStorage solo guarda user/isAuthenticated.
+      // ── C-03 (CWE-922): persistimos user, isAuthenticated y refreshToken.
+      // El access_token NO se persiste (vive solo en memoria en axios.ts).
+      // El refreshToken se persiste en sessionStorage (no accesible entre pestañas)
+      // para permitir recuperar el accessToken al recargar la página sin forzar
+      // un logout. En producción ideal viviría en una cookie httpOnly del backend.
       partialize: (state) => ({
         user: state.user,
         isAuthenticated: state.isAuthenticated,
+        refreshToken: state.refreshToken,
       }),
     },
   ),
 )
 
+import { useCriptoTrufaStore } from '@/stores/criptotrufa.store'
+
 // Registra el callback de logout en Axios para que el interceptor 401
 // pueda llamar logout sin crear un import circular
 registerLogoutCallback(() => {
   useAuthStore.getState().logout()
+  useCriptoTrufaStore.getState().reset()
 })
 
