@@ -9,7 +9,7 @@ from fastapi.responses import ORJSONResponse
 from app.modules.auth.router import router as auth_router
 from app.modules.cart.router import router as cart_router
 from app.modules.categories.router import router as categories_router
-from app.modules.config.router import router as config_router
+from app.modules.config.router import router as config_router, public_router as public_config_router
 from app.modules.dashboard.router import router as dashboard_router
 from app.modules.inventory.router import router as inventory_router
 from app.modules.issues.router import router as issues_router
@@ -51,6 +51,7 @@ api_router.include_router(inventory_router)
 api_router.include_router(cart_router)
 # M14: Nuevos módulos
 api_router.include_router(config_router)
+api_router.include_router(public_config_router)
 api_router.include_router(dashboard_router)
 api_router.include_router(reviews_router)
 api_router.include_router(issues_router)

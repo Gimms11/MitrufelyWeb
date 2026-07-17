@@ -153,11 +153,9 @@ export function PackDetailModal({ isOpen, pack, onClose }: PackDetailModalProps)
                   {pack.nombre}
                 </h3>
 
-                {pack.descripcion && (
-                  <p className="text-sm text-[#2a1115]/70 font-medium leading-relaxed mb-4">
-                    {pack.descripcion}
-                  </p>
-                )}
+                <p className="text-sm text-[#2a1115]/70 font-medium leading-relaxed mb-4">
+                  {pack.descripcion || 'Exclusivo paquete de trufas gourmet seleccionadas artesanalmente para regalar o disfrutar.'}
+                </p>
 
                 {/* Productos incluidos */}
                 <div className="mb-4">

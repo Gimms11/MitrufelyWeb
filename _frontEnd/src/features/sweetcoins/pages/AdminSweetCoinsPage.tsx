@@ -531,7 +531,7 @@ export default function AdminSweetCoinsPage() {
                           {cupon.costo_puntos ? (
                             <span className="inline-flex items-center gap-1 text-[#5c0f1b] font-bold">
                               <Coins className="h-3.5 w-3.5 text-[#ff7a45]" />
-                              {cupon.costo_puntos} pts
+                              {cupon.costo_puntos} CT
                             </span>
                           ) : (
                             <span className="text-stone-400 font-medium">— Gratuito —</span>
@@ -580,7 +580,7 @@ export default function AdminSweetCoinsPage() {
             <div>
               <h3 className="text-lg font-black text-[#5c0f1b]">Configuración del Programa de Recompensas</h3>
               <p className="text-sm text-stone-500 font-semibold mt-0.5">
-                Ajusta las reglas globales de acumulación de puntos, límites de billetera y vigencia de las CriptoTrufas.
+                Ajusta las reglas globales de acumulación de Criptotrufas, límites de billetera y vigencia.
               </p>
             </div>
 
@@ -613,7 +613,7 @@ export default function AdminSweetCoinsPage() {
                       </span>
                     </div>
                     <p className="text-[11px] text-stone-400 font-semibold">
-                      Porcentaje de retorno de puntos sobre el total gastado en cada compra. Ej: 0.10 otorga 10 CriptoTrufas por cada S/. 100 gastados.
+                      Porcentaje de retorno de Criptotrufas sobre el total gastado en cada compra. Ej: 0.10 otorga 10 Criptotrufas por cada S/. 100 gastados.
                     </p>
                   </div>
 
@@ -631,7 +631,7 @@ export default function AdminSweetCoinsPage() {
                       placeholder="Ej: 5000"
                     />
                     <p className="text-[11px] text-stone-400 font-semibold">
-                      Cantidad máxima de puntos que un cliente puede tener acumulados en su saldo.
+                      Cantidad máxima de Criptotrufas que un cliente puede tener acumuladas en su saldo.
                     </p>
                   </div>
                 </div>

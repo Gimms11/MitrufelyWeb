@@ -11,6 +11,7 @@
  */
 import { useState, useRef, useEffect } from 'react'
 import { toast } from 'sonner'
+import { useNavigate } from 'react-router'
 import { useAuthStore } from '@/app/store'
 import { useLogout } from '@/features/auth/hooks/useLogout'
 import { useCartItemCount } from '@/features/cart/hooks/useCart'
@@ -25,18 +26,21 @@ import { HeroSection }    from '@/features/products/components/HeroSection'
 import { CatalogSection } from '@/features/products/components/CatalogSection'
 import { PacksSection }   from '@/features/products/components/PacksSection'
 import { BenefitsSection } from '@/features/products/components/BenefitsSection'
+import { AuthRequireModal } from '@/features/auth/components/AuthRequireModal'
 
 // ─── Página ───────────────────────────────────────────────────────────────
 
 export default function HomePage() {
   const { user, isAuthenticated } = useAuthStore()
   const logout = useLogout()
+  const navigate = useNavigate()
 
   // ── Estado de UI ──────────────────────────────────────────────────────
   const [searchQuery,   setSearchQuery]   = useState('')
   const [activeTab,     setActiveTab]     = useState<string>('')
   const [favorites]                       = useState<number[]>([])
   const [userMenuOpen,  setUserMenuOpen]  = useState(false)
+  const [authModalOpen, setAuthModalOpen] = useState(false)
   const cartCount = useCartItemCount()
 
   const catalogRef = useRef<HTMLElement>(null)
@@ -57,7 +61,7 @@ export default function HomePage() {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
     if (!searchQuery.trim()) return
-    toast.info(`Buscando: "${searchQuery}"`)
+    navigate(`/catalogo?search=${encodeURIComponent(searchQuery.trim())}`)
   }
 
   const handleLogout = async () => {
@@ -68,6 +72,14 @@ export default function HomePage() {
 
   const scrollToCatalog = () =>
     catalogRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+
+  const handleCriptotrufasClick = () => {
+    if (isAuthenticated) {
+      navigate('/puntos')
+    } else {
+      setAuthModalOpen(true)
+    }
+  }
 
   // ── Render ────────────────────────────────────────────────────────────
   return (
@@ -86,7 +98,10 @@ export default function HomePage() {
         onSearchSubmit={handleSearch}
         onLogout={handleLogout}
       />
-      <HeroSection onCatalogClick={scrollToCatalog} />
+      <HeroSection
+        onCatalogClick={scrollToCatalog}
+        onCriptotrufasClick={handleCriptotrufasClick}
+      />
 
       <CatalogSection
         ref={catalogRef}
@@ -97,9 +112,11 @@ export default function HomePage() {
 
       <PacksSection />
 
-      <BenefitsSection />
+      <BenefitsSection onCriptotrufasClick={handleCriptotrufasClick} />
 
       <PublicFooter />
+
+      <AuthRequireModal isOpen={authModalOpen} onClose={() => setAuthModalOpen(false)} />
     </div>
   )
 }

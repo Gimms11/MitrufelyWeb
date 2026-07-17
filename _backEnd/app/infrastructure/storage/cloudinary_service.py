@@ -191,3 +191,6 @@ class CloudinaryService:
             # En eliminación, registramos el error en el log en lugar de lanzar excepción crítica
             # para no romper flujos de borrado en cascada, pero permitiendo auditoría.
             logger.error("Error no crítico al eliminar imagen en Cloudinary", public_id=public_id, error=str(e))
+
+def get_storage_service() -> CloudinaryService:
+    return CloudinaryService()

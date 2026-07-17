@@ -187,10 +187,10 @@ export const CatalogSection = forwardRef<HTMLElement, CatalogSectionProps>(
             <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }} className="inline-block">
               <Link
                 id="hp-view-all-btn"
-                to="/catalogo"
+                to={searchQuery.trim() ? `/catalogo?search=${encodeURIComponent(searchQuery.trim())}` : '/catalogo'}
                 className="inline-flex items-center justify-center px-10 py-3.5 rounded-full bg-[#5c0f1b] text-white text-sm font-black shadow-[0_6px_20px_rgba(92,15,27,0.20)] hover:bg-[#7a1525] transition-colors active:scale-95"
               >
-                Ver todo el catálogo
+                {searchQuery.trim() ? `Ver resultados de "${searchQuery}"` : 'Ver todo el catálogo'}
               </Link>
             </motion.div>
           </motion.div>

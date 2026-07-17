@@ -34,6 +34,7 @@ export interface UserMeResponse {
   email: string
   telefono: string | null
   estado: boolean
+  auth_provider: string
   rol: {
     id_rol: number
     nombre: string
@@ -43,6 +44,7 @@ export interface UserMeResponse {
     referencia: string | null
     telefono: string | null
   } | null
+  avatar_url?: string | null
 }
 
 export const authApi = {

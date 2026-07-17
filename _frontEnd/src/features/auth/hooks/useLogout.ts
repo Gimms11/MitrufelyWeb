@@ -16,6 +16,7 @@
 import { useCallback } from 'react'
 import { useAuthStore } from '@/features/auth/store/auth.store'
 import { authApi } from '@/features/auth/api/auth.api'
+import { useCriptoTrufaStore } from '@/stores/criptotrufa.store'
 
 export function useLogout() {
   const logout = useAuthStore((s) => s.logout)
@@ -31,5 +32,6 @@ export function useLogout() {
     }
     // Limpiar el store local (memoria + sessionStorage)
     logout()
+    useCriptoTrufaStore.getState().reset()
   }, [logout])
 }

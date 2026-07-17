@@ -35,8 +35,11 @@ import {
 interface PaymentModalProps {
   isOpen: boolean
   onClose: () => void
-  subtotal: number
-  total: number
+  subtotalBase: number   // precio base sin IGV
+  igv: number            // monto IGV (18%)
+  costoEnvio: number     // costo de envío
+  envioGratis: boolean   // si el envío es gratuito
+  total: number          // total final
 }
 
 type Step = 0 | 1 | 2 | 3 | 4 | 5
@@ -89,7 +92,7 @@ function Input({ id, error, ...rest }: React.InputHTMLAttributes<HTMLInputElemen
 
 // ─── Componente Principal ─────────────────────────────────────────────────────
 
-export function PaymentModal({ isOpen, onClose, subtotal, total }: PaymentModalProps) {
+export function PaymentModal({ isOpen, onClose, subtotalBase, igv, costoEnvio, envioGratis, total }: PaymentModalProps) {
   const navigate = useNavigate()
   const [step, setStep] = useState<Step>(0)
   const [ventaId, setVentaId] = useState<number | null>(null)
@@ -316,20 +319,42 @@ export function PaymentModal({ isOpen, onClose, subtotal, total }: PaymentModalP
             {/* ═══════════════ STEP 0: Resumen ═══════════════ */}
             {step === 0 && (
               <div className="px-6 py-5 space-y-5 flex-1 overflow-y-auto">
-                <div className="bg-[#faf8f5] rounded-2xl p-5 border border-[#5c0f1b]/8 space-y-2">
+                <div className="bg-[#faf8f5] rounded-2xl p-5 border border-[#5c0f1b]/8 space-y-2.5">
+                  {/* Subtotal base */}
                   <div className="flex justify-between text-sm font-semibold text-[#2a1115]/70">
-                    <span>Subtotal</span>
-                    <span>S/ {Number(subtotal || 0).toFixed(2)}</span>
+                    <span>Subtotal (sin IGV)</span>
+                    <span>S/ {subtotalBase.toFixed(2)}</span>
                   </div>
+                  {/* Descuento */}
                   {discount > 0 && (
-                    <div className="flex justify-between text-sm font-semibold text-emerald-600">
+                    <div className="flex justify-between text-sm font-semibold text-[#ff7a45]">
                       <span>Descuento {coupon && `(${coupon})`}</span>
-                      <span>− S/ {Number(discount || 0).toFixed(2)}</span>
+                      <span>− S/ {discount.toFixed(2)}</span>
                     </div>
                   )}
-                  <div className="flex justify-between text-lg font-black text-[#5c0f1b] border-t border-[#5c0f1b]/10 pt-2 mt-2">
+                  {/* IGV */}
+                  <div className="flex justify-between text-xs font-semibold text-[#2a1115]/50 pt-1 border-t border-[#5c0f1b]/5">
+                    <span>IGV (18%)</span>
+                    <span>S/ {igv.toFixed(2)}</span>
+                  </div>
+                  {/* Envío */}
+                  <div className="flex justify-between text-sm font-semibold text-[#2a1115]/70">
+                    <span className="flex items-center gap-1">
+                      Envío
+                      {envioGratis && (
+                        <span className="text-[10px] bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded-sm font-black ml-1">
+                          GRATIS
+                        </span>
+                      )}
+                    </span>
+                    <span className={envioGratis ? 'text-emerald-600 font-bold' : ''}>
+                      S/ {costoEnvio.toFixed(2)}
+                    </span>
+                  </div>
+                  {/* Total */}
+                  <div className="flex justify-between text-lg font-black text-[#5c0f1b] border-t border-[#5c0f1b]/10 pt-2 mt-1">
                     <span>Total</span>
-                    <span>S/ {Number(total).toFixed(2)}</span>
+                    <span>S/ {total.toFixed(2)}</span>
                   </div>
                 </div>
 

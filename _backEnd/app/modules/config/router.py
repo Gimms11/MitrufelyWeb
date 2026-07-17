@@ -3,18 +3,46 @@ Mifrufely Web — System Config Router
 Endpoints administrativos para gestionar la configuración del sistema.
 """
 
+from decimal import Decimal
 from typing import Annotated
 
 from fastapi import APIRouter, Depends
 
 from app.modules.config.dependencies import get_config_service
-from app.modules.config.schemas import ShippingConfigResponse, UpdateShippingConfigRequest
+from app.modules.config.schemas import (
+    ShippingConfigResponse,
+    UpdateShippingConfigRequest,
+    PublicShippingCostResponse,
+)
 from app.modules.config.service import SystemConfigService
 from app.security.dependencies import AdminUser
 
 router = APIRouter(prefix="/admin/config", tags=["Configuración del Sistema"])
 
 ConfigServiceDep = Annotated[SystemConfigService, Depends(get_config_service)]
+
+public_router = APIRouter(prefix="/config", tags=["Configuración Pública"])
+
+
+@public_router.get(
+    "/shipping-cost",
+    response_model=PublicShippingCostResponse,
+    summary="Calcular costo de envío para un subtotal",
+)
+async def get_shipping_cost(
+    subtotal: Decimal,
+    service: ConfigServiceDep,
+) -> PublicShippingCostResponse:
+    """Calcula el costo de envío y si aplica envío gratuito para el subtotal dado."""
+    result = await service.calculate_shipping(subtotal)
+    return PublicShippingCostResponse(
+        subtotal=result.subtotal,
+        costo_envio=result.shipping_cost,
+        total=result.total_final,
+        aplica_envio_gratis=result.free_shipping_applied,
+        mensaje=result.mensaje,
+        free_shipping_threshold=result.free_shipping_threshold,
+    )
 
 
 @router.get(

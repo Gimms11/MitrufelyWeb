@@ -75,16 +75,17 @@ export function ProductCard({ product }: ProductCardProps) {
       </div>
 
       {/* ── Detalles ── */}
-      <div className="px-2 pb-2">
+      <div className="px-2 pb-2 flex flex-col flex-1">
         {/* Nombre + Precio */}
-        <div className="flex justify-between items-center mb-3 gap-2">
+        <div className="flex flex-col mb-3 gap-1.5 flex-1">
           <h4
-            className="font-black text-[#2a1115] text-lg line-clamp-1 group-hover:text-[#5c0f1b] transition-colors"
+            className="font-black text-[#2a1115] text-lg leading-tight line-clamp-2 group-hover:text-[#5c0f1b] transition-colors"
             style={{ fontFamily: "'Outfit', sans-serif" }}
+            title={normalizeName(nombre)}
           >
             {normalizeName(nombre)}
           </h4>
-          <p className="text-xl font-black text-[#5c0f1b] shrink-0">
+          <p className="text-xl font-black text-[#5c0f1b] mt-auto">
             S/{Number(precio).toFixed(2)}
           </p>
         </div>

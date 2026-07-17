@@ -342,9 +342,9 @@ export default function OrderDetailPage() {
                 </span>
               </div>
 
-              {/* Badges de SweetCoins */}
+              {/* Badges de Criptotrufas */}
               <div className="bg-[#ff7a45]/8 border border-[#ff7a45]/20 rounded-2xl p-3 text-center">
-                <span className="text-[9px] font-black uppercase text-[#ff7a45]/60 block mb-0.5">SweetCoins a Otorgar</span>
+                <span className="text-[9px] font-black uppercase text-[#ff7a45]/60 block mb-0.5">Criptotrufas a Otorgar</span>
                 <span className="text-sm font-black text-[#ff7a45] flex items-center justify-center gap-1">
                   ⭐️ +{order.puntos_ganados} CriptoTrufas
                 </span>

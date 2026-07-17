@@ -558,6 +558,14 @@ class AuthService:
         if not user:
             raise NotFoundError("Usuario no encontrado")
 
+        if data.nombres is not None:
+            user.nombres = data.nombres
+        if data.apellidos is not None:
+            user.apellidos = data.apellidos
+        if data.email is not None and data.email != user.email:
+            if await self._repo.email_exists(data.email):
+                raise BusinessRuleError("Este correo ya está registrado en otra cuenta.")
+            user.email = data.email
         if data.telefono is not None:
             user.telefono = data.telefono
 
@@ -667,3 +675,34 @@ class AuthService:
             user_id=user.id_usuario,
             email=user.email,
         )
+
+    async def change_password(self, user_id: int, payload: 'ChangePasswordRequest') -> None:
+        """
+        Cambia la contraseña desde el perfil de un usuario autenticado.
+        """
+        user = await self._repo.get_by_id(user_id)
+        if not user:
+            raise NotFoundError("Usuario no encontrado")
+            
+        if user.auth_provider != AuthProviderEnum.LOCAL.value:
+            raise BusinessRuleError("No puedes cambiar la contraseña de una cuenta vinculada a Google.")
+            
+        if not user.password_hash or not verify_password(payload.current_password, user.password_hash):
+            raise InvalidCredentialsError("La contraseña actual es incorrecta.")
+            
+        user.password_hash = hash_password(payload.new_password)
+        await self._repo.update(user)
+        logger.info("auth.change_password.success", user_id=user.id_usuario, email=user.email)
+
+    async def update_avatar(self, user_id: int, avatar_url: str) -> Usuario:
+        """
+        Actualiza la URL de la foto de perfil del usuario.
+        """
+        user = await self._repo.get_by_id(user_id)
+        if not user:
+            raise NotFoundError("Usuario no encontrado")
+
+        user.avatar_url = avatar_url
+        await self._repo.update(user)
+        logger.info("auth.update_avatar.success", user_id=user.id_usuario, avatar_url=avatar_url)
+        return user

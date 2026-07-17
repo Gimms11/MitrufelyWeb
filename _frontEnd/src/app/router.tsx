@@ -36,6 +36,9 @@ const PackDetailView = lazy(() => import('@/features/products/pages/PackDetailVi
 const CustomerOrdersPage = lazy(() => import('@/features/orders/pages/CustomerOrdersPage'))
 const CustomerOrderDetailPage = lazy(() => import('@/features/orders/pages/CustomerOrderDetailPage'))
 const AboutPage = lazy(() => import('@/features/about/pages/AboutPage'))
+const CustomerProfileLayout = lazy(() => import('@/features/profile/components/CustomerProfileLayout').then(m => ({ default: m.CustomerProfileLayout })))
+const ProfileInfoPage = lazy(() => import('@/features/profile/pages/ProfileInfoPage').then(m => ({ default: m.ProfileInfoPage })))
+const SecurityPage = lazy(() => import('@/features/profile/pages/SecurityPage').then(m => ({ default: m.SecurityPage })))
 
 // ─── Loading fallback ─────────────────────────────────────────────────────────
 function PageLoader() {
@@ -166,8 +169,13 @@ export function AppRouter() {
 
         {/* Mi Cuenta - Rutas protegidas para cliente */}
         <Route element={<RequireAuth />}>
-          <Route path="/mi-cuenta/pedidos" element={<CustomerOrdersPage />} />
-          <Route path="/mi-cuenta/pedidos/:id" element={<CustomerOrderDetailPage />} />
+          <Route path="/mi-cuenta" element={<CustomerProfileLayout />}>
+            <Route index element={<Navigate to="perfil" replace />} />
+            <Route path="perfil" element={<ProfileInfoPage />} />
+            <Route path="pedidos" element={<CustomerOrdersPage />} />
+            <Route path="pedidos/:id" element={<CustomerOrderDetailPage />} />
+            <Route path="seguridad" element={<SecurityPage />} />
+          </Route>
         </Route>
 
         {/* Ruta de verificación pública */}

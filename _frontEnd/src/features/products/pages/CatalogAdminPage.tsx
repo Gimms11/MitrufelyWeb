@@ -234,9 +234,18 @@ export default function CatalogAdminPage() {
       accessorKey: 'nombre',
       header: 'Nombre / Slug',
       cell: ({ row }) => (
-        <div>
-          <div className="font-bold text-[#2a1115]">{row.getValue('nombre')}</div>
+        <div className="max-w-[220px]">
+          <div className="font-bold text-[#2a1115] truncate" title={row.getValue('nombre') as string}>
+            {row.getValue('nombre') as string}
+          </div>
           <div className="font-mono text-[10px] text-stone-400 mt-0.5">{row.original.slug}</div>
+          <div
+            className="text-[11px] text-stone-500 mt-1 line-clamp-2 leading-tight"
+            title={row.original.descripcion || 'Sin descripción (se usará por defecto)'}
+          >
+            {row.original.descripcion ||
+              'Deliciosa trufa artesanal elaborada con ingredientes seleccionados de la más alta calidad, perfecta para endulzar tus momentos especiales.'}
+          </div>
         </div>
       ),
     },

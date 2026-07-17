@@ -4,7 +4,7 @@
 # ==============================================================================
 
 # ── Stage 1: Builder ─────────────────────────────────────────────────────────
-FROM python:3.11-slim AS builder
+FROM python:3.11-slim-bookworm AS builder
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
@@ -53,7 +53,7 @@ CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload
 #     OS processes provide no benefit on a single CPU core and waste RAM.
 #   - Non-root user (appuser) for security hardening.
 #   - No dev tools (ruff, black, mypy) — they were removed from requirements.txt.
-FROM python:3.11-slim AS production
+FROM python:3.11-slim-bookworm AS production
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \

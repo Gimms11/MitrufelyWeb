@@ -135,7 +135,7 @@ export default function VerifyPage() {
               Verificando Cuenta
             </h2>
             <p className="text-base font-semibold text-[#2a1115]/80 leading-relaxed">
-              Preparando tu vitrina de SweetCoins...
+              Preparando tu vitrina de Criptotrufas...
             </p>
             <p className="text-xs font-medium text-[#5c0f1b]/60 mt-2">
               Confirmando tu registro artesanal en Mitrufely Web
@@ -180,7 +180,7 @@ export default function VerifyPage() {
               Tu cuenta ha sido activada con total éxito. Ya formas parte de nuestra comunidad de amantes de la repostería artesanal.
             </p>
             <p className="text-xs font-bold text-[#ff7a45] mb-8 bg-[#ff7a45]/10 py-2 px-4 rounded-full inline-block">
-              🎁 ¡Tus primeros 1000 SweetCoins te esperan!
+              🎁 ¡Tus primeras 1000 Criptotrufas te esperan!
             </p>
 
             <Link 
