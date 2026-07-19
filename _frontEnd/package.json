@@ -12,7 +12,7 @@
     "lint:fix": "eslint . --fix",
     "format": "prettier --write \"src/**/*.{ts,tsx,css,json}\"",
     "format:check": "prettier --check \"src/**/*.{ts,tsx,css,json}\"",
-    "prepare": "husky",
+    "prepare": "node -e \"if (!process.env.CI) { require('child_process').spawnSync('husky', { stdio: 'inherit', shell: true }); }\"",
     "analyze": "ANALYZE=true vite build",
     "optimize-images": "node scripts/optimize-images.mjs"
   },
