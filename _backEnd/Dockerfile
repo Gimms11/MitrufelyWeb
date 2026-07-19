@@ -81,4 +81,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=20s --retries=3 \
     CMD python -c "import urllib.request; urllib.request.urlopen(f'http://localhost:{__import__(\"os\").environ.get(\"PORT\", 8000)}/api/v1/health')"
 
 # $PORT is injected by Render. Default fallback: 8000 for local production builds.
-CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
+CMD ["sh", "-c", "celery -A app.infrastructure.workers.celery_app worker --loglevel=info --concurrency=1 --without-mingle & celery -A app.infrastructure.workers.celery_app beat --loglevel=info --pidfile=/tmp/celerybeat.pid --schedule=/tmp/celerybeat-schedule & uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
