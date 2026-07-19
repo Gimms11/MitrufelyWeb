@@ -359,7 +359,7 @@ export default function ProductDetailView() {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5, delay: 0.1 }}
-              className="bg-[#130c01] md:bg-[#fff7] flex flex-col justify-center px-8 md:px-12 py-10"
+              className="bg-[#faf8f5] md:bg-white/60 flex flex-col justify-center px-8 md:px-12 py-10"
             >
               {/* Nombre */}
               <h1

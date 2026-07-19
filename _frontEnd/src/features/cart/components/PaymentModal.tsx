@@ -319,7 +319,7 @@ export function PaymentModal({ isOpen, onClose, subtotalBase, igv, costoEnvio, e
           exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
           className="fixed inset-0 z-[200] bg-black/55 backdrop-blur-sm flex items-center justify-center p-4"
-          onClick={() => step !== 4 && onClose()}
+          onClick={() => step === 0 && onClose()}
         >
           <motion.div
             initial={{ scale: 0.92, y: 30, opacity: 0 }}

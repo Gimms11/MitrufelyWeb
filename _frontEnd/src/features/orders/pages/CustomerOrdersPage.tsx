@@ -154,28 +154,28 @@ export default function CustomerOrdersPage() {
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-3">
-                    <div className="text-right hidden sm:block">
-                      <div className="flex items-center gap-2 justify-end mb-1">
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <div className="text-right">
+                      <div className="flex flex-wrap items-center gap-1 justify-end mb-1">
                         <span
-                          className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${ESTADO_LABELS[order.estado]?.color || 'bg-stone-100 text-stone-700'}`}
+                          className={`text-[9px] sm:text-[10px] font-bold px-1.5 py-0.5 rounded-full border ${ESTADO_LABELS[order.estado]?.color || 'bg-stone-100 text-stone-700'}`}
                         >
                           {ESTADO_LABELS[order.estado]?.label || order.estado}
                         </span>
                         <span
-                          className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${PAGO_LABELS[order.estado_pago]?.color || 'bg-stone-50 text-stone-600'}`}
+                          className={`text-[9px] sm:text-[10px] font-bold px-1.5 py-0.5 rounded-full ${PAGO_LABELS[order.estado_pago]?.color || 'bg-stone-50 text-stone-600'} hidden xs:inline-block`}
                         >
                           {PAGO_LABELS[order.estado_pago]?.label || order.estado_pago}
                         </span>
                       </div>
                       <p
-                        className="font-black text-[#5c0f1b] text-lg"
+                        className="font-black text-[#5c0f1b] text-sm sm:text-lg leading-none mt-1 sm:mt-0"
                         style={{ fontFamily: "'Outfit', sans-serif" }}
                       >
                         S/. {Number(order.total).toFixed(2)}
                       </p>
                     </div>
-                    <ChevronRight className="h-5 w-5 text-[#2a1115]/20 group-hover:text-[#5c0f1b] transition-colors shrink-0" />
+                    <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5 text-[#2a1115]/20 group-hover:text-[#5c0f1b] transition-colors shrink-0" />
                   </div>
                 </div>
 
