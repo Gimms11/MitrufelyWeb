@@ -75,7 +75,7 @@ export function HeroSection({ onCatalogClick, onCriptotrufasClick }: HeroSection
 
       {/* Contenido */}
       <div
-        className="relative z-10 max-w-7xl mx-auto px-2 md:px-10 flex items-start pt-10 md:pt-[18vh]"
+        className="relative z-10 max-w-7xl mx-auto px-2 md:px-10 flex items-start pt-28 md:pt-[18vh]"
         style={{ minHeight: '100vh' }}
       >
         {/* ── Columna de texto (animación CSS stagger) — máximo 50% del ancho ── */}

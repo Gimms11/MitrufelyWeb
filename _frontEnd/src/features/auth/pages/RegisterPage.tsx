@@ -279,13 +279,13 @@ export default function RegisterPage() {
           </div>
 
           {/* Botón Registrase */}
-          <div className="flex justify-end pt-6">
+          <div className="flex justify-center md:justify-end pt-6">
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               type="submit"
               disabled={isPending}
-              className="px-10 bg-[#ff7a45] text-white hover:bg-[#ff7a45]/90 py-3.5 rounded-full text-lg font-black tracking-wide shadow-md transition-all disabled:opacity-75 disabled:pointer-events-none flex items-center justify-center gap-2"
+              className="w-full md:w-auto px-10 bg-[#ff7a45] text-white hover:bg-[#ff7a45]/90 py-3.5 rounded-full text-lg font-black tracking-wide shadow-md transition-all disabled:opacity-75 disabled:pointer-events-none flex items-center justify-center gap-2"
             >
               {isPending ? (
                 <>

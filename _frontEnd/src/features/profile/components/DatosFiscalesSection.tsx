@@ -101,8 +101,8 @@ export function DatosFiscalesSection() {
       toast.error('La razón social es obligatoria para RUC.')
       return
     }
-    if (!form.direccion_fiscal.trim()) {
-      toast.error('La dirección fiscal es obligatoria.')
+    if (form.tipo_documento === 'RUC' && !form.direccion_fiscal.trim()) {
+      toast.error('La dirección fiscal es obligatoria para RUC.')
       return
     }
 
@@ -111,7 +111,7 @@ export function DatosFiscalesSection() {
       tipo_documento: form.tipo_documento,
       numero_documento: form.numero_documento,
       razon_social: form.tipo_documento === 'RUC' ? form.razon_social : null,
-      direccion_fiscal: form.direccion_fiscal,
+      direccion_fiscal: form.direccion_fiscal.trim() || null,
     })
 
     // 2. Si la API dio nombres/apellidos (DNI o RUC persona natural), actualizar perfil
@@ -311,13 +311,13 @@ export function DatosFiscalesSection() {
 
         <div className="space-y-1.5">
           <label className="text-xs font-black uppercase tracking-wide text-stone-500">
-            Dirección Fiscal <span className="text-red-500">*</span>
+            Dirección Fiscal {form.tipo_documento === 'RUC' && <span className="text-red-500">*</span>}
           </label>
           <input
             type="text"
             value={form.direccion_fiscal}
             onChange={(e) => setForm({ ...form, direccion_fiscal: e.target.value })}
-            placeholder="Av. / Jr. / Calle"
+            placeholder={form.tipo_documento === 'RUC' ? "Av. / Jr. / Calle (Obligatorio)" : "Av. / Jr. / Calle (Opcional)"}
             className="w-full px-4 py-3 rounded-xl border border-stone-200 bg-[#faf8f5] text-sm font-semibold text-[#2a1115] focus:border-[#5c0f1b] outline-none"
           />
         </div>

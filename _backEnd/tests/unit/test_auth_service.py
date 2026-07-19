@@ -77,23 +77,24 @@ class TestAuthService:
         assert result.refresh_token
         assert result.token_type == "bearer"
 
-    async def test_register_duplicate_email_raises(
+    async def test_register_duplicate_email_silent(
         self,
         service: AuthService,
         mock_auth_repo: AsyncMock,
     ) -> None:
         mock_auth_repo.email_exists.return_value = True
 
-        with pytest.raises(DuplicateResourceError):
-            await service.register(
-                RegisterRequest(
-                    first_name="Juan",
-                    last_name="Pérez",
-                    email="existing@test.com",
-                    password="ValidPass1!",
-                ),
-                background_tasks=MagicMock(),
-            )
+        result = await service.register(
+            RegisterRequest(
+                first_name="Juan",
+                last_name="Pérez",
+                email="existing@test.com",
+                password="ValidPass1!",
+            ),
+            background_tasks=MagicMock(),
+        )
+        assert result.user_id == 0
+        assert result.email == "existing@test.com"
 
     async def test_register_success_client_sends_email(
         self,

@@ -137,6 +137,14 @@ class DatosFiscalesUpsert(BaseModel):
             raise ValueError("La razón social es obligatoria para RUC")
         return v
 
+    @field_validator("direccion_fiscal")
+    @classmethod
+    def validate_direccion_fiscal(cls, v: str | None, info) -> str | None:
+        tipo = info.data.get("tipo_documento", "")
+        if tipo == "RUC" and (not v or not v.strip()):
+            raise ValueError("La dirección fiscal es obligatoria para RUC")
+        return v
+
 
 # ── Perfil / Envío ─────────────────────────────────────────────────────────────
 
