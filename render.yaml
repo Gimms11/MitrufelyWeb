@@ -10,7 +10,6 @@
 # ==============================================================================
 
 services:
-
   # ── Web Service (FastAPI via Docker) ──────────────────────────────────────
   - type: web
     name: mifrufely-backend
@@ -37,7 +36,7 @@ services:
       # ── CORS — Orígenes permitidos ──────────────────────────────
       # IMPORTANTE: Cambiar al dominio real de Vercel tras el deploy
       - key: ALLOWED_ORIGINS
-        value: '["https://mitrufely.vercel.app"]'
+        value: '["https://mitrufely-4wrioeyxp-utp-s-projects.vercel.app"]'
       # ── Database (NeonDB — set via Render dashboard, never commit) ──
       # Format: postgresql+asyncpg://user:pass@host/db?sslmode=require
       - key: DATABASE_URL
@@ -85,4 +84,4 @@ services:
     region: oregon
     plan: free
     maxmemoryPolicy: allkeys-lru
-    ipAllowList: []  # Internal only — accessible only from services in the same region
+    ipAllowList: [] # Internal only — accessible only from services in the same region
