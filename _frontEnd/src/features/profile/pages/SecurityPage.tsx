@@ -165,11 +165,11 @@ export function SecurityPage() {
             </div>
           )}
 
-          <div className="flex justify-end pt-4">
+          <div className="flex justify-center md:justify-end pt-4">
             <button
               type="submit"
               disabled={isPending}
-              className="inline-flex items-center justify-center gap-2 px-8 py-3 rounded-xl bg-[#5c0f1b] hover:bg-[#7a1525] text-white text-sm font-bold transition-all active:scale-95 cursor-pointer disabled:opacity-50"
+              className="w-full md:w-auto inline-flex items-center justify-center gap-2 px-8 py-3 rounded-xl bg-[#5c0f1b] hover:bg-[#7a1525] text-white text-sm font-bold transition-all active:scale-95 cursor-pointer disabled:opacity-50"
             >
               {isPending ? (
                 <>

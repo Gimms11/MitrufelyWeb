@@ -322,12 +322,12 @@ export function DatosFiscalesSection() {
           />
         </div>
 
-        <div className="flex justify-end gap-3 pt-2">
+        <div className="flex flex-col sm:flex-row justify-end gap-3 pt-2">
           {fiscalData?.numero_documento && (
             <button
               type="button"
               onClick={handleCancelar}
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border-2 border-[#5c0f1b]/20 text-[#5c0f1b] font-bold text-sm hover:border-[#5c0f1b]/40 transition-all cursor-pointer"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl border-2 border-[#5c0f1b]/20 text-[#5c0f1b] font-bold text-sm hover:border-[#5c0f1b]/40 transition-all cursor-pointer"
             >
               <X className="h-4 w-4" /> Cancelar
             </button>
@@ -336,7 +336,7 @@ export function DatosFiscalesSection() {
             type="button"
             onClick={handleGuardar}
             disabled={upsertFiscal.isPending || updateProfile.isPending}
-            className="inline-flex items-center justify-center gap-2 px-8 py-3 rounded-xl bg-[#5c0f1b] hover:bg-[#7a1525] text-white text-sm font-bold transition-all active:scale-95 cursor-pointer disabled:opacity-50"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3 rounded-xl bg-[#5c0f1b] hover:bg-[#7a1525] text-white text-sm font-bold transition-all active:scale-95 cursor-pointer disabled:opacity-50"
           >
             {(upsertFiscal.isPending || updateProfile.isPending) ? (
               <><Loader2 className="h-4 w-4 animate-spin" /> Guardando...</>
