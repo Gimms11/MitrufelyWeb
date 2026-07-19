@@ -487,8 +487,8 @@ export function PaymentModal({ isOpen, onClose, subtotalBase, igv, costoEnvio, e
                         <Input id="fiscal-razon" placeholder="Razón Social" error={!!fiscalForm.formState.errors.razon_social} {...fiscalForm.register('razon_social')} />
                       </Field>
                     )}
-                    <Field label="Dirección Fiscal" error={fiscalForm.formState.errors.direccion_fiscal?.message} required>
-                      <Input id="fiscal-direccion" placeholder="Av. / Jr. / Calle" error={!!fiscalForm.formState.errors.direccion_fiscal} {...fiscalForm.register('direccion_fiscal')} />
+                    <Field label="Dirección Fiscal" error={fiscalForm.formState.errors.direccion_fiscal?.message} required={fiscalForm.watch('tipo_documento') === 'RUC'}>
+                      <Input id="fiscal-direccion" placeholder={fiscalForm.watch('tipo_documento') === 'RUC' ? "Av. / Jr. / Calle" : "Av. / Jr. / Calle (Opcional)"} error={!!fiscalForm.formState.errors.direccion_fiscal} {...fiscalForm.register('direccion_fiscal')} />
                     </Field>
                   </div>
                 )}

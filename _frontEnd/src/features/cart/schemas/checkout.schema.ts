@@ -39,7 +39,7 @@ export const fiscalSchema = z
       .max(20, 'Máximo 20 dígitos.')
       .regex(/^\d+$/, 'Solo se permiten números.'),
     razon_social: z.string().optional(),
-    direccion_fiscal: z.string().min(5, 'Mínimo 5 caracteres.').max(255),
+    direccion_fiscal: z.string().max(255).optional().or(z.literal('')),
   })
   .superRefine((data, ctx) => {
     if (data.tipo_documento === 'DNI' && data.numero_documento.length !== 8) {
@@ -61,6 +61,13 @@ export const fiscalSchema = z
         code: z.ZodIssueCode.custom,
         path: ['razon_social'],
         message: 'La razón social es obligatoria para RUC.',
+      })
+    }
+    if (data.tipo_documento === 'RUC' && (!data.direccion_fiscal || data.direccion_fiscal.trim().length < 5)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['direccion_fiscal'],
+        message: 'La dirección fiscal es obligatoria para RUC (mínimo 5 caracteres).',
       })
     }
   })

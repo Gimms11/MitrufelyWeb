@@ -177,10 +177,6 @@ export default function ProductDetailView() {
     window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${message}`, '_blank', 'noopener,noreferrer')
   }
 
-  const handleRating = () => {
-    toast.info('¡Gracias! Las calificaciones estarán disponibles próximamente.')
-  }
-
   // ─── Loading ──────────────────────────────────────────────────────────────
 
   if (productLoading) {
@@ -437,14 +433,6 @@ export default function ProductDetailView() {
                   className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#ff7a45] text-white font-bold text-sm hover:bg-[#e8682e] transition-all active:scale-95 cursor-pointer border-none w-fit"
                 >
                   Información Adicional
-                  <span className="text-white/70 text-xs">›</span>
-                </button>
-                <button
-                  id="product-detail-rating-btn"
-                  onClick={handleRating}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#ff7a45] text-white font-bold text-sm hover:bg-[#e8682e] transition-all active:scale-95 cursor-pointer border-none w-fit"
-                >
-                  ¡Calificame!
                   <span className="text-white/70 text-xs">›</span>
                 </button>
               </div>
