@@ -123,7 +123,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\core\\config.py",
-      "source_location": "L124",
+      "source_location": "L143",
       "file_type": "code"
     },
     {
@@ -132,7 +132,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\core\\config.py",
-      "source_location": "L129",
+      "source_location": "L148",
       "file_type": "code"
     },
     {
@@ -141,7 +141,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\core\\config.py",
-      "source_location": "L151",
+      "source_location": "L170",
       "file_type": "code"
     },
     {
@@ -150,7 +150,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\core\\config.py",
-      "source_location": "L158",
+      "source_location": "L177",
       "file_type": "code"
     },
     {
@@ -159,7 +159,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\core\\config.py",
-      "source_location": "L170",
+      "source_location": "L189",
       "file_type": "code"
     },
     {
@@ -168,7 +168,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\core\\config.py",
-      "source_location": "L180",
+      "source_location": "L199",
       "file_type": "code"
     },
     {
@@ -177,7 +177,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\core\\config.py",
-      "source_location": "L189",
+      "source_location": "L208",
       "file_type": "code"
     },
     {
@@ -186,7 +186,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\core\\config.py",
-      "source_location": "L193",
+      "source_location": "L212",
       "file_type": "code"
     },
     {
@@ -195,7 +195,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\core\\config.py",
-      "source_location": "L198",
+      "source_location": "L217",
       "file_type": "code"
     },
     {
@@ -5676,7 +5676,7 @@
       "type": "class",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\schemas.py",
-      "source_location": "L95",
+      "source_location": "L96",
       "file_type": "code"
     },
     {
@@ -5685,7 +5685,7 @@
       "type": "class",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\schemas.py",
-      "source_location": "L113",
+      "source_location": "L114",
       "file_type": "code"
     },
     {
@@ -5694,7 +5694,7 @@
       "type": "class",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\schemas.py",
-      "source_location": "L125",
+      "source_location": "L126",
       "file_type": "code"
     },
     {
@@ -5703,7 +5703,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\schemas.py",
-      "source_location": "L133",
+      "source_location": "L134",
       "file_type": "code"
     },
     {
@@ -5712,7 +5712,7 @@
       "type": "class",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\schemas.py",
-      "source_location": "L143",
+      "source_location": "L144",
       "file_type": "code"
     },
     {
@@ -5721,7 +5721,7 @@
       "type": "class",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\schemas.py",
-      "source_location": "L151",
+      "source_location": "L152",
       "file_type": "code"
     },
     {
@@ -5730,7 +5730,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\schemas.py",
-      "source_location": "L157",
+      "source_location": "L158",
       "file_type": "code"
     },
     {
@@ -8593,6 +8593,600 @@
       "description": "",
       "source_file": "_backEnd\\app\\modules\\config\\service.py",
       "source_location": "L171",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.consultas.__init__",
+      "label": "__init__",
+      "type": "module",
+      "description": "Python module __init__.py",
+      "source_file": "_backEnd\\app\\modules\\consultas\\__init__.py",
+      "source_location": "L1",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.consultas.dependencies",
+      "label": "dependencies",
+      "type": "module",
+      "description": "Python module dependencies.py",
+      "source_file": "_backEnd\\app\\modules\\consultas\\dependencies.py",
+      "source_location": "L1",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.consultas.dependencies.import_typing_Annotated",
+      "label": "typing.Annotated",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\consultas\\dependencies.py",
+      "source_location": "L6",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.consultas.dependencies.import_fastapi_Depends",
+      "label": "fastapi.Depends",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\consultas\\dependencies.py",
+      "source_location": "L8",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.consultas.dependencies.import_redis_asyncio_Redis",
+      "label": "redis.asyncio.Redis",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\consultas\\dependencies.py",
+      "source_location": "L9",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.consultas.dependencies.import_sqlalchemy_ext_asyncio_AsyncSession",
+      "label": "sqlalchemy.ext.asyncio.AsyncSession",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\consultas\\dependencies.py",
+      "source_location": "L10",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.consultas.dependencies.import_app_infrastructure_cache_redis_client_get_redis",
+      "label": "app.infrastructure.cache.redis_client.get_redis",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\consultas\\dependencies.py",
+      "source_location": "L12",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.consultas.dependencies.import_app_infrastructure_database_session_get_db_session",
+      "label": "app.infrastructure.database.session.get_db_session",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\consultas\\dependencies.py",
+      "source_location": "L13",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.consultas.dependencies.import_app_modules_consultas_service_ConsultasService",
+      "label": "app.modules.consultas.service.ConsultasService",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\consultas\\dependencies.py",
+      "source_location": "L14",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.consultas.dependencies.import_app_security_dependencies_AuthUser",
+      "label": "app.security.dependencies.AuthUser",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\consultas\\dependencies.py",
+      "source_location": "L15",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.consultas.dependencies.import_app_security_dependencies_get_current_user",
+      "label": "app.security.dependencies.get_current_user",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\consultas\\dependencies.py",
+      "source_location": "L15",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.consultas.dependencies.import_app_shared_external_jsonpe_client_JsonPeClient",
+      "label": "app.shared.external.jsonpe.client.JsonPeClient",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\consultas\\dependencies.py",
+      "source_location": "L16",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.consultas.dependencies.import_app_shared_external_jsonpe_dependencies_get_jsonpe_client",
+      "label": "app.shared.external.jsonpe.dependencies.get_jsonpe_client",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\consultas\\dependencies.py",
+      "source_location": "L17",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.consultas.dependencies.get_consultas_service",
+      "label": "get_consultas_service",
+      "type": "function",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\consultas\\dependencies.py",
+      "source_location": "L20",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.consultas.router",
+      "label": "router",
+      "type": "module",
+      "description": "Python module router.py",
+      "source_file": "_backEnd\\app\\modules\\consultas\\router.py",
+      "source_location": "L1",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.consultas.router.import_typing_Annotated",
+      "label": "typing.Annotated",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\consultas\\router.py",
+      "source_location": "L7",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.consultas.router.import_sys",
+      "label": "sys",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\consultas\\router.py",
+      "source_location": "L9",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.consultas.router.import_fastapi_APIRouter",
+      "label": "fastapi.APIRouter",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\consultas\\router.py",
+      "source_location": "L10",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.consultas.router.import_fastapi_Depends",
+      "label": "fastapi.Depends",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\consultas\\router.py",
+      "source_location": "L10",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.consultas.router.import_fastapi_Request",
+      "label": "fastapi.Request",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\consultas\\router.py",
+      "source_location": "L10",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.consultas.router.import_slowapi_Limiter",
+      "label": "slowapi.Limiter",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\consultas\\router.py",
+      "source_location": "L11",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.consultas.router.import_slowapi_util_get_remote_address",
+      "label": "slowapi.util.get_remote_address",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\consultas\\router.py",
+      "source_location": "L12",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.consultas.router.import_app_core_config_settings",
+      "label": "app.core.config.settings",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\consultas\\router.py",
+      "source_location": "L14",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.consultas.router.import_app_modules_consultas_dependencies_ConsultasServiceDep",
+      "label": "app.modules.consultas.dependencies.ConsultasServiceDep",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\consultas\\router.py",
+      "source_location": "L15",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.consultas.router.import_app_modules_consultas_schemas_DocumentoLookupRequest",
+      "label": "app.modules.consultas.schemas.DocumentoLookupRequest",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\consultas\\router.py",
+      "source_location": "L16",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.consultas.router.import_app_modules_consultas_schemas_DocumentoLookupResult",
+      "label": "app.modules.consultas.schemas.DocumentoLookupResult",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\consultas\\router.py",
+      "source_location": "L16",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.consultas.router.import_app_security_dependencies_AuthUser",
+      "label": "app.security.dependencies.AuthUser",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\consultas\\router.py",
+      "source_location": "L17",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.consultas.router.import_app_security_dependencies_get_current_user",
+      "label": "app.security.dependencies.get_current_user",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\consultas\\router.py",
+      "source_location": "L17",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.consultas.router.import_app_shared_schemas_response_APIResponse",
+      "label": "app.shared.schemas.response.APIResponse",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\consultas\\router.py",
+      "source_location": "L18",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.consultas.router.lookup_documento",
+      "label": "lookup_documento",
+      "type": "function",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\consultas\\router.py",
+      "source_location": "L39",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.consultas.schemas",
+      "label": "schemas",
+      "type": "module",
+      "description": "Python module schemas.py",
+      "source_file": "_backEnd\\app\\modules\\consultas\\schemas.py",
+      "source_location": "L1",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.consultas.schemas.import_typing_Literal",
+      "label": "typing.Literal",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\consultas\\schemas.py",
+      "source_location": "L6",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.consultas.schemas.import_typing_Optional",
+      "label": "typing.Optional",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\consultas\\schemas.py",
+      "source_location": "L6",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.consultas.schemas.import_pydantic_BaseModel",
+      "label": "pydantic.BaseModel",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\consultas\\schemas.py",
+      "source_location": "L8",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.consultas.schemas.import_pydantic_ConfigDict",
+      "label": "pydantic.ConfigDict",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\consultas\\schemas.py",
+      "source_location": "L8",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.consultas.schemas.import_pydantic_Field",
+      "label": "pydantic.Field",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\consultas\\schemas.py",
+      "source_location": "L8",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.consultas.schemas.import_pydantic_field_validator",
+      "label": "pydantic.field_validator",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\consultas\\schemas.py",
+      "source_location": "L8",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.consultas.schemas.DocumentoLookupRequest",
+      "label": "DocumentoLookupRequest",
+      "type": "class",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\consultas\\schemas.py",
+      "source_location": "L11",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.consultas.schemas.DocumentoLookupRequest._solo_digitos",
+      "label": "_solo_digitos",
+      "type": "function",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\consultas\\schemas.py",
+      "source_location": "L19",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.consultas.schemas.DocumentoLookupRequest.longitud_ok",
+      "label": "longitud_ok",
+      "type": "function",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\consultas\\schemas.py",
+      "source_location": "L24",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.consultas.schemas.DocumentoLookupResult",
+      "label": "DocumentoLookupResult",
+      "type": "class",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\consultas\\schemas.py",
+      "source_location": "L29",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.consultas.service",
+      "label": "service",
+      "type": "module",
+      "description": "Python module service.py",
+      "source_file": "_backEnd\\app\\modules\\consultas\\service.py",
+      "source_location": "L1",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.consultas.service.import_json",
+      "label": "json",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\consultas\\service.py",
+      "source_location": "L7",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.consultas.service.import_typing_Optional",
+      "label": "typing.Optional",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\consultas\\service.py",
+      "source_location": "L8",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.consultas.service.import_structlog",
+      "label": "structlog",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\consultas\\service.py",
+      "source_location": "L10",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.consultas.service.import_redis_asyncio_Redis",
+      "label": "redis.asyncio.Redis",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\consultas\\service.py",
+      "source_location": "L11",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.consultas.service.import_sqlalchemy_select",
+      "label": "sqlalchemy.select",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\consultas\\service.py",
+      "source_location": "L12",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.consultas.service.import_sqlalchemy_ext_asyncio_AsyncSession",
+      "label": "sqlalchemy.ext.asyncio.AsyncSession",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\consultas\\service.py",
+      "source_location": "L13",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.consultas.service.import_app_core_config_settings",
+      "label": "app.core.config.settings",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\consultas\\service.py",
+      "source_location": "L15",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.consultas.service.import_app_core_exceptions_BusinessRuleError",
+      "label": "app.core.exceptions.BusinessRuleError",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\consultas\\service.py",
+      "source_location": "L16",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.consultas.service.import_app_core_exceptions_ExternalServiceError",
+      "label": "app.core.exceptions.ExternalServiceError",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\consultas\\service.py",
+      "source_location": "L16",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.consultas.service.import_app_core_exceptions_NotFoundError",
+      "label": "app.core.exceptions.NotFoundError",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\consultas\\service.py",
+      "source_location": "L16",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.consultas.service.import_app_infrastructure_database_models_usuarios_DatosFiscales",
+      "label": "app.infrastructure.database.models.usuarios.DatosFiscales",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\consultas\\service.py",
+      "source_location": "L21",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.consultas.service.import_app_modules_consultas_schemas_DocumentoLookupResult",
+      "label": "app.modules.consultas.schemas.DocumentoLookupResult",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\consultas\\service.py",
+      "source_location": "L22",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.consultas.service.import_app_shared_external_jsonpe_client_JsonPeClient",
+      "label": "app.shared.external.jsonpe.client.JsonPeClient",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\consultas\\service.py",
+      "source_location": "L23",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.consultas.service.import_app_shared_external_jsonpe_exceptions_JsonPeError",
+      "label": "app.shared.external.jsonpe.exceptions.JsonPeError",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\consultas\\service.py",
+      "source_location": "L24",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.consultas.service.import_app_shared_external_jsonpe_exceptions_JsonPeNotFound",
+      "label": "app.shared.external.jsonpe.exceptions.JsonPeNotFound",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\consultas\\service.py",
+      "source_location": "L24",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.consultas.service.import_app_shared_external_jsonpe_exceptions_JsonPeTimeout",
+      "label": "app.shared.external.jsonpe.exceptions.JsonPeTimeout",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\consultas\\service.py",
+      "source_location": "L24",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.consultas.service.import_app_shared_external_jsonpe_exceptions_JsonPeUnavailable",
+      "label": "app.shared.external.jsonpe.exceptions.JsonPeUnavailable",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\consultas\\service.py",
+      "source_location": "L24",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.consultas.service.ConsultasService",
+      "label": "ConsultasService",
+      "type": "class",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\consultas\\service.py",
+      "source_location": "L34",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.consultas.service.ConsultasService.__init__",
+      "label": "__init__",
+      "type": "function",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\consultas\\service.py",
+      "source_location": "L37",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.consultas.service.ConsultasService.consultar_documento",
+      "label": "consultar_documento",
+      "type": "function",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\consultas\\service.py",
+      "source_location": "L52",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.consultas.service.ConsultasService._validar_formato",
+      "label": "_validar_formato",
+      "type": "function",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\consultas\\service.py",
+      "source_location": "L135",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.consultas.service.ConsultasService._usuario_tiene_datos_fiscales",
+      "label": "_usuario_tiene_datos_fiscales",
+      "type": "function",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\consultas\\service.py",
+      "source_location": "L144",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.consultas.service.ConsultasService._normalizar_dni",
+      "label": "_normalizar_dni",
+      "type": "function",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\consultas\\service.py",
+      "source_location": "L153",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.consultas.service.ConsultasService._normalizar_ruc",
+      "label": "_normalizar_ruc",
+      "type": "function",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\consultas\\service.py",
+      "source_location": "L169",
       "file_type": "code"
     },
     {
@@ -19918,12 +20512,21 @@
       "file_type": "code"
     },
     {
+      "id": "_backEnd.app.routers.__init__.import_app_modules_consultas_router_consultas_router",
+      "label": "app.modules.consultas.router.router",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\routers\\__init__.py",
+      "source_location": "L26",
+      "file_type": "code"
+    },
+    {
       "id": "_backEnd.app.routers.__init__.health_check",
       "label": "health_check",
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\routers\\__init__.py",
-      "source_location": "L38",
+      "source_location": "L39",
       "file_type": "code"
     },
     {
@@ -20257,6 +20860,465 @@
       "description": "Python module __init__.py",
       "source_file": "_backEnd\\app\\shared\\__init__.py",
       "source_location": "L1",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.shared.external.__init__",
+      "label": "__init__",
+      "type": "module",
+      "description": "Python module __init__.py",
+      "source_file": "_backEnd\\app\\shared\\external\\__init__.py",
+      "source_location": "L1",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.shared.external.jsonpe.__init__",
+      "label": "__init__",
+      "type": "module",
+      "description": "Python module __init__.py",
+      "source_file": "_backEnd\\app\\shared\\external\\jsonpe\\__init__.py",
+      "source_location": "L1",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.shared.external.jsonpe.__init__.import_app_shared_external_jsonpe_client_JsonPeClient",
+      "label": "app.shared.external.jsonpe.client.JsonPeClient",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\shared\\external\\jsonpe\\__init__.py",
+      "source_location": "L6",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.shared.external.jsonpe.__init__.import_app_shared_external_jsonpe_exceptions_JsonPeError",
+      "label": "app.shared.external.jsonpe.exceptions.JsonPeError",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\shared\\external\\jsonpe\\__init__.py",
+      "source_location": "L7",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.shared.external.jsonpe.__init__.import_app_shared_external_jsonpe_exceptions_JsonPeNotFound",
+      "label": "app.shared.external.jsonpe.exceptions.JsonPeNotFound",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\shared\\external\\jsonpe\\__init__.py",
+      "source_location": "L7",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.shared.external.jsonpe.__init__.import_app_shared_external_jsonpe_exceptions_JsonPeTimeout",
+      "label": "app.shared.external.jsonpe.exceptions.JsonPeTimeout",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\shared\\external\\jsonpe\\__init__.py",
+      "source_location": "L7",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.shared.external.jsonpe.__init__.import_app_shared_external_jsonpe_exceptions_JsonPeUnavailable",
+      "label": "app.shared.external.jsonpe.exceptions.JsonPeUnavailable",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\shared\\external\\jsonpe\\__init__.py",
+      "source_location": "L7",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.shared.external.jsonpe.client",
+      "label": "client",
+      "type": "module",
+      "description": "Python module client.py",
+      "source_file": "_backEnd\\app\\shared\\external\\jsonpe\\client.py",
+      "source_location": "L1",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.shared.external.jsonpe.client.import_httpx",
+      "label": "httpx",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\shared\\external\\jsonpe\\client.py",
+      "source_location": "L13",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.shared.external.jsonpe.client.import_pydantic_SecretStr",
+      "label": "pydantic.SecretStr",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\shared\\external\\jsonpe\\client.py",
+      "source_location": "L14",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.shared.external.jsonpe.client.import_app_shared_external_jsonpe_exceptions_JsonPeError",
+      "label": "app.shared.external.jsonpe.exceptions.JsonPeError",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\shared\\external\\jsonpe\\client.py",
+      "source_location": "L16",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.shared.external.jsonpe.client.import_app_shared_external_jsonpe_exceptions_JsonPeNotFound",
+      "label": "app.shared.external.jsonpe.exceptions.JsonPeNotFound",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\shared\\external\\jsonpe\\client.py",
+      "source_location": "L16",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.shared.external.jsonpe.client.import_app_shared_external_jsonpe_exceptions_JsonPeTimeout",
+      "label": "app.shared.external.jsonpe.exceptions.JsonPeTimeout",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\shared\\external\\jsonpe\\client.py",
+      "source_location": "L16",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.shared.external.jsonpe.client.import_app_shared_external_jsonpe_exceptions_JsonPeUnavailable",
+      "label": "app.shared.external.jsonpe.exceptions.JsonPeUnavailable",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\shared\\external\\jsonpe\\client.py",
+      "source_location": "L16",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.shared.external.jsonpe.client.import_app_shared_external_jsonpe_schemas_JsonPeDniData",
+      "label": "app.shared.external.jsonpe.schemas.JsonPeDniData",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\shared\\external\\jsonpe\\client.py",
+      "source_location": "L22",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.shared.external.jsonpe.client.import_app_shared_external_jsonpe_schemas_JsonPeDniRucData",
+      "label": "app.shared.external.jsonpe.schemas.JsonPeDniRucData",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\shared\\external\\jsonpe\\client.py",
+      "source_location": "L22",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.shared.external.jsonpe.client.import_app_shared_external_jsonpe_schemas_JsonPeEnvelope",
+      "label": "app.shared.external.jsonpe.schemas.JsonPeEnvelope",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\shared\\external\\jsonpe\\client.py",
+      "source_location": "L22",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.shared.external.jsonpe.client.import_app_shared_external_jsonpe_schemas_JsonPeRucData",
+      "label": "app.shared.external.jsonpe.schemas.JsonPeRucData",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\shared\\external\\jsonpe\\client.py",
+      "source_location": "L22",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.shared.external.jsonpe.client.JsonPeClient",
+      "label": "JsonPeClient",
+      "type": "class",
+      "description": "",
+      "source_file": "_backEnd\\app\\shared\\external\\jsonpe\\client.py",
+      "source_location": "L30",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.shared.external.jsonpe.client.JsonPeClient.__init__",
+      "label": "__init__",
+      "type": "function",
+      "description": "",
+      "source_file": "_backEnd\\app\\shared\\external\\jsonpe\\client.py",
+      "source_location": "L33",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.shared.external.jsonpe.client.JsonPeClient.consultar_dni",
+      "label": "consultar_dni",
+      "type": "function",
+      "description": "",
+      "source_file": "_backEnd\\app\\shared\\external\\jsonpe\\client.py",
+      "source_location": "L46",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.shared.external.jsonpe.client.JsonPeClient.consultar_ruc",
+      "label": "consultar_ruc",
+      "type": "function",
+      "description": "",
+      "source_file": "_backEnd\\app\\shared\\external\\jsonpe\\client.py",
+      "source_location": "L51",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.shared.external.jsonpe.client.JsonPeClient.dni_tiene_ruc",
+      "label": "dni_tiene_ruc",
+      "type": "function",
+      "description": "",
+      "source_file": "_backEnd\\app\\shared\\external\\jsonpe\\client.py",
+      "source_location": "L56",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.shared.external.jsonpe.client.JsonPeClient._headers",
+      "label": "_headers",
+      "type": "function",
+      "description": "",
+      "source_file": "_backEnd\\app\\shared\\external\\jsonpe\\client.py",
+      "source_location": "L63",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.shared.external.jsonpe.client.JsonPeClient._post",
+      "label": "_post",
+      "type": "function",
+      "description": "",
+      "source_file": "_backEnd\\app\\shared\\external\\jsonpe\\client.py",
+      "source_location": "L70",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.shared.external.jsonpe.dependencies",
+      "label": "dependencies",
+      "type": "module",
+      "description": "Python module dependencies.py",
+      "source_file": "_backEnd\\app\\shared\\external\\jsonpe\\dependencies.py",
+      "source_location": "L1",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.shared.external.jsonpe.dependencies.import_functools_lru_cache",
+      "label": "functools.lru_cache",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\shared\\external\\jsonpe\\dependencies.py",
+      "source_location": "L6",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.shared.external.jsonpe.dependencies.import_app_core_config_settings",
+      "label": "app.core.config.settings",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\shared\\external\\jsonpe\\dependencies.py",
+      "source_location": "L8",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.shared.external.jsonpe.dependencies.import_app_shared_external_jsonpe_client_JsonPeClient",
+      "label": "app.shared.external.jsonpe.client.JsonPeClient",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\shared\\external\\jsonpe\\dependencies.py",
+      "source_location": "L9",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.shared.external.jsonpe.dependencies._build_client",
+      "label": "_build_client",
+      "type": "function",
+      "description": "",
+      "source_file": "_backEnd\\app\\shared\\external\\jsonpe\\dependencies.py",
+      "source_location": "L13",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.shared.external.jsonpe.dependencies.get_jsonpe_client",
+      "label": "get_jsonpe_client",
+      "type": "function",
+      "description": "",
+      "source_file": "_backEnd\\app\\shared\\external\\jsonpe\\dependencies.py",
+      "source_location": "L22",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.shared.external.jsonpe.exceptions",
+      "label": "exceptions",
+      "type": "module",
+      "description": "Python module exceptions.py",
+      "source_file": "_backEnd\\app\\shared\\external\\jsonpe\\exceptions.py",
+      "source_location": "L1",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.shared.external.jsonpe.exceptions.import_http_HTTPStatus",
+      "label": "http.HTTPStatus",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\shared\\external\\jsonpe\\exceptions.py",
+      "source_location": "L7",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.shared.external.jsonpe.exceptions.JsonPeError",
+      "label": "JsonPeError",
+      "type": "class",
+      "description": "",
+      "source_file": "_backEnd\\app\\shared\\external\\jsonpe\\exceptions.py",
+      "source_location": "L10",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.shared.external.jsonpe.exceptions.JsonPeError.__init__",
+      "label": "__init__",
+      "type": "function",
+      "description": "",
+      "source_file": "_backEnd\\app\\shared\\external\\jsonpe\\exceptions.py",
+      "source_location": "L13",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.shared.external.jsonpe.exceptions.JsonPeUnavailable",
+      "label": "JsonPeUnavailable",
+      "type": "class",
+      "description": "",
+      "source_file": "_backEnd\\app\\shared\\external\\jsonpe\\exceptions.py",
+      "source_location": "L19",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.shared.external.jsonpe.exceptions.JsonPeUnavailable.__init__",
+      "label": "__init__",
+      "type": "function",
+      "description": "",
+      "source_file": "_backEnd\\app\\shared\\external\\jsonpe\\exceptions.py",
+      "source_location": "L22",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.shared.external.jsonpe.exceptions.JsonPeNotFound",
+      "label": "JsonPeNotFound",
+      "type": "class",
+      "description": "",
+      "source_file": "_backEnd\\app\\shared\\external\\jsonpe\\exceptions.py",
+      "source_location": "L26",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.shared.external.jsonpe.exceptions.JsonPeNotFound.__init__",
+      "label": "__init__",
+      "type": "function",
+      "description": "",
+      "source_file": "_backEnd\\app\\shared\\external\\jsonpe\\exceptions.py",
+      "source_location": "L29",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.shared.external.jsonpe.exceptions.JsonPeTimeout",
+      "label": "JsonPeTimeout",
+      "type": "class",
+      "description": "",
+      "source_file": "_backEnd\\app\\shared\\external\\jsonpe\\exceptions.py",
+      "source_location": "L33",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.shared.external.jsonpe.exceptions.JsonPeTimeout.__init__",
+      "label": "__init__",
+      "type": "function",
+      "description": "",
+      "source_file": "_backEnd\\app\\shared\\external\\jsonpe\\exceptions.py",
+      "source_location": "L36",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.shared.external.jsonpe.schemas",
+      "label": "schemas",
+      "type": "module",
+      "description": "Python module schemas.py",
+      "source_file": "_backEnd\\app\\shared\\external\\jsonpe\\schemas.py",
+      "source_location": "L1",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.shared.external.jsonpe.schemas.import_typing_Generic",
+      "label": "typing.Generic",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\shared\\external\\jsonpe\\schemas.py",
+      "source_location": "L7",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.shared.external.jsonpe.schemas.import_typing_Optional",
+      "label": "typing.Optional",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\shared\\external\\jsonpe\\schemas.py",
+      "source_location": "L7",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.shared.external.jsonpe.schemas.import_typing_TypeVar",
+      "label": "typing.TypeVar",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\shared\\external\\jsonpe\\schemas.py",
+      "source_location": "L7",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.shared.external.jsonpe.schemas.import_pydantic_BaseModel",
+      "label": "pydantic.BaseModel",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\shared\\external\\jsonpe\\schemas.py",
+      "source_location": "L9",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.shared.external.jsonpe.schemas.import_pydantic_Field",
+      "label": "pydantic.Field",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\shared\\external\\jsonpe\\schemas.py",
+      "source_location": "L9",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.shared.external.jsonpe.schemas.JsonPeEnvelope",
+      "label": "JsonPeEnvelope",
+      "type": "class",
+      "description": "",
+      "source_file": "_backEnd\\app\\shared\\external\\jsonpe\\schemas.py",
+      "source_location": "L14",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.shared.external.jsonpe.schemas.JsonPeDniData",
+      "label": "JsonPeDniData",
+      "type": "class",
+      "description": "",
+      "source_file": "_backEnd\\app\\shared\\external\\jsonpe\\schemas.py",
+      "source_location": "L22",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.shared.external.jsonpe.schemas.JsonPeRucData",
+      "label": "JsonPeRucData",
+      "type": "class",
+      "description": "",
+      "source_file": "_backEnd\\app\\shared\\external\\jsonpe\\schemas.py",
+      "source_location": "L36",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.shared.external.jsonpe.schemas.JsonPeDniRucData",
+      "label": "JsonPeDniRucData",
+      "type": "class",
+      "description": "",
+      "source_file": "_backEnd\\app\\shared\\external\\jsonpe\\schemas.py",
+      "source_location": "L51",
       "file_type": "code"
     },
     {
@@ -22573,6 +23635,159 @@
       "file_type": "code"
     },
     {
+      "id": "_backEnd.tests.integration.test_consultas_router",
+      "label": "test_consultas_router",
+      "type": "module",
+      "description": "Python module test_consultas_router.py",
+      "source_file": "_backEnd\\tests\\integration\\test_consultas_router.py",
+      "source_location": "L1",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.tests.integration.test_consultas_router.import_unittest_mock_AsyncMock",
+      "label": "unittest.mock.AsyncMock",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\tests\\integration\\test_consultas_router.py",
+      "source_location": "L6",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.tests.integration.test_consultas_router.import_unittest_mock_MagicMock",
+      "label": "unittest.mock.MagicMock",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\tests\\integration\\test_consultas_router.py",
+      "source_location": "L6",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.tests.integration.test_consultas_router.import_unittest_mock_patch",
+      "label": "unittest.mock.patch",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\tests\\integration\\test_consultas_router.py",
+      "source_location": "L6",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.tests.integration.test_consultas_router.import_httpx",
+      "label": "httpx",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\tests\\integration\\test_consultas_router.py",
+      "source_location": "L8",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.tests.integration.test_consultas_router.import_pytest",
+      "label": "pytest",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\tests\\integration\\test_consultas_router.py",
+      "source_location": "L9",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.tests.integration.test_consultas_router.import_pydantic_SecretStr",
+      "label": "pydantic.SecretStr",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\tests\\integration\\test_consultas_router.py",
+      "source_location": "L10",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.tests.integration.test_consultas_router.import_app_shared_external_jsonpe_client_JsonPeClient",
+      "label": "app.shared.external.jsonpe.client.JsonPeClient",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\tests\\integration\\test_consultas_router.py",
+      "source_location": "L12",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.tests.integration.test_consultas_router.TestConsultasRouter",
+      "label": "TestConsultasRouter",
+      "type": "class",
+      "description": "",
+      "source_file": "_backEnd\\tests\\integration\\test_consultas_router.py",
+      "source_location": "L16",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.tests.integration.test_consultas_router.TestConsultasRouter.test_unauthenticated_returns_401",
+      "label": "test_unauthenticated_returns_401",
+      "type": "function",
+      "description": "",
+      "source_file": "_backEnd\\tests\\integration\\test_consultas_router.py",
+      "source_location": "L18",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.tests.integration.test_consultas_router.TestConsultasRouter.test_dni_formato_invalido_returns_422",
+      "label": "test_dni_formato_invalido_returns_422",
+      "type": "function",
+      "description": "",
+      "source_file": "_backEnd\\tests\\integration\\test_consultas_router.py",
+      "source_location": "L27",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.tests.integration.test_consultas_router.TestConsultasRouter.test_dni_success_flujo_completo",
+      "label": "test_dni_success_flujo_completo",
+      "type": "function",
+      "description": "",
+      "source_file": "_backEnd\\tests\\integration\\test_consultas_router.py",
+      "source_location": "L41",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.tests.integration.test_consultas_router.TestConsultasRouter.test_dni_success_flujo_completo.import_app_shared_external_jsonpe_schemas_JsonPeDniData",
+      "label": "app.shared.external.jsonpe.schemas.JsonPeDniData",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\tests\\integration\\test_consultas_router.py",
+      "source_location": "L47",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.tests.integration.test_consultas_router.TestConsultasRouter.test_dni_success_flujo_completo.import_app_infrastructure_cache_redis_client_redis_client",
+      "label": "app.infrastructure.cache.redis_client.redis_client",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\tests\\integration\\test_consultas_router.py",
+      "source_location": "L59",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.tests.integration.test_consultas_router.TestConsultasRouter.test_dni_no_encontrado_returns_404",
+      "label": "test_dni_no_encontrado_returns_404",
+      "type": "function",
+      "description": "",
+      "source_file": "_backEnd\\tests\\integration\\test_consultas_router.py",
+      "source_location": "L79",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.tests.integration.test_consultas_router.TestConsultasRouter.test_dni_no_encontrado_returns_404.import_app_shared_external_jsonpe_exceptions_JsonPeNotFound",
+      "label": "app.shared.external.jsonpe.exceptions.JsonPeNotFound",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\tests\\integration\\test_consultas_router.py",
+      "source_location": "L84",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.tests.integration.test_consultas_router.TestConsultasRouter.test_dni_no_encontrado_returns_404.import_app_infrastructure_cache_redis_client_redis_client",
+      "label": "app.infrastructure.cache.redis_client.redis_client",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\tests\\integration\\test_consultas_router.py",
+      "source_location": "L86",
+      "file_type": "code"
+    },
+    {
       "id": "_backEnd.tests.integration.test_db_connection",
       "label": "test_db_connection",
       "type": "module",
@@ -24310,6 +25525,249 @@
       "file_type": "code"
     },
     {
+      "id": "_backEnd.tests.unit.test_consultas_service",
+      "label": "test_consultas_service",
+      "type": "module",
+      "description": "Python module test_consultas_service.py",
+      "source_file": "_backEnd\\tests\\unit\\test_consultas_service.py",
+      "source_location": "L1",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.tests.unit.test_consultas_service.import_json",
+      "label": "json",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\tests\\unit\\test_consultas_service.py",
+      "source_location": "L6",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.tests.unit.test_consultas_service.import_unittest_mock_AsyncMock",
+      "label": "unittest.mock.AsyncMock",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\tests\\unit\\test_consultas_service.py",
+      "source_location": "L7",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.tests.unit.test_consultas_service.import_unittest_mock_MagicMock",
+      "label": "unittest.mock.MagicMock",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\tests\\unit\\test_consultas_service.py",
+      "source_location": "L7",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.tests.unit.test_consultas_service.import_pytest",
+      "label": "pytest",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\tests\\unit\\test_consultas_service.py",
+      "source_location": "L9",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.tests.unit.test_consultas_service.import_pydantic_SecretStr",
+      "label": "pydantic.SecretStr",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\tests\\unit\\test_consultas_service.py",
+      "source_location": "L10",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.tests.unit.test_consultas_service.import_app_core_exceptions_BusinessRuleError",
+      "label": "app.core.exceptions.BusinessRuleError",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\tests\\unit\\test_consultas_service.py",
+      "source_location": "L12",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.tests.unit.test_consultas_service.import_app_core_exceptions_NotFoundError",
+      "label": "app.core.exceptions.NotFoundError",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\tests\\unit\\test_consultas_service.py",
+      "source_location": "L12",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.tests.unit.test_consultas_service.import_app_modules_consultas_schemas_DocumentoLookupResult",
+      "label": "app.modules.consultas.schemas.DocumentoLookupResult",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\tests\\unit\\test_consultas_service.py",
+      "source_location": "L13",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.tests.unit.test_consultas_service.import_app_modules_consultas_service_ConsultasService",
+      "label": "app.modules.consultas.service.ConsultasService",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\tests\\unit\\test_consultas_service.py",
+      "source_location": "L14",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.tests.unit.test_consultas_service.import_app_shared_external_jsonpe_client_JsonPeClient",
+      "label": "app.shared.external.jsonpe.client.JsonPeClient",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\tests\\unit\\test_consultas_service.py",
+      "source_location": "L15",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.tests.unit.test_consultas_service.import_app_shared_external_jsonpe_exceptions_JsonPeNotFound",
+      "label": "app.shared.external.jsonpe.exceptions.JsonPeNotFound",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\tests\\unit\\test_consultas_service.py",
+      "source_location": "L16",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.tests.unit.test_consultas_service.import_app_shared_external_jsonpe_exceptions_JsonPeUnavailable",
+      "label": "app.shared.external.jsonpe.exceptions.JsonPeUnavailable",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\tests\\unit\\test_consultas_service.py",
+      "source_location": "L16",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.tests.unit.test_consultas_service.import_app_shared_external_jsonpe_schemas_JsonPeDniData",
+      "label": "app.shared.external.jsonpe.schemas.JsonPeDniData",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\tests\\unit\\test_consultas_service.py",
+      "source_location": "L17",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.tests.unit.test_consultas_service.import_app_shared_external_jsonpe_schemas_JsonPeRucData",
+      "label": "app.shared.external.jsonpe.schemas.JsonPeRucData",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\tests\\unit\\test_consultas_service.py",
+      "source_location": "L17",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.tests.unit.test_consultas_service.TestConsultasService",
+      "label": "TestConsultasService",
+      "type": "class",
+      "description": "",
+      "source_file": "_backEnd\\tests\\unit\\test_consultas_service.py",
+      "source_location": "L21",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.tests.unit.test_consultas_service.TestConsultasService._build",
+      "label": "_build",
+      "type": "function",
+      "description": "",
+      "source_file": "_backEnd\\tests\\unit\\test_consultas_service.py",
+      "source_location": "L23",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.tests.unit.test_consultas_service.TestConsultasService.test_dni_formato_invalido_raises",
+      "label": "test_dni_formato_invalido_raises",
+      "type": "function",
+      "description": "",
+      "source_file": "_backEnd\\tests\\unit\\test_consultas_service.py",
+      "source_location": "L51",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.tests.unit.test_consultas_service.TestConsultasService.test_ruc_formato_invalido_raises",
+      "label": "test_ruc_formato_invalido_raises",
+      "type": "function",
+      "description": "",
+      "source_file": "_backEnd\\tests\\unit\\test_consultas_service.py",
+      "source_location": "L56",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.tests.unit.test_consultas_service.TestConsultasService.test_dni_cache_hit_no_llama_api",
+      "label": "test_dni_cache_hit_no_llama_api",
+      "type": "function",
+      "description": "",
+      "source_file": "_backEnd\\tests\\unit\\test_consultas_service.py",
+      "source_location": "L61",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.tests.unit.test_consultas_service.TestConsultasService.test_dni_cache_miss_llama_api_y_guarda_cache",
+      "label": "test_dni_cache_miss_llama_api_y_guarda_cache",
+      "type": "function",
+      "description": "",
+      "source_file": "_backEnd\\tests\\unit\\test_consultas_service.py",
+      "source_location": "L82",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.tests.unit.test_consultas_service.TestConsultasService.test_ruc_empresa_se_mapea_a_razon_social",
+      "label": "test_ruc_empresa_se_mapea_a_razon_social",
+      "type": "function",
+      "description": "",
+      "source_file": "_backEnd\\tests\\unit\\test_consultas_service.py",
+      "source_location": "L105",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.tests.unit.test_consultas_service.TestConsultasService.test_ruc_persona_natural_se_mapea_a_nombres_apellidos",
+      "label": "test_ruc_persona_natural_se_mapea_a_nombres_apellidos",
+      "type": "function",
+      "description": "",
+      "source_file": "_backEnd\\tests\\unit\\test_consultas_service.py",
+      "source_location": "L123",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.tests.unit.test_consultas_service.TestConsultasService.test_ya_tiene_datos_true_si_bd_tiene_fiscal",
+      "label": "test_ya_tiene_datos_true_si_bd_tiene_fiscal",
+      "type": "function",
+      "description": "",
+      "source_file": "_backEnd\\tests\\unit\\test_consultas_service.py",
+      "source_location": "L140",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.tests.unit.test_consultas_service.TestConsultasService.test_jsonpe_unavailable_propaga_como_external_error",
+      "label": "test_jsonpe_unavailable_propaga_como_external_error",
+      "type": "function",
+      "description": "",
+      "source_file": "_backEnd\\tests\\unit\\test_consultas_service.py",
+      "source_location": "L153",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.tests.unit.test_consultas_service.TestConsultasService.test_jsonpe_unavailable_propaga_como_external_error.import_app_core_exceptions_ExternalServiceError",
+      "label": "app.core.exceptions.ExternalServiceError",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\tests\\unit\\test_consultas_service.py",
+      "source_location": "L158",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.tests.unit.test_consultas_service.TestConsultasService.test_jsonpe_not_found_propaga_como_not_found",
+      "label": "test_jsonpe_not_found_propaga_como_not_found",
+      "type": "function",
+      "description": "",
+      "source_file": "_backEnd\\tests\\unit\\test_consultas_service.py",
+      "source_location": "L162",
+      "file_type": "code"
+    },
+    {
       "id": "_backEnd.tests.unit.test_inventory_service",
       "label": "test_inventory_service",
       "type": "module",
@@ -24784,6 +26242,186 @@
       "description": "",
       "source_file": "_backEnd\\tests\\unit\\test_inventory_service.py",
       "source_location": "L439",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.tests.unit.test_jsonpe_client",
+      "label": "test_jsonpe_client",
+      "type": "module",
+      "description": "Python module test_jsonpe_client.py",
+      "source_file": "_backEnd\\tests\\unit\\test_jsonpe_client.py",
+      "source_location": "L1",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.tests.unit.test_jsonpe_client.import_typing_Any",
+      "label": "typing.Any",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\tests\\unit\\test_jsonpe_client.py",
+      "source_location": "L6",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.tests.unit.test_jsonpe_client.import_httpx",
+      "label": "httpx",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\tests\\unit\\test_jsonpe_client.py",
+      "source_location": "L8",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.tests.unit.test_jsonpe_client.import_pytest",
+      "label": "pytest",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\tests\\unit\\test_jsonpe_client.py",
+      "source_location": "L9",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.tests.unit.test_jsonpe_client.import_pydantic_SecretStr",
+      "label": "pydantic.SecretStr",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\tests\\unit\\test_jsonpe_client.py",
+      "source_location": "L10",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.tests.unit.test_jsonpe_client.import_unittest_mock_AsyncMock",
+      "label": "unittest.mock.AsyncMock",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\tests\\unit\\test_jsonpe_client.py",
+      "source_location": "L11",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.tests.unit.test_jsonpe_client.import_unittest_mock_patch",
+      "label": "unittest.mock.patch",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\tests\\unit\\test_jsonpe_client.py",
+      "source_location": "L11",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.tests.unit.test_jsonpe_client.import_app_shared_external_jsonpe_client_JsonPeClient",
+      "label": "app.shared.external.jsonpe.client.JsonPeClient",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\tests\\unit\\test_jsonpe_client.py",
+      "source_location": "L13",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.tests.unit.test_jsonpe_client.import_app_shared_external_jsonpe_exceptions_JsonPeNotFound",
+      "label": "app.shared.external.jsonpe.exceptions.JsonPeNotFound",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\tests\\unit\\test_jsonpe_client.py",
+      "source_location": "L14",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.tests.unit.test_jsonpe_client.import_app_shared_external_jsonpe_exceptions_JsonPeTimeout",
+      "label": "app.shared.external.jsonpe.exceptions.JsonPeTimeout",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\tests\\unit\\test_jsonpe_client.py",
+      "source_location": "L14",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.tests.unit.test_jsonpe_client.import_app_shared_external_jsonpe_exceptions_JsonPeUnavailable",
+      "label": "app.shared.external.jsonpe.exceptions.JsonPeUnavailable",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\tests\\unit\\test_jsonpe_client.py",
+      "source_location": "L14",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.tests.unit.test_jsonpe_client.TestJsonPeClient",
+      "label": "TestJsonPeClient",
+      "type": "class",
+      "description": "",
+      "source_file": "_backEnd\\tests\\unit\\test_jsonpe_client.py",
+      "source_location": "L22",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.tests.unit.test_jsonpe_client.TestJsonPeClient._client",
+      "label": "_client",
+      "type": "function",
+      "description": "",
+      "source_file": "_backEnd\\tests\\unit\\test_jsonpe_client.py",
+      "source_location": "L24",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.tests.unit.test_jsonpe_client.TestJsonPeClient.test_consultar_dni_success",
+      "label": "test_consultar_dni_success",
+      "type": "function",
+      "description": "",
+      "source_file": "_backEnd\\tests\\unit\\test_jsonpe_client.py",
+      "source_location": "L31",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.tests.unit.test_jsonpe_client.TestJsonPeClient.test_consultar_ruc_success",
+      "label": "test_consultar_ruc_success",
+      "type": "function",
+      "description": "",
+      "source_file": "_backEnd\\tests\\unit\\test_jsonpe_client.py",
+      "source_location": "L54",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.tests.unit.test_jsonpe_client.TestJsonPeClient.test_consultar_dni_not_found_raises",
+      "label": "test_consultar_dni_not_found_raises",
+      "type": "function",
+      "description": "",
+      "source_file": "_backEnd\\tests\\unit\\test_jsonpe_client.py",
+      "source_location": "L78",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.tests.unit.test_jsonpe_client.TestJsonPeClient.test_consultar_ruc_timeout_raises_unavailable",
+      "label": "test_consultar_ruc_timeout_raises_unavailable",
+      "type": "function",
+      "description": "",
+      "source_file": "_backEnd\\tests\\unit\\test_jsonpe_client.py",
+      "source_location": "L88",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.tests.unit.test_jsonpe_client.TestJsonPeClient.test_consultar_dni_5xx_raises_unavailable",
+      "label": "test_consultar_dni_5xx_raises_unavailable",
+      "type": "function",
+      "description": "",
+      "source_file": "_backEnd\\tests\\unit\\test_jsonpe_client.py",
+      "source_location": "L98",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.tests.unit.test_jsonpe_client.TestJsonPeClient.test_empty_token_raises_unavailable_without_call",
+      "label": "test_empty_token_raises_unavailable_without_call",
+      "type": "function",
+      "description": "",
+      "source_file": "_backEnd\\tests\\unit\\test_jsonpe_client.py",
+      "source_location": "L105",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.tests.unit.test_jsonpe_client.TestJsonPeClient.test_authorization_header_sent",
+      "label": "test_authorization_header_sent",
+      "type": "function",
+      "description": "",
+      "source_file": "_backEnd\\tests\\unit\\test_jsonpe_client.py",
+      "source_location": "L112",
       "file_type": "code"
     },
     {
@@ -29031,7 +30669,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\cart\\components\\PaymentModal.tsx",
-      "source_location": "L51",
+      "source_location": "L53",
       "file_type": "code"
     },
     {
@@ -29040,7 +30678,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\cart\\components\\PaymentModal.tsx",
-      "source_location": "L56",
+      "source_location": "L58",
       "file_type": "code"
     },
     {
@@ -29049,7 +30687,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\cart\\components\\PaymentModal.tsx",
-      "source_location": "L67",
+      "source_location": "L69",
       "file_type": "code"
     },
     {
@@ -29058,7 +30696,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\cart\\components\\PaymentModal.tsx",
-      "source_location": "L81",
+      "source_location": "L83",
       "file_type": "code"
     },
     {
@@ -29067,7 +30705,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\cart\\components\\PaymentModal.tsx",
-      "source_location": "L95",
+      "source_location": "L97",
       "file_type": "code"
     },
     {
@@ -29076,7 +30714,7 @@
       "type": "interface",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\cart\\components\\PaymentModal.tsx",
-      "source_location": "L35",
+      "source_location": "L37",
       "file_type": "code"
     },
     {
@@ -29085,7 +30723,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\cart\\components\\PaymentModal.tsx",
-      "source_location": "L174",
+      "source_location": "L182",
       "file_type": "code"
     },
     {
@@ -29094,7 +30732,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\cart\\components\\PaymentModal.tsx",
-      "source_location": "L195",
+      "source_location": "L203",
       "file_type": "code"
     },
     {
@@ -29103,7 +30741,16 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\cart\\components\\PaymentModal.tsx",
-      "source_location": "L222",
+      "source_location": "L230",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.cart.components.PaymentModal.handleConsultarDocumento",
+      "label": "handleConsultarDocumento",
+      "type": "function",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\cart\\components\\PaymentModal.tsx",
+      "source_location": "L247",
       "file_type": "code"
     },
     {
@@ -29112,7 +30759,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\cart\\components\\PaymentModal.tsx",
-      "source_location": "L252",
+      "source_location": "L281",
       "file_type": "code"
     },
     {
@@ -29121,7 +30768,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\cart\\components\\PaymentModal.tsx",
-      "source_location": "L259",
+      "source_location": "L288",
       "file_type": "code"
     },
     {
@@ -29239,6 +30886,24 @@
       "description": "",
       "source_file": "_frontEnd\\src\\features\\cart\\components\\PaymentModal.tsx",
       "source_location": "L28",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.cart.components.PaymentModal.import_useConsultarDocumento",
+      "label": "@/features/consultas/hooks/useConsultarDocumento",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\cart\\components\\PaymentModal.tsx",
+      "source_location": "L32",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.cart.components.PaymentModal.import_types",
+      "label": "@/features/consultas/types",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\cart\\components\\PaymentModal.tsx",
+      "source_location": "L33",
       "file_type": "code"
     },
     {
@@ -30193,6 +31858,114 @@
       "description": "",
       "source_file": "_frontEnd\\src\\features\\config\\pages\\AdminConfigPage.tsx",
       "source_location": "L6",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.consultas.api.consultasApi",
+      "label": "consultasApi.ts",
+      "type": "module",
+      "description": "TypeScript module consultasApi.ts",
+      "source_file": "_frontEnd\\src\\features\\consultas\\api\\consultasApi.ts",
+      "source_location": "L1",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.consultas.api.consultasApi.import_axios",
+      "label": "@/lib/axios",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\consultas\\api\\consultasApi.ts",
+      "source_location": "L4",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.consultas.api.consultasApi.import_types",
+      "label": "../types",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\consultas\\api\\consultasApi.ts",
+      "source_location": "L5",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.consultas.hooks.useConsultarDocumento",
+      "label": "useConsultarDocumento.ts",
+      "type": "module",
+      "description": "TypeScript module useConsultarDocumento.ts",
+      "source_file": "_frontEnd\\src\\features\\consultas\\hooks\\useConsultarDocumento.ts",
+      "source_location": "L1",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.consultas.hooks.useConsultarDocumento.useConsultarDocumento",
+      "label": "useConsultarDocumento",
+      "type": "function",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\consultas\\hooks\\useConsultarDocumento.ts",
+      "source_location": "L9",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.consultas.hooks.useConsultarDocumento.import_react_query",
+      "label": "@tanstack/react-query",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\consultas\\hooks\\useConsultarDocumento.ts",
+      "source_location": "L4",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.consultas.hooks.useConsultarDocumento.import_sonner",
+      "label": "sonner",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\consultas\\hooks\\useConsultarDocumento.ts",
+      "source_location": "L5",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.consultas.hooks.useConsultarDocumento.import_consultasApi",
+      "label": "../api/consultasApi",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\consultas\\hooks\\useConsultarDocumento.ts",
+      "source_location": "L6",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.consultas.hooks.useConsultarDocumento.import_types",
+      "label": "../types",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\consultas\\hooks\\useConsultarDocumento.ts",
+      "source_location": "L7",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.consultas.types",
+      "label": "types.ts",
+      "type": "module",
+      "description": "TypeScript module types.ts",
+      "source_file": "_frontEnd\\src\\features\\consultas\\types.ts",
+      "source_location": "L1",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.consultas.types.DocumentoLookupRequest",
+      "label": "DocumentoLookupRequest",
+      "type": "interface",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\consultas\\types.ts",
+      "source_location": "L7",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.consultas.types.DocumentoLookupResult",
+      "label": "DocumentoLookupResult",
+      "type": "interface",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\consultas\\types.ts",
+      "source_location": "L12",
       "file_type": "code"
     },
     {
@@ -32046,7 +33819,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\orders\\pages\\CustomerOrderDetailPage.tsx",
-      "source_location": "L38",
+      "source_location": "L39",
       "file_type": "code"
     },
     {
@@ -32055,7 +33828,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\orders\\pages\\CustomerOrderDetailPage.tsx",
-      "source_location": "L45",
+      "source_location": "L46",
       "file_type": "code"
     },
     {
@@ -32064,7 +33837,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\orders\\pages\\CustomerOrderDetailPage.tsx",
-      "source_location": "L63",
+      "source_location": "L65",
       "file_type": "code"
     },
     {
@@ -32073,7 +33846,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\orders\\pages\\CustomerOrderDetailPage.tsx",
-      "source_location": "L90",
+      "source_location": "L92",
       "file_type": "code"
     },
     {
@@ -32082,7 +33855,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\orders\\pages\\CustomerOrderDetailPage.tsx",
-      "source_location": "L116",
+      "source_location": "L126",
       "file_type": "code"
     },
     {
@@ -32191,6 +33964,15 @@
       "description": "",
       "source_file": "_frontEnd\\src\\features\\orders\\pages\\CustomerOrderDetailPage.tsx",
       "source_location": "L19",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.orders.pages.CustomerOrderDetailPage.import_useProfile",
+      "label": "@/features/auth/hooks/useProfile",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\orders\\pages\\CustomerOrderDetailPage.tsx",
+      "source_location": "L20",
       "file_type": "code"
     },
     {
@@ -34912,6 +36694,123 @@
       "file_type": "code"
     },
     {
+      "id": "_frontEnd.src.features.profile.components.DatosFiscalesSection",
+      "label": "DatosFiscalesSection.tsx",
+      "type": "module",
+      "description": "TypeScript module DatosFiscalesSection.tsx",
+      "source_file": "_frontEnd\\src\\features\\profile\\components\\DatosFiscalesSection.tsx",
+      "source_location": "L1",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.profile.components.DatosFiscalesSection.DatosFiscalesSection",
+      "label": "DatosFiscalesSection",
+      "type": "function",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\profile\\components\\DatosFiscalesSection.tsx",
+      "source_location": "L27",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.profile.components.DatosFiscalesSection.FormState",
+      "label": "FormState",
+      "type": "interface",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\profile\\components\\DatosFiscalesSection.tsx",
+      "source_location": "L18",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.profile.components.DatosFiscalesSection.handleConsultar",
+      "label": "handleConsultar",
+      "type": "function",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\profile\\components\\DatosFiscalesSection.tsx",
+      "source_location": "L66",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.profile.components.DatosFiscalesSection.handleGuardar",
+      "label": "handleGuardar",
+      "type": "function",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\profile\\components\\DatosFiscalesSection.tsx",
+      "source_location": "L94",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.profile.components.DatosFiscalesSection.handleCancelar",
+      "label": "handleCancelar",
+      "type": "function",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\profile\\components\\DatosFiscalesSection.tsx",
+      "source_location": "L129",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.profile.components.DatosFiscalesSection.import_react",
+      "label": "react",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\profile\\components\\DatosFiscalesSection.tsx",
+      "source_location": "L10",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.profile.components.DatosFiscalesSection.import_framer_motion",
+      "label": "framer-motion",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\profile\\components\\DatosFiscalesSection.tsx",
+      "source_location": "L11",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.profile.components.DatosFiscalesSection.import_lucide_react",
+      "label": "lucide-react",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\profile\\components\\DatosFiscalesSection.tsx",
+      "source_location": "L12",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.profile.components.DatosFiscalesSection.import_useProfile",
+      "label": "@/features/auth/hooks/useProfile",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\profile\\components\\DatosFiscalesSection.tsx",
+      "source_location": "L13",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.profile.components.DatosFiscalesSection.import_useConsultarDocumento",
+      "label": "@/features/consultas/hooks/useConsultarDocumento",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\profile\\components\\DatosFiscalesSection.tsx",
+      "source_location": "L14",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.profile.components.DatosFiscalesSection.import_types",
+      "label": "@/features/consultas/types",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\profile\\components\\DatosFiscalesSection.tsx",
+      "source_location": "L15",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.profile.components.DatosFiscalesSection.import_sonner",
+      "label": "sonner",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\profile\\components\\DatosFiscalesSection.tsx",
+      "source_location": "L16",
+      "file_type": "code"
+    },
+    {
       "id": "_frontEnd.src.features.profile.pages.ProfileInfoPage",
       "label": "ProfileInfoPage.tsx",
       "type": "module",
@@ -34926,7 +36825,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\profile\\pages\\ProfileInfoPage.tsx",
-      "source_location": "L76",
+      "source_location": "L77",
       "file_type": "code"
     },
     {
@@ -34935,7 +36834,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\profile\\pages\\ProfileInfoPage.tsx",
-      "source_location": "L123",
+      "source_location": "L124",
       "file_type": "code"
     },
     {
@@ -34944,7 +36843,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\profile\\pages\\ProfileInfoPage.tsx",
-      "source_location": "L132",
+      "source_location": "L133",
       "file_type": "code"
     },
     {
@@ -34953,7 +36852,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\profile\\pages\\ProfileInfoPage.tsx",
-      "source_location": "L207",
+      "source_location": "L208",
       "file_type": "code"
     },
     {
@@ -34962,7 +36861,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\profile\\pages\\ProfileInfoPage.tsx",
-      "source_location": "L244",
+      "source_location": "L245",
       "file_type": "code"
     },
     {
@@ -35011,12 +36910,21 @@
       "file_type": "code"
     },
     {
+      "id": "_frontEnd.src.features.profile.pages.ProfileInfoPage.import_DatosFiscalesSection",
+      "label": "@/features/profile/components/DatosFiscalesSection",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\profile\\pages\\ProfileInfoPage.tsx",
+      "source_location": "L6",
+      "file_type": "code"
+    },
+    {
       "id": "_frontEnd.src.features.profile.pages.ProfileInfoPage.import_zod",
       "label": "zod",
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\profile\\pages\\ProfileInfoPage.tsx",
-      "source_location": "L6",
+      "source_location": "L7",
       "file_type": "code"
     },
     {
@@ -42552,6 +44460,311 @@
       "relation": "contains"
     },
     {
+      "source": "_backEnd.app.modules.consultas.dependencies",
+      "target": "_backEnd.app.modules.consultas.dependencies.import_typing_Annotated",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.consultas.dependencies",
+      "target": "_backEnd.app.modules.consultas.dependencies.import_fastapi_Depends",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.consultas.dependencies",
+      "target": "_backEnd.app.modules.consultas.dependencies.import_redis_asyncio_Redis",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.consultas.dependencies",
+      "target": "_backEnd.app.modules.consultas.dependencies.import_sqlalchemy_ext_asyncio_AsyncSession",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.consultas.dependencies",
+      "target": "_backEnd.app.modules.consultas.dependencies.import_app_infrastructure_cache_redis_client_get_redis",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.consultas.dependencies",
+      "target": "_backEnd.app.modules.consultas.dependencies.import_app_infrastructure_database_session_get_db_session",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.consultas.dependencies",
+      "target": "_backEnd.app.modules.consultas.dependencies.import_app_modules_consultas_service_ConsultasService",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.consultas.dependencies",
+      "target": "_backEnd.app.modules.consultas.dependencies.import_app_security_dependencies_AuthUser",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.consultas.dependencies",
+      "target": "_backEnd.app.modules.consultas.dependencies.import_app_security_dependencies_get_current_user",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.consultas.dependencies",
+      "target": "_backEnd.app.modules.consultas.dependencies.import_app_shared_external_jsonpe_client_JsonPeClient",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.consultas.dependencies",
+      "target": "_backEnd.app.modules.consultas.dependencies.import_app_shared_external_jsonpe_dependencies_get_jsonpe_client",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.consultas.dependencies",
+      "target": "_backEnd.app.modules.consultas.dependencies.get_consultas_service",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.app.modules.consultas.router",
+      "target": "_backEnd.app.modules.consultas.router.import_typing_Annotated",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.consultas.router",
+      "target": "_backEnd.app.modules.consultas.router.import_sys",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.consultas.router",
+      "target": "_backEnd.app.modules.consultas.router.import_fastapi_APIRouter",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.consultas.router",
+      "target": "_backEnd.app.modules.consultas.router.import_fastapi_Depends",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.consultas.router",
+      "target": "_backEnd.app.modules.consultas.router.import_fastapi_Request",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.consultas.router",
+      "target": "_backEnd.app.modules.consultas.router.import_slowapi_Limiter",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.consultas.router",
+      "target": "_backEnd.app.modules.consultas.router.import_slowapi_util_get_remote_address",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.consultas.router",
+      "target": "_backEnd.app.modules.consultas.router.import_app_core_config_settings",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.consultas.router",
+      "target": "_backEnd.app.modules.consultas.router.import_app_modules_consultas_dependencies_ConsultasServiceDep",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.consultas.router",
+      "target": "_backEnd.app.modules.consultas.router.import_app_modules_consultas_schemas_DocumentoLookupRequest",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.consultas.router",
+      "target": "_backEnd.app.modules.consultas.router.import_app_modules_consultas_schemas_DocumentoLookupResult",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.consultas.router",
+      "target": "_backEnd.app.modules.consultas.router.import_app_security_dependencies_AuthUser",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.consultas.router",
+      "target": "_backEnd.app.modules.consultas.router.import_app_security_dependencies_get_current_user",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.consultas.router",
+      "target": "_backEnd.app.modules.consultas.router.import_app_shared_schemas_response_APIResponse",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.consultas.router",
+      "target": "_backEnd.app.modules.consultas.router.lookup_documento",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.app.modules.consultas.schemas",
+      "target": "_backEnd.app.modules.consultas.schemas.import_typing_Literal",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.consultas.schemas",
+      "target": "_backEnd.app.modules.consultas.schemas.import_typing_Optional",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.consultas.schemas",
+      "target": "_backEnd.app.modules.consultas.schemas.import_pydantic_BaseModel",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.consultas.schemas",
+      "target": "_backEnd.app.modules.consultas.schemas.import_pydantic_ConfigDict",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.consultas.schemas",
+      "target": "_backEnd.app.modules.consultas.schemas.import_pydantic_Field",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.consultas.schemas",
+      "target": "_backEnd.app.modules.consultas.schemas.import_pydantic_field_validator",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.consultas.schemas",
+      "target": "_backEnd.app.modules.consultas.schemas.DocumentoLookupRequest",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.app.modules.consultas.schemas.DocumentoLookupRequest",
+      "target": "_backEnd.app.modules.consultas.schemas.DocumentoLookupRequest._solo_digitos",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.app.modules.consultas.schemas.DocumentoLookupRequest",
+      "target": "_backEnd.app.modules.consultas.schemas.DocumentoLookupRequest.longitud_ok",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.app.modules.consultas.schemas",
+      "target": "_backEnd.app.modules.consultas.schemas.DocumentoLookupResult",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.app.modules.consultas.service",
+      "target": "_backEnd.app.modules.consultas.service.import_json",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.consultas.service",
+      "target": "_backEnd.app.modules.consultas.service.import_typing_Optional",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.consultas.service",
+      "target": "_backEnd.app.modules.consultas.service.import_structlog",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.consultas.service",
+      "target": "_backEnd.app.modules.consultas.service.import_redis_asyncio_Redis",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.consultas.service",
+      "target": "_backEnd.app.modules.consultas.service.import_sqlalchemy_select",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.consultas.service",
+      "target": "_backEnd.app.modules.consultas.service.import_sqlalchemy_ext_asyncio_AsyncSession",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.consultas.service",
+      "target": "_backEnd.app.modules.consultas.service.import_app_core_config_settings",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.consultas.service",
+      "target": "_backEnd.app.modules.consultas.service.import_app_core_exceptions_BusinessRuleError",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.consultas.service",
+      "target": "_backEnd.app.modules.consultas.service.import_app_core_exceptions_ExternalServiceError",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.consultas.service",
+      "target": "_backEnd.app.modules.consultas.service.import_app_core_exceptions_NotFoundError",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.consultas.service",
+      "target": "_backEnd.app.modules.consultas.service.import_app_infrastructure_database_models_usuarios_DatosFiscales",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.consultas.service",
+      "target": "_backEnd.app.modules.consultas.service.import_app_modules_consultas_schemas_DocumentoLookupResult",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.consultas.service",
+      "target": "_backEnd.app.modules.consultas.service.import_app_shared_external_jsonpe_client_JsonPeClient",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.consultas.service",
+      "target": "_backEnd.app.modules.consultas.service.import_app_shared_external_jsonpe_exceptions_JsonPeError",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.consultas.service",
+      "target": "_backEnd.app.modules.consultas.service.import_app_shared_external_jsonpe_exceptions_JsonPeNotFound",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.consultas.service",
+      "target": "_backEnd.app.modules.consultas.service.import_app_shared_external_jsonpe_exceptions_JsonPeTimeout",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.consultas.service",
+      "target": "_backEnd.app.modules.consultas.service.import_app_shared_external_jsonpe_exceptions_JsonPeUnavailable",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.consultas.service",
+      "target": "_backEnd.app.modules.consultas.service.ConsultasService",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.app.modules.consultas.service.ConsultasService",
+      "target": "_backEnd.app.modules.consultas.service.ConsultasService.__init__",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.app.modules.consultas.service.ConsultasService",
+      "target": "_backEnd.app.modules.consultas.service.ConsultasService.consultar_documento",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.app.modules.consultas.service.ConsultasService",
+      "target": "_backEnd.app.modules.consultas.service.ConsultasService._validar_formato",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.app.modules.consultas.service.ConsultasService",
+      "target": "_backEnd.app.modules.consultas.service.ConsultasService._usuario_tiene_datos_fiscales",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.app.modules.consultas.service.ConsultasService",
+      "target": "_backEnd.app.modules.consultas.service.ConsultasService._normalizar_dni",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.app.modules.consultas.service.ConsultasService",
+      "target": "_backEnd.app.modules.consultas.service.ConsultasService._normalizar_ruc",
+      "relation": "contains"
+    },
+    {
       "source": "_backEnd.app.modules.dashboard.router",
       "target": "_backEnd.app.modules.dashboard.router.import_fastapi_APIRouter",
       "relation": "imports_from"
@@ -48523,6 +50736,11 @@
     },
     {
       "source": "_backEnd.app.routers.__init__",
+      "target": "_backEnd.app.routers.__init__.import_app_modules_consultas_router_consultas_router",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.routers.__init__",
       "target": "_backEnd.app.routers.__init__.health_check",
       "relation": "contains"
     },
@@ -48689,6 +50907,231 @@
     {
       "source": "_backEnd.app.security.dependencies.require_permission",
       "target": "_backEnd.app.security.dependencies.require_permission._check",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.app.shared.external.jsonpe.__init__",
+      "target": "_backEnd.app.shared.external.jsonpe.__init__.import_app_shared_external_jsonpe_client_JsonPeClient",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.shared.external.jsonpe.__init__",
+      "target": "_backEnd.app.shared.external.jsonpe.__init__.import_app_shared_external_jsonpe_exceptions_JsonPeError",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.shared.external.jsonpe.__init__",
+      "target": "_backEnd.app.shared.external.jsonpe.__init__.import_app_shared_external_jsonpe_exceptions_JsonPeNotFound",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.shared.external.jsonpe.__init__",
+      "target": "_backEnd.app.shared.external.jsonpe.__init__.import_app_shared_external_jsonpe_exceptions_JsonPeTimeout",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.shared.external.jsonpe.__init__",
+      "target": "_backEnd.app.shared.external.jsonpe.__init__.import_app_shared_external_jsonpe_exceptions_JsonPeUnavailable",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.shared.external.jsonpe.client",
+      "target": "_backEnd.app.shared.external.jsonpe.client.import_httpx",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.shared.external.jsonpe.client",
+      "target": "_backEnd.app.shared.external.jsonpe.client.import_pydantic_SecretStr",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.shared.external.jsonpe.client",
+      "target": "_backEnd.app.shared.external.jsonpe.client.import_app_shared_external_jsonpe_exceptions_JsonPeError",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.shared.external.jsonpe.client",
+      "target": "_backEnd.app.shared.external.jsonpe.client.import_app_shared_external_jsonpe_exceptions_JsonPeNotFound",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.shared.external.jsonpe.client",
+      "target": "_backEnd.app.shared.external.jsonpe.client.import_app_shared_external_jsonpe_exceptions_JsonPeTimeout",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.shared.external.jsonpe.client",
+      "target": "_backEnd.app.shared.external.jsonpe.client.import_app_shared_external_jsonpe_exceptions_JsonPeUnavailable",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.shared.external.jsonpe.client",
+      "target": "_backEnd.app.shared.external.jsonpe.client.import_app_shared_external_jsonpe_schemas_JsonPeDniData",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.shared.external.jsonpe.client",
+      "target": "_backEnd.app.shared.external.jsonpe.client.import_app_shared_external_jsonpe_schemas_JsonPeDniRucData",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.shared.external.jsonpe.client",
+      "target": "_backEnd.app.shared.external.jsonpe.client.import_app_shared_external_jsonpe_schemas_JsonPeEnvelope",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.shared.external.jsonpe.client",
+      "target": "_backEnd.app.shared.external.jsonpe.client.import_app_shared_external_jsonpe_schemas_JsonPeRucData",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.shared.external.jsonpe.client",
+      "target": "_backEnd.app.shared.external.jsonpe.client.JsonPeClient",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.app.shared.external.jsonpe.client.JsonPeClient",
+      "target": "_backEnd.app.shared.external.jsonpe.client.JsonPeClient.__init__",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.app.shared.external.jsonpe.client.JsonPeClient",
+      "target": "_backEnd.app.shared.external.jsonpe.client.JsonPeClient.consultar_dni",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.app.shared.external.jsonpe.client.JsonPeClient",
+      "target": "_backEnd.app.shared.external.jsonpe.client.JsonPeClient.consultar_ruc",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.app.shared.external.jsonpe.client.JsonPeClient",
+      "target": "_backEnd.app.shared.external.jsonpe.client.JsonPeClient.dni_tiene_ruc",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.app.shared.external.jsonpe.client.JsonPeClient",
+      "target": "_backEnd.app.shared.external.jsonpe.client.JsonPeClient._headers",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.app.shared.external.jsonpe.client.JsonPeClient",
+      "target": "_backEnd.app.shared.external.jsonpe.client.JsonPeClient._post",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.app.shared.external.jsonpe.dependencies",
+      "target": "_backEnd.app.shared.external.jsonpe.dependencies.import_functools_lru_cache",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.shared.external.jsonpe.dependencies",
+      "target": "_backEnd.app.shared.external.jsonpe.dependencies.import_app_core_config_settings",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.shared.external.jsonpe.dependencies",
+      "target": "_backEnd.app.shared.external.jsonpe.dependencies.import_app_shared_external_jsonpe_client_JsonPeClient",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.shared.external.jsonpe.dependencies",
+      "target": "_backEnd.app.shared.external.jsonpe.dependencies._build_client",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.app.shared.external.jsonpe.dependencies",
+      "target": "_backEnd.app.shared.external.jsonpe.dependencies.get_jsonpe_client",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.app.shared.external.jsonpe.exceptions",
+      "target": "_backEnd.app.shared.external.jsonpe.exceptions.import_http_HTTPStatus",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.shared.external.jsonpe.exceptions",
+      "target": "_backEnd.app.shared.external.jsonpe.exceptions.JsonPeError",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.app.shared.external.jsonpe.exceptions.JsonPeError",
+      "target": "_backEnd.app.shared.external.jsonpe.exceptions.JsonPeError.__init__",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.app.shared.external.jsonpe.exceptions",
+      "target": "_backEnd.app.shared.external.jsonpe.exceptions.JsonPeUnavailable",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.app.shared.external.jsonpe.exceptions.JsonPeUnavailable",
+      "target": "_backEnd.app.shared.external.jsonpe.exceptions.JsonPeUnavailable.__init__",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.app.shared.external.jsonpe.exceptions",
+      "target": "_backEnd.app.shared.external.jsonpe.exceptions.JsonPeNotFound",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.app.shared.external.jsonpe.exceptions.JsonPeNotFound",
+      "target": "_backEnd.app.shared.external.jsonpe.exceptions.JsonPeNotFound.__init__",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.app.shared.external.jsonpe.exceptions",
+      "target": "_backEnd.app.shared.external.jsonpe.exceptions.JsonPeTimeout",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.app.shared.external.jsonpe.exceptions.JsonPeTimeout",
+      "target": "_backEnd.app.shared.external.jsonpe.exceptions.JsonPeTimeout.__init__",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.app.shared.external.jsonpe.schemas",
+      "target": "_backEnd.app.shared.external.jsonpe.schemas.import_typing_Generic",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.shared.external.jsonpe.schemas",
+      "target": "_backEnd.app.shared.external.jsonpe.schemas.import_typing_Optional",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.shared.external.jsonpe.schemas",
+      "target": "_backEnd.app.shared.external.jsonpe.schemas.import_typing_TypeVar",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.shared.external.jsonpe.schemas",
+      "target": "_backEnd.app.shared.external.jsonpe.schemas.import_pydantic_BaseModel",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.shared.external.jsonpe.schemas",
+      "target": "_backEnd.app.shared.external.jsonpe.schemas.import_pydantic_Field",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.shared.external.jsonpe.schemas",
+      "target": "_backEnd.app.shared.external.jsonpe.schemas.JsonPeEnvelope",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.app.shared.external.jsonpe.schemas",
+      "target": "_backEnd.app.shared.external.jsonpe.schemas.JsonPeDniData",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.app.shared.external.jsonpe.schemas",
+      "target": "_backEnd.app.shared.external.jsonpe.schemas.JsonPeRucData",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.app.shared.external.jsonpe.schemas",
+      "target": "_backEnd.app.shared.external.jsonpe.schemas.JsonPeDniRucData",
       "relation": "contains"
     },
     {
@@ -49837,6 +52280,86 @@
       "relation": "contains"
     },
     {
+      "source": "_backEnd.tests.integration.test_consultas_router",
+      "target": "_backEnd.tests.integration.test_consultas_router.import_unittest_mock_AsyncMock",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.tests.integration.test_consultas_router",
+      "target": "_backEnd.tests.integration.test_consultas_router.import_unittest_mock_MagicMock",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.tests.integration.test_consultas_router",
+      "target": "_backEnd.tests.integration.test_consultas_router.import_unittest_mock_patch",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.tests.integration.test_consultas_router",
+      "target": "_backEnd.tests.integration.test_consultas_router.import_httpx",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.tests.integration.test_consultas_router",
+      "target": "_backEnd.tests.integration.test_consultas_router.import_pytest",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.tests.integration.test_consultas_router",
+      "target": "_backEnd.tests.integration.test_consultas_router.import_pydantic_SecretStr",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.tests.integration.test_consultas_router",
+      "target": "_backEnd.tests.integration.test_consultas_router.import_app_shared_external_jsonpe_client_JsonPeClient",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.tests.integration.test_consultas_router",
+      "target": "_backEnd.tests.integration.test_consultas_router.TestConsultasRouter",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.tests.integration.test_consultas_router.TestConsultasRouter",
+      "target": "_backEnd.tests.integration.test_consultas_router.TestConsultasRouter.test_unauthenticated_returns_401",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.tests.integration.test_consultas_router.TestConsultasRouter",
+      "target": "_backEnd.tests.integration.test_consultas_router.TestConsultasRouter.test_dni_formato_invalido_returns_422",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.tests.integration.test_consultas_router.TestConsultasRouter",
+      "target": "_backEnd.tests.integration.test_consultas_router.TestConsultasRouter.test_dni_success_flujo_completo",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.tests.integration.test_consultas_router.TestConsultasRouter.test_dni_success_flujo_completo",
+      "target": "_backEnd.tests.integration.test_consultas_router.TestConsultasRouter.test_dni_success_flujo_completo.import_app_shared_external_jsonpe_schemas_JsonPeDniData",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.tests.integration.test_consultas_router.TestConsultasRouter.test_dni_success_flujo_completo",
+      "target": "_backEnd.tests.integration.test_consultas_router.TestConsultasRouter.test_dni_success_flujo_completo.import_app_infrastructure_cache_redis_client_redis_client",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.tests.integration.test_consultas_router.TestConsultasRouter",
+      "target": "_backEnd.tests.integration.test_consultas_router.TestConsultasRouter.test_dni_no_encontrado_returns_404",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.tests.integration.test_consultas_router.TestConsultasRouter.test_dni_no_encontrado_returns_404",
+      "target": "_backEnd.tests.integration.test_consultas_router.TestConsultasRouter.test_dni_no_encontrado_returns_404.import_app_shared_external_jsonpe_exceptions_JsonPeNotFound",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.tests.integration.test_consultas_router.TestConsultasRouter.test_dni_no_encontrado_returns_404",
+      "target": "_backEnd.tests.integration.test_consultas_router.TestConsultasRouter.test_dni_no_encontrado_returns_404.import_app_infrastructure_cache_redis_client_redis_client",
+      "relation": "imports_from"
+    },
+    {
       "source": "_backEnd.tests.integration.test_db_connection",
       "target": "_backEnd.tests.integration.test_db_connection.import_pytest",
       "relation": "imports_from"
@@ -50757,6 +53280,136 @@
       "relation": "contains"
     },
     {
+      "source": "_backEnd.tests.unit.test_consultas_service",
+      "target": "_backEnd.tests.unit.test_consultas_service.import_json",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.tests.unit.test_consultas_service",
+      "target": "_backEnd.tests.unit.test_consultas_service.import_unittest_mock_AsyncMock",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.tests.unit.test_consultas_service",
+      "target": "_backEnd.tests.unit.test_consultas_service.import_unittest_mock_MagicMock",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.tests.unit.test_consultas_service",
+      "target": "_backEnd.tests.unit.test_consultas_service.import_pytest",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.tests.unit.test_consultas_service",
+      "target": "_backEnd.tests.unit.test_consultas_service.import_pydantic_SecretStr",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.tests.unit.test_consultas_service",
+      "target": "_backEnd.tests.unit.test_consultas_service.import_app_core_exceptions_BusinessRuleError",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.tests.unit.test_consultas_service",
+      "target": "_backEnd.tests.unit.test_consultas_service.import_app_core_exceptions_NotFoundError",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.tests.unit.test_consultas_service",
+      "target": "_backEnd.tests.unit.test_consultas_service.import_app_modules_consultas_schemas_DocumentoLookupResult",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.tests.unit.test_consultas_service",
+      "target": "_backEnd.tests.unit.test_consultas_service.import_app_modules_consultas_service_ConsultasService",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.tests.unit.test_consultas_service",
+      "target": "_backEnd.tests.unit.test_consultas_service.import_app_shared_external_jsonpe_client_JsonPeClient",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.tests.unit.test_consultas_service",
+      "target": "_backEnd.tests.unit.test_consultas_service.import_app_shared_external_jsonpe_exceptions_JsonPeNotFound",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.tests.unit.test_consultas_service",
+      "target": "_backEnd.tests.unit.test_consultas_service.import_app_shared_external_jsonpe_exceptions_JsonPeUnavailable",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.tests.unit.test_consultas_service",
+      "target": "_backEnd.tests.unit.test_consultas_service.import_app_shared_external_jsonpe_schemas_JsonPeDniData",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.tests.unit.test_consultas_service",
+      "target": "_backEnd.tests.unit.test_consultas_service.import_app_shared_external_jsonpe_schemas_JsonPeRucData",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.tests.unit.test_consultas_service",
+      "target": "_backEnd.tests.unit.test_consultas_service.TestConsultasService",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.tests.unit.test_consultas_service.TestConsultasService",
+      "target": "_backEnd.tests.unit.test_consultas_service.TestConsultasService._build",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.tests.unit.test_consultas_service.TestConsultasService",
+      "target": "_backEnd.tests.unit.test_consultas_service.TestConsultasService.test_dni_formato_invalido_raises",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.tests.unit.test_consultas_service.TestConsultasService",
+      "target": "_backEnd.tests.unit.test_consultas_service.TestConsultasService.test_ruc_formato_invalido_raises",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.tests.unit.test_consultas_service.TestConsultasService",
+      "target": "_backEnd.tests.unit.test_consultas_service.TestConsultasService.test_dni_cache_hit_no_llama_api",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.tests.unit.test_consultas_service.TestConsultasService",
+      "target": "_backEnd.tests.unit.test_consultas_service.TestConsultasService.test_dni_cache_miss_llama_api_y_guarda_cache",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.tests.unit.test_consultas_service.TestConsultasService",
+      "target": "_backEnd.tests.unit.test_consultas_service.TestConsultasService.test_ruc_empresa_se_mapea_a_razon_social",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.tests.unit.test_consultas_service.TestConsultasService",
+      "target": "_backEnd.tests.unit.test_consultas_service.TestConsultasService.test_ruc_persona_natural_se_mapea_a_nombres_apellidos",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.tests.unit.test_consultas_service.TestConsultasService",
+      "target": "_backEnd.tests.unit.test_consultas_service.TestConsultasService.test_ya_tiene_datos_true_si_bd_tiene_fiscal",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.tests.unit.test_consultas_service.TestConsultasService",
+      "target": "_backEnd.tests.unit.test_consultas_service.TestConsultasService.test_jsonpe_unavailable_propaga_como_external_error",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.tests.unit.test_consultas_service.TestConsultasService.test_jsonpe_unavailable_propaga_como_external_error",
+      "target": "_backEnd.tests.unit.test_consultas_service.TestConsultasService.test_jsonpe_unavailable_propaga_como_external_error.import_app_core_exceptions_ExternalServiceError",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.tests.unit.test_consultas_service.TestConsultasService",
+      "target": "_backEnd.tests.unit.test_consultas_service.TestConsultasService.test_jsonpe_not_found_propaga_como_not_found",
+      "relation": "contains"
+    },
+    {
       "source": "_backEnd.tests.unit.test_inventory_service",
       "target": "_backEnd.tests.unit.test_inventory_service.import_datetime_datetime",
       "relation": "imports_from"
@@ -51014,6 +53667,101 @@
     {
       "source": "_backEnd.tests.unit.test_inventory_service.TestGetReconciliation",
       "target": "_backEnd.tests.unit.test_inventory_service.TestGetReconciliation.test_filtra_solo_descuadrados",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.tests.unit.test_jsonpe_client",
+      "target": "_backEnd.tests.unit.test_jsonpe_client.import_typing_Any",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.tests.unit.test_jsonpe_client",
+      "target": "_backEnd.tests.unit.test_jsonpe_client.import_httpx",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.tests.unit.test_jsonpe_client",
+      "target": "_backEnd.tests.unit.test_jsonpe_client.import_pytest",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.tests.unit.test_jsonpe_client",
+      "target": "_backEnd.tests.unit.test_jsonpe_client.import_pydantic_SecretStr",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.tests.unit.test_jsonpe_client",
+      "target": "_backEnd.tests.unit.test_jsonpe_client.import_unittest_mock_AsyncMock",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.tests.unit.test_jsonpe_client",
+      "target": "_backEnd.tests.unit.test_jsonpe_client.import_unittest_mock_patch",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.tests.unit.test_jsonpe_client",
+      "target": "_backEnd.tests.unit.test_jsonpe_client.import_app_shared_external_jsonpe_client_JsonPeClient",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.tests.unit.test_jsonpe_client",
+      "target": "_backEnd.tests.unit.test_jsonpe_client.import_app_shared_external_jsonpe_exceptions_JsonPeNotFound",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.tests.unit.test_jsonpe_client",
+      "target": "_backEnd.tests.unit.test_jsonpe_client.import_app_shared_external_jsonpe_exceptions_JsonPeTimeout",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.tests.unit.test_jsonpe_client",
+      "target": "_backEnd.tests.unit.test_jsonpe_client.import_app_shared_external_jsonpe_exceptions_JsonPeUnavailable",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.tests.unit.test_jsonpe_client",
+      "target": "_backEnd.tests.unit.test_jsonpe_client.TestJsonPeClient",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.tests.unit.test_jsonpe_client.TestJsonPeClient",
+      "target": "_backEnd.tests.unit.test_jsonpe_client.TestJsonPeClient._client",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.tests.unit.test_jsonpe_client.TestJsonPeClient",
+      "target": "_backEnd.tests.unit.test_jsonpe_client.TestJsonPeClient.test_consultar_dni_success",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.tests.unit.test_jsonpe_client.TestJsonPeClient",
+      "target": "_backEnd.tests.unit.test_jsonpe_client.TestJsonPeClient.test_consultar_ruc_success",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.tests.unit.test_jsonpe_client.TestJsonPeClient",
+      "target": "_backEnd.tests.unit.test_jsonpe_client.TestJsonPeClient.test_consultar_dni_not_found_raises",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.tests.unit.test_jsonpe_client.TestJsonPeClient",
+      "target": "_backEnd.tests.unit.test_jsonpe_client.TestJsonPeClient.test_consultar_ruc_timeout_raises_unavailable",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.tests.unit.test_jsonpe_client.TestJsonPeClient",
+      "target": "_backEnd.tests.unit.test_jsonpe_client.TestJsonPeClient.test_consultar_dni_5xx_raises_unavailable",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.tests.unit.test_jsonpe_client.TestJsonPeClient",
+      "target": "_backEnd.tests.unit.test_jsonpe_client.TestJsonPeClient.test_empty_token_raises_unavailable_without_call",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.tests.unit.test_jsonpe_client.TestJsonPeClient",
+      "target": "_backEnd.tests.unit.test_jsonpe_client.TestJsonPeClient.test_authorization_header_sent",
       "relation": "contains"
     },
     {
@@ -53213,6 +55961,11 @@
     },
     {
       "source": "_frontEnd.src.features.cart.components.PaymentModal",
+      "target": "_frontEnd.src.features.cart.components.PaymentModal.handleConsultarDocumento",
+      "relation": "contains"
+    },
+    {
+      "source": "_frontEnd.src.features.cart.components.PaymentModal",
       "target": "_frontEnd.src.features.cart.components.PaymentModal.handleGoToOrder",
       "relation": "contains"
     },
@@ -53284,6 +56037,16 @@
     {
       "source": "_frontEnd.src.features.cart.components.PaymentModal",
       "target": "_frontEnd.src.features.cart.components.PaymentModal.import_checkout_schema",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.cart.components.PaymentModal",
+      "target": "_frontEnd.src.features.cart.components.PaymentModal.import_useConsultarDocumento",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.cart.components.PaymentModal",
+      "target": "_frontEnd.src.features.cart.components.PaymentModal.import_types",
       "relation": "imports_from"
     },
     {
@@ -53760,6 +56523,51 @@
       "source": "_frontEnd.src.features.config.pages.AdminConfigPage",
       "target": "_frontEnd.src.features.config.pages.AdminConfigPage.import_config_api",
       "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.consultas.api.consultasApi",
+      "target": "_frontEnd.src.features.consultas.api.consultasApi.import_axios",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.consultas.api.consultasApi",
+      "target": "_frontEnd.src.features.consultas.api.consultasApi.import_types",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.consultas.hooks.useConsultarDocumento",
+      "target": "_frontEnd.src.features.consultas.hooks.useConsultarDocumento.useConsultarDocumento",
+      "relation": "contains"
+    },
+    {
+      "source": "_frontEnd.src.features.consultas.hooks.useConsultarDocumento",
+      "target": "_frontEnd.src.features.consultas.hooks.useConsultarDocumento.import_react_query",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.consultas.hooks.useConsultarDocumento",
+      "target": "_frontEnd.src.features.consultas.hooks.useConsultarDocumento.import_sonner",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.consultas.hooks.useConsultarDocumento",
+      "target": "_frontEnd.src.features.consultas.hooks.useConsultarDocumento.import_consultasApi",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.consultas.hooks.useConsultarDocumento",
+      "target": "_frontEnd.src.features.consultas.hooks.useConsultarDocumento.import_types",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.consultas.types",
+      "target": "_frontEnd.src.features.consultas.types.DocumentoLookupRequest",
+      "relation": "contains"
+    },
+    {
+      "source": "_frontEnd.src.features.consultas.types",
+      "target": "_frontEnd.src.features.consultas.types.DocumentoLookupResult",
+      "relation": "contains"
     },
     {
       "source": "_frontEnd.src.features.dashboard.api.dashboard.api",
@@ -54739,6 +57547,11 @@
     {
       "source": "_frontEnd.src.features.orders.pages.CustomerOrderDetailPage",
       "target": "_frontEnd.src.features.orders.pages.CustomerOrderDetailPage.import_reviews_api",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.orders.pages.CustomerOrderDetailPage",
+      "target": "_frontEnd.src.features.orders.pages.CustomerOrderDetailPage.import_useProfile",
       "relation": "imports_from"
     },
     {
@@ -56112,6 +58925,66 @@
       "relation": "imports_from"
     },
     {
+      "source": "_frontEnd.src.features.profile.components.DatosFiscalesSection",
+      "target": "_frontEnd.src.features.profile.components.DatosFiscalesSection.DatosFiscalesSection",
+      "relation": "contains"
+    },
+    {
+      "source": "_frontEnd.src.features.profile.components.DatosFiscalesSection",
+      "target": "_frontEnd.src.features.profile.components.DatosFiscalesSection.FormState",
+      "relation": "contains"
+    },
+    {
+      "source": "_frontEnd.src.features.profile.components.DatosFiscalesSection",
+      "target": "_frontEnd.src.features.profile.components.DatosFiscalesSection.handleConsultar",
+      "relation": "contains"
+    },
+    {
+      "source": "_frontEnd.src.features.profile.components.DatosFiscalesSection",
+      "target": "_frontEnd.src.features.profile.components.DatosFiscalesSection.handleGuardar",
+      "relation": "contains"
+    },
+    {
+      "source": "_frontEnd.src.features.profile.components.DatosFiscalesSection",
+      "target": "_frontEnd.src.features.profile.components.DatosFiscalesSection.handleCancelar",
+      "relation": "contains"
+    },
+    {
+      "source": "_frontEnd.src.features.profile.components.DatosFiscalesSection",
+      "target": "_frontEnd.src.features.profile.components.DatosFiscalesSection.import_react",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.profile.components.DatosFiscalesSection",
+      "target": "_frontEnd.src.features.profile.components.DatosFiscalesSection.import_framer_motion",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.profile.components.DatosFiscalesSection",
+      "target": "_frontEnd.src.features.profile.components.DatosFiscalesSection.import_lucide_react",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.profile.components.DatosFiscalesSection",
+      "target": "_frontEnd.src.features.profile.components.DatosFiscalesSection.import_useProfile",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.profile.components.DatosFiscalesSection",
+      "target": "_frontEnd.src.features.profile.components.DatosFiscalesSection.import_useConsultarDocumento",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.profile.components.DatosFiscalesSection",
+      "target": "_frontEnd.src.features.profile.components.DatosFiscalesSection.import_types",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.profile.components.DatosFiscalesSection",
+      "target": "_frontEnd.src.features.profile.components.DatosFiscalesSection.import_sonner",
+      "relation": "imports_from"
+    },
+    {
       "source": "_frontEnd.src.features.profile.pages.ProfileInfoPage",
       "target": "_frontEnd.src.features.profile.pages.ProfileInfoPage.ProfileInfoPage",
       "relation": "contains"
@@ -56159,6 +59032,11 @@
     {
       "source": "_frontEnd.src.features.profile.pages.ProfileInfoPage",
       "target": "_frontEnd.src.features.profile.pages.ProfileInfoPage.import_useProfile",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.profile.pages.ProfileInfoPage",
+      "target": "_frontEnd.src.features.profile.pages.ProfileInfoPage.import_DatosFiscalesSection",
       "relation": "imports_from"
     },
     {
