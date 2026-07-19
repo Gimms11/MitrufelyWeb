@@ -2895,7 +2895,7 @@
       "type": "class",
       "description": "",
       "source_file": "_backEnd\\app\\infrastructure\\database\\models\\usuarios.py",
-      "source_location": "L121",
+      "source_location": "L123",
       "file_type": "code"
     },
     {
@@ -2904,7 +2904,7 @@
       "type": "class",
       "description": "",
       "source_file": "_backEnd\\app\\infrastructure\\database\\models\\usuarios.py",
-      "source_location": "L154",
+      "source_location": "L156",
       "file_type": "code"
     },
     {
@@ -2913,7 +2913,7 @@
       "type": "class",
       "description": "",
       "source_file": "_backEnd\\app\\infrastructure\\database\\models\\usuarios.py",
-      "source_location": "L196",
+      "source_location": "L198",
       "file_type": "code"
     },
     {
@@ -3697,6 +3697,15 @@
       "description": "",
       "source_file": "_backEnd\\app\\infrastructure\\storage\\cloudinary_service.py",
       "source_location": "L185",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.infrastructure.storage.cloudinary_service.get_storage_service",
+      "label": "get_storage_service",
+      "type": "function",
+      "description": "",
+      "source_file": "_backEnd\\app\\infrastructure\\storage\\cloudinary_service.py",
+      "source_location": "L195",
       "file_type": "code"
     },
     {
@@ -5113,6 +5122,33 @@
       "file_type": "code"
     },
     {
+      "id": "_backEnd.app.modules.auth.router.import_fastapi_UploadFile",
+      "label": "fastapi.UploadFile",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\auth\\router.py",
+      "source_location": "L8",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.auth.router.import_fastapi_File",
+      "label": "fastapi.File",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\auth\\router.py",
+      "source_location": "L8",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.auth.router.import_fastapi_HTTPException",
+      "label": "fastapi.HTTPException",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\auth\\router.py",
+      "source_location": "L8",
+      "file_type": "code"
+    },
+    {
       "id": "_backEnd.app.modules.auth.router.import_fastapi_responses_JSONResponse",
       "label": "fastapi.responses.JSONResponse",
       "type": "import",
@@ -5167,12 +5203,39 @@
       "file_type": "code"
     },
     {
+      "id": "_backEnd.app.modules.auth.router.import_app_infrastructure_storage_cloudinary_service_CloudinaryService",
+      "label": "app.infrastructure.storage.cloudinary_service.CloudinaryService",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\auth\\router.py",
+      "source_location": "L16",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.auth.router.import_app_infrastructure_storage_cloudinary_service_get_storage_service",
+      "label": "app.infrastructure.storage.cloudinary_service.get_storage_service",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\auth\\router.py",
+      "source_location": "L16",
+      "file_type": "code"
+    },
+    {
       "id": "_backEnd.app.modules.auth.router.import_app_modules_auth_dependencies_get_auth_service",
       "label": "app.modules.auth.dependencies.get_auth_service",
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L16",
+      "source_location": "L17",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.auth.router.import_app_modules_auth_schemas_ChangePasswordRequest",
+      "label": "app.modules.auth.schemas.ChangePasswordRequest",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\auth\\router.py",
+      "source_location": "L18",
       "file_type": "code"
     },
     {
@@ -5181,7 +5244,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L17",
+      "source_location": "L18",
       "file_type": "code"
     },
     {
@@ -5190,7 +5253,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L17",
+      "source_location": "L18",
       "file_type": "code"
     },
     {
@@ -5199,7 +5262,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L17",
+      "source_location": "L18",
       "file_type": "code"
     },
     {
@@ -5208,7 +5271,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L17",
+      "source_location": "L18",
       "file_type": "code"
     },
     {
@@ -5217,7 +5280,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L17",
+      "source_location": "L18",
       "file_type": "code"
     },
     {
@@ -5226,7 +5289,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L17",
+      "source_location": "L18",
       "file_type": "code"
     },
     {
@@ -5235,7 +5298,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L17",
+      "source_location": "L18",
       "file_type": "code"
     },
     {
@@ -5244,7 +5307,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L17",
+      "source_location": "L18",
       "file_type": "code"
     },
     {
@@ -5253,7 +5316,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L17",
+      "source_location": "L18",
       "file_type": "code"
     },
     {
@@ -5262,7 +5325,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L17",
+      "source_location": "L18",
       "file_type": "code"
     },
     {
@@ -5271,7 +5334,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L17",
+      "source_location": "L18",
       "file_type": "code"
     },
     {
@@ -5280,7 +5343,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L17",
+      "source_location": "L18",
       "file_type": "code"
     },
     {
@@ -5289,7 +5352,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L31",
+      "source_location": "L33",
       "file_type": "code"
     },
     {
@@ -5298,7 +5361,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L32",
+      "source_location": "L34",
       "file_type": "code"
     },
     {
@@ -5307,7 +5370,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L51",
+      "source_location": "L53",
       "file_type": "code"
     },
     {
@@ -5316,7 +5379,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L91",
+      "source_location": "L93",
       "file_type": "code"
     },
     {
@@ -5325,7 +5388,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L108",
+      "source_location": "L110",
       "file_type": "code"
     },
     {
@@ -5334,7 +5397,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L132",
+      "source_location": "L134",
       "file_type": "code"
     },
     {
@@ -5343,7 +5406,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L146",
+      "source_location": "L148",
       "file_type": "code"
     },
     {
@@ -5352,7 +5415,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L160",
+      "source_location": "L162",
       "file_type": "code"
     },
     {
@@ -5361,7 +5424,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L207",
+      "source_location": "L209",
       "file_type": "code"
     },
     {
@@ -5370,7 +5433,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L224",
+      "source_location": "L226",
       "file_type": "code"
     },
     {
@@ -5379,7 +5442,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L231",
+      "source_location": "L233",
       "file_type": "code"
     },
     {
@@ -5388,7 +5451,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L231",
+      "source_location": "L233",
       "file_type": "code"
     },
     {
@@ -5397,7 +5460,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L248",
+      "source_location": "L250",
       "file_type": "code"
     },
     {
@@ -5406,7 +5469,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L263",
+      "source_location": "L265",
       "file_type": "code"
     },
     {
@@ -5415,7 +5478,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L277",
+      "source_location": "L279",
       "file_type": "code"
     },
     {
@@ -5424,7 +5487,25 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\router.py",
-      "source_location": "L292",
+      "source_location": "L294",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.auth.router.change_password",
+      "label": "change_password",
+      "type": "function",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\auth\\router.py",
+      "source_location": "L308",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.auth.router.upload_avatar",
+      "label": "upload_avatar",
+      "type": "function",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\auth\\router.py",
+      "source_location": "L323",
       "file_type": "code"
     },
     {
@@ -5604,7 +5685,7 @@
       "type": "class",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\schemas.py",
-      "source_location": "L112",
+      "source_location": "L113",
       "file_type": "code"
     },
     {
@@ -5613,7 +5694,7 @@
       "type": "class",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\schemas.py",
-      "source_location": "L124",
+      "source_location": "L125",
       "file_type": "code"
     },
     {
@@ -5622,7 +5703,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\schemas.py",
-      "source_location": "L132",
+      "source_location": "L133",
       "file_type": "code"
     },
     {
@@ -5631,7 +5712,25 @@
       "type": "class",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\schemas.py",
-      "source_location": "L142",
+      "source_location": "L143",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.auth.schemas.ChangePasswordRequest",
+      "label": "ChangePasswordRequest",
+      "type": "class",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\auth\\schemas.py",
+      "source_location": "L151",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.auth.schemas.ChangePasswordRequest.validate_password_strength",
+      "label": "validate_password_strength",
+      "type": "function",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\auth\\schemas.py",
+      "source_location": "L157",
       "file_type": "code"
     },
     {
@@ -6216,7 +6315,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L585",
+      "source_location": "L593",
       "file_type": "code"
     },
     {
@@ -6225,7 +6324,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L606",
+      "source_location": "L614",
       "file_type": "code"
     },
     {
@@ -6234,7 +6333,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L624",
+      "source_location": "L632",
       "file_type": "code"
     },
     {
@@ -6243,7 +6342,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L632",
+      "source_location": "L640",
       "file_type": "code"
     },
     {
@@ -6252,7 +6351,25 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\auth\\service.py",
-      "source_location": "L632",
+      "source_location": "L640",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.auth.service.AuthService.change_password",
+      "label": "change_password",
+      "type": "function",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\auth\\service.py",
+      "source_location": "L679",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.auth.service.AuthService.update_avatar",
+      "label": "update_avatar",
+      "type": "function",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\auth\\service.py",
+      "source_location": "L697",
       "file_type": "code"
     },
     {
@@ -8092,12 +8209,21 @@
       "file_type": "code"
     },
     {
+      "id": "_backEnd.app.modules.config.router.import_decimal_Decimal",
+      "label": "decimal.Decimal",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\config\\router.py",
+      "source_location": "L6",
+      "file_type": "code"
+    },
+    {
       "id": "_backEnd.app.modules.config.router.import_typing_Annotated",
       "label": "typing.Annotated",
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\config\\router.py",
-      "source_location": "L6",
+      "source_location": "L7",
       "file_type": "code"
     },
     {
@@ -8106,7 +8232,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\config\\router.py",
-      "source_location": "L8",
+      "source_location": "L9",
       "file_type": "code"
     },
     {
@@ -8115,7 +8241,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\config\\router.py",
-      "source_location": "L8",
+      "source_location": "L9",
       "file_type": "code"
     },
     {
@@ -8124,7 +8250,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\config\\router.py",
-      "source_location": "L10",
+      "source_location": "L11",
       "file_type": "code"
     },
     {
@@ -8133,7 +8259,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\config\\router.py",
-      "source_location": "L11",
+      "source_location": "L12",
       "file_type": "code"
     },
     {
@@ -8142,7 +8268,16 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\config\\router.py",
-      "source_location": "L11",
+      "source_location": "L12",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.config.router.import_app_modules_config_schemas_PublicShippingCostResponse",
+      "label": "app.modules.config.schemas.PublicShippingCostResponse",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\config\\router.py",
+      "source_location": "L12",
       "file_type": "code"
     },
     {
@@ -8151,7 +8286,7 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\config\\router.py",
-      "source_location": "L12",
+      "source_location": "L17",
       "file_type": "code"
     },
     {
@@ -8160,7 +8295,16 @@
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\config\\router.py",
-      "source_location": "L13",
+      "source_location": "L18",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.config.router.get_shipping_cost",
+      "label": "get_shipping_cost",
+      "type": "function",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\config\\router.py",
+      "source_location": "L32",
       "file_type": "code"
     },
     {
@@ -8169,7 +8313,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\config\\router.py",
-      "source_location": "L25",
+      "source_location": "L53",
       "file_type": "code"
     },
     {
@@ -8178,7 +8322,7 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\config\\router.py",
-      "source_location": "L38",
+      "source_location": "L66",
       "file_type": "code"
     },
     {
@@ -8278,6 +8422,15 @@
       "description": "",
       "source_file": "_backEnd\\app\\modules\\config\\schemas.py",
       "source_location": "L52",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.modules.config.schemas.PublicShippingCostResponse",
+      "label": "PublicShippingCostResponse",
+      "type": "class",
+      "description": "",
+      "source_file": "_backEnd\\app\\modules\\config\\schemas.py",
+      "source_location": "L62",
       "file_type": "code"
     },
     {
@@ -19356,7 +19509,7 @@
       "type": "class",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\users\\schemas.py",
-      "source_location": "L56",
+      "source_location": "L59",
       "file_type": "code"
     },
     {
@@ -19365,7 +19518,7 @@
       "type": "class",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\users\\schemas.py",
-      "source_location": "L66",
+      "source_location": "L69",
       "file_type": "code"
     },
     {
@@ -19374,7 +19527,7 @@
       "type": "class",
       "description": "",
       "source_file": "_backEnd\\app\\modules\\users\\schemas.py",
-      "source_location": "L72",
+      "source_location": "L75",
       "file_type": "code"
     },
     {
@@ -19641,6 +19794,15 @@
     {
       "id": "_backEnd.app.routers.__init__.import_app_modules_config_router_config_router",
       "label": "app.modules.config.router.router",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\app\\routers\\__init__.py",
+      "source_location": "L12",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.app.routers.__init__.import_app_modules_config_router_public_config_router",
+      "label": "app.modules.config.router.public_router",
       "type": "import",
       "description": "",
       "source_file": "_backEnd\\app\\routers\\__init__.py",
@@ -20760,6 +20922,78 @@
       "type": "function",
       "description": "",
       "source_file": "_backEnd\\scripts\\apply_migration_m15.py",
+      "source_location": "L38",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.scripts.apply_migration_m16_avatar",
+      "label": "apply_migration_m16_avatar",
+      "type": "module",
+      "description": "Python module apply_migration_m16_avatar.py",
+      "source_file": "_backEnd\\scripts\\apply_migration_m16_avatar.py",
+      "source_location": "L1",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.scripts.apply_migration_m16_avatar.import_asyncio",
+      "label": "asyncio",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\scripts\\apply_migration_m16_avatar.py",
+      "source_location": "L11",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.scripts.apply_migration_m16_avatar.import_os",
+      "label": "os",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\scripts\\apply_migration_m16_avatar.py",
+      "source_location": "L12",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.scripts.apply_migration_m16_avatar.import_sys",
+      "label": "sys",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\scripts\\apply_migration_m16_avatar.py",
+      "source_location": "L13",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.scripts.apply_migration_m16_avatar.import_pathlib_Path",
+      "label": "pathlib.Path",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\scripts\\apply_migration_m16_avatar.py",
+      "source_location": "L14",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.scripts.apply_migration_m16_avatar.import_asyncpg",
+      "label": "asyncpg",
+      "type": "import",
+      "description": "",
+      "source_file": "_backEnd\\scripts\\apply_migration_m16_avatar.py",
+      "source_location": "L16",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.scripts.apply_migration_m16_avatar.load_env",
+      "label": "load_env",
+      "type": "function",
+      "description": "",
+      "source_file": "_backEnd\\scripts\\apply_migration_m16_avatar.py",
+      "source_location": "L23",
+      "file_type": "code"
+    },
+    {
+      "id": "_backEnd.scripts.apply_migration_m16_avatar.main",
+      "label": "main",
+      "type": "function",
+      "description": "",
+      "source_file": "_backEnd\\scripts\\apply_migration_m16_avatar.py",
       "source_location": "L38",
       "file_type": "code"
     },
@@ -26452,12 +26686,21 @@
       "file_type": "code"
     },
     {
+      "id": "_frontEnd.src.app.providers.AuthInitializer",
+      "label": "AuthInitializer",
+      "type": "function",
+      "description": "",
+      "source_file": "_frontEnd\\src\\app\\providers.tsx",
+      "source_location": "L28",
+      "file_type": "code"
+    },
+    {
       "id": "_frontEnd.src.app.providers.Providers",
       "label": "Providers",
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\app\\providers.tsx",
-      "source_location": "L21",
+      "source_location": "L53",
       "file_type": "code"
     },
     {
@@ -26466,7 +26709,7 @@
       "type": "interface",
       "description": "",
       "source_file": "_frontEnd\\src\\app\\providers.tsx",
-      "source_location": "L17",
+      "source_location": "L19",
       "file_type": "code"
     },
     {
@@ -26506,6 +26749,24 @@
       "file_type": "code"
     },
     {
+      "id": "_frontEnd.src.app.providers.import_useAuthInit",
+      "label": "@/features/auth/hooks/useAuthInit",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\app\\providers.tsx",
+      "source_location": "L6",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.app.providers.import_store",
+      "label": "@/app/store",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\app\\providers.tsx",
+      "source_location": "L7",
+      "file_type": "code"
+    },
+    {
       "id": "_frontEnd.src.app.router",
       "label": "router.tsx",
       "type": "module",
@@ -26520,7 +26781,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\app\\router.tsx",
-      "source_location": "L41",
+      "source_location": "L44",
       "file_type": "code"
     },
     {
@@ -26529,7 +26790,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\app\\router.tsx",
-      "source_location": "L53",
+      "source_location": "L56",
       "file_type": "code"
     },
     {
@@ -26538,7 +26799,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\app\\router.tsx",
-      "source_location": "L69",
+      "source_location": "L72",
       "file_type": "code"
     },
     {
@@ -26547,7 +26808,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\app\\router.tsx",
-      "source_location": "L90",
+      "source_location": "L93",
       "file_type": "code"
     },
     {
@@ -26556,7 +26817,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\app\\router.tsx",
-      "source_location": "L102",
+      "source_location": "L105",
       "file_type": "code"
     },
     {
@@ -26565,7 +26826,7 @@
       "type": "interface",
       "description": "",
       "source_file": "_frontEnd\\src\\app\\router.tsx",
-      "source_location": "L65",
+      "source_location": "L68",
       "file_type": "code"
     },
     {
@@ -26790,7 +27051,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\about\\components\\PhilosophySection.tsx",
-      "source_location": "L93",
+      "source_location": "L84",
       "file_type": "code"
     },
     {
@@ -26799,7 +27060,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\about\\components\\PhilosophySection.tsx",
-      "source_location": "L137",
+      "source_location": "L130",
       "file_type": "code"
     },
     {
@@ -26808,7 +27069,7 @@
       "type": "interface",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\about\\components\\PhilosophySection.tsx",
-      "source_location": "L14",
+      "source_location": "L7",
       "file_type": "code"
     },
     {
@@ -26817,7 +27078,7 @@
       "type": "interface",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\about\\components\\PhilosophySection.tsx",
-      "source_location": "L89",
+      "source_location": "L80",
       "file_type": "code"
     },
     {
@@ -26826,7 +27087,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\about\\components\\PhilosophySection.tsx",
-      "source_location": "L8",
+      "source_location": "L1",
       "file_type": "code"
     },
     {
@@ -26835,7 +27096,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\about\\components\\PhilosophySection.tsx",
-      "source_location": "L9",
+      "source_location": "L2",
       "file_type": "code"
     },
     {
@@ -27109,12 +27370,219 @@
       "file_type": "code"
     },
     {
+      "id": "_frontEnd.src.features.auth.api.profileApi.ChangePasswordPayload",
+      "label": "ChangePasswordPayload",
+      "type": "interface",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\auth\\api\\profileApi.ts",
+      "source_location": "L29",
+      "file_type": "code"
+    },
+    {
       "id": "_frontEnd.src.features.auth.api.profileApi.import_axios",
       "label": "@/lib/axios",
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\auth\\api\\profileApi.ts",
       "source_location": "L1",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.auth.components.AuthRequireModal",
+      "label": "AuthRequireModal.tsx",
+      "type": "module",
+      "description": "TypeScript module AuthRequireModal.tsx",
+      "source_file": "_frontEnd\\src\\features\\auth\\components\\AuthRequireModal.tsx",
+      "source_location": "L1",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.auth.components.AuthRequireModal.AuthRequireModal",
+      "label": "AuthRequireModal",
+      "type": "function",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\auth\\components\\AuthRequireModal.tsx",
+      "source_location": "L11",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.auth.components.AuthRequireModal.AuthRequireModalProps",
+      "label": "AuthRequireModalProps",
+      "type": "interface",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\auth\\components\\AuthRequireModal.tsx",
+      "source_location": "L6",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.auth.components.AuthRequireModal.handleKey",
+      "label": "handleKey",
+      "type": "function",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\auth\\components\\AuthRequireModal.tsx",
+      "source_location": "L16",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.auth.components.AuthRequireModal.handleLoginRedirect",
+      "label": "handleLoginRedirect",
+      "type": "function",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\auth\\components\\AuthRequireModal.tsx",
+      "source_location": "L27",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.auth.components.AuthRequireModal.import_react",
+      "label": "react",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\auth\\components\\AuthRequireModal.tsx",
+      "source_location": "L1",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.auth.components.AuthRequireModal.import_framer_motion",
+      "label": "framer-motion",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\auth\\components\\AuthRequireModal.tsx",
+      "source_location": "L2",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.auth.components.AuthRequireModal.import_react_router",
+      "label": "react-router",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\auth\\components\\AuthRequireModal.tsx",
+      "source_location": "L3",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.auth.components.AuthRequireModal.import_lucide_react",
+      "label": "lucide-react",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\auth\\components\\AuthRequireModal.tsx",
+      "source_location": "L4",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.auth.components.CheckoutAuthModal",
+      "label": "CheckoutAuthModal.tsx",
+      "type": "module",
+      "description": "TypeScript module CheckoutAuthModal.tsx",
+      "source_file": "_frontEnd\\src\\features\\auth\\components\\CheckoutAuthModal.tsx",
+      "source_location": "L1",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.auth.components.CheckoutAuthModal.CheckoutAuthModal",
+      "label": "CheckoutAuthModal",
+      "type": "function",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\auth\\components\\CheckoutAuthModal.tsx",
+      "source_location": "L11",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.auth.components.CheckoutAuthModal.CheckoutAuthModalProps",
+      "label": "CheckoutAuthModalProps",
+      "type": "interface",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\auth\\components\\CheckoutAuthModal.tsx",
+      "source_location": "L6",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.auth.components.CheckoutAuthModal.handleKey",
+      "label": "handleKey",
+      "type": "function",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\auth\\components\\CheckoutAuthModal.tsx",
+      "source_location": "L16",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.auth.components.CheckoutAuthModal.import_react",
+      "label": "react",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\auth\\components\\CheckoutAuthModal.tsx",
+      "source_location": "L1",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.auth.components.CheckoutAuthModal.import_framer_motion",
+      "label": "framer-motion",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\auth\\components\\CheckoutAuthModal.tsx",
+      "source_location": "L2",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.auth.components.CheckoutAuthModal.import_react_router",
+      "label": "react-router",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\auth\\components\\CheckoutAuthModal.tsx",
+      "source_location": "L3",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.auth.components.CheckoutAuthModal.import_lucide_react",
+      "label": "lucide-react",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\auth\\components\\CheckoutAuthModal.tsx",
+      "source_location": "L4",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.auth.hooks.useAuthInit",
+      "label": "useAuthInit.ts",
+      "type": "module",
+      "description": "TypeScript module useAuthInit.ts",
+      "source_file": "_frontEnd\\src\\features\\auth\\hooks\\useAuthInit.ts",
+      "source_location": "L1",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.auth.hooks.useAuthInit.useAuthInit",
+      "label": "useAuthInit",
+      "type": "function",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\auth\\hooks\\useAuthInit.ts",
+      "source_location": "L34",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.auth.hooks.useAuthInit.import_react",
+      "label": "react",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\auth\\hooks\\useAuthInit.ts",
+      "source_location": "L22",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.auth.hooks.useAuthInit.import_axios",
+      "label": "axios",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\auth\\hooks\\useAuthInit.ts",
+      "source_location": "L23",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.auth.hooks.useAuthInit.import_store",
+      "label": "@/app/store",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\auth\\hooks\\useAuthInit.ts",
+      "source_location": "L24",
       "file_type": "code"
     },
     {
@@ -27375,7 +27843,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\auth\\hooks\\useLogout.ts",
-      "source_location": "L20",
+      "source_location": "L21",
       "file_type": "code"
     },
     {
@@ -27406,6 +27874,15 @@
       "file_type": "code"
     },
     {
+      "id": "_frontEnd.src.features.auth.hooks.useLogout.import_criptotrufa_store",
+      "label": "@/stores/criptotrufa.store",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\auth\\hooks\\useLogout.ts",
+      "source_location": "L19",
+      "file_type": "code"
+    },
+    {
       "id": "_frontEnd.src.features.auth.hooks.useProfile",
       "label": "useProfile.ts",
       "type": "module",
@@ -27420,7 +27897,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\auth\\hooks\\useProfile.ts",
-      "source_location": "L9",
+      "source_location": "L10",
       "file_type": "code"
     },
     {
@@ -27429,7 +27906,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\auth\\hooks\\useProfile.ts",
-      "source_location": "L17",
+      "source_location": "L18",
       "file_type": "code"
     },
     {
@@ -27438,7 +27915,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\auth\\hooks\\useProfile.ts",
-      "source_location": "L25",
+      "source_location": "L26",
       "file_type": "code"
     },
     {
@@ -27447,7 +27924,25 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\auth\\hooks\\useProfile.ts",
-      "source_location": "L40",
+      "source_location": "L41",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.auth.hooks.useProfile.useChangePassword",
+      "label": "useChangePassword",
+      "type": "function",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\auth\\hooks\\useProfile.ts",
+      "source_location": "L57",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.auth.hooks.useProfile.useUploadAvatar",
+      "label": "useUploadAvatar",
+      "type": "function",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\auth\\hooks\\useProfile.ts",
+      "source_location": "L70",
       "file_type": "code"
     },
     {
@@ -27469,12 +27964,21 @@
       "file_type": "code"
     },
     {
+      "id": "_frontEnd.src.features.auth.hooks.useProfile.import_store",
+      "label": "@/app/store",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\auth\\hooks\\useProfile.ts",
+      "source_location": "L3",
+      "file_type": "code"
+    },
+    {
       "id": "_frontEnd.src.features.auth.hooks.useProfile.import_profileApi",
       "label": "../api/profileApi",
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\auth\\hooks\\useProfile.ts",
-      "source_location": "L3",
+      "source_location": "L4",
       "file_type": "code"
     },
     {
@@ -27483,7 +27987,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\auth\\hooks\\useProfile.ts",
-      "source_location": "L4",
+      "source_location": "L5",
       "file_type": "code"
     },
     {
@@ -28216,6 +28720,15 @@
       "file_type": "code"
     },
     {
+      "id": "_frontEnd.src.features.auth.store.auth.store.import_criptotrufa_store",
+      "label": "@/stores/criptotrufa.store",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\auth\\store\\auth.store.ts",
+      "source_location": "L111",
+      "file_type": "code"
+    },
+    {
       "id": "_frontEnd.src.features.cart.api.cartApi",
       "label": "cartApi.ts",
       "type": "module",
@@ -28311,7 +28824,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\cart\\components\\CartView.tsx",
-      "source_location": "L34",
+      "source_location": "L48",
       "file_type": "code"
     },
     {
@@ -28320,7 +28833,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\cart\\components\\CartView.tsx",
-      "source_location": "L39",
+      "source_location": "L53",
       "file_type": "code"
     },
     {
@@ -28329,7 +28842,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\cart\\components\\CartView.tsx",
-      "source_location": "L121",
+      "source_location": "L148",
       "file_type": "code"
     },
     {
@@ -28338,7 +28851,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\cart\\components\\CartView.tsx",
-      "source_location": "L127",
+      "source_location": "L154",
       "file_type": "code"
     },
     {
@@ -28347,7 +28860,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\cart\\components\\CartView.tsx",
-      "source_location": "L133",
+      "source_location": "L160",
       "file_type": "code"
     },
     {
@@ -28356,7 +28869,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\cart\\components\\CartView.tsx",
-      "source_location": "L144",
+      "source_location": "L174",
       "file_type": "code"
     },
     {
@@ -28392,7 +28905,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\cart\\components\\CartView.tsx",
-      "source_location": "L12",
+      "source_location": "L24",
       "file_type": "code"
     },
     {
@@ -28401,7 +28914,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\cart\\components\\CartView.tsx",
-      "source_location": "L13",
+      "source_location": "L25",
       "file_type": "code"
     },
     {
@@ -28410,7 +28923,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\cart\\components\\CartView.tsx",
-      "source_location": "L15",
+      "source_location": "L27",
       "file_type": "code"
     },
     {
@@ -28419,7 +28932,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\cart\\components\\CartView.tsx",
-      "source_location": "L17",
+      "source_location": "L29",
       "file_type": "code"
     },
     {
@@ -28428,7 +28941,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\cart\\components\\CartView.tsx",
-      "source_location": "L19",
+      "source_location": "L31",
       "file_type": "code"
     },
     {
@@ -28437,7 +28950,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\cart\\components\\CartView.tsx",
-      "source_location": "L25",
+      "source_location": "L37",
       "file_type": "code"
     },
     {
@@ -28446,7 +28959,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\cart\\components\\CartView.tsx",
-      "source_location": "L26",
+      "source_location": "L38",
       "file_type": "code"
     },
     {
@@ -28455,7 +28968,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\cart\\components\\CartView.tsx",
-      "source_location": "L27",
+      "source_location": "L39",
       "file_type": "code"
     },
     {
@@ -28464,16 +28977,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\cart\\components\\CartView.tsx",
-      "source_location": "L28",
-      "file_type": "code"
-    },
-    {
-      "id": "_frontEnd.src.features.cart.components.CartView.import_useConfig",
-      "label": "@/features/config/hooks/useConfig",
-      "type": "import",
-      "description": "",
-      "source_file": "_frontEnd\\src\\features\\cart\\components\\CartView.tsx",
-      "source_location": "L29",
+      "source_location": "L40",
       "file_type": "code"
     },
     {
@@ -28482,7 +28986,16 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\cart\\components\\CartView.tsx",
-      "source_location": "L30",
+      "source_location": "L42",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.cart.components.CartView.import_useConfig",
+      "label": "@/features/config/hooks/useConfig",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\cart\\components\\CartView.tsx",
+      "source_location": "L43",
       "file_type": "code"
     },
     {
@@ -28491,7 +29004,16 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\cart\\components\\CartView.tsx",
-      "source_location": "L32",
+      "source_location": "L45",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.cart.components.CartView.import_CheckoutAuthModal",
+      "label": "@/features/auth/components/CheckoutAuthModal",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\cart\\components\\CartView.tsx",
+      "source_location": "L46",
       "file_type": "code"
     },
     {
@@ -28509,7 +29031,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\cart\\components\\PaymentModal.tsx",
-      "source_location": "L48",
+      "source_location": "L51",
       "file_type": "code"
     },
     {
@@ -28518,7 +29040,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\cart\\components\\PaymentModal.tsx",
-      "source_location": "L53",
+      "source_location": "L56",
       "file_type": "code"
     },
     {
@@ -28527,7 +29049,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\cart\\components\\PaymentModal.tsx",
-      "source_location": "L64",
+      "source_location": "L67",
       "file_type": "code"
     },
     {
@@ -28536,7 +29058,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\cart\\components\\PaymentModal.tsx",
-      "source_location": "L78",
+      "source_location": "L81",
       "file_type": "code"
     },
     {
@@ -28545,7 +29067,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\cart\\components\\PaymentModal.tsx",
-      "source_location": "L92",
+      "source_location": "L95",
       "file_type": "code"
     },
     {
@@ -28563,7 +29085,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\cart\\components\\PaymentModal.tsx",
-      "source_location": "L171",
+      "source_location": "L174",
       "file_type": "code"
     },
     {
@@ -28572,7 +29094,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\cart\\components\\PaymentModal.tsx",
-      "source_location": "L192",
+      "source_location": "L195",
       "file_type": "code"
     },
     {
@@ -28581,7 +29103,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\cart\\components\\PaymentModal.tsx",
-      "source_location": "L219",
+      "source_location": "L222",
       "file_type": "code"
     },
     {
@@ -28590,7 +29112,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\cart\\components\\PaymentModal.tsx",
-      "source_location": "L249",
+      "source_location": "L252",
       "file_type": "code"
     },
     {
@@ -28599,7 +29121,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\cart\\components\\PaymentModal.tsx",
-      "source_location": "L256",
+      "source_location": "L259",
       "file_type": "code"
     },
     {
@@ -28729,12 +29251,39 @@
       "file_type": "code"
     },
     {
+      "id": "_frontEnd.src.features.cart.hooks.useCart.getLocalCart",
+      "label": "getLocalCart",
+      "type": "function",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\cart\\hooks\\useCart.ts",
+      "source_location": "L13",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.cart.hooks.useCart.saveLocalCart",
+      "label": "saveLocalCart",
+      "type": "function",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\cart\\hooks\\useCart.ts",
+      "source_location": "L30",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.cart.hooks.useCart.fetchItemDetails",
+      "label": "fetchItemDetails",
+      "type": "function",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\cart\\hooks\\useCart.ts",
+      "source_location": "L34",
+      "file_type": "code"
+    },
+    {
       "id": "_frontEnd.src.features.cart.hooks.useCart.useCartQuery",
       "label": "useCartQuery",
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\cart\\hooks\\useCart.ts",
-      "source_location": "L10",
+      "source_location": "L60",
       "file_type": "code"
     },
     {
@@ -28743,7 +29292,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\cart\\hooks\\useCart.ts",
-      "source_location": "L21",
+      "source_location": "L79",
       "file_type": "code"
     },
     {
@@ -28752,7 +29301,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\cart\\hooks\\useCart.ts",
-      "source_location": "L28",
+      "source_location": "L86",
       "file_type": "code"
     },
     {
@@ -28761,7 +29310,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\cart\\hooks\\useCart.ts",
-      "source_location": "L43",
+      "source_location": "L127",
       "file_type": "code"
     },
     {
@@ -28770,7 +29319,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\cart\\hooks\\useCart.ts",
-      "source_location": "L58",
+      "source_location": "L156",
       "file_type": "code"
     },
     {
@@ -28779,7 +29328,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\cart\\hooks\\useCart.ts",
-      "source_location": "L73",
+      "source_location": "L183",
       "file_type": "code"
     },
     {
@@ -28788,7 +29337,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\cart\\hooks\\useCart.ts",
-      "source_location": "L88",
+      "source_location": "L205",
       "file_type": "code"
     },
     {
@@ -28816,6 +29365,33 @@
       "description": "",
       "source_file": "_frontEnd\\src\\features\\cart\\hooks\\useCart.ts",
       "source_location": "L3",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.cart.hooks.useCart.import_store",
+      "label": "@/app/store",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\cart\\hooks\\useCart.ts",
+      "source_location": "L5",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.cart.hooks.useCart.import_catalogAdminApi",
+      "label": "@/features/products/api/catalogAdminApi",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\cart\\hooks\\useCart.ts",
+      "source_location": "L6",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.cart.hooks.useCart.import_packagesApi",
+      "label": "@/features/products/api/packagesApi",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\cart\\hooks\\useCart.ts",
+      "source_location": "L7",
       "file_type": "code"
     },
     {
@@ -29238,7 +29814,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\catalog\\pages\\CatalogPage.tsx",
-      "source_location": "L34",
+      "source_location": "L35",
       "file_type": "code"
     },
     {
@@ -29247,7 +29823,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\catalog\\pages\\CatalogPage.tsx",
-      "source_location": "L39",
+      "source_location": "L40",
       "file_type": "code"
     },
     {
@@ -29256,7 +29832,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\catalog\\pages\\CatalogPage.tsx",
-      "source_location": "L51",
+      "source_location": "L52",
       "file_type": "code"
     },
     {
@@ -29265,7 +29841,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\catalog\\pages\\CatalogPage.tsx",
-      "source_location": "L72",
+      "source_location": "L73",
       "file_type": "code"
     },
     {
@@ -29274,7 +29850,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\catalog\\pages\\CatalogPage.tsx",
-      "source_location": "L212",
+      "source_location": "L220",
       "file_type": "code"
     },
     {
@@ -29283,7 +29859,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\catalog\\pages\\CatalogPage.tsx",
-      "source_location": "L218",
+      "source_location": "L226",
       "file_type": "code"
     },
     {
@@ -29323,12 +29899,21 @@
       "file_type": "code"
     },
     {
+      "id": "_frontEnd.src.features.catalog.pages.CatalogPage.import_react_router",
+      "label": "react-router",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\catalog\\pages\\CatalogPage.tsx",
+      "source_location": "L16",
+      "file_type": "code"
+    },
+    {
       "id": "_frontEnd.src.features.catalog.pages.CatalogPage.import_store",
       "label": "@/app/store",
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\catalog\\pages\\CatalogPage.tsx",
-      "source_location": "L16",
+      "source_location": "L17",
       "file_type": "code"
     },
     {
@@ -29337,7 +29922,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\catalog\\pages\\CatalogPage.tsx",
-      "source_location": "L17",
+      "source_location": "L18",
       "file_type": "code"
     },
     {
@@ -29346,7 +29931,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\catalog\\pages\\CatalogPage.tsx",
-      "source_location": "L19",
+      "source_location": "L20",
       "file_type": "code"
     },
     {
@@ -29355,7 +29940,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\catalog\\pages\\CatalogPage.tsx",
-      "source_location": "L21",
+      "source_location": "L22",
       "file_type": "code"
     },
     {
@@ -29364,7 +29949,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\catalog\\pages\\CatalogPage.tsx",
-      "source_location": "L23",
+      "source_location": "L24",
       "file_type": "code"
     },
     {
@@ -29373,7 +29958,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\catalog\\pages\\CatalogPage.tsx",
-      "source_location": "L24",
+      "source_location": "L25",
       "file_type": "code"
     },
     {
@@ -29382,7 +29967,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\catalog\\pages\\CatalogPage.tsx",
-      "source_location": "L25",
+      "source_location": "L26",
       "file_type": "code"
     },
     {
@@ -29391,7 +29976,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\catalog\\pages\\CatalogPage.tsx",
-      "source_location": "L27",
+      "source_location": "L28",
       "file_type": "code"
     },
     {
@@ -29400,7 +29985,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\catalog\\pages\\CatalogPage.tsx",
-      "source_location": "L28",
+      "source_location": "L29",
       "file_type": "code"
     },
     {
@@ -29409,7 +29994,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\catalog\\pages\\CatalogPage.tsx",
-      "source_location": "L29",
+      "source_location": "L30",
       "file_type": "code"
     },
     {
@@ -29418,7 +30003,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\catalog\\pages\\CatalogPage.tsx",
-      "source_location": "L30",
+      "source_location": "L31",
       "file_type": "code"
     },
     {
@@ -29445,7 +30030,7 @@
       "type": "interface",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\config\\api\\config.api.ts",
-      "source_location": "L11",
+      "source_location": "L12",
       "file_type": "code"
     },
     {
@@ -29454,7 +30039,7 @@
       "type": "interface",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\config\\api\\config.api.ts",
-      "source_location": "L19",
+      "source_location": "L20",
       "file_type": "code"
     },
     {
@@ -31461,7 +32046,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\orders\\pages\\CustomerOrderDetailPage.tsx",
-      "source_location": "L43",
+      "source_location": "L38",
       "file_type": "code"
     },
     {
@@ -31470,7 +32055,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\orders\\pages\\CustomerOrderDetailPage.tsx",
-      "source_location": "L50",
+      "source_location": "L45",
       "file_type": "code"
     },
     {
@@ -31479,7 +32064,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\orders\\pages\\CustomerOrderDetailPage.tsx",
-      "source_location": "L74",
+      "source_location": "L63",
       "file_type": "code"
     },
     {
@@ -31488,25 +32073,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\orders\\pages\\CustomerOrderDetailPage.tsx",
-      "source_location": "L101",
-      "file_type": "code"
-    },
-    {
-      "id": "_frontEnd.src.features.orders.pages.CustomerOrderDetailPage.handleSearch",
-      "label": "handleSearch",
-      "type": "function",
-      "description": "",
-      "source_file": "_frontEnd\\src\\features\\orders\\pages\\CustomerOrderDetailPage.tsx",
-      "source_location": "L125",
-      "file_type": "code"
-    },
-    {
-      "id": "_frontEnd.src.features.orders.pages.CustomerOrderDetailPage.handleLogout",
-      "label": "handleLogout",
-      "type": "function",
-      "description": "",
-      "source_file": "_frontEnd\\src\\features\\orders\\pages\\CustomerOrderDetailPage.tsx",
-      "source_location": "L126",
+      "source_location": "L90",
       "file_type": "code"
     },
     {
@@ -31515,7 +32082,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\orders\\pages\\CustomerOrderDetailPage.tsx",
-      "source_location": "L128",
+      "source_location": "L116",
       "file_type": "code"
     },
     {
@@ -31564,57 +32131,12 @@
       "file_type": "code"
     },
     {
-      "id": "_frontEnd.src.features.orders.pages.CustomerOrderDetailPage.import_store",
-      "label": "@/app/store",
-      "type": "import",
-      "description": "",
-      "source_file": "_frontEnd\\src\\features\\orders\\pages\\CustomerOrderDetailPage.tsx",
-      "source_location": "L13",
-      "file_type": "code"
-    },
-    {
-      "id": "_frontEnd.src.features.orders.pages.CustomerOrderDetailPage.import_useLogout",
-      "label": "@/features/auth/hooks/useLogout",
-      "type": "import",
-      "description": "",
-      "source_file": "_frontEnd\\src\\features\\orders\\pages\\CustomerOrderDetailPage.tsx",
-      "source_location": "L14",
-      "file_type": "code"
-    },
-    {
-      "id": "_frontEnd.src.features.orders.pages.CustomerOrderDetailPage.import_PublicHeader",
-      "label": "@/shared/components/layout/PublicHeader",
-      "type": "import",
-      "description": "",
-      "source_file": "_frontEnd\\src\\features\\orders\\pages\\CustomerOrderDetailPage.tsx",
-      "source_location": "L15",
-      "file_type": "code"
-    },
-    {
-      "id": "_frontEnd.src.features.orders.pages.CustomerOrderDetailPage.import_PublicFooter",
-      "label": "@/shared/components/layout/PublicFooter",
-      "type": "import",
-      "description": "",
-      "source_file": "_frontEnd\\src\\features\\orders\\pages\\CustomerOrderDetailPage.tsx",
-      "source_location": "L16",
-      "file_type": "code"
-    },
-    {
-      "id": "_frontEnd.src.features.orders.pages.CustomerOrderDetailPage.import_useCart",
-      "label": "@/features/cart/hooks/useCart",
-      "type": "import",
-      "description": "",
-      "source_file": "_frontEnd\\src\\features\\orders\\pages\\CustomerOrderDetailPage.tsx",
-      "source_location": "L17",
-      "file_type": "code"
-    },
-    {
       "id": "_frontEnd.src.features.orders.pages.CustomerOrderDetailPage.import_useOrders",
       "label": "@/features/orders/hooks/useOrders",
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\orders\\pages\\CustomerOrderDetailPage.tsx",
-      "source_location": "L18",
+      "source_location": "L13",
       "file_type": "code"
     },
     {
@@ -31623,7 +32145,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\orders\\pages\\CustomerOrderDetailPage.tsx",
-      "source_location": "L19",
+      "source_location": "L14",
       "file_type": "code"
     },
     {
@@ -31632,7 +32154,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\orders\\pages\\CustomerOrderDetailPage.tsx",
-      "source_location": "L20",
+      "source_location": "L15",
       "file_type": "code"
     },
     {
@@ -31641,7 +32163,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\orders\\pages\\CustomerOrderDetailPage.tsx",
-      "source_location": "L21",
+      "source_location": "L16",
       "file_type": "code"
     },
     {
@@ -31650,7 +32172,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\orders\\pages\\CustomerOrderDetailPage.tsx",
-      "source_location": "L22",
+      "source_location": "L17",
       "file_type": "code"
     },
     {
@@ -31659,7 +32181,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\orders\\pages\\CustomerOrderDetailPage.tsx",
-      "source_location": "L23",
+      "source_location": "L18",
       "file_type": "code"
     },
     {
@@ -31668,7 +32190,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\orders\\pages\\CustomerOrderDetailPage.tsx",
-      "source_location": "L24",
+      "source_location": "L19",
       "file_type": "code"
     },
     {
@@ -31686,7 +32208,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\orders\\pages\\CustomerOrdersPage.tsx",
-      "source_location": "L41",
+      "source_location": "L38",
       "file_type": "code"
     },
     {
@@ -31699,39 +32221,12 @@
       "file_type": "code"
     },
     {
-      "id": "_frontEnd.src.features.orders.pages.CustomerOrdersPage.handleSearch",
-      "label": "handleSearch",
-      "type": "function",
-      "description": "",
-      "source_file": "_frontEnd\\src\\features\\orders\\pages\\CustomerOrdersPage.tsx",
-      "source_location": "L59",
-      "file_type": "code"
-    },
-    {
-      "id": "_frontEnd.src.features.orders.pages.CustomerOrdersPage.handleLogout",
-      "label": "handleLogout",
-      "type": "function",
-      "description": "",
-      "source_file": "_frontEnd\\src\\features\\orders\\pages\\CustomerOrdersPage.tsx",
-      "source_location": "L60",
-      "file_type": "code"
-    },
-    {
-      "id": "_frontEnd.src.features.orders.pages.CustomerOrdersPage.import_react",
-      "label": "react",
-      "type": "import",
-      "description": "",
-      "source_file": "_frontEnd\\src\\features\\orders\\pages\\CustomerOrdersPage.tsx",
-      "source_location": "L7",
-      "file_type": "code"
-    },
-    {
       "id": "_frontEnd.src.features.orders.pages.CustomerOrdersPage.import_react_router",
       "label": "react-router",
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\orders\\pages\\CustomerOrdersPage.tsx",
-      "source_location": "L8",
+      "source_location": "L7",
       "file_type": "code"
     },
     {
@@ -31740,16 +32235,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\orders\\pages\\CustomerOrdersPage.tsx",
-      "source_location": "L9",
-      "file_type": "code"
-    },
-    {
-      "id": "_frontEnd.src.features.orders.pages.CustomerOrdersPage.import_sonner",
-      "label": "sonner",
-      "type": "import",
-      "description": "",
-      "source_file": "_frontEnd\\src\\features\\orders\\pages\\CustomerOrdersPage.tsx",
-      "source_location": "L10",
+      "source_location": "L8",
       "file_type": "code"
     },
     {
@@ -31758,52 +32244,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\orders\\pages\\CustomerOrdersPage.tsx",
-      "source_location": "L11",
-      "file_type": "code"
-    },
-    {
-      "id": "_frontEnd.src.features.orders.pages.CustomerOrdersPage.import_store",
-      "label": "@/app/store",
-      "type": "import",
-      "description": "",
-      "source_file": "_frontEnd\\src\\features\\orders\\pages\\CustomerOrdersPage.tsx",
-      "source_location": "L16",
-      "file_type": "code"
-    },
-    {
-      "id": "_frontEnd.src.features.orders.pages.CustomerOrdersPage.import_useLogout",
-      "label": "@/features/auth/hooks/useLogout",
-      "type": "import",
-      "description": "",
-      "source_file": "_frontEnd\\src\\features\\orders\\pages\\CustomerOrdersPage.tsx",
-      "source_location": "L17",
-      "file_type": "code"
-    },
-    {
-      "id": "_frontEnd.src.features.orders.pages.CustomerOrdersPage.import_PublicHeader",
-      "label": "@/shared/components/layout/PublicHeader",
-      "type": "import",
-      "description": "",
-      "source_file": "_frontEnd\\src\\features\\orders\\pages\\CustomerOrdersPage.tsx",
-      "source_location": "L18",
-      "file_type": "code"
-    },
-    {
-      "id": "_frontEnd.src.features.orders.pages.CustomerOrdersPage.import_PublicFooter",
-      "label": "@/shared/components/layout/PublicFooter",
-      "type": "import",
-      "description": "",
-      "source_file": "_frontEnd\\src\\features\\orders\\pages\\CustomerOrdersPage.tsx",
-      "source_location": "L20",
-      "file_type": "code"
-    },
-    {
-      "id": "_frontEnd.src.features.orders.pages.CustomerOrdersPage.import_useCart",
-      "label": "@/features/cart/hooks/useCart",
-      "type": "import",
-      "description": "",
-      "source_file": "_frontEnd\\src\\features\\orders\\pages\\CustomerOrdersPage.tsx",
-      "source_location": "L21",
+      "source_location": "L9",
       "file_type": "code"
     },
     {
@@ -31812,7 +32253,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\orders\\pages\\CustomerOrdersPage.tsx",
-      "source_location": "L22",
+      "source_location": "L19",
       "file_type": "code"
     },
     {
@@ -32622,12 +33063,21 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\products\\components\\BenefitsSection.tsx",
-      "source_location": "L59",
+      "source_location": "L37",
       "file_type": "code"
     },
     {
-      "id": "_frontEnd.src.features.products.components.BenefitsSection.import_sonner",
-      "label": "sonner",
+      "id": "_frontEnd.src.features.products.components.BenefitsSection.BenefitsSectionProps",
+      "label": "BenefitsSectionProps",
+      "type": "interface",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\products\\components\\BenefitsSection.tsx",
+      "source_location": "L33",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.products.components.BenefitsSection.import_react",
+      "label": "react",
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\products\\components\\BenefitsSection.tsx",
@@ -32641,6 +33091,15 @@
       "description": "",
       "source_file": "_frontEnd\\src\\features\\products\\components\\BenefitsSection.tsx",
       "source_location": "L16",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.products.components.BenefitsSection.import_CustomizationModal",
+      "label": "./CustomizationModal",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\products\\components\\BenefitsSection.tsx",
+      "source_location": "L17",
       "file_type": "code"
     },
     {
@@ -32716,6 +33175,87 @@
       "file_type": "code"
     },
     {
+      "id": "_frontEnd.src.features.products.components.CustomizationModal",
+      "label": "CustomizationModal.tsx",
+      "type": "module",
+      "description": "TypeScript module CustomizationModal.tsx",
+      "source_file": "_frontEnd\\src\\features\\products\\components\\CustomizationModal.tsx",
+      "source_location": "L1",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.products.components.CustomizationModal.CustomizationModal",
+      "label": "CustomizationModal",
+      "type": "function",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\products\\components\\CustomizationModal.tsx",
+      "source_location": "L13",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.products.components.CustomizationModal.CustomizationModalProps",
+      "label": "CustomizationModalProps",
+      "type": "interface",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\products\\components\\CustomizationModal.tsx",
+      "source_location": "L6",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.products.components.CustomizationModal.handleChange",
+      "label": "handleChange",
+      "type": "function",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\products\\components\\CustomizationModal.tsx",
+      "source_location": "L22",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.products.components.CustomizationModal.handleSubmit",
+      "label": "handleSubmit",
+      "type": "function",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\products\\components\\CustomizationModal.tsx",
+      "source_location": "L26",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.products.components.CustomizationModal.import_react",
+      "label": "react",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\products\\components\\CustomizationModal.tsx",
+      "source_location": "L1",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.products.components.CustomizationModal.import_framer_motion",
+      "label": "framer-motion",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\products\\components\\CustomizationModal.tsx",
+      "source_location": "L2",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.products.components.CustomizationModal.import_lucide_react",
+      "label": "lucide-react",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\products\\components\\CustomizationModal.tsx",
+      "source_location": "L3",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.products.components.CustomizationModal.import_sonner",
+      "label": "sonner",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\products\\components\\CustomizationModal.tsx",
+      "source_location": "L4",
+      "file_type": "code"
+    },
+    {
       "id": "_frontEnd.src.features.products.components.HeroSection",
       "label": "HeroSection.tsx",
       "type": "module",
@@ -32725,12 +33265,21 @@
       "file_type": "code"
     },
     {
+      "id": "_frontEnd.src.features.products.components.HeroSection.AnimatedCounter",
+      "label": "AnimatedCounter",
+      "type": "function",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\products\\components\\HeroSection.tsx",
+      "source_location": "L31",
+      "file_type": "code"
+    },
+    {
       "id": "_frontEnd.src.features.products.components.HeroSection.HeroSection",
       "label": "HeroSection",
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\products\\components\\HeroSection.tsx",
-      "source_location": "L31",
+      "source_location": "L48",
       "file_type": "code"
     },
     {
@@ -32739,7 +33288,7 @@
       "type": "interface",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\products\\components\\HeroSection.tsx",
-      "source_location": "L17",
+      "source_location": "L18",
       "file_type": "code"
     },
     {
@@ -32748,7 +33297,25 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\products\\components\\HeroSection.tsx",
+      "source_location": "L12",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.products.components.HeroSection.import_react",
+      "label": "react",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\products\\components\\HeroSection.tsx",
       "source_location": "L13",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.products.components.HeroSection.import_framer_motion",
+      "label": "framer-motion",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\products\\components\\HeroSection.tsx",
+      "source_location": "L14",
       "file_type": "code"
     },
     {
@@ -33085,21 +33652,21 @@
       "file_type": "code"
     },
     {
-      "id": "_frontEnd.src.features.products.components.PacksSection.goLeft",
-      "label": "goLeft",
+      "id": "_frontEnd.src.features.products.components.PacksSection.handleResize",
+      "label": "handleResize",
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\products\\components\\PacksSection.tsx",
-      "source_location": "L26",
+      "source_location": "L23",
       "file_type": "code"
     },
     {
-      "id": "_frontEnd.src.features.products.components.PacksSection.goRight",
-      "label": "goRight",
+      "id": "_frontEnd.src.features.products.components.PacksSection.getItemWidth",
+      "label": "getItemWidth",
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\products\\components\\PacksSection.tsx",
-      "source_location": "L27",
+      "source_location": "L66",
       "file_type": "code"
     },
     {
@@ -33108,7 +33675,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\products\\components\\PacksSection.tsx",
-      "source_location": "L7",
+      "source_location": "L8",
       "file_type": "code"
     },
     {
@@ -33117,7 +33684,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\products\\components\\PacksSection.tsx",
-      "source_location": "L8",
+      "source_location": "L9",
       "file_type": "code"
     },
     {
@@ -33126,7 +33693,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\products\\components\\PacksSection.tsx",
-      "source_location": "L9",
+      "source_location": "L10",
       "file_type": "code"
     },
     {
@@ -33135,7 +33702,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\products\\components\\PacksSection.tsx",
-      "source_location": "L10",
+      "source_location": "L11",
       "file_type": "code"
     },
     {
@@ -33144,7 +33711,16 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\products\\components\\PacksSection.tsx",
-      "source_location": "L11",
+      "source_location": "L12",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.products.components.PacksSection.import_types",
+      "label": "../types",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\products\\components\\PacksSection.tsx",
+      "source_location": "L13",
       "file_type": "code"
     },
     {
@@ -33162,7 +33738,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\products\\components\\TrufaCard.tsx",
-      "source_location": "L19",
+      "source_location": "L21",
       "file_type": "code"
     },
     {
@@ -33171,7 +33747,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\products\\components\\TrufaCard.tsx",
-      "source_location": "L26",
+      "source_location": "L28",
       "file_type": "code"
     },
     {
@@ -33180,7 +33756,7 @@
       "type": "interface",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\products\\components\\TrufaCard.tsx",
-      "source_location": "L14",
+      "source_location": "L16",
       "file_type": "code"
     },
     {
@@ -33189,7 +33765,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\products\\components\\TrufaCard.tsx",
-      "source_location": "L7",
+      "source_location": "L9",
       "file_type": "code"
     },
     {
@@ -33198,7 +33774,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\products\\components\\TrufaCard.tsx",
-      "source_location": "L8",
+      "source_location": "L10",
       "file_type": "code"
     },
     {
@@ -33207,7 +33783,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\products\\components\\TrufaCard.tsx",
-      "source_location": "L9",
+      "source_location": "L11",
       "file_type": "code"
     },
     {
@@ -33216,7 +33792,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\products\\components\\TrufaCard.tsx",
-      "source_location": "L10",
+      "source_location": "L12",
       "file_type": "code"
     },
     {
@@ -33522,7 +34098,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\products\\pages\\CatalogAdminPage.tsx",
-      "source_location": "L767",
+      "source_location": "L776",
       "file_type": "code"
     },
     {
@@ -33531,7 +34107,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\products\\pages\\CatalogAdminPage.tsx",
-      "source_location": "L775",
+      "source_location": "L784",
       "file_type": "code"
     },
     {
@@ -33540,7 +34116,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\products\\pages\\CatalogAdminPage.tsx",
-      "source_location": "L788",
+      "source_location": "L797",
       "file_type": "code"
     },
     {
@@ -33549,7 +34125,7 @@
       "type": "interface",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\products\\pages\\CatalogAdminPage.tsx",
-      "source_location": "L783",
+      "source_location": "L792",
       "file_type": "code"
     },
     {
@@ -33666,7 +34242,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\products\\pages\\CatalogAdminPage.tsx",
-      "source_location": "L815",
+      "source_location": "L824",
       "file_type": "code"
     },
     {
@@ -33954,7 +34530,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\products\\pages\\ProductDetailView.tsx",
-      "source_location": "L58",
+      "source_location": "L59",
       "file_type": "code"
     },
     {
@@ -33963,7 +34539,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\products\\pages\\ProductDetailView.tsx",
-      "source_location": "L82",
+      "source_location": "L83",
       "file_type": "code"
     },
     {
@@ -33972,7 +34548,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\products\\pages\\ProductDetailView.tsx",
-      "source_location": "L121",
+      "source_location": "L127",
       "file_type": "code"
     },
     {
@@ -33981,7 +34557,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\products\\pages\\ProductDetailView.tsx",
-      "source_location": "L127",
+      "source_location": "L133",
       "file_type": "code"
     },
     {
@@ -33990,7 +34566,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\products\\pages\\ProductDetailView.tsx",
-      "source_location": "L133",
+      "source_location": "L139",
       "file_type": "code"
     },
     {
@@ -33999,7 +34575,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\products\\pages\\ProductDetailView.tsx",
-      "source_location": "L136",
+      "source_location": "L141",
       "file_type": "code"
     },
     {
@@ -34008,7 +34584,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\products\\pages\\ProductDetailView.tsx",
-      "source_location": "L141",
+      "source_location": "L146",
       "file_type": "code"
     },
     {
@@ -34017,7 +34593,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\products\\pages\\ProductDetailView.tsx",
-      "source_location": "L167",
+      "source_location": "L172",
       "file_type": "code"
     },
     {
@@ -34026,7 +34602,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\products\\pages\\ProductDetailView.tsx",
-      "source_location": "L175",
+      "source_location": "L180",
       "file_type": "code"
     },
     {
@@ -34129,12 +34705,21 @@
       "file_type": "code"
     },
     {
+      "id": "_frontEnd.src.features.products.pages.ProductDetailView.import_useCategories",
+      "label": "../hooks/useCategories",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\products\\pages\\ProductDetailView.tsx",
+      "source_location": "L48",
+      "file_type": "code"
+    },
+    {
       "id": "_frontEnd.src.features.products.pages.ProductDetailView.import_InfoModal",
       "label": "../components/InfoModal",
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\products\\pages\\ProductDetailView.tsx",
-      "source_location": "L50",
+      "source_location": "L51",
       "file_type": "code"
     },
     {
@@ -34207,6 +34792,312 @@
       "description": "",
       "source_file": "_frontEnd\\src\\features\\products\\types.ts",
       "source_location": "L97",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.profile.components.CustomerProfileLayout",
+      "label": "CustomerProfileLayout.tsx",
+      "type": "module",
+      "description": "TypeScript module CustomerProfileLayout.tsx",
+      "source_file": "_frontEnd\\src\\features\\profile\\components\\CustomerProfileLayout.tsx",
+      "source_location": "L1",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.profile.components.CustomerProfileLayout.CustomerProfileLayout",
+      "label": "CustomerProfileLayout",
+      "type": "function",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\profile\\components\\CustomerProfileLayout.tsx",
+      "source_location": "L11",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.profile.components.CustomerProfileLayout.handleSearch",
+      "label": "handleSearch",
+      "type": "function",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\profile\\components\\CustomerProfileLayout.tsx",
+      "source_location": "L20",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.profile.components.CustomerProfileLayout.handleLogout",
+      "label": "handleLogout",
+      "type": "function",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\profile\\components\\CustomerProfileLayout.tsx",
+      "source_location": "L24",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.profile.components.CustomerProfileLayout.import_react",
+      "label": "react",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\profile\\components\\CustomerProfileLayout.tsx",
+      "source_location": "L1",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.profile.components.CustomerProfileLayout.import_react_router",
+      "label": "react-router",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\profile\\components\\CustomerProfileLayout.tsx",
+      "source_location": "L2",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.profile.components.CustomerProfileLayout.import_lucide_react",
+      "label": "lucide-react",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\profile\\components\\CustomerProfileLayout.tsx",
+      "source_location": "L3",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.profile.components.CustomerProfileLayout.import_store",
+      "label": "@/app/store",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\profile\\components\\CustomerProfileLayout.tsx",
+      "source_location": "L4",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.profile.components.CustomerProfileLayout.import_useLogout",
+      "label": "@/features/auth/hooks/useLogout",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\profile\\components\\CustomerProfileLayout.tsx",
+      "source_location": "L5",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.profile.components.CustomerProfileLayout.import_PublicHeader",
+      "label": "@/shared/components/layout/PublicHeader",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\profile\\components\\CustomerProfileLayout.tsx",
+      "source_location": "L6",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.profile.components.CustomerProfileLayout.import_PublicFooter",
+      "label": "@/shared/components/layout/PublicFooter",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\profile\\components\\CustomerProfileLayout.tsx",
+      "source_location": "L7",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.profile.components.CustomerProfileLayout.import_useCart",
+      "label": "@/features/cart/hooks/useCart",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\profile\\components\\CustomerProfileLayout.tsx",
+      "source_location": "L8",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.profile.components.CustomerProfileLayout.import_sonner",
+      "label": "sonner",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\profile\\components\\CustomerProfileLayout.tsx",
+      "source_location": "L9",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.profile.pages.ProfileInfoPage",
+      "label": "ProfileInfoPage.tsx",
+      "type": "module",
+      "description": "TypeScript module ProfileInfoPage.tsx",
+      "source_file": "_frontEnd\\src\\features\\profile\\pages\\ProfileInfoPage.tsx",
+      "source_location": "L1",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.profile.pages.ProfileInfoPage.ProfileInfoPage",
+      "label": "ProfileInfoPage",
+      "type": "function",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\profile\\pages\\ProfileInfoPage.tsx",
+      "source_location": "L76",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.profile.pages.ProfileInfoPage.handleChange",
+      "label": "handleChange",
+      "type": "function",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\profile\\pages\\ProfileInfoPage.tsx",
+      "source_location": "L123",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.profile.pages.ProfileInfoPage.handleFileChange",
+      "label": "handleFileChange",
+      "type": "function",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\profile\\pages\\ProfileInfoPage.tsx",
+      "source_location": "L132",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.profile.pages.ProfileInfoPage.handleSubmit",
+      "label": "handleSubmit",
+      "type": "function",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\profile\\pages\\ProfileInfoPage.tsx",
+      "source_location": "L207",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.profile.pages.ProfileInfoPage.inputClass",
+      "label": "inputClass",
+      "type": "function",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\profile\\pages\\ProfileInfoPage.tsx",
+      "source_location": "L244",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.profile.pages.ProfileInfoPage.import_react",
+      "label": "react",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\profile\\pages\\ProfileInfoPage.tsx",
+      "source_location": "L1",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.profile.pages.ProfileInfoPage.import_framer_motion",
+      "label": "framer-motion",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\profile\\pages\\ProfileInfoPage.tsx",
+      "source_location": "L2",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.profile.pages.ProfileInfoPage.import_lucide_react",
+      "label": "lucide-react",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\profile\\pages\\ProfileInfoPage.tsx",
+      "source_location": "L3",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.profile.pages.ProfileInfoPage.import_store",
+      "label": "@/app/store",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\profile\\pages\\ProfileInfoPage.tsx",
+      "source_location": "L4",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.profile.pages.ProfileInfoPage.import_useProfile",
+      "label": "@/features/auth/hooks/useProfile",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\profile\\pages\\ProfileInfoPage.tsx",
+      "source_location": "L5",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.profile.pages.ProfileInfoPage.import_zod",
+      "label": "zod",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\profile\\pages\\ProfileInfoPage.tsx",
+      "source_location": "L6",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.profile.pages.SecurityPage",
+      "label": "SecurityPage.tsx",
+      "type": "module",
+      "description": "TypeScript module SecurityPage.tsx",
+      "source_file": "_frontEnd\\src\\features\\profile\\pages\\SecurityPage.tsx",
+      "source_location": "L1",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.profile.pages.SecurityPage.SecurityPage",
+      "label": "SecurityPage",
+      "type": "function",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\profile\\pages\\SecurityPage.tsx",
+      "source_location": "L6",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.profile.pages.SecurityPage.handleChange",
+      "label": "handleChange",
+      "type": "function",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\profile\\pages\\SecurityPage.tsx",
+      "source_location": "L18",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.profile.pages.SecurityPage.validatePassword",
+      "label": "validatePassword",
+      "type": "function",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\profile\\pages\\SecurityPage.tsx",
+      "source_location": "L23",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.profile.pages.SecurityPage.handleSubmit",
+      "label": "handleSubmit",
+      "type": "function",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\profile\\pages\\SecurityPage.tsx",
+      "source_location": "L30",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.profile.pages.SecurityPage.import_react",
+      "label": "react",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\profile\\pages\\SecurityPage.tsx",
+      "source_location": "L1",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.profile.pages.SecurityPage.import_framer_motion",
+      "label": "framer-motion",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\profile\\pages\\SecurityPage.tsx",
+      "source_location": "L2",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.profile.pages.SecurityPage.import_lucide_react",
+      "label": "lucide-react",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\profile\\pages\\SecurityPage.tsx",
+      "source_location": "L3",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.profile.pages.SecurityPage.import_useProfile",
+      "label": "@/features/auth/hooks/useProfile",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\profile\\pages\\SecurityPage.tsx",
+      "source_location": "L4",
       "file_type": "code"
     },
     {
@@ -35412,7 +36303,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\sweetcoins\\pages\\PointsView.tsx",
-      "source_location": "L46",
+      "source_location": "L49",
       "file_type": "code"
     },
     {
@@ -35421,7 +36312,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\sweetcoins\\pages\\PointsView.tsx",
-      "source_location": "L55",
+      "source_location": "L58",
       "file_type": "code"
     },
     {
@@ -35430,7 +36321,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\sweetcoins\\pages\\PointsView.tsx",
-      "source_location": "L89",
+      "source_location": "L94",
       "file_type": "code"
     },
     {
@@ -35439,7 +36330,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\sweetcoins\\pages\\PointsView.tsx",
-      "source_location": "L100",
+      "source_location": "L105",
       "file_type": "code"
     },
     {
@@ -35448,7 +36339,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\sweetcoins\\pages\\PointsView.tsx",
-      "source_location": "L101",
+      "source_location": "L106",
       "file_type": "code"
     },
     {
@@ -35457,7 +36348,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\sweetcoins\\pages\\PointsView.tsx",
-      "source_location": "L104",
+      "source_location": "L109",
       "file_type": "code"
     },
     {
@@ -35493,7 +36384,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\sweetcoins\\pages\\PointsView.tsx",
-      "source_location": "L28",
+      "source_location": "L29",
       "file_type": "code"
     },
     {
@@ -35502,7 +36393,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\sweetcoins\\pages\\PointsView.tsx",
-      "source_location": "L31",
+      "source_location": "L32",
       "file_type": "code"
     },
     {
@@ -35511,7 +36402,25 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\sweetcoins\\pages\\PointsView.tsx",
-      "source_location": "L32",
+      "source_location": "L33",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.sweetcoins.pages.PointsView.import_react_router",
+      "label": "react-router",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\sweetcoins\\pages\\PointsView.tsx",
+      "source_location": "L34",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.features.sweetcoins.pages.PointsView.import_AuthRequireModal",
+      "label": "@/features/auth/components/AuthRequireModal",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\features\\sweetcoins\\pages\\PointsView.tsx",
+      "source_location": "L35",
       "file_type": "code"
     },
     {
@@ -35520,7 +36429,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\sweetcoins\\pages\\PointsView.tsx",
-      "source_location": "L35",
+      "source_location": "L38",
       "file_type": "code"
     },
     {
@@ -35529,7 +36438,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\sweetcoins\\pages\\PointsView.tsx",
-      "source_location": "L36",
+      "source_location": "L39",
       "file_type": "code"
     },
     {
@@ -35538,7 +36447,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\sweetcoins\\pages\\PointsView.tsx",
-      "source_location": "L37",
+      "source_location": "L40",
       "file_type": "code"
     },
     {
@@ -35547,7 +36456,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\sweetcoins\\pages\\PointsView.tsx",
-      "source_location": "L38",
+      "source_location": "L41",
       "file_type": "code"
     },
     {
@@ -35556,7 +36465,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\sweetcoins\\pages\\PointsView.tsx",
-      "source_location": "L41",
+      "source_location": "L44",
       "file_type": "code"
     },
     {
@@ -35565,7 +36474,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\sweetcoins\\pages\\PointsView.tsx",
-      "source_location": "L42",
+      "source_location": "L45",
       "file_type": "code"
     },
     {
@@ -35574,7 +36483,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\features\\sweetcoins\\pages\\PointsView.tsx",
-      "source_location": "L43",
+      "source_location": "L46",
       "file_type": "code"
     },
     {
@@ -36100,6 +37009,15 @@
       "file_type": "code"
     },
     {
+      "id": "_frontEnd.src.main.import_ScrollToTop",
+      "label": "@/shared/components/ScrollToTop",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\main.tsx",
+      "source_location": "L6",
+      "file_type": "code"
+    },
+    {
       "id": "_frontEnd.src.mocks.mockProducts",
       "label": "mockProducts.ts",
       "type": "module",
@@ -36168,7 +37086,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\pages\\public\\HomePage.tsx",
-      "source_location": "L31",
+      "source_location": "L33",
       "file_type": "code"
     },
     {
@@ -36177,7 +37095,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\pages\\public\\HomePage.tsx",
-      "source_location": "L57",
+      "source_location": "L61",
       "file_type": "code"
     },
     {
@@ -36186,7 +37104,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\pages\\public\\HomePage.tsx",
-      "source_location": "L63",
+      "source_location": "L67",
       "file_type": "code"
     },
     {
@@ -36195,7 +37113,16 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\pages\\public\\HomePage.tsx",
-      "source_location": "L69",
+      "source_location": "L73",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.pages.public.HomePage.handleCriptotrufasClick",
+      "label": "handleCriptotrufasClick",
+      "type": "function",
+      "description": "",
+      "source_file": "_frontEnd\\src\\pages\\public\\HomePage.tsx",
+      "source_location": "L76",
       "file_type": "code"
     },
     {
@@ -36217,12 +37144,21 @@
       "file_type": "code"
     },
     {
+      "id": "_frontEnd.src.pages.public.HomePage.import_react_router",
+      "label": "react-router",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\pages\\public\\HomePage.tsx",
+      "source_location": "L14",
+      "file_type": "code"
+    },
+    {
       "id": "_frontEnd.src.pages.public.HomePage.import_store",
       "label": "@/app/store",
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\pages\\public\\HomePage.tsx",
-      "source_location": "L14",
+      "source_location": "L15",
       "file_type": "code"
     },
     {
@@ -36231,7 +37167,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\pages\\public\\HomePage.tsx",
-      "source_location": "L15",
+      "source_location": "L16",
       "file_type": "code"
     },
     {
@@ -36240,7 +37176,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\pages\\public\\HomePage.tsx",
-      "source_location": "L16",
+      "source_location": "L17",
       "file_type": "code"
     },
     {
@@ -36249,7 +37185,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\pages\\public\\HomePage.tsx",
-      "source_location": "L19",
+      "source_location": "L20",
       "file_type": "code"
     },
     {
@@ -36258,7 +37194,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\pages\\public\\HomePage.tsx",
-      "source_location": "L21",
+      "source_location": "L22",
       "file_type": "code"
     },
     {
@@ -36267,7 +37203,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\pages\\public\\HomePage.tsx",
-      "source_location": "L24",
+      "source_location": "L25",
       "file_type": "code"
     },
     {
@@ -36276,7 +37212,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\pages\\public\\HomePage.tsx",
-      "source_location": "L25",
+      "source_location": "L26",
       "file_type": "code"
     },
     {
@@ -36285,7 +37221,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\pages\\public\\HomePage.tsx",
-      "source_location": "L26",
+      "source_location": "L27",
       "file_type": "code"
     },
     {
@@ -36294,7 +37230,16 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\pages\\public\\HomePage.tsx",
-      "source_location": "L27",
+      "source_location": "L28",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.pages.public.HomePage.import_AuthRequireModal",
+      "label": "@/features/auth/components/AuthRequireModal",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\pages\\public\\HomePage.tsx",
+      "source_location": "L29",
       "file_type": "code"
     },
     {
@@ -36348,7 +37293,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\shared\\components\\layout\\PublicHeader.tsx",
-      "source_location": "L44",
+      "source_location": "L61",
       "file_type": "code"
     },
     {
@@ -36357,7 +37302,16 @@
       "type": "interface",
       "description": "",
       "source_file": "_frontEnd\\src\\shared\\components\\layout\\PublicHeader.tsx",
-      "source_location": "L23",
+      "source_location": "L40",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.shared.components.layout.PublicHeader.handler",
+      "label": "handler",
+      "type": "function",
+      "description": "",
+      "source_file": "_frontEnd\\src\\shared\\components\\layout\\PublicHeader.tsx",
+      "source_location": "L130",
       "file_type": "code"
     },
     {
@@ -36366,7 +37320,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\shared\\components\\layout\\PublicHeader.tsx",
-      "source_location": "L77",
+      "source_location": "L140",
       "file_type": "code"
     },
     {
@@ -36384,7 +37338,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\shared\\components\\layout\\PublicHeader.tsx",
-      "source_location": "L11",
+      "source_location": "L26",
       "file_type": "code"
     },
     {
@@ -36393,7 +37347,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\shared\\components\\layout\\PublicHeader.tsx",
-      "source_location": "L12",
+      "source_location": "L27",
       "file_type": "code"
     },
     {
@@ -36402,7 +37356,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\shared\\components\\layout\\PublicHeader.tsx",
-      "source_location": "L13",
+      "source_location": "L28",
       "file_type": "code"
     },
     {
@@ -36411,7 +37365,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\shared\\components\\layout\\PublicHeader.tsx",
-      "source_location": "L14",
+      "source_location": "L29",
       "file_type": "code"
     },
     {
@@ -36420,7 +37374,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\shared\\components\\layout\\PublicHeader.tsx",
-      "source_location": "L15",
+      "source_location": "L30",
       "file_type": "code"
     },
     {
@@ -36429,7 +37383,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\shared\\components\\layout\\PublicHeader.tsx",
-      "source_location": "L16",
+      "source_location": "L31",
       "file_type": "code"
     },
     {
@@ -36438,7 +37392,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\shared\\components\\layout\\PublicHeader.tsx",
-      "source_location": "L17",
+      "source_location": "L32",
       "file_type": "code"
     },
     {
@@ -36447,7 +37401,7 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\shared\\components\\layout\\PublicHeader.tsx",
-      "source_location": "L18",
+      "source_location": "L33",
       "file_type": "code"
     },
     {
@@ -36456,7 +37410,25 @@
       "type": "import",
       "description": "",
       "source_file": "_frontEnd\\src\\shared\\components\\layout\\PublicHeader.tsx",
-      "source_location": "L19",
+      "source_location": "L34",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.shared.components.layout.PublicHeader.import_useCatalogAdmin",
+      "label": "@/features/products/hooks/useCatalogAdmin",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\shared\\components\\layout\\PublicHeader.tsx",
+      "source_location": "L35",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.shared.components.layout.PublicHeader.import_types",
+      "label": "@/features/products/types",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\shared\\components\\layout\\PublicHeader.tsx",
+      "source_location": "L36",
       "file_type": "code"
     },
     {
@@ -36493,6 +37465,42 @@
       "description": "",
       "source_file": "_frontEnd\\src\\shared\\components\\layout\\PublicNav.tsx",
       "source_location": "L12",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.shared.components.ScrollToTop",
+      "label": "ScrollToTop.tsx",
+      "type": "module",
+      "description": "TypeScript module ScrollToTop.tsx",
+      "source_file": "_frontEnd\\src\\shared\\components\\ScrollToTop.tsx",
+      "source_location": "L1",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.shared.components.ScrollToTop.ScrollToTop",
+      "label": "ScrollToTop",
+      "type": "function",
+      "description": "",
+      "source_file": "_frontEnd\\src\\shared\\components\\ScrollToTop.tsx",
+      "source_location": "L11",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.shared.components.ScrollToTop.import_react",
+      "label": "react",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\shared\\components\\ScrollToTop.tsx",
+      "source_location": "L8",
+      "file_type": "code"
+    },
+    {
+      "id": "_frontEnd.src.shared.components.ScrollToTop.import_react_router",
+      "label": "react-router",
+      "type": "import",
+      "description": "",
+      "source_file": "_frontEnd\\src\\shared\\components\\ScrollToTop.tsx",
+      "source_location": "L9",
       "file_type": "code"
     },
     {
@@ -36861,7 +37869,7 @@
       "type": "function",
       "description": "",
       "source_file": "_frontEnd\\src\\stores\\criptotrufa.store.ts",
-      "source_location": "L93",
+      "source_location": "L94",
       "file_type": "code"
     },
     {
@@ -39029,6 +40037,11 @@
       "relation": "contains"
     },
     {
+      "source": "_backEnd.app.infrastructure.storage.cloudinary_service",
+      "target": "_backEnd.app.infrastructure.storage.cloudinary_service.get_storage_service",
+      "relation": "contains"
+    },
+    {
       "source": "_backEnd.app.infrastructure.workers.celery_app",
       "target": "_backEnd.app.infrastructure.workers.celery_app.import_celery_Celery",
       "relation": "imports_from"
@@ -39715,6 +40728,21 @@
     },
     {
       "source": "_backEnd.app.modules.auth.router",
+      "target": "_backEnd.app.modules.auth.router.import_fastapi_UploadFile",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.auth.router",
+      "target": "_backEnd.app.modules.auth.router.import_fastapi_File",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.auth.router",
+      "target": "_backEnd.app.modules.auth.router.import_fastapi_HTTPException",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.auth.router",
       "target": "_backEnd.app.modules.auth.router.import_fastapi_responses_JSONResponse",
       "relation": "imports_from"
     },
@@ -39745,7 +40773,22 @@
     },
     {
       "source": "_backEnd.app.modules.auth.router",
+      "target": "_backEnd.app.modules.auth.router.import_app_infrastructure_storage_cloudinary_service_CloudinaryService",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.auth.router",
+      "target": "_backEnd.app.modules.auth.router.import_app_infrastructure_storage_cloudinary_service_get_storage_service",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.auth.router",
       "target": "_backEnd.app.modules.auth.router.import_app_modules_auth_dependencies_get_auth_service",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.auth.router",
+      "target": "_backEnd.app.modules.auth.router.import_app_modules_auth_schemas_ChangePasswordRequest",
       "relation": "imports_from"
     },
     {
@@ -39889,6 +40932,16 @@
       "relation": "contains"
     },
     {
+      "source": "_backEnd.app.modules.auth.router",
+      "target": "_backEnd.app.modules.auth.router.change_password",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.app.modules.auth.router",
+      "target": "_backEnd.app.modules.auth.router.upload_avatar",
+      "relation": "contains"
+    },
+    {
       "source": "_backEnd.app.modules.auth.schemas",
       "target": "_backEnd.app.modules.auth.schemas.import_pydantic_BaseModel",
       "relation": "imports_from"
@@ -39996,6 +41049,16 @@
     {
       "source": "_backEnd.app.modules.auth.schemas",
       "target": "_backEnd.app.modules.auth.schemas.UserProfileUpdate",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.app.modules.auth.schemas",
+      "target": "_backEnd.app.modules.auth.schemas.ChangePasswordRequest",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.app.modules.auth.schemas.ChangePasswordRequest",
+      "target": "_backEnd.app.modules.auth.schemas.ChangePasswordRequest.validate_password_strength",
       "relation": "contains"
     },
     {
@@ -40337,6 +41400,16 @@
       "source": "_backEnd.app.modules.auth.service.AuthService.reset_password",
       "target": "_backEnd.app.modules.auth.service.AuthService.reset_password.import_datetime_timezone",
       "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.auth.service.AuthService",
+      "target": "_backEnd.app.modules.auth.service.AuthService.change_password",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.app.modules.auth.service.AuthService",
+      "target": "_backEnd.app.modules.auth.service.AuthService.update_avatar",
+      "relation": "contains"
     },
     {
       "source": "_backEnd.app.modules.cart.dependencies",
@@ -41275,6 +42348,11 @@
     },
     {
       "source": "_backEnd.app.modules.config.router",
+      "target": "_backEnd.app.modules.config.router.import_decimal_Decimal",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.config.router",
       "target": "_backEnd.app.modules.config.router.import_typing_Annotated",
       "relation": "imports_from"
     },
@@ -41305,6 +42383,11 @@
     },
     {
       "source": "_backEnd.app.modules.config.router",
+      "target": "_backEnd.app.modules.config.router.import_app_modules_config_schemas_PublicShippingCostResponse",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.config.router",
       "target": "_backEnd.app.modules.config.router.import_app_modules_config_service_SystemConfigService",
       "relation": "imports_from"
     },
@@ -41312,6 +42395,11 @@
       "source": "_backEnd.app.modules.config.router",
       "target": "_backEnd.app.modules.config.router.import_app_security_dependencies_AdminUser",
       "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.modules.config.router",
+      "target": "_backEnd.app.modules.config.router.get_shipping_cost",
+      "relation": "contains"
     },
     {
       "source": "_backEnd.app.modules.config.router",
@@ -41371,6 +42459,11 @@
     {
       "source": "_backEnd.app.modules.config.schemas",
       "target": "_backEnd.app.modules.config.schemas.ShippingCalculationResult",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.app.modules.config.schemas",
+      "target": "_backEnd.app.modules.config.schemas.PublicShippingCostResponse",
       "relation": "contains"
     },
     {
@@ -47365,6 +48458,11 @@
     },
     {
       "source": "_backEnd.app.routers.__init__",
+      "target": "_backEnd.app.routers.__init__.import_app_modules_config_router_public_config_router",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.app.routers.__init__",
       "target": "_backEnd.app.routers.__init__.import_app_modules_dashboard_router_dashboard_router",
       "relation": "imports_from"
     },
@@ -47911,6 +49009,41 @@
     {
       "source": "_backEnd.scripts.apply_migration_m15",
       "target": "_backEnd.scripts.apply_migration_m15.main",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.scripts.apply_migration_m16_avatar",
+      "target": "_backEnd.scripts.apply_migration_m16_avatar.import_asyncio",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.scripts.apply_migration_m16_avatar",
+      "target": "_backEnd.scripts.apply_migration_m16_avatar.import_os",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.scripts.apply_migration_m16_avatar",
+      "target": "_backEnd.scripts.apply_migration_m16_avatar.import_sys",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.scripts.apply_migration_m16_avatar",
+      "target": "_backEnd.scripts.apply_migration_m16_avatar.import_pathlib_Path",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.scripts.apply_migration_m16_avatar",
+      "target": "_backEnd.scripts.apply_migration_m16_avatar.import_asyncpg",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_backEnd.scripts.apply_migration_m16_avatar",
+      "target": "_backEnd.scripts.apply_migration_m16_avatar.load_env",
+      "relation": "contains"
+    },
+    {
+      "source": "_backEnd.scripts.apply_migration_m16_avatar",
+      "target": "_backEnd.scripts.apply_migration_m16_avatar.main",
       "relation": "contains"
     },
     {
@@ -50895,6 +52028,11 @@
     },
     {
       "source": "_frontEnd.src.app.providers",
+      "target": "_frontEnd.src.app.providers.AuthInitializer",
+      "relation": "contains"
+    },
+    {
+      "source": "_frontEnd.src.app.providers",
       "target": "_frontEnd.src.app.providers.Providers",
       "relation": "contains"
     },
@@ -50921,6 +52059,16 @@
     {
       "source": "_frontEnd.src.app.providers",
       "target": "_frontEnd.src.app.providers.import_query_client",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.app.providers",
+      "target": "_frontEnd.src.app.providers.import_useAuthInit",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.app.providers",
+      "target": "_frontEnd.src.app.providers.import_store",
       "relation": "imports_from"
     },
     {
@@ -51210,7 +52358,107 @@
     },
     {
       "source": "_frontEnd.src.features.auth.api.profileApi",
+      "target": "_frontEnd.src.features.auth.api.profileApi.ChangePasswordPayload",
+      "relation": "contains"
+    },
+    {
+      "source": "_frontEnd.src.features.auth.api.profileApi",
       "target": "_frontEnd.src.features.auth.api.profileApi.import_axios",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.auth.components.AuthRequireModal",
+      "target": "_frontEnd.src.features.auth.components.AuthRequireModal.AuthRequireModal",
+      "relation": "contains"
+    },
+    {
+      "source": "_frontEnd.src.features.auth.components.AuthRequireModal",
+      "target": "_frontEnd.src.features.auth.components.AuthRequireModal.AuthRequireModalProps",
+      "relation": "contains"
+    },
+    {
+      "source": "_frontEnd.src.features.auth.components.AuthRequireModal",
+      "target": "_frontEnd.src.features.auth.components.AuthRequireModal.handleKey",
+      "relation": "contains"
+    },
+    {
+      "source": "_frontEnd.src.features.auth.components.AuthRequireModal",
+      "target": "_frontEnd.src.features.auth.components.AuthRequireModal.handleLoginRedirect",
+      "relation": "contains"
+    },
+    {
+      "source": "_frontEnd.src.features.auth.components.AuthRequireModal",
+      "target": "_frontEnd.src.features.auth.components.AuthRequireModal.import_react",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.auth.components.AuthRequireModal",
+      "target": "_frontEnd.src.features.auth.components.AuthRequireModal.import_framer_motion",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.auth.components.AuthRequireModal",
+      "target": "_frontEnd.src.features.auth.components.AuthRequireModal.import_react_router",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.auth.components.AuthRequireModal",
+      "target": "_frontEnd.src.features.auth.components.AuthRequireModal.import_lucide_react",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.auth.components.CheckoutAuthModal",
+      "target": "_frontEnd.src.features.auth.components.CheckoutAuthModal.CheckoutAuthModal",
+      "relation": "contains"
+    },
+    {
+      "source": "_frontEnd.src.features.auth.components.CheckoutAuthModal",
+      "target": "_frontEnd.src.features.auth.components.CheckoutAuthModal.CheckoutAuthModalProps",
+      "relation": "contains"
+    },
+    {
+      "source": "_frontEnd.src.features.auth.components.CheckoutAuthModal",
+      "target": "_frontEnd.src.features.auth.components.CheckoutAuthModal.handleKey",
+      "relation": "contains"
+    },
+    {
+      "source": "_frontEnd.src.features.auth.components.CheckoutAuthModal",
+      "target": "_frontEnd.src.features.auth.components.CheckoutAuthModal.import_react",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.auth.components.CheckoutAuthModal",
+      "target": "_frontEnd.src.features.auth.components.CheckoutAuthModal.import_framer_motion",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.auth.components.CheckoutAuthModal",
+      "target": "_frontEnd.src.features.auth.components.CheckoutAuthModal.import_react_router",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.auth.components.CheckoutAuthModal",
+      "target": "_frontEnd.src.features.auth.components.CheckoutAuthModal.import_lucide_react",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.auth.hooks.useAuthInit",
+      "target": "_frontEnd.src.features.auth.hooks.useAuthInit.useAuthInit",
+      "relation": "contains"
+    },
+    {
+      "source": "_frontEnd.src.features.auth.hooks.useAuthInit",
+      "target": "_frontEnd.src.features.auth.hooks.useAuthInit.import_react",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.auth.hooks.useAuthInit",
+      "target": "_frontEnd.src.features.auth.hooks.useAuthInit.import_axios",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.auth.hooks.useAuthInit",
+      "target": "_frontEnd.src.features.auth.hooks.useAuthInit.import_store",
       "relation": "imports_from"
     },
     {
@@ -51354,6 +52602,11 @@
       "relation": "imports_from"
     },
     {
+      "source": "_frontEnd.src.features.auth.hooks.useLogout",
+      "target": "_frontEnd.src.features.auth.hooks.useLogout.import_criptotrufa_store",
+      "relation": "imports_from"
+    },
+    {
       "source": "_frontEnd.src.features.auth.hooks.useProfile",
       "target": "_frontEnd.src.features.auth.hooks.useProfile.useProfileData",
       "relation": "contains"
@@ -51375,12 +52628,27 @@
     },
     {
       "source": "_frontEnd.src.features.auth.hooks.useProfile",
+      "target": "_frontEnd.src.features.auth.hooks.useProfile.useChangePassword",
+      "relation": "contains"
+    },
+    {
+      "source": "_frontEnd.src.features.auth.hooks.useProfile",
+      "target": "_frontEnd.src.features.auth.hooks.useProfile.useUploadAvatar",
+      "relation": "contains"
+    },
+    {
+      "source": "_frontEnd.src.features.auth.hooks.useProfile",
       "target": "_frontEnd.src.features.auth.hooks.useProfile.import_react_query",
       "relation": "imports_from"
     },
     {
       "source": "_frontEnd.src.features.auth.hooks.useProfile",
       "target": "_frontEnd.src.features.auth.hooks.useProfile.import_sonner",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.auth.hooks.useProfile",
+      "target": "_frontEnd.src.features.auth.hooks.useProfile.import_store",
       "relation": "imports_from"
     },
     {
@@ -51744,6 +53012,11 @@
       "relation": "imports_from"
     },
     {
+      "source": "_frontEnd.src.features.auth.store.auth.store",
+      "target": "_frontEnd.src.features.auth.store.auth.store.import_criptotrufa_store",
+      "relation": "imports_from"
+    },
+    {
       "source": "_frontEnd.src.features.cart.api.cartApi",
       "target": "_frontEnd.src.features.cart.api.cartApi.mapCartResponse",
       "relation": "contains"
@@ -51875,17 +53148,22 @@
     },
     {
       "source": "_frontEnd.src.features.cart.components.CartView",
-      "target": "_frontEnd.src.features.cart.components.CartView.import_useConfig",
-      "relation": "imports_from"
-    },
-    {
-      "source": "_frontEnd.src.features.cart.components.CartView",
       "target": "_frontEnd.src.features.cart.components.CartView.import_useCategories",
       "relation": "imports_from"
     },
     {
       "source": "_frontEnd.src.features.cart.components.CartView",
+      "target": "_frontEnd.src.features.cart.components.CartView.import_useConfig",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.cart.components.CartView",
       "target": "_frontEnd.src.features.cart.components.CartView.import_PaymentModal",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.cart.components.CartView",
+      "target": "_frontEnd.src.features.cart.components.CartView.import_CheckoutAuthModal",
       "relation": "imports_from"
     },
     {
@@ -52010,6 +53288,21 @@
     },
     {
       "source": "_frontEnd.src.features.cart.hooks.useCart",
+      "target": "_frontEnd.src.features.cart.hooks.useCart.getLocalCart",
+      "relation": "contains"
+    },
+    {
+      "source": "_frontEnd.src.features.cart.hooks.useCart",
+      "target": "_frontEnd.src.features.cart.hooks.useCart.saveLocalCart",
+      "relation": "contains"
+    },
+    {
+      "source": "_frontEnd.src.features.cart.hooks.useCart",
+      "target": "_frontEnd.src.features.cart.hooks.useCart.fetchItemDetails",
+      "relation": "contains"
+    },
+    {
+      "source": "_frontEnd.src.features.cart.hooks.useCart",
       "target": "_frontEnd.src.features.cart.hooks.useCart.useCartQuery",
       "relation": "contains"
     },
@@ -52056,6 +53349,21 @@
     {
       "source": "_frontEnd.src.features.cart.hooks.useCart",
       "target": "_frontEnd.src.features.cart.hooks.useCart.import_cartApi",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.cart.hooks.useCart",
+      "target": "_frontEnd.src.features.cart.hooks.useCart.import_store",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.cart.hooks.useCart",
+      "target": "_frontEnd.src.features.cart.hooks.useCart.import_catalogAdminApi",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.cart.hooks.useCart",
+      "target": "_frontEnd.src.features.cart.hooks.useCart.import_packagesApi",
       "relation": "imports_from"
     },
     {
@@ -52301,6 +53609,11 @@
     {
       "source": "_frontEnd.src.features.catalog.pages.CatalogPage",
       "target": "_frontEnd.src.features.catalog.pages.CatalogPage.import_lucide_react",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.catalog.pages.CatalogPage",
+      "target": "_frontEnd.src.features.catalog.pages.CatalogPage.import_react_router",
       "relation": "imports_from"
     },
     {
@@ -53365,16 +54678,6 @@
     },
     {
       "source": "_frontEnd.src.features.orders.pages.CustomerOrderDetailPage",
-      "target": "_frontEnd.src.features.orders.pages.CustomerOrderDetailPage.handleSearch",
-      "relation": "contains"
-    },
-    {
-      "source": "_frontEnd.src.features.orders.pages.CustomerOrderDetailPage",
-      "target": "_frontEnd.src.features.orders.pages.CustomerOrderDetailPage.handleLogout",
-      "relation": "contains"
-    },
-    {
-      "source": "_frontEnd.src.features.orders.pages.CustomerOrderDetailPage",
       "target": "_frontEnd.src.features.orders.pages.CustomerOrderDetailPage.handleModalSuccess",
       "relation": "contains"
     },
@@ -53401,31 +54704,6 @@
     {
       "source": "_frontEnd.src.features.orders.pages.CustomerOrderDetailPage",
       "target": "_frontEnd.src.features.orders.pages.CustomerOrderDetailPage.import_lucide_react",
-      "relation": "imports_from"
-    },
-    {
-      "source": "_frontEnd.src.features.orders.pages.CustomerOrderDetailPage",
-      "target": "_frontEnd.src.features.orders.pages.CustomerOrderDetailPage.import_store",
-      "relation": "imports_from"
-    },
-    {
-      "source": "_frontEnd.src.features.orders.pages.CustomerOrderDetailPage",
-      "target": "_frontEnd.src.features.orders.pages.CustomerOrderDetailPage.import_useLogout",
-      "relation": "imports_from"
-    },
-    {
-      "source": "_frontEnd.src.features.orders.pages.CustomerOrderDetailPage",
-      "target": "_frontEnd.src.features.orders.pages.CustomerOrderDetailPage.import_PublicHeader",
-      "relation": "imports_from"
-    },
-    {
-      "source": "_frontEnd.src.features.orders.pages.CustomerOrderDetailPage",
-      "target": "_frontEnd.src.features.orders.pages.CustomerOrderDetailPage.import_PublicFooter",
-      "relation": "imports_from"
-    },
-    {
-      "source": "_frontEnd.src.features.orders.pages.CustomerOrderDetailPage",
-      "target": "_frontEnd.src.features.orders.pages.CustomerOrderDetailPage.import_useCart",
       "relation": "imports_from"
     },
     {
@@ -53475,21 +54753,6 @@
     },
     {
       "source": "_frontEnd.src.features.orders.pages.CustomerOrdersPage",
-      "target": "_frontEnd.src.features.orders.pages.CustomerOrdersPage.handleSearch",
-      "relation": "contains"
-    },
-    {
-      "source": "_frontEnd.src.features.orders.pages.CustomerOrdersPage",
-      "target": "_frontEnd.src.features.orders.pages.CustomerOrdersPage.handleLogout",
-      "relation": "contains"
-    },
-    {
-      "source": "_frontEnd.src.features.orders.pages.CustomerOrdersPage",
-      "target": "_frontEnd.src.features.orders.pages.CustomerOrdersPage.import_react",
-      "relation": "imports_from"
-    },
-    {
-      "source": "_frontEnd.src.features.orders.pages.CustomerOrdersPage",
       "target": "_frontEnd.src.features.orders.pages.CustomerOrdersPage.import_react_router",
       "relation": "imports_from"
     },
@@ -53500,37 +54763,7 @@
     },
     {
       "source": "_frontEnd.src.features.orders.pages.CustomerOrdersPage",
-      "target": "_frontEnd.src.features.orders.pages.CustomerOrdersPage.import_sonner",
-      "relation": "imports_from"
-    },
-    {
-      "source": "_frontEnd.src.features.orders.pages.CustomerOrdersPage",
       "target": "_frontEnd.src.features.orders.pages.CustomerOrdersPage.import_lucide_react",
-      "relation": "imports_from"
-    },
-    {
-      "source": "_frontEnd.src.features.orders.pages.CustomerOrdersPage",
-      "target": "_frontEnd.src.features.orders.pages.CustomerOrdersPage.import_store",
-      "relation": "imports_from"
-    },
-    {
-      "source": "_frontEnd.src.features.orders.pages.CustomerOrdersPage",
-      "target": "_frontEnd.src.features.orders.pages.CustomerOrdersPage.import_useLogout",
-      "relation": "imports_from"
-    },
-    {
-      "source": "_frontEnd.src.features.orders.pages.CustomerOrdersPage",
-      "target": "_frontEnd.src.features.orders.pages.CustomerOrdersPage.import_PublicHeader",
-      "relation": "imports_from"
-    },
-    {
-      "source": "_frontEnd.src.features.orders.pages.CustomerOrdersPage",
-      "target": "_frontEnd.src.features.orders.pages.CustomerOrdersPage.import_PublicFooter",
-      "relation": "imports_from"
-    },
-    {
-      "source": "_frontEnd.src.features.orders.pages.CustomerOrdersPage",
-      "target": "_frontEnd.src.features.orders.pages.CustomerOrdersPage.import_useCart",
       "relation": "imports_from"
     },
     {
@@ -53935,12 +55168,22 @@
     },
     {
       "source": "_frontEnd.src.features.products.components.BenefitsSection",
-      "target": "_frontEnd.src.features.products.components.BenefitsSection.import_sonner",
+      "target": "_frontEnd.src.features.products.components.BenefitsSection.BenefitsSectionProps",
+      "relation": "contains"
+    },
+    {
+      "source": "_frontEnd.src.features.products.components.BenefitsSection",
+      "target": "_frontEnd.src.features.products.components.BenefitsSection.import_react",
       "relation": "imports_from"
     },
     {
       "source": "_frontEnd.src.features.products.components.BenefitsSection",
       "target": "_frontEnd.src.features.products.components.BenefitsSection.import_framer_motion",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.products.components.BenefitsSection",
+      "target": "_frontEnd.src.features.products.components.BenefitsSection.import_CustomizationModal",
       "relation": "imports_from"
     },
     {
@@ -53979,6 +55222,51 @@
       "relation": "imports_from"
     },
     {
+      "source": "_frontEnd.src.features.products.components.CustomizationModal",
+      "target": "_frontEnd.src.features.products.components.CustomizationModal.CustomizationModal",
+      "relation": "contains"
+    },
+    {
+      "source": "_frontEnd.src.features.products.components.CustomizationModal",
+      "target": "_frontEnd.src.features.products.components.CustomizationModal.CustomizationModalProps",
+      "relation": "contains"
+    },
+    {
+      "source": "_frontEnd.src.features.products.components.CustomizationModal",
+      "target": "_frontEnd.src.features.products.components.CustomizationModal.handleChange",
+      "relation": "contains"
+    },
+    {
+      "source": "_frontEnd.src.features.products.components.CustomizationModal",
+      "target": "_frontEnd.src.features.products.components.CustomizationModal.handleSubmit",
+      "relation": "contains"
+    },
+    {
+      "source": "_frontEnd.src.features.products.components.CustomizationModal",
+      "target": "_frontEnd.src.features.products.components.CustomizationModal.import_react",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.products.components.CustomizationModal",
+      "target": "_frontEnd.src.features.products.components.CustomizationModal.import_framer_motion",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.products.components.CustomizationModal",
+      "target": "_frontEnd.src.features.products.components.CustomizationModal.import_lucide_react",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.products.components.CustomizationModal",
+      "target": "_frontEnd.src.features.products.components.CustomizationModal.import_sonner",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.products.components.HeroSection",
+      "target": "_frontEnd.src.features.products.components.HeroSection.AnimatedCounter",
+      "relation": "contains"
+    },
+    {
       "source": "_frontEnd.src.features.products.components.HeroSection",
       "target": "_frontEnd.src.features.products.components.HeroSection.HeroSection",
       "relation": "contains"
@@ -53991,6 +55279,16 @@
     {
       "source": "_frontEnd.src.features.products.components.HeroSection",
       "target": "_frontEnd.src.features.products.components.HeroSection.import_Button",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.products.components.HeroSection",
+      "target": "_frontEnd.src.features.products.components.HeroSection.import_react",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.products.components.HeroSection",
+      "target": "_frontEnd.src.features.products.components.HeroSection.import_framer_motion",
       "relation": "imports_from"
     },
     {
@@ -54160,12 +55458,12 @@
     },
     {
       "source": "_frontEnd.src.features.products.components.PacksSection",
-      "target": "_frontEnd.src.features.products.components.PacksSection.goLeft",
+      "target": "_frontEnd.src.features.products.components.PacksSection.handleResize",
       "relation": "contains"
     },
     {
       "source": "_frontEnd.src.features.products.components.PacksSection",
-      "target": "_frontEnd.src.features.products.components.PacksSection.goRight",
+      "target": "_frontEnd.src.features.products.components.PacksSection.getItemWidth",
       "relation": "contains"
     },
     {
@@ -54191,6 +55489,11 @@
     {
       "source": "_frontEnd.src.features.products.components.PacksSection",
       "target": "_frontEnd.src.features.products.components.PacksSection.import_usePackages",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.products.components.PacksSection",
+      "target": "_frontEnd.src.features.products.components.PacksSection.import_types",
       "relation": "imports_from"
     },
     {
@@ -54705,6 +56008,11 @@
     },
     {
       "source": "_frontEnd.src.features.products.pages.ProductDetailView",
+      "target": "_frontEnd.src.features.products.pages.ProductDetailView.import_useCategories",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.products.pages.ProductDetailView",
       "target": "_frontEnd.src.features.products.pages.ProductDetailView.import_InfoModal",
       "relation": "imports_from"
     },
@@ -54742,6 +56050,161 @@
       "source": "_frontEnd.src.features.products.types",
       "target": "_frontEnd.src.features.products.types.PaginatedResponse",
       "relation": "contains"
+    },
+    {
+      "source": "_frontEnd.src.features.profile.components.CustomerProfileLayout",
+      "target": "_frontEnd.src.features.profile.components.CustomerProfileLayout.CustomerProfileLayout",
+      "relation": "contains"
+    },
+    {
+      "source": "_frontEnd.src.features.profile.components.CustomerProfileLayout",
+      "target": "_frontEnd.src.features.profile.components.CustomerProfileLayout.handleSearch",
+      "relation": "contains"
+    },
+    {
+      "source": "_frontEnd.src.features.profile.components.CustomerProfileLayout",
+      "target": "_frontEnd.src.features.profile.components.CustomerProfileLayout.handleLogout",
+      "relation": "contains"
+    },
+    {
+      "source": "_frontEnd.src.features.profile.components.CustomerProfileLayout",
+      "target": "_frontEnd.src.features.profile.components.CustomerProfileLayout.import_react",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.profile.components.CustomerProfileLayout",
+      "target": "_frontEnd.src.features.profile.components.CustomerProfileLayout.import_react_router",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.profile.components.CustomerProfileLayout",
+      "target": "_frontEnd.src.features.profile.components.CustomerProfileLayout.import_lucide_react",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.profile.components.CustomerProfileLayout",
+      "target": "_frontEnd.src.features.profile.components.CustomerProfileLayout.import_store",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.profile.components.CustomerProfileLayout",
+      "target": "_frontEnd.src.features.profile.components.CustomerProfileLayout.import_useLogout",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.profile.components.CustomerProfileLayout",
+      "target": "_frontEnd.src.features.profile.components.CustomerProfileLayout.import_PublicHeader",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.profile.components.CustomerProfileLayout",
+      "target": "_frontEnd.src.features.profile.components.CustomerProfileLayout.import_PublicFooter",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.profile.components.CustomerProfileLayout",
+      "target": "_frontEnd.src.features.profile.components.CustomerProfileLayout.import_useCart",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.profile.components.CustomerProfileLayout",
+      "target": "_frontEnd.src.features.profile.components.CustomerProfileLayout.import_sonner",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.profile.pages.ProfileInfoPage",
+      "target": "_frontEnd.src.features.profile.pages.ProfileInfoPage.ProfileInfoPage",
+      "relation": "contains"
+    },
+    {
+      "source": "_frontEnd.src.features.profile.pages.ProfileInfoPage",
+      "target": "_frontEnd.src.features.profile.pages.ProfileInfoPage.handleChange",
+      "relation": "contains"
+    },
+    {
+      "source": "_frontEnd.src.features.profile.pages.ProfileInfoPage",
+      "target": "_frontEnd.src.features.profile.pages.ProfileInfoPage.handleFileChange",
+      "relation": "contains"
+    },
+    {
+      "source": "_frontEnd.src.features.profile.pages.ProfileInfoPage",
+      "target": "_frontEnd.src.features.profile.pages.ProfileInfoPage.handleSubmit",
+      "relation": "contains"
+    },
+    {
+      "source": "_frontEnd.src.features.profile.pages.ProfileInfoPage",
+      "target": "_frontEnd.src.features.profile.pages.ProfileInfoPage.inputClass",
+      "relation": "contains"
+    },
+    {
+      "source": "_frontEnd.src.features.profile.pages.ProfileInfoPage",
+      "target": "_frontEnd.src.features.profile.pages.ProfileInfoPage.import_react",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.profile.pages.ProfileInfoPage",
+      "target": "_frontEnd.src.features.profile.pages.ProfileInfoPage.import_framer_motion",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.profile.pages.ProfileInfoPage",
+      "target": "_frontEnd.src.features.profile.pages.ProfileInfoPage.import_lucide_react",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.profile.pages.ProfileInfoPage",
+      "target": "_frontEnd.src.features.profile.pages.ProfileInfoPage.import_store",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.profile.pages.ProfileInfoPage",
+      "target": "_frontEnd.src.features.profile.pages.ProfileInfoPage.import_useProfile",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.profile.pages.ProfileInfoPage",
+      "target": "_frontEnd.src.features.profile.pages.ProfileInfoPage.import_zod",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.profile.pages.SecurityPage",
+      "target": "_frontEnd.src.features.profile.pages.SecurityPage.SecurityPage",
+      "relation": "contains"
+    },
+    {
+      "source": "_frontEnd.src.features.profile.pages.SecurityPage",
+      "target": "_frontEnd.src.features.profile.pages.SecurityPage.handleChange",
+      "relation": "contains"
+    },
+    {
+      "source": "_frontEnd.src.features.profile.pages.SecurityPage",
+      "target": "_frontEnd.src.features.profile.pages.SecurityPage.validatePassword",
+      "relation": "contains"
+    },
+    {
+      "source": "_frontEnd.src.features.profile.pages.SecurityPage",
+      "target": "_frontEnd.src.features.profile.pages.SecurityPage.handleSubmit",
+      "relation": "contains"
+    },
+    {
+      "source": "_frontEnd.src.features.profile.pages.SecurityPage",
+      "target": "_frontEnd.src.features.profile.pages.SecurityPage.import_react",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.profile.pages.SecurityPage",
+      "target": "_frontEnd.src.features.profile.pages.SecurityPage.import_framer_motion",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.profile.pages.SecurityPage",
+      "target": "_frontEnd.src.features.profile.pages.SecurityPage.import_lucide_react",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.profile.pages.SecurityPage",
+      "target": "_frontEnd.src.features.profile.pages.SecurityPage.import_useProfile",
+      "relation": "imports_from"
     },
     {
       "source": "_frontEnd.src.features.reports.api.reports.api",
@@ -55405,6 +56868,16 @@
     },
     {
       "source": "_frontEnd.src.features.sweetcoins.pages.PointsView",
+      "target": "_frontEnd.src.features.sweetcoins.pages.PointsView.import_react_router",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.sweetcoins.pages.PointsView",
+      "target": "_frontEnd.src.features.sweetcoins.pages.PointsView.import_AuthRequireModal",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.features.sweetcoins.pages.PointsView",
       "target": "_frontEnd.src.features.sweetcoins.pages.PointsView.import_store",
       "relation": "imports_from"
     },
@@ -55684,6 +57157,11 @@
       "relation": "imports_from"
     },
     {
+      "source": "_frontEnd.src.main",
+      "target": "_frontEnd.src.main.import_ScrollToTop",
+      "relation": "imports_from"
+    },
+    {
       "source": "_frontEnd.src.mocks.mockProducts",
       "target": "_frontEnd.src.mocks.mockProducts.getMockProductsByCategory",
       "relation": "contains"
@@ -55725,12 +57203,22 @@
     },
     {
       "source": "_frontEnd.src.pages.public.HomePage",
+      "target": "_frontEnd.src.pages.public.HomePage.handleCriptotrufasClick",
+      "relation": "contains"
+    },
+    {
+      "source": "_frontEnd.src.pages.public.HomePage",
       "target": "_frontEnd.src.pages.public.HomePage.import_react",
       "relation": "imports_from"
     },
     {
       "source": "_frontEnd.src.pages.public.HomePage",
       "target": "_frontEnd.src.pages.public.HomePage.import_sonner",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.pages.public.HomePage",
+      "target": "_frontEnd.src.pages.public.HomePage.import_react_router",
       "relation": "imports_from"
     },
     {
@@ -55779,6 +57267,11 @@
       "relation": "imports_from"
     },
     {
+      "source": "_frontEnd.src.pages.public.HomePage",
+      "target": "_frontEnd.src.pages.public.HomePage.import_AuthRequireModal",
+      "relation": "imports_from"
+    },
+    {
       "source": "_frontEnd.src.shared.components.layout.PublicFooter",
       "target": "_frontEnd.src.shared.components.layout.PublicFooter.PublicFooter",
       "relation": "contains"
@@ -55801,6 +57294,11 @@
     {
       "source": "_frontEnd.src.shared.components.layout.PublicHeader",
       "target": "_frontEnd.src.shared.components.layout.PublicHeader.PublicHeaderProps",
+      "relation": "contains"
+    },
+    {
+      "source": "_frontEnd.src.shared.components.layout.PublicHeader",
+      "target": "_frontEnd.src.shared.components.layout.PublicHeader.handler",
       "relation": "contains"
     },
     {
@@ -55859,6 +57357,16 @@
       "relation": "imports_from"
     },
     {
+      "source": "_frontEnd.src.shared.components.layout.PublicHeader",
+      "target": "_frontEnd.src.shared.components.layout.PublicHeader.import_useCatalogAdmin",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.shared.components.layout.PublicHeader",
+      "target": "_frontEnd.src.shared.components.layout.PublicHeader.import_types",
+      "relation": "imports_from"
+    },
+    {
       "source": "_frontEnd.src.shared.components.layout.PublicNav",
       "target": "_frontEnd.src.shared.components.layout.PublicNav.PublicNav",
       "relation": "contains"
@@ -55871,6 +57379,21 @@
     {
       "source": "_frontEnd.src.shared.components.layout.PublicNav",
       "target": "_frontEnd.src.shared.components.layout.PublicNav.import_react_router",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.shared.components.ScrollToTop",
+      "target": "_frontEnd.src.shared.components.ScrollToTop.ScrollToTop",
+      "relation": "contains"
+    },
+    {
+      "source": "_frontEnd.src.shared.components.ScrollToTop",
+      "target": "_frontEnd.src.shared.components.ScrollToTop.import_react",
+      "relation": "imports_from"
+    },
+    {
+      "source": "_frontEnd.src.shared.components.ScrollToTop",
+      "target": "_frontEnd.src.shared.components.ScrollToTop.import_react_router",
       "relation": "imports_from"
     },
     {
