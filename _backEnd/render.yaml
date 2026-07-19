@@ -4,7 +4,6 @@
 # ==============================================================================
 
 services:
-
   # ── Web Service (FastAPI) ──────────────────────────────────────────────────
   - type: web
     name: mifrufely-backend
@@ -27,7 +26,7 @@ services:
       # ── Frontend URL (para links en emails de verificación/reset) ──
       # IMPORTANTE: Cambiar al dominio real de Vercel tras el deploy
       - key: FRONTEND_URL
-        value: https://mitrufely.vercel.app
+        value: https://mitrufely-4wrioeyxp-utp-s-projects.vercel.app
       # ── CORS — Orígenes permitidos ──────────────────────────────
       # IMPORTANTE: Cambiar al dominio real de Vercel tras el deploy
       - key: ALLOWED_ORIGINS
@@ -78,4 +77,4 @@ services:
     region: oregon
     plan: free
     maxmemoryPolicy: allkeys-lru
-    ipAllowList: []  # Internal only
+    ipAllowList: [] # Internal only
