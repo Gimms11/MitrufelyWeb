@@ -8,10 +8,12 @@ import { packagesApi } from '@/features/products/api/packagesApi'
 
 export const CART_QUERY_KEY = ['cart'] as const
 
+const GUEST_CART_KEY = 'mitrufely-guest-cart'
+
 // ─── Guest Cart Helpers ───────────────────────────────────────────────────────
 
 function getLocalCart(): CartResponse {
-  const raw = sessionStorage.getItem('mitrufely-guest-cart')
+  const raw = localStorage.getItem(GUEST_CART_KEY)
   if (!raw) {
     return { items: [], total_items: 0, subtotal: 0 }
   }
@@ -28,7 +30,42 @@ function getLocalCart(): CartResponse {
 }
 
 function saveLocalCart(cart: CartResponse) {
-  sessionStorage.setItem('mitrufely-guest-cart', JSON.stringify(cart))
+  localStorage.setItem(GUEST_CART_KEY, JSON.stringify(cart))
+}
+
+function clearLocalCart() {
+  localStorage.removeItem(GUEST_CART_KEY)
+}
+
+/** Reads isAuthenticated directly from the Zustand store (no stale closures). */
+function getIsAuthenticated(): boolean {
+  return useAuthStore.getState().isAuthenticated
+}
+
+/**
+ * Sincroniza el carrito de invitado (localStorage) con el backend.
+ * Se llama después de que el usuario inicia sesión exitosamente.
+ * Envía cada producto del carrito local al backend y luego limpia localStorage.
+ */
+export async function syncGuestCartToBackend(): Promise<void> {
+  const guestCart = getLocalCart()
+  if (guestCart.items.length === 0) return
+
+  for (const item of guestCart.items) {
+    try {
+      const payload: AddCartItemRequest = {
+        id_producto: item.id_producto,
+        cantidad: item.cantidad,
+        es_paquete: item.es_paquete || false,
+        id_paquete: item.id_paquete || null,
+      }
+      await cartApi.addItem(payload)
+    } catch {
+      console.warn(`No se pudo sincronizar producto ${item.id_producto} al carrito del backend.`)
+    }
+  }
+
+  clearLocalCart()
 }
 
 async function fetchItemDetails(item: AddCartItemRequest) {
@@ -58,10 +95,10 @@ async function fetchItemDetails(item: AddCartItemRequest) {
 // ─── Query ───────────────────────────────────────────────────────────────────
 
 export function useCartQuery(options?: { enabled?: boolean }) {
-  const { isAuthenticated } = useAuthStore()
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated)
 
   return useQuery({
-    queryKey: [...CART_QUERY_KEY, isAuthenticated],
+    queryKey: CART_QUERY_KEY,
     queryFn: async () => {
       if (isAuthenticated) {
         return cartApi.getCart()
@@ -69,7 +106,9 @@ export function useCartQuery(options?: { enabled?: boolean }) {
         return getLocalCart()
       }
     },
-    staleTime: 30_000,
+    // Guest cart reads localStorage, so always refetch on mount to stay fresh.
+    // Authenticated cart uses the backend, so 30s staleTime is fine.
+    staleTime: isAuthenticated ? 30_000 : 0,
     ...options,
   })
 }
@@ -85,11 +124,10 @@ export function useCartItemCount(): number {
 
 export function useAddCartItem() {
   const queryClient = useQueryClient()
-  const { isAuthenticated } = useAuthStore()
 
   return useMutation({
     mutationFn: async (item: AddCartItemRequest) => {
-      if (isAuthenticated) {
+      if (getIsAuthenticated()) {
         return cartApi.addItem(item)
       } else {
         const details = await fetchItemDetails(item)
@@ -115,7 +153,10 @@ export function useAddCartItem() {
       }
     },
     onSuccess: (data) => {
-      queryClient.setQueryData([...CART_QUERY_KEY, isAuthenticated], data)
+      // Set cache directly for immediate feedback on the current page,
+      // then invalidate to ensure all other mounted queries refetch.
+      queryClient.setQueryData(CART_QUERY_KEY, data)
+      queryClient.invalidateQueries({ queryKey: CART_QUERY_KEY })
       toast.success('Producto agregado al carrito 🛍️', { duration: 2000 })
     },
     onError: () => {
@@ -126,11 +167,10 @@ export function useAddCartItem() {
 
 export function useUpdateCartItem() {
   const queryClient = useQueryClient()
-  const { isAuthenticated } = useAuthStore()
 
   return useMutation({
     mutationFn: async ({ id_producto, cantidad }: { id_producto: number; cantidad: number }) => {
-      if (isAuthenticated) {
+      if (getIsAuthenticated()) {
         return cartApi.updateItem(id_producto, { cantidad })
       } else {
         const cart = getLocalCart()
@@ -145,7 +185,8 @@ export function useUpdateCartItem() {
       }
     },
     onSuccess: (data) => {
-      queryClient.setQueryData([...CART_QUERY_KEY, isAuthenticated], data)
+      queryClient.setQueryData(CART_QUERY_KEY, data)
+      queryClient.invalidateQueries({ queryKey: CART_QUERY_KEY })
     },
     onError: () => {
       toast.error('No se pudo actualizar la cantidad.')
@@ -155,11 +196,10 @@ export function useUpdateCartItem() {
 
 export function useRemoveCartItem() {
   const queryClient = useQueryClient()
-  const { isAuthenticated } = useAuthStore()
 
   return useMutation({
     mutationFn: async (id_producto: number) => {
-      if (isAuthenticated) {
+      if (getIsAuthenticated()) {
         return cartApi.removeItem(id_producto)
       } else {
         const cart = getLocalCart()
@@ -171,7 +211,8 @@ export function useRemoveCartItem() {
       }
     },
     onSuccess: (data) => {
-      queryClient.setQueryData([...CART_QUERY_KEY, isAuthenticated], data)
+      queryClient.setQueryData(CART_QUERY_KEY, data)
+      queryClient.invalidateQueries({ queryKey: CART_QUERY_KEY })
       toast.info('Producto eliminado del carrito.')
     },
     onError: () => {
@@ -182,18 +223,18 @@ export function useRemoveCartItem() {
 
 export function useClearCart() {
   const queryClient = useQueryClient()
-  const { isAuthenticated } = useAuthStore()
 
   return useMutation({
     mutationFn: async () => {
-      if (isAuthenticated) {
+      if (getIsAuthenticated()) {
         return cartApi.clearCart()
       } else {
-        sessionStorage.removeItem('mitrufely-guest-cart')
+        clearLocalCart()
       }
     },
     onSuccess: () => {
-      queryClient.setQueryData([...CART_QUERY_KEY, isAuthenticated], { items: [], total_items: 0, subtotal: 0 })
+      queryClient.setQueryData(CART_QUERY_KEY, { items: [], total_items: 0, subtotal: 0 })
+      queryClient.invalidateQueries({ queryKey: CART_QUERY_KEY })
       toast.info('Carrito vaciado.')
     },
     onError: () => {

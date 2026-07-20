@@ -23,6 +23,7 @@ from sqlalchemy import select
 from sqlalchemy.exc import DBAPIError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
+from sqlalchemy import select, func
 
 from app.core.exceptions import (
     BusinessRuleError,
@@ -43,7 +44,10 @@ from app.infrastructure.database.models.enums import (
     TipoNotificacionEnum,
     TipoDocumentoVentaEnum,
     TipoPagoEnum,
+    TipoMovimientoPuntosEnum,
 )
+from app.infrastructure.database.models.recompensas import ConfiguracionRecompensas, MovimientoPuntos
+
 from app.infrastructure.database.models.pedidos_ext import (
     Notification,
     OrderEvent,
@@ -707,6 +711,9 @@ class VentaService(AbstractService[VentaResponse, VentaRequest, None, int]):
 
                 # Devolver stock vía movimientos_stock (DEVOLUCION)
                 await self._devolver_stock(venta, id_usuario)
+                
+                # Revertir puntos ganados si corresponde
+                await self._revertir_puntos(venta)
 
                 await self.session.flush()
 
@@ -869,6 +876,61 @@ class VentaService(AbstractService[VentaResponse, VentaRequest, None, int]):
             created_by=id_usuario,
         ))
 
+    async def _revertir_puntos(self, venta: Venta) -> None:
+        """Revierte los puntos ganados si el pedido fue pagado y luego cancelado o reembolsado."""
+        if venta.puntos_ganados <= 0 or not venta.id_cliente:
+            return
+
+        # Verificar si realmente se le otorgaron puntos por esta venta
+        stmt_otorgados = select(MovimientoPuntos).where(
+            MovimientoPuntos.id_venta == venta.id_venta,
+            MovimientoPuntos.tipo_movimiento == TipoMovimientoPuntosEnum.ACUMULACION_VENTA
+        )
+        result_otorgados = await self.session.execute(stmt_otorgados)
+        mov_otorgado = result_otorgados.scalars().first()
+
+        if not mov_otorgado:
+            return
+
+        # Verificar si ya se le revirtieron los puntos
+        stmt_rev = select(MovimientoPuntos).where(
+            MovimientoPuntos.id_venta == venta.id_venta,
+            MovimientoPuntos.tipo_movimiento == TipoMovimientoPuntosEnum.AJUSTE_ADMIN,
+            MovimientoPuntos.cantidad < 0
+        )
+        result_rev = await self.session.execute(stmt_rev)
+        if result_rev.scalars().first():
+            return
+
+        # Consultar saldo actual
+        stmt_saldo = select(func.sum(MovimientoPuntos.cantidad)).where(
+            MovimientoPuntos.id_cliente == venta.id_cliente
+        )
+        result_saldo = await self.session.execute(stmt_saldo)
+        saldo_actual = result_saldo.scalar() or 0
+
+        # Calcular cuánto podemos descontar sin quedar en negativo
+        puntos_a_descontar = min(venta.puntos_ganados, saldo_actual)
+
+        if puntos_a_descontar > 0:
+            # Obtener config activa
+            stmt_cfg = select(ConfiguracionRecompensas).where(ConfiguracionRecompensas.estado == True)
+            result_cfg = await self.session.execute(stmt_cfg)
+            cfg = result_cfg.scalars().first()
+            if not cfg:
+                return
+
+            mov_reversion = MovimientoPuntos(
+                id_cliente=venta.id_cliente,
+                id_venta=venta.id_venta,
+                id_config=cfg.id_config,
+                tipo_movimiento=TipoMovimientoPuntosEnum.AJUSTE_ADMIN,
+                cantidad=-puntos_a_descontar,
+                saldo_puntos_resultante=0,
+                justificacion=f"Reversión de puntos por pedido {venta.id_venta} cancelado/reembolsado."
+            )
+            self.session.add(mov_reversion)
+
     # ══════════════════════════════════════════════════════════════════════════
     # DEVOLUCIÓN — ENTREGADO → DEVUELTO
     # ══════════════════════════════════════════════════════════════════════════
@@ -991,6 +1053,9 @@ class VentaService(AbstractService[VentaResponse, VentaRequest, None, int]):
                         "includes_shipping": includes_shipping,
                     },
                 )
+
+                # Revertir puntos ganados si corresponde
+                await self._revertir_puntos(venta)
 
                 await self.session.flush()
 

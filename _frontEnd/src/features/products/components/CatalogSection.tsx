@@ -30,19 +30,17 @@ interface CatalogSectionProps {
 
 const sectionHeader: Variants = {
   hidden: { opacity: 0, y: 30 },
-  show:   { opacity: 1, y: 0,
-    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } },
+  show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } },
 }
 
 const tabsContainer: Variants = {
   hidden: {},
-  show:   { transition: { staggerChildren: 0.05 } },
+  show: { transition: { staggerChildren: 0.05 } },
 }
 
 const tabItem: Variants = {
   hidden: { opacity: 0, scale: 0.88 },
-  show:   { opacity: 1, scale: 1,
-    transition: { type: 'spring', damping: 18, stiffness: 260 } },
+  show: { opacity: 1, scale: 1, transition: { type: 'spring', damping: 18, stiffness: 260 } },
 }
 
 // ─── Componente ───────────────────────────────────────────────────────────
@@ -64,25 +62,24 @@ export const CatalogSection = forwardRef<HTMLElement, CatalogSectionProps>(
     }, [categories, activeTab, onTabChange])
 
     // 3. Obtener productos asociados a la categoría seleccionada
-    const { data: productsRes, isLoading: productsLoading, isPlaceholderData } = useActiveProducts(
+    const {
+      data: productsRes,
+      isLoading: productsLoading,
+      isPlaceholderData,
+    } = useActiveProducts(
       {
         categoria: activeTab || undefined,
         search: searchQuery || undefined,
-        size: 8,
+        size: 4,
       },
       { enabled: !!activeTab },
     )
     const products = productsRes?.items || []
-    const displayedProducts = products.slice(0, 8)
+    const displayedProducts = products.slice(0, 4)
 
     return (
-      <section
-        id="catalogo"
-        ref={ref}
-        className="px-4 py-24 scroll-mt-20 bg-[#faf8f5]"
-      >
+      <section id="catalogo" ref={ref} className="px-4 py-24 scroll-mt-20 bg-[#faf8f5]">
         <div className="max-w-7xl mx-auto">
-
           {/* ── Encabezado con whileInView ── */}
           <motion.div
             variants={sectionHeader}
@@ -159,7 +156,9 @@ export const CatalogSection = forwardRef<HTMLElement, CatalogSectionProps>(
               {productsLoading || isPlaceholderData ? (
                 <div className="col-span-full py-20 text-center flex flex-col items-center justify-center gap-3">
                   <div className="h-8 w-8 animate-spin rounded-full border-[3px] border-[#5c0f1b] border-t-transparent" />
-                  <span className="text-[#2a1115]/40 font-semibold text-sm">Cargando delicias…</span>
+                  <span className="text-[#2a1115]/40 font-semibold text-sm">
+                    Cargando delicias…
+                  </span>
                 </div>
               ) : displayedProducts.length > 0 ? (
                 displayedProducts.map((prod) => (
@@ -184,10 +183,18 @@ export const CatalogSection = forwardRef<HTMLElement, CatalogSectionProps>(
             transition={{ duration: 0.5, ease: 'easeOut' }}
             className="text-center mt-14"
           >
-            <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }} className="inline-block">
+            <motion.div
+              whileHover={{ scale: 1.04 }}
+              whileTap={{ scale: 0.97 }}
+              className="inline-block"
+            >
               <Link
                 id="hp-view-all-btn"
-                to={searchQuery.trim() ? `/catalogo?search=${encodeURIComponent(searchQuery.trim())}` : '/catalogo'}
+                to={
+                  searchQuery.trim()
+                    ? `/catalogo?search=${encodeURIComponent(searchQuery.trim())}`
+                    : '/catalogo'
+                }
                 className="inline-flex items-center justify-center px-10 py-3.5 rounded-full bg-[#5c0f1b] text-white text-sm font-black shadow-[0_6px_20px_rgba(92,15,27,0.20)] hover:bg-[#7a1525] transition-colors active:scale-95"
               >
                 {searchQuery.trim() ? `Ver resultados de "${searchQuery}"` : 'Ver todo el catálogo'}
