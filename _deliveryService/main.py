@@ -135,7 +135,8 @@ async def _simulate_delivery(id_venta: int, n_productos: int) -> None:
 
     except Exception as e:
         logger.error("delivery.simulation_error", id_venta=id_venta, error=str(e))
-        deliveries[id_venta]["status"] = "ERROR"
+        if id_venta in deliveries:
+            deliveries[id_venta]["status"] = "ERROR"
 
 
 async def _notify_backend(id_venta: int) -> None:

@@ -1,3 +1,4 @@
+/// <reference types="vitest" />
 import { defineConfig, loadEnv } from 'vite'
 import react, { reactCompilerPreset } from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
@@ -11,6 +12,11 @@ export default defineConfig(({ mode }) => {
   const isAnalyze = process.env['ANALYZE'] === 'true'
 
   return {
+    test: {
+      globals: true,
+      environment: 'jsdom',
+      setupFiles: './src/test/setup.ts',
+    },
     plugins: [
       react({
         // Activa React Compiler vía Rolldown Babel preset
