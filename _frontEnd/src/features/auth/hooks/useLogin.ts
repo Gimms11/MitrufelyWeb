@@ -1,11 +1,12 @@
 import { useEffect, useRef } from 'react'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useNavigate, useLocation } from 'react-router'
 import { toast } from 'sonner'
 import { authApi } from '../api/auth.api'
 import { useAuthStore } from '@/app/store'
 import type { LoginCredentials } from '@/types/auth'
 import type { AxiosError } from 'axios'
+import { syncGuestCartToBackend, CART_QUERY_KEY } from '@/features/cart/hooks/useCart'
 
 export interface DecodedToken {
   sub: string
@@ -53,6 +54,7 @@ export function useLogin() {
   const navigate = useNavigate()
   const location = useLocation()
   const setUser = useAuthStore((s) => s.setUser)
+  const queryClient = useQueryClient()
 
   const from = (location.state as { from?: { pathname: string } })?.from?.pathname || '/'
   const fromRef = useRef(from)
@@ -63,7 +65,7 @@ export function useLogin() {
 
   return useMutation({
     mutationFn: (credentials: LoginCredentials) => authApi.login(credentials),
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       const decoded = decodeJwt(data.access_token)
       if (!decoded) {
         toast.error('Token inválido recibido del servidor.')
@@ -89,6 +91,18 @@ export function useLogin() {
       }
 
       setUser(user, data.access_token, data.refresh_token)
+
+      // Sincronizar carrito de invitado (localStorage) → backend
+      try {
+        await syncGuestCartToBackend()
+      } catch {
+        // Si la sincronización falla, no bloqueamos el login
+        console.warn('No se pudo sincronizar el carrito de invitado.')
+      }
+
+      // Refrescar cache del carrito para mostrar los items fusionados
+      queryClient.invalidateQueries({ queryKey: CART_QUERY_KEY })
+
       toast.success('¡Sesión iniciada correctamente!')
       navigate(fromRef.current, { replace: true })
     },
@@ -98,3 +112,4 @@ export function useLogin() {
     },
   })
 }
+
