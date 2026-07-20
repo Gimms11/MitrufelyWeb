@@ -336,7 +336,7 @@ export function PaymentModal({ isOpen, onClose, subtotalBase, igv, costoEnvio, e
                 {step === 5 ? '¡Pedido confirmado!' : 'Finalizar compra'}
               </h2>
               {step !== 4 && (
-                <button onClick={onClose} aria-label="Cerrar" className="p-2 rounded-full border border-[#5c0f1b]/10 text-[#5c0f1b] hover:text-[#ff7a45] hover:scale-110 active:scale-90 transition-all cursor-pointer">
+                <button onClick={onClose} aria-label="Cerrar" className="p-2 rounded-full text-[#5c0f1b] hover:text-[#ff7a45] hover:scale-110 active:scale-90 transition-all cursor-pointer">
                   <X className="h-4 w-4" />
                 </button>
               )}
@@ -348,7 +348,7 @@ export function PaymentModal({ isOpen, onClose, subtotalBase, igv, costoEnvio, e
             {/* ═══════════════ STEP 0: Resumen ═══════════════ */}
             {step === 0 && (
               <div className="px-6 py-5 space-y-5 flex-1 overflow-y-auto">
-                <div className="bg-[#faf8f5] rounded-2xl p-5 border border-[#5c0f1b]/8 space-y-2.5">
+                <div className="bg-[#faf8f5] rounded-2xl p-5 space-y-2.5">
                   {/* Subtotal base */}
                   <div className="flex justify-between text-sm font-semibold text-[#2a1115]/70">
                     <span>Subtotal (sin IGV)</span>
@@ -414,7 +414,7 @@ export function PaymentModal({ isOpen, onClose, subtotalBase, igv, costoEnvio, e
                     <Loader2 className="h-6 w-6 animate-spin text-[#5c0f1b]" />
                   </div>
                 ) : fiscalData && !editFiscal ? (
-                  <div className="bg-emerald-50 rounded-2xl p-5 border border-emerald-200 space-y-3">
+                  <div className="bg-emerald-50 rounded-2xl p-5 space-y-3">
                     <div className="flex justify-between">
                       <span className="text-xs font-bold text-stone-500 uppercase">Documento</span>
                       <span className="text-sm font-black text-[#2a1115]">{fiscalData.tipo_documento}: {fiscalData.numero_documento}</span>
@@ -518,7 +518,7 @@ export function PaymentModal({ isOpen, onClose, subtotalBase, igv, costoEnvio, e
 
                 {/* Banner: usar dirección fiscal como envío */}
                 {lookupResult?.direccion_fiscal && !editEnvio && (
-                  <div className="bg-amber-50 rounded-2xl p-4 border border-amber-200 space-y-2">
+                  <div className="bg-amber-50 rounded-2xl p-4 space-y-2">
                     <p className="text-xs font-bold text-amber-900 mb-1">
                       💡 Detectamos la dirección fiscal de tu RUC:
                     </p>
@@ -539,7 +539,7 @@ export function PaymentModal({ isOpen, onClose, subtotalBase, igv, costoEnvio, e
                 )}
 
                 {profileData && (profileData.cliente?.direccion || profileData.telefono) && !editEnvio ? (
-                  <div className="bg-emerald-50 rounded-2xl p-5 border border-emerald-200 space-y-3">
+                  <div className="bg-emerald-50 rounded-2xl p-5 space-y-3">
                     {profileData.cliente?.direccion && (
                       <div className="flex justify-between">
                         <span className="text-xs font-bold text-stone-500 uppercase">Dirección</span>

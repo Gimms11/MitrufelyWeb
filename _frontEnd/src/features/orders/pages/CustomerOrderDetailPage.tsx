@@ -200,7 +200,7 @@ export default function CustomerOrderDetailPage() {
             <div className="space-y-6">
               {/* Alerta de Administrador/Consulta si no es propietario */}
               {order && !esPropietario && (
-                <div className="bg-amber-50 rounded-2xl p-4 border border-amber-200 flex items-start gap-2.5 shadow-sm">
+                <div className="bg-amber-50 rounded-2xl p-4 flex items-start gap-2.5 shadow-sm">
                   <AlertCircle className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
                   <div>
                     <h4 className="font-black text-amber-900 text-sm">Vista de Administrador / Consulta</h4>
@@ -214,7 +214,7 @@ export default function CustomerOrderDetailPage() {
 
               {/* Acciones de Cliente (Reviews / Issues) */}
               {(order.estado === 'ENTREGADO' || !['CANCELADO', 'DEVUELTO', 'REEMBOLSADO', 'ANULADO'].includes(order.estado)) && (
-                <div className="bg-white rounded-2xl border border-[#5c0f1b]/8 p-5 flex flex-col sm:flex-row gap-4 items-center justify-between shadow-sm">
+                <div className="bg-white rounded-2xl p-5 flex flex-col sm:flex-row gap-4 items-center justify-between shadow-sm">
                   {order.estado === 'ENTREGADO' && (
                     <div className="flex items-center justify-between w-full sm:w-auto sm:gap-4 border-b sm:border-b-0 sm:border-r border-stone-100 pb-4 sm:pb-0 sm:pr-4">
                       {reviewData ? (
@@ -289,7 +289,7 @@ export default function CustomerOrderDetailPage() {
               )}
 
               {/* Productos */}
-              <div className="bg-white rounded-2xl border border-[#5c0f1b]/8 p-5">
+              <div className="bg-white rounded-2xl p-5">
                 <h3 className="font-black text-[#2a1115] text-sm uppercase tracking-wider mb-4 flex items-center gap-2">
                   <ShoppingBag className="h-4 w-4 text-[#5c0f1b]" />
                   Productos
@@ -329,7 +329,7 @@ export default function CustomerOrderDetailPage() {
 
             {/* Resumen */}
             <div className="space-y-4">
-              <div className="bg-white rounded-2xl border border-[#5c0f1b]/8 p-5 space-y-3">
+              <div className="bg-white rounded-2xl p-5 space-y-3">
                 <h3 className="font-black text-[#2a1115] text-sm uppercase tracking-wider mb-2 flex items-center gap-2">
                   <Receipt className="h-4 w-4 text-[#5c0f1b]" />
                   Resumen
@@ -367,7 +367,7 @@ export default function CustomerOrderDetailPage() {
                 </div>
               </div>
 
-              <div className="bg-white rounded-2xl border border-[#5c0f1b]/8 p-5 space-y-3">
+              <div className="bg-white rounded-2xl p-5 space-y-3">
                 <h3 className="font-black text-[#2a1115] text-sm uppercase tracking-wider mb-2 flex items-center gap-2">
                   <CreditCard className="h-4 w-4 text-[#5c0f1b]" />
                   Pago
@@ -390,7 +390,7 @@ export default function CustomerOrderDetailPage() {
               </div>
 
               {/* Comprobante electrónico (PDF generado en servidor) */}
-              <div className="bg-white rounded-2xl border border-dashed border-[#5c0f1b]/15 p-5 space-y-3">
+              <div className="bg-white rounded-2xl p-5 space-y-3">
                 <h3 className="font-black text-[#2a1115] text-sm uppercase tracking-wider mb-2 flex items-center gap-2">
                   <Receipt className="h-4 w-4 text-[#5c0f1b]" />
                   Comprobante Electrónico
