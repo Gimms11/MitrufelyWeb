@@ -41,15 +41,18 @@ import { useCartItemCount } from '@/features/cart/hooks/useCart'
 import { useCriptoTrufaStore } from '@/stores/criptotrufa.store'
 
 // ── Componentes propios ────────────────────────────────────────────────────────
-import { CouponCard   } from '../components/CouponCard'
-import { RewardCard   } from '../components/RewardCard'
-import { ArcadeSection} from '../components/ArcadeSection'
+import { CouponCard } from '../components/CouponCard'
+import { RewardCard } from '../components/RewardCard'
+import { ArcadeSection } from '../components/ArcadeSection'
 
 // ─── Helper fecha ─────────────────────────────────────────────────────────────
 function formatDate(iso: string) {
   return new Intl.DateTimeFormat('es-PE', {
-    day: '2-digit', month: 'short', year: 'numeric',
-    hour: '2-digit', minute: '2-digit',
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
   }).format(new Date(iso))
 }
 
@@ -61,20 +64,20 @@ export default function PointsView() {
   // Stores
   const { user, isAuthenticated } = useAuthStore()
   const logout = useLogout()
-  const cartCount       = useCartItemCount()
-  const saldoActual     = useCriptoTrufaStore((s) => s.saldoActual)
-  const cuponesCliente  = useCriptoTrufaStore((s) => s.cuponesCliente)
-  const cuponesMaestro  = useCriptoTrufaStore((s) => s.cuponesMaestro)
-  const historial       = useCriptoTrufaStore((s) => s.historialMovimientos)
-  const canjearCupon    = useCriptoTrufaStore((s) => s.canjearCupon)
+  const cartCount = useCartItemCount()
+  const saldoActual = useCriptoTrufaStore((s) => s.saldoActual)
+  const cuponesCliente = useCriptoTrufaStore((s) => s.cuponesCliente)
+  const cuponesMaestro = useCriptoTrufaStore((s) => s.cuponesMaestro)
+  const historial = useCriptoTrufaStore((s) => s.historialMovimientos)
+  const canjearCupon = useCriptoTrufaStore((s) => s.canjearCupon)
   const hydrateSweetCoins = useCriptoTrufaStore((s) => s.hydrateSweetCoins)
 
   // UI local
-  const [searchQuery,   setSearchQuery]  = useState('')
-  const [userMenuOpen,  setUserMenuOpen] = useState(false)
-  const [carouselIdx,   setCarouselIdx]  = useState(0)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [userMenuOpen, setUserMenuOpen] = useState(false)
+  const [carouselIdx, setCarouselIdx] = useState(0)
   const [historialOpen, setHistorialOpen] = useState(false)
-  
+
   // Estado responsivo para el carrusel
   const [visibleCount, setVisibleCount] = useState(3)
   const [redeemLoading, setRedeemLoading] = useState(false)
@@ -86,7 +89,9 @@ export default function PointsView() {
     if (isAuthenticated) {
       hydrateSweetCoins()
     }
-    return () => { document.body.style.backgroundColor = prev }
+    return () => {
+      document.body.style.backgroundColor = prev
+    }
   }, [isAuthenticated, hydrateSweetCoins])
 
   // Efecto para determinar cuántos cupones mostrar según el ancho de pantalla
@@ -96,14 +101,20 @@ export default function PointsView() {
       else if (window.innerWidth < 1024) setVisibleCount(2)
       else setVisibleCount(3)
     }
-    
+
     updateVisibleCount()
     window.addEventListener('resize', updateVisibleCount)
     return () => window.removeEventListener('resize', updateVisibleCount)
   }, [])
 
-  const handleSearch = (e: React.FormEvent) => { e.preventDefault() }
-  const handleLogout = async () => { await logout(); setUserMenuOpen(false); toast.success('Sesión cerrada.') }
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault()
+  }
+  const handleLogout = async () => {
+    await logout()
+    setUserMenuOpen(false)
+    toast.success('Sesión cerrada.')
+  }
 
   // Canje con feedback
   const handleCanjear = async (id_cupon: number) => {
@@ -126,7 +137,7 @@ export default function PointsView() {
   }
 
   // Lógica del carrusel fluido
-  const maxIdx  = Math.max(0, cuponesCliente.length - visibleCount)
+  const maxIdx = Math.max(0, cuponesCliente.length - visibleCount)
   const canPrev = carouselIdx > 0
   const canNext = carouselIdx < maxIdx
 
@@ -144,7 +155,6 @@ export default function PointsView() {
 
   return (
     <div className="min-h-screen bg-[#faf8f5] text-[#2a1115] font-sans antialiased">
-
       {/* ── Header ── */}
       <PublicHeader
         cartCount={cartCount}
@@ -160,7 +170,6 @@ export default function PointsView() {
       />
 
       <main className="max-w-7xl mx-auto px-4 md:px-8 py-8 space-y-10">
-
         {/* ══════════════════════════════════════════════════════════════════════
             HERO — Saldo actual
         ══════════════════════════════════════════════════════════════════════ */}
@@ -189,7 +198,10 @@ export default function PointsView() {
                 </div>
                 <div
                   className="text-white font-black leading-none mb-2"
-                  style={{ fontFamily: "'Outfit', sans-serif", fontSize: 'clamp(3rem, 8vw, 5.5rem)' }}
+                  style={{
+                    fontFamily: "'Outfit', sans-serif",
+                    fontSize: 'clamp(3rem, 8vw, 5.5rem)',
+                  }}
                 >
                   {saldoActual.toLocaleString()}
                 </div>
@@ -201,16 +213,30 @@ export default function PointsView() {
               {/* Mini-estadísticas */}
               <div className="flex gap-4 flex-wrap">
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl px-5 py-4 text-center min-w-[100px]">
-                  <p className="text-white/50 text-[10px] font-black uppercase tracking-widest mb-1">Cupones</p>
-                  <p className="text-white font-black text-2xl" style={{ fontFamily: "'Outfit', sans-serif" }}>
+                  <p className="text-white/50 text-[10px] font-black uppercase tracking-widest mb-1">
+                    Cupones
+                  </p>
+                  <p
+                    className="text-white font-black text-2xl"
+                    style={{ fontFamily: "'Outfit', sans-serif" }}
+                  >
                     {cuponesCliente.filter((c) => c.estado === 'DISPONIBLE').length}
                   </p>
                   <p className="text-white/40 text-[10px] font-semibold">disponibles</p>
                 </div>
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl px-5 py-4 text-center min-w-[100px]">
-                  <p className="text-white/50 text-[10px] font-black uppercase tracking-widest mb-1">Canjeables</p>
-                  <p className="text-white font-black text-2xl" style={{ fontFamily: "'Outfit', sans-serif" }}>
-                    {cuponesMaestro.filter((r) => r.costo_puntos !== null && saldoActual >= (r.costo_puntos ?? 0)).length}
+                  <p className="text-white/50 text-[10px] font-black uppercase tracking-widest mb-1">
+                    Canjeables
+                  </p>
+                  <p
+                    className="text-white font-black text-2xl"
+                    style={{ fontFamily: "'Outfit', sans-serif" }}
+                  >
+                    {
+                      cuponesMaestro.filter(
+                        (r) => r.costo_puntos !== null && saldoActual >= (r.costo_puntos ?? 0),
+                      ).length
+                    }
                   </p>
                   <p className="text-white/40 text-[10px] font-semibold">recompensas</p>
                 </div>
@@ -219,10 +245,15 @@ export default function PointsView() {
                 <button
                   id="puntos-historial-btn"
                   onClick={() => setHistorialOpen((o) => !o)}
-                  className="bg-[#ff7a45]/20 hover:bg-[#ff7a45]/35 border border-[#ff7a45]/30 backdrop-blur-sm rounded-2xl px-5 py-4 text-center min-w-[100px] transition-all cursor-pointer"
+                  className="bg-[#ff7a45]/20 hover:bg-[#ff7a45]/35  backdrop-blur-sm rounded-2xl px-5 py-4 text-center min-w-[100px] transition-all cursor-pointer"
                 >
-                  <p className="text-white/70 text-[10px] font-black uppercase tracking-widest mb-1">Historial</p>
-                  <p className="text-white font-black text-2xl" style={{ fontFamily: "'Outfit', sans-serif" }}>
+                  <p className="text-white/70 text-[10px] font-black uppercase tracking-widest mb-1">
+                    Historial
+                  </p>
+                  <p
+                    className="text-white font-black text-2xl"
+                    style={{ fontFamily: "'Outfit', sans-serif" }}
+                  >
                     {historial.length}
                   </p>
                   <p className="text-white/60 text-[10px] font-semibold">movimientos</p>
@@ -261,9 +292,11 @@ export default function PointsView() {
                               : 'bg-red-50 text-red-500'
                           }`}
                         >
-                          {mov.cantidad > 0
-                            ? <TrendingUp className="h-4 w-4" />
-                            : <TrendingDown className="h-4 w-4" />}
+                          {mov.cantidad > 0 ? (
+                            <TrendingUp className="h-4 w-4" />
+                          ) : (
+                            <TrendingDown className="h-4 w-4" />
+                          )}
                         </div>
                         <div className="flex-1 min-w-0">
                           <p className="text-xs font-black text-[#2a1115] truncate">
@@ -279,7 +312,8 @@ export default function PointsView() {
                             mov.cantidad > 0 ? 'text-emerald-600' : 'text-red-500'
                           }`}
                         >
-                          {mov.cantidad > 0 ? '+' : ''}{mov.cantidad.toLocaleString()}
+                          {mov.cantidad > 0 ? '+' : ''}
+                          {mov.cantidad.toLocaleString()}
                         </span>
                       </div>
                     ))}
@@ -345,7 +379,7 @@ export default function PointsView() {
                 {cuponesCliente.map((c, i) => (
                   <div
                     key={c.id_cupon_cliente}
-                    className="shrink-0"
+                    className="shrink-0 relative hover:z-10"
                     style={{ width: itemWidth }}
                   >
                     <CouponCard coupon={c} index={i} />
@@ -360,7 +394,6 @@ export default function PointsView() {
             ZONA DE RECOMPENSAS + ARCADE (2 columnas)
         ══════════════════════════════════════════════════════════════════════ */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-
           {/* ── Zona de Recompensas (ocupa 2/3) ── */}
           <section className="lg:col-span-2">
             <div className="flex items-center gap-2 mb-5">
@@ -408,8 +441,8 @@ export default function PointsView() {
           className="bg-[#5c0f1b]/4 rounded-2xl px-6 py-4 text-center"
         >
           <p className="text-xs font-semibold text-[#2a1115]/50 leading-relaxed">
-            🍫 Las CriptoTrufas se acumulan automáticamente al completar tus compras.
-            Los cupones son de uso único. Consulta términos y condiciones en nuestra tienda.
+            🍫 Las CriptoTrufas se acumulan automáticamente al completar tus compras. Los cupones
+            son de uso único. Consulta términos y condiciones en nuestra tienda.
           </p>
         </motion.div>
       </main>
@@ -437,7 +470,8 @@ export default function PointsView() {
                   Procesando Canje
                 </h3>
                 <p className="text-xs text-stone-500 font-medium leading-relaxed">
-                  Por favor, no cierres esta ventana ni refresques la página mientras generamos tu cupón.
+                  Por favor, no cierres esta ventana ni refresques la página mientras generamos tu
+                  cupón.
                 </p>
               </div>
             </motion.div>
