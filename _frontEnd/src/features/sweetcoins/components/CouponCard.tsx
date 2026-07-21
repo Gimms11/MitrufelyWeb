@@ -52,10 +52,11 @@ export function CouponCard({ coupon, index = 0 }: CouponCardProps) {
       onHoverEnd={()   => setHovered(false)}
       style={{
         willChange: 'transform',
+        zIndex: hovered && active ? 10 : 1,
         boxShadow: hovered && active
           ? '0 24px 56px rgba(92,15,27,0.22), 0 10px 24px rgba(92,15,27,0.15)'
           : '0 4px 20px rgba(92,15,27,0.10)',
-        transition: 'box-shadow 0.3s ease',
+        transition: 'box-shadow 0.3s ease, z-index 0s',
       }}
       className={`relative overflow-hidden rounded-[22px] flex flex-col min-w-[220px] ${
         active ? 'bg-white cursor-pointer' : 'bg-stone-50 opacity-60'
