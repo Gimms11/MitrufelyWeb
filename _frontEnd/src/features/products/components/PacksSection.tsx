@@ -1,9 +1,8 @@
 /**
  * PacksSection.tsx — Sección de packs de regalo de la HomePage
  *
- * Carrusel infinito de PackCards con navegación por flechas y swipe (móvil).
+ * Carrusel interactivo de PackCards con navegación por flechas, puntos (móvil/escritorio) y swipe.
  * Muestra 1, 2 o 3 packs dependiendo del ancho de pantalla.
- * El desplazamiento es continuo y cíclico.
  */
 import { useState, useEffect, useCallback } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
@@ -38,18 +37,18 @@ export function PacksSection() {
   const isInfinite = totalPacks > itemsToShow
 
   const goLeft = useCallback(() => {
-    if (!isInfinite) return
+    if (totalPacks <= 1) return
     setDirection(-1)
     setActiveIndex((prev) => (prev - 1 + totalPacks) % totalPacks)
-  }, [isInfinite, totalPacks])
+  }, [totalPacks])
 
   const goRight = useCallback(() => {
-    if (!isInfinite) return
+    if (totalPacks <= 1) return
     setDirection(1)
     setActiveIndex((prev) => (prev + 1) % totalPacks)
-  }, [isInfinite, totalPacks])
+  }, [totalPacks])
 
-  // Calcular los packs a mostrar (con wrapping para el efecto infinito)
+  // Calcular los packs a mostrar
   const visiblePacks: Pack[] = []
   if (totalPacks > 0) {
     if (isInfinite) {
@@ -70,7 +69,7 @@ export function PacksSection() {
   }
 
   return (
-    <section id="puntos" className="bg-white py-24 px-4 scroll-mt-20 overflow-hidden">
+    <section id="puntos" className="bg-white py-16 md:py-24 px-4 scroll-mt-20 overflow-hidden">
       <div className="max-w-7xl mx-auto">
         {/* Encabezado */}
         <motion.div
@@ -78,7 +77,7 @@ export function PacksSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.35 }}
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-          className="text-center mb-14"
+          className="text-center mb-10 md:mb-14"
         >
           <span className="inline-block bg-[#5c0f1b]/8 text-[#5c0f1b] text-[10px] font-black uppercase tracking-[0.18em] px-4 py-1.5 rounded-full mb-4 border-[#5c0f1b]/10">
             Packs Especiales
@@ -103,7 +102,7 @@ export function PacksSection() {
         </motion.div>
 
         <div className="relative max-w-6xl mx-auto">
-          {/* Flecha Izquierda */}
+          {/* Flecha Izquierda Flotante (Escritorio) */}
           {isInfinite && (
             <button
               aria-label="Pack anterior"
@@ -116,55 +115,57 @@ export function PacksSection() {
 
           {/* Estado de Carga / Error */}
           {isLoading && (
-            <div className="flex justify-center items-center min-h-[400px]">
+            <div className="flex justify-center items-center min-h-[350px]">
               <span className="text-[#5c0f1b] font-bold">Cargando paquetes especiales...</span>
             </div>
           )}
           {isError && (
-            <div className="flex justify-center items-center min-h-[400px]">
+            <div className="flex justify-center items-center min-h-[350px]">
               <span className="text-red-600 font-bold">Ocurrió un error al cargar los paquetes.</span>
             </div>
           )}
           {!isLoading && !isError && visiblePacks.length === 0 && (
-            <div className="flex justify-center items-center min-h-[400px]">
+            <div className="flex justify-center items-center min-h-[350px]">
               <span className="text-gray-500 font-medium">Por el momento no hay paquetes disponibles.</span>
             </div>
           )}
 
           {/* Carrusel Swipeable */}
           {!isLoading && !isError && visiblePacks.length > 0 && (
-            <motion.div
-              className="flex gap-6 md:gap-8 min-h-[400px] py-4 cursor-grab active:cursor-grabbing items-stretch justify-center md:justify-start"
-              onPanEnd={(_e, info) => {
-                if (!isInfinite) return
-                const swipeThreshold = 50
-                if (info.offset.x < -swipeThreshold) goRight()
-                else if (info.offset.x > swipeThreshold) goLeft()
-              }}
-            >
-              <AnimatePresence mode="popLayout" initial={false} custom={direction}>
-                {visiblePacks.map((pack) => (
-                  <motion.div
-                    key={pack.id_paquete}
-                    layout
-                    custom={direction}
-                    initial={{ opacity: 0, x: direction * 100, scale: 0.9 }}
-                    animate={{ opacity: 1, x: 0, scale: 1 }}
-                    exit={{ opacity: 0, x: direction * -100, scale: 0.9 }}
-                    transition={{ duration: 0.4, ease: 'easeOut' }}
-                    className="shrink-0 flex justify-center"
-                    style={{ width: getItemWidth() }}
-                  >
-                    <div className="w-full max-w-[400px] h-full">
-                      <PackCard pack={pack} />
+            <div className="overflow-hidden py-2 touch-pan-y">
+              <AnimatePresence mode="wait" custom={direction}>
+                <motion.div
+                  key={activeIndex}
+                  custom={direction}
+                  initial={{ opacity: 0, x: direction > 0 ? 50 : -50 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: direction > 0 ? -50 : 50 }}
+                  transition={{ duration: 0.3, ease: 'easeOut' }}
+                  className="flex gap-6 md:gap-8 min-h-[380px] cursor-grab active:cursor-grabbing items-stretch justify-center md:justify-start"
+                  onPanEnd={(_e, info) => {
+                    if (totalPacks <= 1) return
+                    const swipeThreshold = 40
+                    if (info.offset.x < -swipeThreshold) goRight()
+                    else if (info.offset.x > swipeThreshold) goLeft()
+                  }}
+                >
+                  {visiblePacks.map((pack) => (
+                    <div
+                      key={pack.id_paquete}
+                      className="shrink-0 flex justify-center"
+                      style={{ width: getItemWidth() }}
+                    >
+                      <div className="w-full max-w-[400px] h-full">
+                        <PackCard pack={pack} />
+                      </div>
                     </div>
-                  </motion.div>
-                ))}
+                  ))}
+                </motion.div>
               </AnimatePresence>
-            </motion.div>
+            </div>
           )}
 
-          {/* Flecha Derecha */}
+          {/* Flecha Derecha Flotante (Escritorio) */}
           {isInfinite && (
             <button
               aria-label="Siguiente pack"
@@ -174,8 +175,49 @@ export function PacksSection() {
               <ChevronRight className="h-6 w-6" />
             </button>
           )}
+
+          {/* Controles de Navegación y Puntos (Móvil y Tablet) */}
+          {!isLoading && !isError && totalPacks > 1 && (
+            <div className="flex items-center justify-center gap-4 mt-6">
+              <button
+                aria-label="Pack anterior"
+                onClick={goLeft}
+                className="h-10 w-10 rounded-full bg-[#ff7a45] text-white flex items-center justify-center shadow-md hover:bg-[#e86a35] active:scale-95 transition-all cursor-pointer border-none"
+              >
+                <ChevronLeft className="h-5 w-5" />
+              </button>
+
+              {/* Dots de Paginación */}
+              <div className="flex items-center gap-2">
+                {Array.from({ length: totalPacks }).map((_, idx) => (
+                  <button
+                    key={idx}
+                    aria-label={`Ir al pack ${idx + 1}`}
+                    onClick={() => {
+                      setDirection(idx > activeIndex ? 1 : -1)
+                      setActiveIndex(idx)
+                    }}
+                    className={`h-2.5 rounded-full transition-all cursor-pointer border-none ${
+                      idx === activeIndex
+                        ? 'w-7 bg-[#5c0f1b]'
+                        : 'w-2.5 bg-stone-300 hover:bg-stone-400'
+                    }`}
+                  />
+                ))}
+              </div>
+
+              <button
+                aria-label="Siguiente pack"
+                onClick={goRight}
+                className="h-10 w-10 rounded-full bg-[#ff7a45] text-white flex items-center justify-center shadow-md hover:bg-[#e86a35] active:scale-95 transition-all cursor-pointer border-none"
+              >
+                <ChevronRight className="h-5 w-5" />
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </section>
   )
 }
+

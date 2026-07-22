@@ -216,12 +216,16 @@ export function PaymentModal({ isOpen, onClose, subtotalBase, igv, costoEnvio, e
       (fiscalData.direccion_fiscal || '') !== (data.direccion_fiscal || '');
 
     if (isModified) {
-      await upsertFiscal.mutateAsync({
-        tipo_documento: data.tipo_documento,
-        numero_documento: data.numero_documento,
-        razon_social: data.razon_social || null,
-        direccion_fiscal: data.direccion_fiscal || null,
-      })
+      try {
+        await upsertFiscal.mutateAsync({
+          tipo_documento: data.tipo_documento,
+          numero_documento: data.numero_documento,
+          razon_social: data.razon_social || null,
+          direccion_fiscal: data.direccion_fiscal || null,
+        })
+      } catch {
+        return
+      }
     }
     setEditFiscal(false)
     setStep(2)

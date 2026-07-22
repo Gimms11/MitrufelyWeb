@@ -32,8 +32,32 @@ export function useUpsertDatosFiscales() {
       queryClient.setQueryData(FISCAL_QUERY_KEY, data)
       toast.success('Datos fiscales guardados.')
     },
-    onError: () => {
-      toast.error('No se pudieron guardar los datos fiscales.')
+    onError: (error: any) => {
+      const status = error?.response?.status
+      const detail =
+        error?.response?.data?.detail ||
+        error?.response?.data?.error?.message ||
+        error?.response?.data?.message
+
+      if (
+        status === 404 ||
+        status === 409 ||
+        status === 422 ||
+        status === 400 ||
+        !detail ||
+        (typeof detail === 'string' &&
+          (detail.toLowerCase().includes('registrado') ||
+            detail.toLowerCase().includes('existe') ||
+            detail.toLowerCase().includes('no disponible') ||
+            detail.toLowerCase().includes('dni') ||
+            detail.toLowerCase().includes('documento')))
+      ) {
+        toast.error('DNI no disponible')
+      } else if (typeof detail === 'string' && detail.trim()) {
+        toast.error(detail)
+      } else {
+        toast.error('DNI no disponible')
+      }
     },
   })
 }
@@ -48,8 +72,25 @@ export function useUpdateProfile() {
       queryClient.invalidateQueries({ queryKey: ['auth'] })
       toast.success('Perfil actualizado.')
     },
-    onError: () => {
-      toast.error('No se pudo actualizar el perfil.')
+    onError: (error: any) => {
+      const status = error?.response?.status
+      const detail =
+        error?.response?.data?.detail ||
+        error?.response?.data?.error?.message ||
+        error?.response?.data?.message
+
+      if (
+        status === 404 ||
+        status === 409 ||
+        status === 422 ||
+        (typeof detail === 'string' && detail.toLowerCase().includes('dni'))
+      ) {
+        toast.error('DNI no disponible')
+      } else if (typeof detail === 'string' && detail.trim()) {
+        toast.error(detail)
+      } else {
+        toast.error('No se pudo actualizar el perfil.')
+      }
     },
   })
 }

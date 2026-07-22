@@ -283,13 +283,13 @@ export default function OrdersPage() {
               {transitionMut.isPending && transitionMut.variables?.id === order.id_venta ? (
                 <button
                   disabled
-                  className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg border border-stone-200 bg-stone-50 text-[10px] font-black text-stone-400 cursor-not-allowed uppercase tracking-wider"
+                  className="hidden md:inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg border border-stone-200 bg-stone-50 text-[10px] font-black text-stone-400 cursor-not-allowed uppercase tracking-wider"
                 >
                   <Loader2 className="h-3 w-3 animate-spin text-[#5c0f1b]" />
                   Procesando
                 </button>
               ) : (
-                <div className="relative group">
+                <div className="relative group hidden md:block">
                   <button className="inline-flex items-center justify-center px-2 py-1.5 rounded-lg border border-stone-200 hover:bg-stone-50 text-xs font-bold text-stone-600">
                     Acciones ▼
                   </button>
