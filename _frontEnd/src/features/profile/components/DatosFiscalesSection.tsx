@@ -106,24 +106,28 @@ export function DatosFiscalesSection() {
       return
     }
 
-    // 1. Upsert fiscal
-    await upsertFiscal.mutateAsync({
-      tipo_documento: form.tipo_documento,
-      numero_documento: form.numero_documento,
-      razon_social: form.tipo_documento === 'RUC' ? form.razon_social : null,
-      direccion_fiscal: form.direccion_fiscal.trim() || null,
-    })
-
-    // 2. Si la API dio nombres/apellidos (DNI o RUC persona natural), actualizar perfil
-    if (form.nombres || form.apellidos) {
-      await updateProfile.mutateAsync({
-        nombres: form.nombres || null,
-        apellidos: form.apellidos || null,
+    try {
+      // 1. Upsert fiscal
+      await upsertFiscal.mutateAsync({
+        tipo_documento: form.tipo_documento,
+        numero_documento: form.numero_documento,
+        razon_social: form.tipo_documento === 'RUC' ? form.razon_social : null,
+        direccion_fiscal: form.direccion_fiscal.trim() || null,
       })
-    }
 
-    setEditando(false)
-    setConsultadoOk(false)
+      // 2. Si la API dio nombres/apellidos (DNI o RUC persona natural), actualizar perfil
+      if (form.nombres || form.apellidos) {
+        await updateProfile.mutateAsync({
+          nombres: form.nombres || null,
+          apellidos: form.apellidos || null,
+        })
+      }
+
+      setEditando(false)
+      setConsultadoOk(false)
+    } catch {
+      // El toast "DNI no disponible" ya se maneja en el onError del hook useUpsertDatosFiscales
+    }
   }
 
   const handleCancelar = () => {

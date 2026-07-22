@@ -66,7 +66,7 @@ export function PublicHeader({
   onUserMenuToggle,
   searchQuery,
   onSearchChange,
-  onSearchSubmit,
+  onSearchSubmit: _onSearchSubmit,
   onLogout,
 }: PublicHeaderProps) {
   const navigate = useNavigate()
@@ -84,9 +84,10 @@ export function PublicHeader({
     if (isAuthenticated) {
       hydrateSweetCoins()
     }
-    // Access coinsBalance to satisfy TS compiler unused check
+    // Access unused props for satisfies TS compiler
     void coinsBalance
-  }, [isAuthenticated, hydrateSweetCoins, coinsBalance])
+    void _onSearchSubmit
+  }, [isAuthenticated, hydrateSweetCoins, coinsBalance, _onSearchSubmit])
 
   // ── Auto-hide al scroll ───────────────────────────────────────────────
   const [visible, setVisible] = useState(true)
@@ -514,23 +515,108 @@ export function PublicHeader({
                 </button>
               </div>
 
-              {/* Buscador Móvil */}
-              <form
-                onSubmit={(e) => {
-                  onSearchSubmit(e)
-                  setMobileNavOpen(false)
-                }}
-                className="relative mb-6"
-              >
-                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[#2a1115]/40 pointer-events-none" />
-                <input
-                  type="text"
-                  className="w-full bg-[#f0ede8] border border-stone-200 rounded-full px-4 pl-9 py-2.5 text-[#2a1115] text-sm font-medium placeholder:text-[#2a1115]/40 outline-none focus:border-[#5c0f1b]/30 focus:ring-2 focus:ring-[#5c0f1b]/10 transition-all"
-                  placeholder="Buscar trufas, sabores..."
-                  value={searchQuery}
-                  onChange={(e) => onSearchChange(e.target.value)}
-                />
-              </form>
+              {/* Buscador Móvil con Live Search */}
+              <div className="relative mb-6">
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault()
+                    if (!searchQuery.trim()) return
+                    navigate(`/catalogo?search=${encodeURIComponent(searchQuery.trim())}`)
+                    setSearchOpen(false)
+                    setMobileNavOpen(false)
+                  }}
+                  className="relative w-full"
+                >
+                  <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[#2a1115]/40 pointer-events-none" />
+                  <input
+                    type="text"
+                    className="w-full bg-[#f0ede8] border border-stone-200 rounded-full px-4 pl-9 py-2.5 text-[#2a1115] text-sm font-medium placeholder:text-[#2a1115]/40 outline-none focus:border-[#5c0f1b]/30 focus:ring-2 focus:ring-[#5c0f1b]/10 transition-all"
+                    placeholder="Buscar trufas, sabores..."
+                    value={searchQuery}
+                    onChange={(e) => {
+                      onSearchChange(e.target.value)
+                      setSearchOpen(true)
+                    }}
+                    onFocus={() => searchQuery.trim().length >= 2 && setSearchOpen(true)}
+                    autoComplete="off"
+                  />
+                </form>
+
+                {/* Dropdown de resultados en móvil */}
+                <AnimatePresence>
+                  {searchOpen && isSearched && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 8, scale: 0.97 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 8, scale: 0.97 }}
+                      transition={{ duration: 0.16 }}
+                      className="absolute left-0 right-0 top-full mt-2 bg-white rounded-2xl shadow-2xl border border-[#5c0f1b]/10 overflow-hidden z-50"
+                    >
+                      {searchPreview.length > 0 ? (
+                        <>
+                          <ul className="divide-y divide-stone-100">
+                            {searchPreview.map((p) => (
+                              <li
+                                key={p.id_producto}
+                                onClick={() => {
+                                  navigate(`/producto/${p.slug}`)
+                                  setSearchOpen(false)
+                                  setMobileNavOpen(false)
+                                }}
+                                className="flex items-center gap-3 px-4 py-3 hover:bg-[#5c0f1b]/5 cursor-pointer transition-colors"
+                              >
+                                {p.imagen_url && (
+                                  <img
+                                    src={p.imagen_url}
+                                    alt={p.nombre}
+                                    className="h-10 w-10 rounded-xl object-cover shrink-0"
+                                  />
+                                )}
+                                <div className="flex-1 min-w-0">
+                                  <p className="text-sm font-black text-[#2a1115] truncate">
+                                    {p.nombre}
+                                  </p>
+                                  {p.ingredientes && (
+                                    <p className="text-xs text-[#5c0f1b]/70 truncate">
+                                      {p.ingredientes}
+                                    </p>
+                                  )}
+                                </div>
+                                <span className="text-sm font-black text-[#5c0f1b] shrink-0">
+                                  S/. {Number(p.precio).toFixed(2)}
+                                </span>
+                              </li>
+                            ))}
+                          </ul>
+                          <button
+                            onClick={() => {
+                              navigate(`/catalogo?search=${encodeURIComponent(debouncedQuery)}`)
+                              setSearchOpen(false)
+                              setMobileNavOpen(false)
+                            }}
+                            className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-[#5c0f1b]/5 hover:bg-[#5c0f1b]/10 text-sm font-black text-[#5c0f1b] transition-colors border-t border-stone-100 cursor-pointer"
+                          >
+                            {hasMoreResults
+                              ? `Ver los ${allMatches.length} resultados`
+                              : 'Ver en catálogo'}
+                            <ArrowRight className="h-4 w-4" />
+                          </button>
+                        </>
+                      ) : (
+                        <div className="flex flex-col items-center gap-2 py-7 px-4">
+                          <PackageX className="h-7 w-7 text-stone-300" />
+                          <p className="text-sm font-bold text-stone-400 text-center">
+                            No encontramos trufas con «{debouncedQuery}»
+                          </p>
+                          <p className="text-xs text-stone-300 text-center">
+                            Intenta con otro sabor o ingrediente
+                          </p>
+                        </div>
+                      )}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
 
               {/* Enlaces de navegación */}
               <nav className="flex-1 space-y-2">

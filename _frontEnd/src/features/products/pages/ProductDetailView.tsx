@@ -441,9 +441,9 @@ export default function ProductDetailView() {
               <div className="border-t border-dashed border-[#5c0f1b]/20 mb-6" />
 
               {/* Selector de cantidad + Add to cart */}
-              <div className="flex items-center gap-4">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
                 {/* Contador */}
-                <div className="flex items-center gap-3 bg-white/60 border border-[#5c0f1b]/15 rounded-full px-4 py-2.5 shadow-sm">
+                <div className="flex items-center justify-between sm:justify-start gap-3 bg-white/60 border border-[#5c0f1b]/15 rounded-full px-4 py-2.5 shadow-sm shrink-0">
                   <button
                     id="product-detail-minus"
                     onClick={handleDecrement}
@@ -475,7 +475,7 @@ export default function ProductDetailView() {
                   id="product-detail-add-cart"
                   onClick={handleAddToCart}
                   disabled={!isAvailable}
-                  className={`flex-1 flex items-center justify-center gap-2.5 py-3.5 rounded-full font-black text-sm transition-all active:scale-95 cursor-pointer border-none shadow-lg ${
+                  className={`flex-1 min-w-0 flex items-center justify-center gap-2 px-4 sm:px-6 py-3.5 rounded-full font-black text-xs sm:text-sm transition-all active:scale-95 cursor-pointer border-none shadow-lg ${
                     isAvailable
                       ? addedAnim
                         ? 'bg-emerald-600 text-white scale-95'
@@ -484,12 +484,14 @@ export default function ProductDetailView() {
                   }`}
                   aria-label="Añadir al carrito"
                 >
-                  <ShoppingCart className="h-4 w-4" />
-                  {addedAnim
-                    ? '¡Agregado! ✓'
-                    : isAvailable
-                      ? `Añadir al carrito · S/ ${totalPrice}`
-                      : 'No disponible'}
+                  <ShoppingCart className="h-4 w-4 shrink-0" />
+                  <span className="truncate">
+                    {addedAnim
+                      ? '¡Agregado! ✓'
+                      : isAvailable
+                        ? `Añadir al carrito · S/ ${totalPrice}`
+                        : 'No disponible'}
+                  </span>
                 </button>
               </div>
             </motion.div>
