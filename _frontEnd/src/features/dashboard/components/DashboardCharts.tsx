@@ -87,8 +87,8 @@ export function SalesAreaChart({ data }: SalesChartProps) {
               padding: '12px 16px',
               fontFamily: 'Inter, sans-serif',
             }}
-            formatter={(value: number) => [`S/. ${Number(value || 0).toFixed(2)}`, 'Ingresos Totales']}
-            labelFormatter={(label) => `Fecha: ${label}`}
+            formatter={(value: any) => [`S/. ${Number(value || 0).toFixed(2)}`, 'Ingresos Totales']}
+            labelFormatter={(label: any) => `Fecha: ${label}`}
           />
           <Area
             type="monotone"
@@ -170,11 +170,11 @@ export function TopProductsBarChart({ data, limit = 10 }: ProductsChartProps) {
               padding: '12px 16px',
               fontFamily: 'Inter, sans-serif',
             }}
-            labelFormatter={(_, payload) => payload[0]?.payload?.fullName || ''}
-            formatter={(value: number, _, item: any) => [
-              `${value} unidades ${item.payload.ingresos ? `(S/. ${Number(item.payload.ingresos).toFixed(2)})` : ''}`,
+            labelFormatter={((label: any, payload: any) => payload?.[0]?.payload?.fullName || String(label || '')) as any}
+            formatter={((value: any, _: any, item: any) => [
+              `${value} unidades ${item?.payload?.ingresos ? `(S/. ${Number(item.payload.ingresos).toFixed(2)})` : ''}`,
               'Total Vendido',
-            ]}
+            ]) as any}
           />
           <Bar dataKey="vendido" radius={[0, 8, 8, 0]} barSize={20}>
             {chartData.map((_, index) => (
@@ -242,8 +242,8 @@ export function StockBarChart({ data }: ProductsChartProps) {
               border: '1px solid #5c0f1b20',
               fontSize: '12px',
             }}
-            labelFormatter={(_, payload) => payload[0]?.payload?.fullName || ''}
-            formatter={(value: number) => [`${value} unidades`, 'Stock Disponible']}
+            labelFormatter={((label: any, payload: any) => payload?.[0]?.payload?.fullName || String(label || '')) as any}
+            formatter={((value: any) => [`${value} unidades`, 'Stock Disponible']) as any}
           />
           <Bar dataKey="stock" radius={[0, 8, 8, 0]} barSize={20}>
             {chartData.map((entry, index) => (

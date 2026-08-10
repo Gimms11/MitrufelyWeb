@@ -10,7 +10,6 @@ import {
   ArrowUpRight,
   CheckCircle,
   Calendar,
-  Filter,
 } from 'lucide-react'
 import { motion } from 'framer-motion'
 

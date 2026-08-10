@@ -15,7 +15,6 @@ import {
   ArrowUpRight,
   TrendingUp,
   BarChart3,
-  CheckCircle,
 } from 'lucide-react'
 import { useDashboardQuery } from '../hooks/useDashboard'
 
