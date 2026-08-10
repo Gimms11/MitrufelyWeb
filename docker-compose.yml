@@ -62,34 +62,6 @@ services:
       - mifrufely-net
     restart: on-failure
 
-  # ── Delivery Microservice ──────────────────────────────────────────────────
-  delivery-service:
-    build:
-      context: ./_deliveryService
-      dockerfile: Dockerfile
-    command:
-      - uvicorn
-      - main:app
-      - --host
-      - "0.0.0.0"
-      - --port
-      - "8001"
-      - --reload
-    volumes:
-      - ./_deliveryService:/app
-    ports:
-      - "127.0.0.1:8001:8001"
-    environment:
-      - BACKEND_URL=http://api:8000
-      # M-12: Token de webhook — en desarrollo se usa un valor aleatorio.
-      # En producción, establecer via variable de entorno o secrets manager.
-      - DELIVERY_WEBHOOK_TOKEN=${DELIVERY_WEBHOOK_TOKEN:-change-me-in-prod-7f3a9b2e}
-      - PREPARATION_DELAY_SECONDS=5
-      - DELIVERY_DELAY_SECONDS=10
-    networks:
-      - mifrufely-net
-    restart: on-failure
-
   # ── Redis ──────────────────────────────────────────────────────────────────
   redis:
     image: redis:7.2-alpine

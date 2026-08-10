@@ -39,8 +39,10 @@ export interface DashboardMetricsResponse {
 }
 
 export const dashboardApi = {
-  getMetrics: async (): Promise<DashboardMetricsResponse> => {
-    const { data } = await api.get<DashboardMetricsResponse>('/admin/dashboard/metrics')
+  getMetrics: async (dias: number = 30): Promise<DashboardMetricsResponse> => {
+    const { data } = await api.get<DashboardMetricsResponse>('/admin/dashboard/metrics', {
+      params: { dias },
+    })
     return data
   },
 }

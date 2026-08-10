@@ -212,6 +212,11 @@ class Settings(BaseSettings):
     def is_development(self) -> bool:
         return self.APP_ENV == "development"
 
+    @property
+    def is_testing(self) -> bool:
+        import sys
+        return self.APP_ENV == "testing" or "pytest" in sys.modules
+
 
 @lru_cache(maxsize=1)
 def get_settings() -> Settings:

@@ -27,11 +27,12 @@ class DashboardService:
     def __init__(self, session: AsyncSession) -> None:
         self.session = session
 
-    async def get_metrics(self) -> DashboardMetricsResponse:
+    async def get_metrics(self, dias: int = 30) -> DashboardMetricsResponse:
         """Calcula todas las métricas del dashboard en una sola invocación."""
-        logger.info("dashboard.metrics.calculating")
+        logger.info("dashboard.metrics.calculating", dias=dias)
 
-        # ── Conteo por estado ──────────────────────────────────────────────
+        # ── Ventas por día (últimos N días) ───────────────────────────────
+        hace_n_dias = datetime.utcnow() - timedelta(days=dias)
         stmt_estados = select(
             Venta.estado,
             func.count(Venta.id_venta).label("cantidad")
@@ -108,7 +109,7 @@ class DashboardService:
                 func.coalesce(func.sum(Venta.total_final), 0).label("total_ingresos"),
             )
             .where(
-                Venta.fecha_venta >= hace_30_dias,
+                Venta.fecha_venta >= hace_n_dias,
                 Venta.estado.notin_([EstadoVentaEnum.ANULADO]),
             )
             .group_by(func.date(Venta.fecha_venta))

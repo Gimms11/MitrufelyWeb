@@ -1,5 +1,7 @@
 # 📋 Informe Técnico de Pruebas Unitarias y Funcionales — MitrufelyWeb
 
+> ⚠️ **Nota (Agosto 2026):** El microservicio `_deliveryService` y sus 8 pruebas fueron eliminados del proyecto. Las transiciones de estado de entregas se gestionan ahora mediante la máquina de estados del backend principal.
+
 > **Comparativa Antes / Después de la Implementación de Pruebas Automatizadas**
 >
 > | Campo                             | Valor                                                        |

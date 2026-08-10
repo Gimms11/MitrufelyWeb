@@ -1,4 +1,4 @@
-import { useMemo, Suspense, lazy } from 'react'
+import { useState, useMemo, Suspense, lazy } from 'react'
 import { Link } from 'react-router'
 import {
   Sparkles,
@@ -9,6 +9,8 @@ import {
   AlertTriangle,
   ArrowUpRight,
   CheckCircle,
+  Calendar,
+  Filter,
 } from 'lucide-react'
 import { motion } from 'framer-motion'
 
@@ -26,6 +28,9 @@ import { useReconciliationQuery } from '@/features/inventory/hooks/useInventory'
 import { cn } from '@/lib/utils'
 
 export default function DashboardPage() {
+  const [daysRange, setDaysRange] = useState<number>(7)
+  const [topProductsCount, setTopProductsCount] = useState<number>(5)
+
   // 1. Fetch Orders (limit to 100 recent)
   const { data: orders = [], isLoading: ordersLoading } = useOrdersQuery({ limit: 100 })
 
@@ -67,13 +72,18 @@ export default function DashboardPage() {
     }
   }, [orders, products, reconciliation])
 
-  // --- PROCESS CHART DATA (Sales by Date) ---
+  // --- PROCESS CHART DATA (Sales by Date filtered by daysRange) ---
   const chartData = useMemo(() => {
+    const cutoffDate = new Date()
+    cutoffDate.setDate(cutoffDate.getDate() - daysRange)
+
     const dailyMap: Record<string, { date: string; ventas: number; ordenes: number }> = {}
 
-    // Process last 7 days of data from orders
     orders.forEach((order) => {
-      const dateStr = new Date(order.fecha_venta).toLocaleDateString('es-PE', {
+      const orderDate = new Date(order.fecha_venta)
+      if (orderDate < cutoffDate) return
+
+      const dateStr = orderDate.toLocaleDateString('es-PE', {
         day: '2-digit',
         month: 'short',
       })
@@ -89,19 +99,18 @@ export default function DashboardPage() {
       }
     })
 
-    // Convert to sorted array
-    return Object.values(dailyMap).reverse().slice(-7)
-  }, [orders])
+    return Object.values(dailyMap).reverse().slice(-daysRange)
+  }, [orders, daysRange])
 
   // --- PROCESS TOP PRODUCTS CHART ---
   const topProductsData = useMemo(() => {
     return products
-      .slice(0, 5)
+      .slice(0, topProductsCount)
       .map((p) => ({
         name: p.nombre,
         stock: p.stock_actual,
       }))
-  }, [products])
+  }, [products, topProductsCount])
 
   const recentOrders = useMemo(() => {
     return orders.slice(0, 5)
@@ -114,18 +123,38 @@ export default function DashboardPage() {
   return (
     <div className="min-h-screen bg-[#faf8f5] text-[#2a1115] font-sans antialiased pb-12">
       {/* Cabecera del Dashboard */}
-      <header className="bg-white border-b border-[#5c0f1b]/10 sticky top-0 z-40 backdrop-blur-md bg-white/95">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex items-center justify-between">
+      <header className="bg-white border-b border-[#5c0f1b]/10 sticky top-0 z-40 backdrop-blur-md bg-white/95 shadow-2xs">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-xs font-black bg-[#ff7a45]/12 border border-[#ff7a45]/20 px-2.5 py-1 rounded-full text-[#ff7a45] uppercase tracking-wide">
+              <span className="text-xs font-black bg-[#ff7a45]/12 border border-[#ff7a45]/20 px-2.5 py-0.5 rounded-full text-[#ff7a45] uppercase tracking-wide">
                 Analíticas en tiempo real
               </span>
               <Sparkles className="h-4 w-4 text-[#ff7a45] animate-pulse" />
             </div>
-            <h1 className="text-2xl font-black text-[#5c0f1b] tracking-tight mt-1" style={{ fontFamily: "'Outfit', sans-serif" }}>
+            <h1 className="text-2xl font-black text-[#5c0f1b] tracking-tight mt-0.5" style={{ fontFamily: "'Outfit', sans-serif" }}>
               Panel de Control Administrativo
             </h1>
+          </div>
+
+          {/* Filtro Rápido de Tiempo */}
+          <div className="flex items-center gap-2 bg-[#faf8f5] p-1.5 rounded-2xl border border-[#5c0f1b]/10 self-stretch sm:self-auto justify-end">
+            <div className="flex items-center gap-1.5 px-3 py-1 text-xs font-black text-[#5c0f1b] uppercase tracking-wider">
+              <Calendar className="h-3.5 w-3.5 text-[#ff7a45]" /> Ver:
+            </div>
+            {[7, 14, 30].map((num) => (
+              <button
+                key={num}
+                onClick={() => setDaysRange(num)}
+                className={`px-3 py-1.5 rounded-xl text-xs font-black transition-all cursor-pointer ${
+                  daysRange === num
+                    ? 'bg-[#5c0f1b] text-white shadow-2xs scale-105'
+                    : 'text-stone-600 hover:bg-white hover:text-[#5c0f1b]'
+                }`}
+              >
+                {num} Días
+              </button>
+            ))}
           </div>
         </div>
       </header>
@@ -139,14 +168,15 @@ export default function DashboardPage() {
         </div>
       ) : (
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
-          {/* Grilla de Widgets de KPI */}
+          
+          {/* Grilla de Widgets KPI */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             
             {/* Widget 1: Ingresos Totales */}
             <motion.div
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-white p-6 rounded-3xl border border-[#5c0f1b]/10 shadow-sm relative overflow-hidden group hover:shadow-md transition-all"
+              className="bg-white p-6 rounded-3xl border border-[#5c0f1b]/10 shadow-2xs relative overflow-hidden group hover:shadow-md transition-all"
             >
               <div className="flex items-center justify-between">
                 <span className="text-xs font-black uppercase text-stone-400">Ingresos Totales (Cobrados)</span>
@@ -169,7 +199,7 @@ export default function DashboardPage() {
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.05 }}
-              className="bg-white p-6 rounded-3xl border border-[#5c0f1b]/10 shadow-sm relative overflow-hidden group hover:shadow-md transition-all"
+              className="bg-white p-6 rounded-3xl border border-[#5c0f1b]/10 shadow-2xs relative overflow-hidden group hover:shadow-md transition-all"
             >
               <div className="flex items-center justify-between">
                 <span className="text-xs font-black uppercase text-stone-400">Pagos Pendientes</span>
@@ -192,7 +222,7 @@ export default function DashboardPage() {
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="bg-white p-6 rounded-3xl border border-[#5c0f1b]/10 shadow-sm relative overflow-hidden group hover:shadow-md transition-all"
+              className="bg-white p-6 rounded-3xl border border-[#5c0f1b]/10 shadow-2xs relative overflow-hidden group hover:shadow-md transition-all"
             >
               <div className="flex items-center justify-between">
                 <span className="text-xs font-black uppercase text-stone-400">Alertas de Stock</span>
@@ -218,7 +248,7 @@ export default function DashboardPage() {
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.15 }}
-              className="bg-white p-6 rounded-3xl border border-[#5c0f1b]/10 shadow-sm relative overflow-hidden group hover:shadow-md transition-all"
+              className="bg-white p-6 rounded-3xl border border-[#5c0f1b]/10 shadow-2xs relative overflow-hidden group hover:shadow-md transition-all"
             >
               <div className="flex items-center justify-between">
                 <span className="text-xs font-black uppercase text-stone-400">Discrepancias FEFO</span>
@@ -243,13 +273,15 @@ export default function DashboardPage() {
           {/* Grilla de Gráficos Analíticos */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             
-            {/* Gráfico 1: Ventas en los últimos 7 días */}
-            <div className="lg:col-span-2 bg-white p-6 rounded-[32px] border border-[#5c0f1b]/10 shadow-sm">
-              <h3 className="text-sm font-black uppercase tracking-wider text-[#5c0f1b] mb-6 flex items-center gap-2" style={{ fontFamily: "'Outfit', sans-serif" }}>
-                <TrendingUp className="h-4.5 w-4.5" />
-                Historial de Ventas Diarias (Última semana)
-              </h3>
-              <div className="h-80 w-full">
+            {/* Gráfico 1: Ventas filtradas */}
+            <div className="lg:col-span-2 bg-white p-6 rounded-[32px] border border-[#5c0f1b]/10 shadow-2xs flex flex-col justify-between">
+              <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
+                <h3 className="text-sm font-black uppercase tracking-wider text-[#5c0f1b] flex items-center gap-2" style={{ fontFamily: "'Outfit', sans-serif" }}>
+                  <TrendingUp className="h-4.5 w-4.5 text-[#ff7a45]" />
+                  Historial de Ventas Diarias ({daysRange} días)
+                </h3>
+              </div>
+              <div className="w-full min-h-[300px] flex-1">
                 {chartData.length > 0 ? (
                   <Suspense
                     fallback={
@@ -261,20 +293,37 @@ export default function DashboardPage() {
                     <SalesAreaChartGeneric data={chartData} />
                   </Suspense>
                 ) : (
-                  <div className="h-full flex items-center justify-center text-stone-400">
-                    Aún no hay transacciones para graficar.
+                  <div className="h-full flex items-center justify-center text-stone-400 text-xs font-bold">
+                    Aún no hay transacciones para graficar en este rango.
                   </div>
                 )}
               </div>
             </div>
 
-            {/* Gráfico 2: Niveles de Stock de los Primeros Productos */}
-            <div className="bg-white p-6 rounded-[32px] border border-[#5c0f1b]/10 shadow-sm">
-              <h3 className="text-sm font-black uppercase tracking-wider text-[#5c0f1b] mb-6 flex items-center gap-2" style={{ fontFamily: "'Outfit', sans-serif" }}>
-                <Boxes className="h-4.5 w-4.5" />
-                Inventario Crítico de Trufas
-              </h3>
-              <div className="h-80 w-full">
+            {/* Gráfico 2: Inventario Crítico con selector de productos */}
+            <div className="bg-white p-6 rounded-[32px] border border-[#5c0f1b]/10 shadow-2xs flex flex-col justify-between">
+              <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
+                <h3 className="text-sm font-black uppercase tracking-wider text-[#5c0f1b] flex items-center gap-2" style={{ fontFamily: "'Outfit', sans-serif" }}>
+                  <Boxes className="h-4.5 w-4.5 text-[#ff7a45]" />
+                  Inventario Crítico
+                </h3>
+                <div className="flex items-center gap-1 bg-[#faf8f5] p-1 rounded-xl border border-[#5c0f1b]/10">
+                  {[5, 10].map((count) => (
+                    <button
+                      key={count}
+                      onClick={() => setTopProductsCount(count)}
+                      className={`px-2 py-0.5 rounded-lg text-[10px] font-black transition-all cursor-pointer ${
+                        topProductsCount === count
+                          ? 'bg-[#5c0f1b] text-white shadow-2xs'
+                          : 'text-stone-600 hover:text-[#5c0f1b]'
+                      }`}
+                    >
+                      Top {count}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div className="w-full overflow-y-auto max-h-[380px] flex-1">
                 {topProductsData.length > 0 ? (
                   <Suspense
                     fallback={
@@ -286,7 +335,7 @@ export default function DashboardPage() {
                     <StockBarChart data={topProductsData} />
                   </Suspense>
                 ) : (
-                  <div className="h-full flex items-center justify-center text-stone-400">
+                  <div className="h-full flex items-center justify-center text-stone-400 text-xs font-bold">
                     Sin productos registrados.
                   </div>
                 )}
@@ -298,11 +347,11 @@ export default function DashboardPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             
             {/* Tabla: Últimos Pedidos */}
-            <div className="bg-white p-6 rounded-[32px] border border-[#5c0f1b]/10 shadow-sm flex flex-col justify-between">
+            <div className="bg-white p-6 rounded-[32px] border border-[#5c0f1b]/10 shadow-2xs flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between mb-4 border-b border-[#5c0f1b]/8 pb-3">
                   <h3 className="text-sm font-black uppercase tracking-wider text-[#5c0f1b] flex items-center gap-2" style={{ fontFamily: "'Outfit', sans-serif" }}>
-                    <ClipboardList className="h-4.5 w-4.5" />
+                    <ClipboardList className="h-4.5 w-4.5 text-[#ff7a45]" />
                     Últimas Transacciones
                   </h3>
                   <Link to="/orders" className="text-xs font-black text-[#ff7a45] hover:text-[#5c0f1b] inline-flex items-center gap-0.5 transition-colors">
@@ -340,18 +389,18 @@ export default function DashboardPage() {
                       </Link>
                     ))
                   ) : (
-                    <div className="p-8 text-center text-stone-400">No hay ventas registradas.</div>
+                    <div className="p-8 text-center text-stone-400 text-xs font-bold">No hay ventas registradas.</div>
                   )}
                 </div>
               </div>
             </div>
 
             {/* Tabla: Alertas de Stock Mínimo */}
-            <div className="bg-white p-6 rounded-[32px] border border-[#5c0f1b]/10 shadow-sm flex flex-col justify-between">
+            <div className="bg-white p-6 rounded-[32px] border border-[#5c0f1b]/10 shadow-2xs flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between mb-4 border-b border-[#5c0f1b]/8 pb-3">
                   <h3 className="text-sm font-black uppercase tracking-wider text-[#5c0f1b] flex items-center gap-2" style={{ fontFamily: "'Outfit', sans-serif" }}>
-                    <AlertTriangle className="h-4.5 w-4.5" />
+                    <AlertTriangle className="h-4.5 w-4.5 text-red-500" />
                     Alertas Críticas de Stock
                   </h3>
                   <Link to="/inventory" className="text-xs font-black text-[#ff7a45] hover:text-[#5c0f1b] inline-flex items-center gap-0.5 transition-colors">
@@ -380,7 +429,7 @@ export default function DashboardPage() {
                       </div>
                     ))
                   ) : (
-                    <div className="p-8 text-center text-emerald-600 font-bold flex flex-col items-center gap-2">
+                    <div className="p-8 text-center text-emerald-600 font-bold flex flex-col items-center gap-2 text-xs">
                       <CheckCircle className="h-8 w-8 text-emerald-500" />
                       <span>¡Todo en orden! No hay productos con bajo inventario.</span>
                     </div>

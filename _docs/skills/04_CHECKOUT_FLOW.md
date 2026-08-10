@@ -28,8 +28,8 @@ Cliente                 Backend (FastAPI)              PostgreSQL (Triggers)
   │                           │                               │
   │  [POST /ventas/{id}/pagar] (ADMIN, manual)                │
   │                           │── async with session.begin():  │
-  │                           │   ├─ venta.estado_pago=PAGADO  │  ←tg_ventas_otorgar_puntos
-  │                           │   └─ pago.estado=APROBADO      │    (CriptoTrufas + cupón USADO)
+  │                           │   ├─ venta.estado_pago=PAGADO  │
+  │                           │   └─ pago.estado=APROBADO      │    (Puntos acreditados al ENTREGAR)
 ```
 
 **Flujo alternativo — Checkout desde carrito Redis:**

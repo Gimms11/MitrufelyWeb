@@ -4,7 +4,7 @@ Para que el ecosistema completo del sistema de pedidos funcione de la forma más
 
 ---
 
-## 1. Levantar Todo el Backend (API + Delivery + Redis + Celery)
+## 1. Levantar Todo el Backend (API + Redis + Celery)
 
 Abre una terminal en esta misma carpeta raíz (`MitrufelyWeb`) y ejecuta:
 
@@ -12,14 +12,13 @@ Abre una terminal en esta misma carpeta raíz (`MitrufelyWeb`) y ejecuta:
 docker-compose up -d --build
 ```
 
-Este único comando se encargará de levantar 5 contenedores interconectados en la misma red:
+Este único comando se encargará de levantar 4 contenedores interconectados en la misma red:
 1. **api**: El backend principal de FastAPI en el puerto **`8000`** (`http://localhost:8000/docs`).
-2. **delivery-service**: El microservicio logístico asíncrono en el puerto **`8001`**.
-3. **redis**: El almacén de caché y broker de mensajes en el puerto **`6399`**.
-4. **celery_worker**: El worker para tareas en segundo plano.
-5. **celery_beat**: El programador de tareas periódicas.
+2. **redis**: El almacén de caché y broker de mensajes en el puerto **`6399`**.
+3. **celery_worker**: El worker para tareas en segundo plano.
+4. **celery_beat**: El programador de tareas periódicas.
 
-Para ver los logs en tiempo real de todos los servicios y monitorear cómo el `delivery-service` se comunica con la `api`:
+Para ver los logs en tiempo real de todos los servicios:
 ```powershell
 docker-compose logs -f
 ```

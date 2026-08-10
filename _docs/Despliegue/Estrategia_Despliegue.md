@@ -72,12 +72,11 @@ En el backend, estas variables se leen de forma centralizada y tipada mediante *
 
 ---
 
-## 5. 🚚 Microservicio de Entregas (Delivery Service)
+## 5. 🚚 Gestión de Entregas
 
-El sistema incluye un microservicio independiente (`_deliveryService`) encargado de simular el proceso de preparación y tránsito de los pedidos:
-*   Se ejecuta como un servicio FastAPI aislado (puerto `8001`), exponiendo `POST /deliveries` para iniciar una entrega y `GET /deliveries/{id}` para consultar su estado.
-*   Tras simular la preparación y el tránsito (con retardos configurables), notifica al backend mediante un webhook firmado (`x-delivery-token`) hacia `/api/v1/ventas/{id}/delivery-completed`, aplicando reintentos con *backoff exponencial* ante fallos transitorios de red.
-*   Este desacoplamiento permite que la lógica de entregas evolucione (o se sustituya por una pasarela de envíos real) sin afectar al backend principal.
+El ciclo de vida del pedido (PENDIENTE → PAGADO → PREPARANDO → EN_CAMINO → ENTREGADO) se gestiona mediante una **máquina de estados** integrada en el backend principal. Las transiciones las ejecuta el administrador desde el panel de control.
+
+> **Nota histórica:** En versiones anteriores existía un microservicio independiente (`_deliveryService`) que simulaba el proceso de preparación y tránsito con retardos automáticos. Fue eliminado en favor de la máquina de estados del backend.
 
 ---
 

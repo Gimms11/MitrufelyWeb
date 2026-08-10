@@ -18,6 +18,7 @@ const NAV_LINKS = [
 // ─── Componente ───────────────────────────────────────────────────────────
 
 export function PublicFooter() {
+
   return (
     <footer className="bg-[#5c0f1b] text-white pt-14 pb-8 px-4 md:px-8">
       <div className="max-w-7xl mx-auto">
@@ -37,7 +38,7 @@ export function PublicFooter() {
             </p>
             <div className="flex items-center gap-2 text-sm text-white/60 font-medium">
               <Mail className="h-4 w-4 text-[#ff7a45] shrink-0" />
-              <span>mitrufely123@gmail.com</span>
+              <span>mitrufely.dev@gmail.com</span>
             </div>
           </div>
 
@@ -66,18 +67,20 @@ export function PublicFooter() {
             </p>
             <div className="flex gap-3 mb-6">
               <a
-                href="#"
+                href="https://www.facebook.com/profile.php?id=61591210353721"
+                target='_blank'
                 id="hp-footer-facebook"
-                onClick={(e) => { e.preventDefault(); toast.success('¡Visita nuestro Facebook!') }}
+                onClick= {e => {console.log(e); toast.success('¡Visita nuestro Facebook!')}}
                 className="h-10 w-10 rounded-full bg-white/8 hover:bg-[#ff7a45] flex items-center justify-center text-white transition-all hover:scale-105 active:scale-95"
                 aria-label="Facebook"
               >
                 <Facebook className="h-4 w-4" />
               </a>
               <a
-                href="#"
+                href="https://www.instagram.com/mitrufely.dev/"
+                target='_blank'
                 id="hp-footer-instagram"
-                onClick={(e) => { e.preventDefault(); toast.success('¡Visita nuestro Instagram!') }}
+                onClick= {e => {console.log(e); toast.success('¡Visita nuestro Instagram!')}}
                 className="h-10 w-10 rounded-full bg-white/8 hover:bg-[#ff7a45] flex items-center justify-center text-white transition-all hover:scale-105 active:scale-95"
                 aria-label="Instagram"
               >

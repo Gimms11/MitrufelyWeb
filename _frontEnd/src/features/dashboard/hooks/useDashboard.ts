@@ -3,10 +3,10 @@ import { dashboardApi } from '../api/dashboard.api'
 
 export const DASHBOARD_QUERY_KEY = ['admin', 'dashboard'] as const
 
-export function useDashboardQuery() {
+export function useDashboardQuery(dias: number = 30) {
   return useQuery({
-    queryKey: DASHBOARD_QUERY_KEY,
-    queryFn: () => dashboardApi.getMetrics(),
+    queryKey: ['admin', 'dashboard', dias],
+    queryFn: () => dashboardApi.getMetrics(dias),
     staleTime: 60000,
   })
 }

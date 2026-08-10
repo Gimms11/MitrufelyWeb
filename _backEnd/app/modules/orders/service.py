@@ -13,8 +13,8 @@ CAMBIOS M14:
   - Mantiene compatibilidad con create_checkout y get_by_id existentes
 """
 
-import httpx
-from datetime import datetime
+import asyncio
+from datetime import datetime, timedelta
 from decimal import Decimal
 from typing import List, Optional
 
@@ -280,6 +280,23 @@ class VentaService(AbstractService[VentaResponse, VentaRequest, None, int]):
                 base_imponible = (subtotal_con_descuento / Decimal("1.18")).quantize(Decimal("0.01"))
                 igv = (subtotal_con_descuento - base_imponible).quantize(Decimal("0.01"))
 
+                # ── Calcular puntos proyectados ────────────────────────────
+                tasa = 10
+                try:
+                    stmt_cfg = select(ConfiguracionRecompensas).where(ConfiguracionRecompensas.estado == True)
+                    res_cfg = await self.session.execute(stmt_cfg)
+                    cfg = res_cfg.scalars().first()
+                    raw_tasa = getattr(cfg, "tasa_conversion", None) if cfg else None
+                    if isinstance(raw_tasa, (int, float)):
+                        tasa = raw_tasa
+                except Exception:
+                    tasa = 10
+
+                try:
+                    puntos_proyectados = int(total_final * Decimal(str(tasa)))
+                except Exception:
+                    puntos_proyectados = int(total_final * 10)
+
                 nueva_venta.subtotal_productos = subtotal
                 nueva_venta.monto_descuento_cupon = monto_descuento
                 nueva_venta.shipping_cost_applied = shipping_cost
@@ -289,6 +306,7 @@ class VentaService(AbstractService[VentaResponse, VentaRequest, None, int]):
                 nueva_venta.total = total_final  # Mantener compatibilidad
                 nueva_venta.total_final = total_final
                 nueva_venta.costo_envio = shipping_cost
+                nueva_venta.puntos_ganados = puntos_proyectados
 
                 nueva_venta.metodos_pago.append(
                     MetodoPago(
@@ -335,13 +353,14 @@ class VentaService(AbstractService[VentaResponse, VentaRequest, None, int]):
                     description=f"Stock comprometido para {n_productos_total} unidad(es) via FEFO.",
                 ))
 
-                # ── Notificación al cliente ────────────────────────────────
+                # ── Notificación al cliente (In-App + Email) ───────────────
                 await self._crear_notificacion(
                     id_usuario=id_cliente,
                     id_venta=nueva_venta.id_venta,
                     tipo=TipoNotificacionEnum.PEDIDO_CONFIRMADO,
                     titulo="¡Pedido recibido!",
                     mensaje=f"Tu pedido #{nueva_venta.id_venta} fue creado. Total: S/{total_final:.2f}.",
+                    total_final=total_final,
                 )
 
         except DBAPIError as exc:
@@ -414,8 +433,11 @@ class VentaService(AbstractService[VentaResponse, VentaRequest, None, int]):
         tipo: TipoNotificacionEnum,
         titulo: str,
         mensaje: str,
+        total_final: Optional[Decimal] = None,
+        eta: Optional[datetime] = None,
+        motivo: Optional[str] = None,
     ) -> None:
-        """Crea una notificación en BD para el usuario dado."""
+        """Crea una notificación en BD para el usuario dado y envía correo HTML."""
         self.session.add(Notification(
             id_usuario=id_usuario,
             id_venta=id_venta,
@@ -423,6 +445,31 @@ class VentaService(AbstractService[VentaResponse, VentaRequest, None, int]):
             title=titulo,
             message=mensaje,
         ))
+
+        # ── Enviar correo de notificación por Gmail ─────────────────────────────
+        try:
+            from app.infrastructure.database.models.usuarios import Usuario
+            from app.infrastructure.email.service import EmailService
+
+            stmt = select(Usuario).where(Usuario.id_usuario == id_usuario)
+            res = await self.session.execute(stmt)
+            usr = res.scalar_one_or_none()
+
+            if usr and usr.email:
+                usr_name = f"{usr.nombres} {usr.apellidos}".strip()
+                EmailService.fire_and_forget_order_status_email(
+                    to_email=usr.email,
+                    user_name=usr_name,
+                    id_venta=id_venta or 0,
+                    tipo=tipo.value if hasattr(tipo, "value") else str(tipo),
+                    titulo=titulo,
+                    mensaje=mensaje,
+                    total_final=total_final,
+                    eta=eta,
+                    motivo=motivo,
+                )
+        except Exception as exc:
+            logger.warning("orders.email_notification_failed", id_usuario=id_usuario, id_venta=id_venta, error=str(exc))
 
     # ══════════════════════════════════════════════════════════════════════════
     # CONFIRMAR PAGO — PENDIENTE → PAGADO
@@ -460,6 +507,7 @@ class VentaService(AbstractService[VentaResponse, VentaRequest, None, int]):
                     tipo=TipoNotificacionEnum.PEDIDO_PAGADO,
                     titulo="Pago confirmado",
                     mensaje=f"Tu pago del pedido #{id_venta} fue confirmado.",
+                    total_final=venta.total_final,
                 )
 
         except (NotFoundError, BusinessRuleError):
@@ -525,6 +573,8 @@ class VentaService(AbstractService[VentaResponse, VentaRequest, None, int]):
                         f"¡Estamos preparando tu pedido #{id_venta}! "
                         f"ETA estimado: {eta.strftime('%H:%M') if eta else 'pronto'}."
                     ),
+                    total_final=venta.total_final,
+                    eta=eta,
                 )
 
         except (NotFoundError, BusinessRuleError):
@@ -569,6 +619,8 @@ class VentaService(AbstractService[VentaResponse, VentaRequest, None, int]):
                     tipo=TipoNotificacionEnum.PEDIDO_EN_CAMINO,
                     titulo="Tu pedido está en camino",
                     mensaje=f"¡Tu pedido #{id_venta} está en camino! Prepárate para recibirlo.",
+                    total_final=venta.total_final,
+                    eta=venta.delivery_eta,
                 )
 
         except (NotFoundError, BusinessRuleError):
@@ -578,28 +630,11 @@ class VentaService(AbstractService[VentaResponse, VentaRequest, None, int]):
         except Exception as exc:
             raise DatabaseError(f"Error al despachar pedido. {exc}") from exc
 
-        # Notificar microservicio de entregas de forma asíncrona (best-effort)
-        await self._notify_delivery_service(id_venta, venta)
-
         await self.session.refresh(venta)
         return VentaResponse.model_validate(venta)
 
-    async def _notify_delivery_service(self, id_venta: int, venta: Venta) -> None:
-        """Notifica al delivery-service de forma asíncrona (best-effort, no bloquea)."""
-        from app.core.config import settings
-        delivery_url = getattr(settings, "DELIVERY_SERVICE_URL", "http://localhost:8001")
-        n_productos = sum(d.cantidad for d in venta.detalles) if venta.detalles else 1
-        try:
-            async with httpx.AsyncClient(timeout=5.0) as client:
-                await client.post(
-                    f"{delivery_url}/deliveries",
-                    json={"id_venta": id_venta, "n_productos": n_productos},
-                )
-        except Exception as e:
-            logger.warning("delivery_service.notify_failed", id_venta=id_venta, error=str(e))
-
     # ══════════════════════════════════════════════════════════════════════════
-    # MARCAR ENTREGADO — EN_CAMINO → ENTREGADO (webhook delivery-service)
+    # MARCAR ENTREGADO — EN_CAMINO → ENTREGADO
     # ══════════════════════════════════════════════════════════════════════════
 
     async def marcar_entregado(self, id_venta: int, id_usuario: Optional[int] = None) -> VentaResponse:
@@ -625,6 +660,9 @@ class VentaService(AbstractService[VentaResponse, VentaRequest, None, int]):
 
                 await self.session.flush()
 
+                # ── Otorgar CriptoTrufas (SweetCoins) solo al ENTREGAR ──────
+                await self._otorgar_puntos_por_entrega(venta)
+
                 if venta.cliente:
                     await self._crear_notificacion(
                         id_usuario=venta.cliente.id_usuario,
@@ -635,6 +673,7 @@ class VentaService(AbstractService[VentaResponse, VentaRequest, None, int]):
                             f"Tu pedido #{id_venta} fue entregado. "
                             "¡Esperamos que lo disfrutes! Puedes dejarnos tu calificación."
                         ),
+                        total_final=venta.total_final,
                     )
 
         except (NotFoundError, BusinessRuleError):
@@ -724,6 +763,8 @@ class VentaService(AbstractService[VentaResponse, VentaRequest, None, int]):
                         tipo=TipoNotificacionEnum.PEDIDO_CANCELADO,
                         titulo="Pedido cancelado",
                         mensaje=f"Tu pedido #{id_venta} fue cancelado. Motivo: {dto.motivo}.",
+                        total_final=venta.total_final,
+                        motivo=dto.motivo,
                     )
 
         except (NotFoundError, BusinessRuleError, ForbiddenError):
@@ -875,6 +916,60 @@ class VentaService(AbstractService[VentaResponse, VentaRequest, None, int]):
             description=event_desc,
             created_by=id_usuario,
         ))
+
+    async def _otorgar_puntos_por_entrega(self, venta: Venta) -> None:
+        """Otorga CriptoTrufas (SweetCoins) al cliente solo cuando el pedido es ENTREGADO."""
+        if not venta.id_cliente or venta.estado_pago != EstadoPagoEnum.PAGADO:
+            return
+
+        # Evitar duplicados si ya fueron otorgados
+        stmt_check = select(MovimientoPuntos).where(
+            MovimientoPuntos.id_venta == venta.id_venta,
+            MovimientoPuntos.tipo_movimiento == TipoMovimientoPuntosEnum.ACUMULACION_VENTA,
+        )
+        res_check = await self.session.execute(stmt_check)
+        if res_check.scalars().first():
+            return
+
+        # Configuración activa de recompensas
+        stmt_cfg = select(ConfiguracionRecompensas).where(ConfiguracionRecompensas.estado == True)
+        res_cfg = await self.session.execute(stmt_cfg)
+        cfg = res_cfg.scalars().first()
+        if not cfg:
+            return
+
+        tasa = cfg.tasa_conversion or 10
+        puntos = int(venta.total_final * Decimal(tasa))
+        if puntos <= 0:
+            return
+
+        venta.puntos_ganados = puntos
+        expiracion = datetime.utcnow() + timedelta(days=cfg.dias_expiracion or 365)
+
+        self.session.add(
+            MovimientoPuntos(
+                id_cliente=venta.id_cliente,
+                id_venta=venta.id_venta,
+                id_cupon_cliente=venta.id_cupon_cliente,
+                id_config=cfg.id_config,
+                tipo_movimiento=TipoMovimientoPuntosEnum.ACUMULACION_VENTA,
+                cantidad=puntos,
+                saldo_puntos_resultante=0,
+                fecha_expiracion=expiracion,
+                justificacion=f"Puntos ganados por pedido #{venta.id_venta} entregado.",
+            )
+        )
+
+        # Marcar cupón aplicado como USADO únicamente al ENTREGAR el pedido
+        if venta.id_cupon_cliente:
+            from app.infrastructure.database.models.cupones import CuponCliente
+            from app.infrastructure.database.models.enums import EstadoCuponEnum
+            stmt_cupon = select(CuponCliente).where(CuponCliente.id_cupon_cliente == venta.id_cupon_cliente)
+            res_cupon = await self.session.execute(stmt_cupon)
+            cupon = res_cupon.scalar_one_or_none()
+            if cupon and cupon.estado == EstadoCuponEnum.DISPONIBLE:
+                cupon.estado = EstadoCuponEnum.USADO
+                cupon.fecha_uso = datetime.utcnow()
 
     async def _revertir_puntos(self, venta: Venta) -> None:
         """Revierte los puntos ganados si el pedido fue pagado y luego cancelado o reembolsado."""
@@ -1069,6 +1164,8 @@ class VentaService(AbstractService[VentaResponse, VentaRequest, None, int]):
                             f"Tu reembolso de S/{monto_reembolso:.2f} del pedido #{id_venta} "
                             "fue procesado exitosamente."
                         ),
+                        total_final=monto_reembolso,
+                        motivo=dto.motivo,
                     )
 
         except (NotFoundError, BusinessRuleError):

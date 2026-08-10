@@ -2,7 +2,7 @@
 Mifrufely Web — Dashboard Router
 """
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Annotated
 
@@ -31,10 +31,11 @@ DashboardServiceDep = Annotated[DashboardService, Depends(get_dashboard_service)
 async def get_dashboard_metrics(
     current_user: AdminUser,
     service: DashboardServiceDep,
+    dias: int = Query(default=30, ge=1, le=365, description="Número de días para tendencia de ventas"),
 ) -> DashboardMetricsResponse:
     """
     Retorna KPIs completos del negocio:
     conteo de pedidos por estado, totales financieros, top productos,
-    tendencia de 30 días, calificaciones e incidencias activas.
+    tendencia de N días, calificaciones e incidencias activas.
     """
-    return await service.get_metrics()
+    return await service.get_metrics(dias=dias)

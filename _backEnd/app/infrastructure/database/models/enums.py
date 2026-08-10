@@ -9,7 +9,6 @@ M14 additions (2026-06-21):
   - EstadoVentaEnum: +PREPARANDO, +EN_CAMINO, +CANCELADO, +DEVUELTO, +REEMBOLSADO
   - EstadoPagoEnum: +REEMBOLSADO
   - TipoEventoVentaEnum: historial de eventos del pedido
-  - EstadoEntregaEnum: estados internos del microservicio de entregas
   - TipoIncidenciaEnum: tipos de incidencia reportable
   - EstadoIncidenciaEnum: ciclo de vida de una incidencia
   - TipoNotificacionEnum: tipos de notificación en BD
@@ -158,14 +157,6 @@ class TipoEventoVentaEnum(str, enum.Enum):
     CALIFICACION_RECIBIDA = "CALIFICACION_RECIBIDA"
     NOTIFICACION_ENVIADA = "NOTIFICACION_ENVIADA"
     ETA_CALCULADO = "ETA_CALCULADO"
-
-
-class EstadoEntregaEnum(str, enum.Enum):
-    """Estados internos del microservicio delivery-service."""
-    ASIGNADO = "ASIGNADO"
-    RECOGIDO = "RECOGIDO"
-    EN_RUTA = "EN_RUTA"
-    ENTREGADO = "ENTREGADO"
 
 
 class TipoIncidenciaEnum(str, enum.Enum):

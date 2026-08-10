@@ -14,7 +14,6 @@ runs. Failing to import a model means its table will be unknown to Base.metadata
 # ── Enums (M01) ───────────────────────────────────────────────────────────────
 from app.infrastructure.database.models.enums import (  # noqa: F401
     EstadoCuponEnum,
-    EstadoEntregaEnum,
     EstadoIncidenciaEnum,
     EstadoLoteEnum,
     EstadoPagoEnum,
@@ -102,7 +101,6 @@ __all__ = [
     "TipoMovimientoPuntosEnum",
     # M14 Enums
     "TipoEventoVentaEnum",
-    "EstadoEntregaEnum",
     "TipoIncidenciaEnum",
     "EstadoIncidenciaEnum",
     "TipoNotificacionEnum",

@@ -10,6 +10,7 @@ import { motion } from 'framer-motion'
 import { toast } from 'sonner'
 import { Loader2, ArrowLeft, ShoppingBag, Clock, Package, Receipt, CreditCard, Coins, Star, AlertTriangle, Download, Ban, AlertCircle, XCircle } from 'lucide-react'
 
+import { cn } from '@/lib/utils'
 import { useOrderDetailQuery, useTransitionVentaMutation } from '@/features/orders/hooks/useOrders'
 import { OrderTrackingTimeline } from '@/features/orders/components/OrderTrackingTimeline'
 import { ReviewModal } from '@/features/reviews/components/ReviewModal'
@@ -378,15 +379,33 @@ export default function CustomerOrderDetailPage() {
                     {order.metodos_pago?.[0]?.tipo_pago === 'TARJETA' ? 'Tarjeta' : order.metodos_pago?.[0]?.tipo_pago || 'Tarjeta'}
                   </span>
                 </div>
-                {order.puntos_ganados !== undefined && order.puntos_ganados !== null && (
-                  <div className="flex justify-between text-sm font-semibold">
-                    <span className="text-[#2a1115]/60 flex items-center gap-1">
-                      <Coins className="h-3.5 w-3.5 text-[#ff7a45]" />
-                      Criptotrufas
-                    </span>
-                    <span className="text-[#ff7a45] font-black">+{order.puntos_ganados}</span>
-                  </div>
-                )}
+                {order.puntos_ganados !== undefined && order.puntos_ganados !== null && (() => {
+                  const isEntregado = order.estado === 'ENTREGADO'
+                  const isAnulado = ['CANCELADO', 'REEMBOLSADO', 'ANULADO', 'DEVUELTO'].includes(order.estado)
+
+                  let label = 'Pendientes'
+                  let style = 'bg-red-50 text-red-700 border-red-200'
+
+                  if (isEntregado) {
+                    label = 'Acreditadas'
+                    style = 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                  } else if (isAnulado) {
+                    label = 'Anuladas'
+                    style = 'bg-stone-100 text-stone-600 border-stone-300'
+                  }
+
+                  return (
+                    <div className="flex justify-between items-center text-sm font-semibold">
+                      <span className="text-[#2a1115]/60 flex items-center gap-1">
+                        <Coins className="h-3.5 w-3.5 text-[#ff7a45]" />
+                        Criptotrufas
+                      </span>
+                      <span className={cn('font-black text-xs px-2 py-0.5 rounded-md border whitespace-nowrap', style)}>
+                        +{order.puntos_ganados} ({label})
+                      </span>
+                    </div>
+                  )
+                })()}
               </div>
 
               {/* Comprobante electrónico (PDF generado en servidor) */}

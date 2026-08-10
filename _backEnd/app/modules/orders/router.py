@@ -6,7 +6,6 @@ Nuevos endpoints M14:
   PUT  /ventas/{id}/pagar              ADMIN  PENDIENTE → PAGADO
   PUT  /ventas/{id}/preparar           ADMIN  PAGADO → PREPARANDO
   PUT  /ventas/{id}/despachar          ADMIN  PREPARANDO → EN_CAMINO
-  POST /ventas/{id}/delivery-completed SYSTEM EN_CAMINO → ENTREGADO (webhook)
   PUT  /ventas/{id}/cancelar           CLIENTE / ADMIN
   PUT  /ventas/{id}/devolver           CLIENTE (solo si ENTREGADO)
   PUT  /ventas/{id}/reembolso          ADMIN
@@ -19,7 +18,7 @@ Deprecado (mantiene compatibilidad):
 
 from typing import Annotated, List, Optional
 
-from fastapi import APIRouter, Depends, Header, HTTPException, Query, status
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from redis.asyncio import Redis
 
 from app.core.constants import Permission
@@ -236,7 +235,7 @@ async def despachar_pedido(
     current_user: AdminUser,
     service: VentaServiceDep,
 ) -> VentaResponse:
-    """Entrega el pedido al repartidor. Notifica al microservicio delivery-service. Requiere ADMIN."""
+    """Entrega el pedido al repartidor. Requiere ADMIN."""
     return await service.despachar_pedido(id_venta=id_venta, id_usuario=current_user.user_id)
 
 
@@ -312,34 +311,6 @@ async def solicitar_devolucion(
         dto=payload,
         es_admin=current_user.is_admin(),
     )
-
-
-# ══════════════════════════════════════════════════════════════════════════════
-# WEBHOOK INTERNO — delivery-service (M14)
-# ══════════════════════════════════════════════════════════════════════════════
-
-
-@router.post(
-    "/{id_venta}/delivery-completed",
-    response_model=VentaResponse,
-    status_code=status.HTTP_200_OK,
-    summary="[INTERNO] Webhook: delivery-service confirma entrega",
-    include_in_schema=False,  # Oculto en Swagger público
-)
-async def delivery_completed_webhook(
-    id_venta: int,
-    service: VentaServiceDep,
-    x_delivery_token: str = Header(default=""),
-) -> VentaResponse:
-    """
-    Endpoint interno llamado por el microservicio delivery-service
-    cuando completa la entrega simulada.
-    """
-    from app.core.config import settings
-    expected_token = getattr(settings, "DELIVERY_WEBHOOK_TOKEN", "dev-webhook-token")
-    if x_delivery_token != expected_token:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Token inválido.")
-    return await service.marcar_entregado(id_venta=id_venta)
 
 
 # ══════════════════════════════════════════════════════════════════════════════

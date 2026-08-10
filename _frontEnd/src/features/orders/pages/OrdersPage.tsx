@@ -258,11 +258,34 @@ export default function OrdersPage() {
       {
         accessorKey: 'puntos_ganados',
         header: 'Criptotrufas',
-        cell: ({ row }) => (
-          <span className="font-extrabold text-xs text-[#ff7a45]">
-            ⭐️ +{row.getValue('puntos_ganados')} CT
-          </span>
-        ),
+        cell: ({ row }) => {
+          const estado = row.original.estado
+          const isEntregado = estado === 'ENTREGADO'
+          const isAnulado = ['CANCELADO', 'REEMBOLSADO', 'ANULADO', 'DEVUELTO'].includes(estado)
+          const pts = (row.getValue('puntos_ganados') as number) || 0
+
+          let label = 'Pendiente'
+          let style = 'bg-red-50 text-red-700 border-red-200'
+
+          if (isEntregado) {
+            label = 'Entregado'
+            style = 'bg-emerald-50 text-emerald-700 border-emerald-200'
+          } else if (isAnulado) {
+            label = 'Anulado'
+            style = 'bg-stone-100 text-stone-600 border-stone-300'
+          }
+
+          return (
+            <span
+              className={cn(
+                'inline-flex items-center gap-1 font-black text-[11px] px-2.5 py-0.5 rounded-full border whitespace-nowrap w-max shrink-0',
+                style
+              )}
+            >
+              ⭐️ +{pts} CT ({label})
+            </span>
+          )
+        },
       },
       {
         id: 'actions',

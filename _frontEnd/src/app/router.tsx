@@ -1,6 +1,8 @@
 import { Navigate, Outlet, Route, Routes, useLocation } from 'react-router'
 import { Suspense, lazy } from 'react'
 import { useAuthStore } from '@/app/store'
+import { useMaintenanceStore } from '@/stores/maintenance.store'
+import { MaintenancePage } from '@/shared/components/MaintenancePage'
 import type { Permission } from '@/types/roles'
 import { PERMISSIONS } from '@/types/roles'
 
@@ -103,6 +105,12 @@ function GuestOnly() {
 
 // ─── Router principal ─────────────────────────────────────────────────────────
 export function AppRouter() {
+  const isMaintenance = useMaintenanceStore((s) => s.isMaintenance)
+
+  if (isMaintenance) {
+    return <MaintenancePage />
+  }
+
   return (
     <Suspense fallback={<PageLoader />}>
       <Routes>

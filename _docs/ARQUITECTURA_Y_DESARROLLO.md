@@ -140,13 +140,11 @@ Ningún secreto vive en el repositorio. Toda la configuración sensible se admin
 
 En el backend, estas variables se leen de forma centralizada y tipada mediante **Pydantic Settings** (con el patrón **Singleton** vía `@lru_cache`), validando su presencia y formato al arrancar la aplicación y fallando de forma temprana (*fail-fast*) si alguna es inválida.
 
-## 5. Microservicio de Entregas (Delivery Service)
+## 5. Gestión de Entregas
 
-El sistema incluye un **microservicio independiente** (`_deliveryService`) encargado de **simular el proceso de preparación y tránsito** de los pedidos:
+El ciclo de vida del pedido (PENDIENTE → PAGADO → PREPARANDO → EN_CAMINO → ENTREGADO) se gestiona mediante una **máquina de estados** integrada en el backend principal. Las transiciones las ejecuta el administrador desde el panel de control.
 
-- Se ejecuta como un servicio FastAPI aislado (puerto `8001`), exponiendo `POST /deliveries` para iniciar una entrega y `GET /deliveries/{id}` para consultar su estado.
-- Tras simular la preparación y el tránsito (con retardos configurables), **notifica al backend** mediante un *webhook* firmado (`x-delivery-token`) hacia `/api/v1/ventas/{id}/delivery-completed`, aplicando **reintentos con backoff exponencial** ante fallos transitorios de red.
-- Este desacoplamiento permite que la lógica de entregas evolucione (o se sustituya por una pasarela de envíos real) sin afectar al backend principal.
+> **Nota histórica:** En versiones anteriores existía un microservicio independiente (`_deliveryService`) que simulaba el proceso de preparación y tránsito con retardos automáticos. Fue eliminado en favor de la máquina de estados del backend, que permite al administrador controlar manualmente cada transición.
 
 ## 6. Estrategia CI/CD y Pipeline de Liberación
 

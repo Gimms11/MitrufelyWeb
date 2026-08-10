@@ -4,6 +4,7 @@ import {
   getCoreRowModel,
   getSortedRowModel,
   getFilteredRowModel,
+  getPaginationRowModel,
   flexRender,
   type ColumnDef,
   type SortingState,
@@ -21,7 +22,7 @@ import { cn } from '@/lib/utils'
 interface AdminDataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
-  searchKey: string
+  searchKey?: string
   searchPlaceholder?: string
   onCreateNew?: () => void
   createButtonText?: string
@@ -40,7 +41,7 @@ export function AdminDataTable<TData, TValue>({
   searchPlaceholder = 'Buscar...',
   onCreateNew,
   createButtonText = 'Nuevo',
-  pageCount = 1,
+  pageCount,
   pageIndex = 0,
   pageSize = 10,
   onPageChange,
@@ -50,6 +51,8 @@ export function AdminDataTable<TData, TValue>({
 }: AdminDataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([])
   const [globalFilter, setGlobalFilter] = useState('')
+
+  const isServerPaginated = !!onPageChange
 
   // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
@@ -64,8 +67,58 @@ export function AdminDataTable<TData, TValue>({
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    manualPagination: !!onPageChange, // backend pagination enabled if callback provided
+    ...(isServerPaginated
+      ? { manualPagination: true }
+      : { getPaginationRowModel: getPaginationRowModel() }),
   })
+
+  // ─── CÁLCULO DE PÁGINAS Y NAVEGACIÓN DE PAGINACIÓN ───────────────────────
+  const realTotal = isServerPaginated
+    ? totalCount > 0
+      ? totalCount
+      : data.length
+    : data.length
+
+  const computedPages = pageSize > 0 ? Math.ceil(realTotal / pageSize) : 1
+  const effectivePageCount = isServerPaginated
+    ? Math.max(1, pageCount || 0, computedPages)
+    : table.getPageCount() || 1
+
+  const currentDisplayIndex = isServerPaginated
+    ? pageIndex
+    : table.getState().pagination.pageIndex
+
+  const canGoPrevious = isServerPaginated
+    ? currentDisplayIndex > 0
+    : table.getCanPreviousPage()
+
+  const canGoNext = isServerPaginated
+    ? currentDisplayIndex + 1 < effectivePageCount
+    : table.getCanNextPage()
+
+  const handlePrev = () => {
+    if (isServerPaginated && onPageChange) {
+      onPageChange(currentDisplayIndex) // 1-based index de la página anterior
+    } else {
+      table.previousPage()
+    }
+  }
+
+  const handleNext = () => {
+    if (isServerPaginated && onPageChange) {
+      onPageChange(currentDisplayIndex + 2) // 1-based index de la página siguiente
+    } else {
+      table.nextPage()
+    }
+  }
+
+  const handleSizeChange = (newSize: number) => {
+    if (isServerPaginated && onPageSizeChange) {
+      onPageSizeChange(newSize)
+    } else {
+      table.setPageSize(newSize)
+    }
+  }
 
   return (
     <div className="w-full flex flex-col gap-4">
@@ -167,55 +220,55 @@ export function AdminDataTable<TData, TValue>({
       </div>
 
       {/* Paginación */}
-      {onPageChange && (
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-white/70 backdrop-blur-md p-4 rounded-2xl border border-[#5c0f1b]/10 shadow-sm text-xs font-semibold text-stone-600">
-          <div>
-            Mostrando <span className="text-[#5c0f1b]">{data.length}</span> de{' '}
-            <span className="text-[#5c0f1b]">{totalCount}</span> registros
+      <div className="flex flex-col md:flex-row items-center justify-between gap-4 bg-white/70 backdrop-blur-md p-4 rounded-2xl border border-[#5c0f1b]/10 shadow-sm text-xs font-semibold text-stone-600">
+        <div className="shrink-0">
+          Mostrando <span className="text-[#5c0f1b] font-bold">{data.length}</span> de{' '}
+          <span className="text-[#5c0f1b] font-bold">{realTotal}</span> registros
+        </div>
+
+        <div className="flex flex-wrap items-center justify-center md:justify-end gap-4 md:gap-6 w-full md:w-auto">
+          {/* Botones de Desplazamiento de Página (SIEMPRE PRIMERO EN CONTROLES) */}
+          <div className="flex items-center gap-1.5 shrink-0">
+            <button
+              onClick={handlePrev}
+              disabled={!canGoPrevious || isLoading}
+              className="p-2 rounded-xl border border-stone-200 bg-white hover:bg-stone-50 text-stone-700 hover:text-stone-950 disabled:opacity-35 disabled:cursor-not-allowed transition-all cursor-pointer shadow-2xs"
+              aria-label="Página anterior"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </button>
+            
+            <span className="px-3.5 py-1.5 bg-stone-50 border border-stone-200 rounded-xl font-extrabold text-[#5c0f1b] text-xs whitespace-nowrap shadow-2xs">
+              Pág. {currentDisplayIndex + 1} de {effectivePageCount}
+            </span>
+
+            <button
+              onClick={handleNext}
+              disabled={!canGoNext || isLoading}
+              className="p-2 rounded-xl border border-stone-200 bg-white hover:bg-stone-50 text-stone-700 hover:text-stone-950 disabled:opacity-35 disabled:cursor-not-allowed transition-all cursor-pointer shadow-2xs"
+              aria-label="Página siguiente"
+            >
+              <ChevronRight className="h-4 w-4" />
+            </button>
           </div>
 
-          <div className="flex items-center gap-6">
-            {onPageSizeChange && (
-              <div className="flex items-center gap-2">
-                <span>Filas por página:</span>
-                <select
-                  value={pageSize}
-                  onChange={(e) => onPageSizeChange(Number(e.target.value))}
-                  className="bg-stone-50 border border-stone-200 rounded-lg px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-[#5c0f1b] focus:border-[#5c0f1b] transition-all cursor-pointer font-bold text-stone-700"
-                >
-                  {[5, 10, 20, 50].map((size) => (
-                    <option key={size} value={size}>
-                      {size}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            )}
-
-            <div className="flex items-center gap-1">
-              <button
-                onClick={() => onPageChange(pageIndex)}
-                disabled={pageIndex === 0 || isLoading}
-                className="p-1.5 rounded-lg border border-stone-200 bg-white hover:bg-stone-50 text-stone-600 hover:text-stone-900 disabled:opacity-50 disabled:hover:bg-white disabled:hover:text-stone-600 transition-all cursor-pointer"
-                aria-label="Página anterior"
-              >
-                <ChevronLeft className="h-4 w-4" />
-              </button>
-              <span className="px-3 py-1 bg-stone-50 border border-stone-200 rounded-lg font-bold text-[#5c0f1b]">
-                Pág. {pageIndex + 1} de {pageCount}
-              </span>
-              <button
-                onClick={() => onPageChange(pageIndex + 2)}
-                disabled={pageIndex + 1 >= pageCount || isLoading}
-                className="p-1.5 rounded-lg border border-stone-200 bg-white hover:bg-stone-50 text-stone-600 hover:text-stone-900 disabled:opacity-50 disabled:hover:bg-white disabled:hover:text-stone-600 transition-all cursor-pointer"
-                aria-label="Página siguiente"
-              >
-                <ChevronRight className="h-4 w-4" />
-              </button>
-            </div>
+          {/* Combobox de Filas por Página */}
+          <div className="flex items-center gap-2 shrink-0">
+            <span className="text-xs font-bold text-stone-600 whitespace-nowrap">Filas por página:</span>
+            <select
+              value={pageSize}
+              onChange={(e) => handleSizeChange(Number(e.target.value))}
+              className="bg-stone-50 border border-stone-200 rounded-xl px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-[#5c0f1b] focus:border-[#5c0f1b] transition-all cursor-pointer font-extrabold text-stone-800 text-xs shadow-2xs"
+            >
+              {[5, 10, 20, 50].map((size) => (
+                <option key={size} value={size}>
+                  {size}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
-      )}
+      </div>
     </div>
   )
 }

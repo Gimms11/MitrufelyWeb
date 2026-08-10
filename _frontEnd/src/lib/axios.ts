@@ -114,6 +114,17 @@ api.interceptors.response.use(
       }
     }
 
+    if (
+      !error.response ||
+      error.code === 'ERR_NETWORK' ||
+      error.code === 'ECONNABORTED' ||
+      [502, 503, 504].includes(error.response?.status)
+    ) {
+      import('@/stores/maintenance.store').then(({ useMaintenanceStore }) => {
+        useMaintenanceStore.getState().setMaintenance(true)
+      })
+    }
+
     if (error.response?.status === 403) {
       toast.error('No tienes permisos para realizar esta acción.')
     }

@@ -848,11 +848,11 @@ DECLARE
   v_cfg configuracion_recompensas%ROWTYPE;
   v_puntos int;
 BEGIN
-  IF NEW.estado_pago <> 'PAGADO' OR NEW.estado = 'ANULADO' THEN
+  IF NEW.estado <> 'ENTREGADO' OR NEW.estado_pago <> 'PAGADO' THEN
     RETURN NEW;
   END IF;
 
-  IF OLD.estado_pago = 'PAGADO' THEN
+  IF OLD.estado = 'ENTREGADO' THEN
     RETURN NEW;
   END IF;
 
@@ -892,7 +892,7 @@ BEGIN
     v_puntos,
     0,
     CURRENT_TIMESTAMP + (v_cfg.dias_expiracion || ' days')::interval,
-    'Puntos generados por venta pagada'
+    'Puntos generados por venta entregada'
   );
 
   UPDATE ventas
@@ -911,8 +911,9 @@ BEGIN
 END;
 $$;
 
+DROP TRIGGER IF EXISTS tg_ventas_otorgar_puntos ON ventas;
 CREATE TRIGGER tg_ventas_otorgar_puntos
-AFTER UPDATE OF estado_pago ON ventas
+AFTER UPDATE OF estado ON ventas
 FOR EACH ROW
 EXECUTE FUNCTION fn_tg_ventas_otorgar_puntos();
 

@@ -533,12 +533,38 @@ export default function OrderDetailPage() {
               </div>
 
               {/* Badges de Criptotrufas */}
-              <div className="bg-[#ff7a45]/8 border border-[#ff7a45]/20 rounded-2xl p-3 text-center">
-                <span className="text-[9px] font-black uppercase text-[#ff7a45]/60 block mb-0.5">Criptotrufas a Otorgar</span>
-                <span className="text-sm font-black text-[#ff7a45] flex items-center justify-center gap-1">
-                  ⭐️ +{order.puntos_ganados} CriptoTrufas
-                </span>
-              </div>
+              {order.puntos_ganados !== undefined && (() => {
+                const isEntregado = order.estado === 'ENTREGADO'
+                const isAnulado = ['CANCELADO', 'REEMBOLSADO', 'ANULADO', 'DEVUELTO'].includes(order.estado)
+
+                let label = 'Pendientes de Entrega'
+                let boxStyle = 'bg-red-50 border-red-200'
+                let textStyle = 'text-red-700'
+                let subStyle = 'text-red-700/80'
+
+                if (isEntregado) {
+                  label = 'Acreditadas'
+                  boxStyle = 'bg-emerald-50 border-emerald-200'
+                  textStyle = 'text-emerald-700'
+                  subStyle = 'text-emerald-700/80'
+                } else if (isAnulado) {
+                  label = 'Anuladas'
+                  boxStyle = 'bg-stone-100 border-stone-300'
+                  textStyle = 'text-stone-700'
+                  subStyle = 'text-stone-600'
+                }
+
+                return (
+                  <div className={cn('border rounded-2xl p-3 text-center transition-colors', boxStyle)}>
+                    <span className={cn('text-[9px] font-black uppercase block mb-0.5', subStyle)}>
+                      Criptotrufas ({label})
+                    </span>
+                    <span className={cn('text-sm font-black flex items-center justify-center gap-1', textStyle)}>
+                      ⭐️ +{order.puntos_ganados} CriptoTrufas
+                    </span>
+                  </div>
+                )
+              })()}
             </motion.div>
           </div>
         </div>
