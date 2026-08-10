@@ -1,8 +1,8 @@
 /**
- * DashboardCharts.tsx — Componente aislado con los gráficos de recharts
+ * DashboardCharts.tsx — Componentes de analíticas visuales (recharts)
  *
- * Se carga con lazy() para que recharts (~1.1MB) no entre en el chunk principal
- * del dashboard ni bloquee el primer render. Solo se carga cuando hay datos.
+ * Carga diferida con lazy() para optimizar el bundle principal.
+ * Implementa Custom Tooltips 100% tipados (sin casts 'as any').
  */
 
 import { useMemo } from 'react'
@@ -17,6 +17,7 @@ import {
   BarChart,
   Bar,
   Cell,
+  type TooltipProps,
 } from 'recharts'
 import { TrendingUp, Package } from 'lucide-react'
 
@@ -31,7 +32,49 @@ interface ProductsChartProps {
   limit?: number
 }
 
-// ─── Gráfico de ventas (AreaChart) ─────────────────────────────────────────
+// ─── Custom Tooltips Profesionales ────────────────────────────────────────
+
+function CustomSalesTooltip({ active, payload, label }: TooltipProps<number, string>) {
+  if (!active || !payload || !payload.length || !payload[0]) return null
+  const val = payload[0].value ?? 0
+  return (
+    <div className="bg-white p-3 rounded-2xl border border-[#5c0f1b]/15 shadow-xl text-xs font-sans space-y-0.5">
+      <p className="font-bold text-stone-500">Fecha: {label}</p>
+      <p className="font-black text-[#5c0f1b] text-sm">
+        Ingresos: S/. {Number(val).toFixed(2)}
+      </p>
+    </div>
+  )
+}
+
+function CustomTopProductsTooltip({ active, payload }: TooltipProps<number, string>) {
+  if (!active || !payload || !payload.length || !payload[0] || !payload[0].payload) return null
+  const item = payload[0].payload
+  const val = payload[0].value ?? 0
+  return (
+    <div className="bg-white p-3 rounded-2xl border border-[#5c0f1b]/15 shadow-xl text-xs font-sans space-y-0.5">
+      <p className="font-black text-[#5c0f1b]">{item.fullName || item.name}</p>
+      <p className="font-bold text-[#2a1115]">
+        Vendido: {val} unidades{' '}
+        {item.ingresos ? `(S/. ${Number(item.ingresos).toFixed(2)})` : ''}
+      </p>
+    </div>
+  )
+}
+
+function CustomStockTooltip({ active, payload }: TooltipProps<number, string>) {
+  if (!active || !payload || !payload.length || !payload[0] || !payload[0].payload) return null
+  const item = payload[0].payload
+  const val = payload[0].value ?? 0
+  return (
+    <div className="bg-white p-3 rounded-2xl border border-[#5c0f1b]/15 shadow-xl text-xs font-sans space-y-0.5">
+      <p className="font-black text-[#5c0f1b]">{item.fullName || item.name}</p>
+      <p className="font-bold text-stone-700">Stock Disponible: {val} unidades</p>
+    </div>
+  )
+}
+
+// ─── Gráfico de Ventas (AreaChart) ─────────────────────────────────────────
 
 export function SalesAreaChart({ data }: SalesChartProps) {
   const formattedData = useMemo(() => {
@@ -78,18 +121,7 @@ export function SalesAreaChart({ data }: SalesChartProps) {
             tick={{ fontSize: 11, fill: '#6b7280', fontWeight: 600 }}
             tickFormatter={(val) => `S/.${val >= 1000 ? `${(val / 1000).toFixed(1)}k` : val}`}
           />
-          <Tooltip
-            contentStyle={{
-              backgroundColor: '#ffffff',
-              borderRadius: '16px',
-              border: '1px solid #5c0f1b20',
-              boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1)',
-              padding: '12px 16px',
-              fontFamily: 'Inter, sans-serif',
-            }}
-            formatter={(value: any) => [`S/. ${Number(value || 0).toFixed(2)}`, 'Ingresos Totales']}
-            labelFormatter={(label: any) => `Fecha: ${label}`}
-          />
+          <Tooltip content={<CustomSalesTooltip />} />
           <Area
             type="monotone"
             dataKey="ingresos"
@@ -110,7 +142,7 @@ export function SalesAreaChartGeneric({ data }: SalesChartProps) {
   return <SalesAreaChart data={data} />
 }
 
-// ─── Gráfico de productos más vendidos (BarChart horizontal reactivo) ──────────
+// ─── Gráfico de Productos Más Vendidos ───────────────────────────────────
 
 export function TopProductsBarChart({ data, limit = 10 }: ProductsChartProps) {
   const chartData = useMemo(() => {
@@ -161,21 +193,7 @@ export function TopProductsBarChart({ data, limit = 10 }: ProductsChartProps) {
             tick={{ fontSize: 11, fill: '#2a1115', fontWeight: 700 }}
             width={160}
           />
-          <Tooltip
-            contentStyle={{
-              backgroundColor: '#ffffff',
-              borderRadius: '16px',
-              border: '1px solid #5c0f1b20',
-              boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1)',
-              padding: '12px 16px',
-              fontFamily: 'Inter, sans-serif',
-            }}
-            labelFormatter={((label: any, payload: any) => payload?.[0]?.payload?.fullName || String(label || '')) as any}
-            formatter={((value: any, _: any, item: any) => [
-              `${value} unidades ${item?.payload?.ingresos ? `(S/. ${Number(item.payload.ingresos).toFixed(2)})` : ''}`,
-              'Total Vendido',
-            ]) as any}
-          />
+          <Tooltip content={<CustomTopProductsTooltip />} />
           <Bar dataKey="vendido" radius={[0, 8, 8, 0]} barSize={20}>
             {chartData.map((_, index) => (
               <Cell
@@ -190,7 +208,7 @@ export function TopProductsBarChart({ data, limit = 10 }: ProductsChartProps) {
   )
 }
 
-// ─── Gráfico de inventario crítico (BarChart reactivo) ──────────
+// ─── Gráfico de Inventario Crítico ───────────────────────────────────────
 
 export function StockBarChart({ data }: ProductsChartProps) {
   const chartData = useMemo(() => {
@@ -235,16 +253,7 @@ export function StockBarChart({ data }: ProductsChartProps) {
             fontWeight="bold"
             width={140}
           />
-          <Tooltip
-            contentStyle={{
-              backgroundColor: '#ffffff',
-              borderRadius: '16px',
-              border: '1px solid #5c0f1b20',
-              fontSize: '12px',
-            }}
-            labelFormatter={((label: any, payload: any) => payload?.[0]?.payload?.fullName || String(label || '')) as any}
-            formatter={((value: any) => [`${value} unidades`, 'Stock Disponible']) as any}
-          />
+          <Tooltip content={<CustomStockTooltip />} />
           <Bar dataKey="stock" radius={[0, 8, 8, 0]} barSize={20}>
             {chartData.map((entry, index) => (
               <Cell
