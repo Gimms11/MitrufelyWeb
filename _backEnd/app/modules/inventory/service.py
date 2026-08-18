@@ -10,7 +10,7 @@ Principio Rector:
 """
 
 import structlog
-from datetime import datetime, UTC
+from datetime import date, datetime, UTC
 from sqlalchemy.exc import IntegrityError, DBAPIError
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -197,10 +197,7 @@ class InventoryService:
 
         dias_restantes: int | None = None
         if lote.fecha_vencimiento is not None:
-            fv = lote.fecha_vencimiento
-            if fv.tzinfo is None:
-                fv = fv.replace(tzinfo=UTC)
-            delta = fv - datetime.now(UTC)
+            delta = lote.fecha_vencimiento - date.today()
             dias_restantes = max(delta.days, 0)
 
         return NextLotResponse(

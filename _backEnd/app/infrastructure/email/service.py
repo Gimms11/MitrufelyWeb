@@ -33,10 +33,24 @@ class EmailService:
 
     @staticmethod
     def fire_and_forget_order_status_email(*args, **kwargs) -> None:
-        """Schedules send_order_status_email as a tracked background task."""
-        task = asyncio.create_task(EmailService.send_order_status_email(*args, **kwargs))
-        _background_email_tasks.add(task)
-        task.add_done_callback(_background_email_tasks.discard)
+        """
+        Schedules send_order_status_email.
+        Production: enqueues via Cloud Tasks for guaranteed delivery.
+        Development: uses asyncio.create_task (fire-and-forget).
+        """
+        if settings.is_production and settings.GCP_PROJECT_ID:
+            from app.infrastructure.cloud_tasks.client import enqueue_task
+            # Build serializable payload from args/kwargs
+            payload = {
+                "template": "order_status",
+                "to_email": kwargs.get("to_email", args[0] if args else ""),
+                "data": {k: str(v) if v is not None else None for k, v in kwargs.items() if k != "to_email"},
+            }
+            enqueue_task("/api/v1/tasks/send-email", payload)
+        else:
+            task = asyncio.create_task(EmailService.send_order_status_email(*args, **kwargs))
+            _background_email_tasks.add(task)
+            task.add_done_callback(_background_email_tasks.discard)
 
     @staticmethod
     async def send_order_status_email(

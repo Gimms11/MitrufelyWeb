@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { X, Check, Info } from 'lucide-react'
+import { formatDateShort } from '@/lib/utils'
 import type { Producto } from '@/features/products/types'
 import type { Lote, TipoMovimientoStock } from '../types'
 import { useLotsQuery } from '../hooks/useInventory'
@@ -47,7 +48,7 @@ export function AdjustStockModal({
     watch,
     formState: { errors },
   } = useForm<AdjustStockFormValues>({
-    resolver: zodResolver(adjustStockSchema) as any,
+    resolver: zodResolver(adjustStockSchema),
     defaultValues: {
       id_producto: initialLot?.id_producto || 0,
       id_lote: initialLot?.id_lote || 0,
@@ -135,7 +136,7 @@ export function AdjustStockModal({
                 </p>
                 {initialLot.fecha_vencimiento && (
                   <p className="mt-0.5 text-stone-500">
-                    Vence el: {new Date(initialLot.fecha_vencimiento).toLocaleDateString()}
+                    Vence el: {formatDateShort(initialLot.fecha_vencimiento)}
                   </p>
                 )}
               </div>
@@ -186,7 +187,7 @@ export function AdjustStockModal({
                   {activeLots.map((l) => (
                     <option key={l.id_lote} value={l.id_lote}>
                       Lote #{l.id_lote} (Disp: {l.cantidad_disponible} uds
-                      {l.fecha_vencimiento ? ` | Vence: ${new Date(l.fecha_vencimiento).toLocaleDateString()}` : ''})
+                      {l.fecha_vencimiento ? ` | Vence: ${formatDateShort(l.fecha_vencimiento)}` : ''})
                     </option>
                   ))}
                 </select>

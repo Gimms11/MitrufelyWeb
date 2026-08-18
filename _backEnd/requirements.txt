@@ -35,6 +35,9 @@ redis==5.3.0
 celery[redis]==5.5.2
 kombu==5.5.2
 
+# --- GCP CLOUD TASKS (production only) ---
+google-cloud-tasks==2.16.0
+
 # --- PDF GENERATION ---
 reportlab==4.4.1
 

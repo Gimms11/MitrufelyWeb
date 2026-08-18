@@ -21,7 +21,7 @@ export function useGoogleLogin() {
 
   return useMutation({
     mutationFn: (idToken: string) => authApi.loginWithGoogle(idToken),
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       const decoded = decodeJwt(data.access_token)
       if (!decoded) {
         toast.error('Token de Google procesado, pero la firma local es inválida.')
@@ -47,6 +47,21 @@ export function useGoogleLogin() {
       }
 
       setUser(user, data.access_token, data.refresh_token)
+
+      // Cargar perfil completo (incluyendo avatar_url)
+      try {
+        const profile = await authApi.getMe()
+        if (profile) {
+          const fullName = `${profile.nombres} ${profile.apellidos}`.trim()
+          useAuthStore.getState().updateUser({
+            avatarUrl: profile.avatar_url ?? null,
+            ...(fullName ? { name: fullName } : {}),
+          })
+        }
+      } catch {
+        // Fallback silencioso
+      }
+
       toast.success('¡Sesión iniciada con Google correctamente!')
       navigate(fromRef.current, { replace: true })
     },

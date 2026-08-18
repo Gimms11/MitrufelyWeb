@@ -67,12 +67,9 @@ class InventoryRepositoryImpl(IInventoryRepository):
         """
         Inserta un nuevo lote.
         NeonDB ejecuta automáticamente:
-          1. tg_lotes_validar_insert  → normaliza y valida fecha_vencimiento.
+          1. tg_lotes_validar_insert  → valida fecha_vencimiento.
           2. tg_lotes_post_insert     → incrementa stock_actual y registra INGRESO_COMPRA en Kardex.
         """
-        from datetime import UTC
-        if lote.fecha_vencimiento is not None and lote.fecha_vencimiento.tzinfo is not None:
-            lote.fecha_vencimiento = lote.fecha_vencimiento.astimezone(UTC).replace(tzinfo=None)
         self._session.add(lote)
         await self._session.flush()
         await self._session.refresh(lote)

@@ -14,7 +14,7 @@ CAMBIOS M14:
 """
 
 import asyncio
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 from decimal import Decimal
 from typing import List, Optional
 
@@ -800,7 +800,7 @@ class VentaService(AbstractService[VentaResponse, VentaRequest, None, int]):
         # Recalcular y actualizar producto.stock_actual una sola vez por producto
         stock_por_producto: dict[int, int] = {}
         unidades_eliminadas: int = 0
-        ahora = datetime.utcnow()
+        hoy = date.today()
 
         for detalle in venta.detalles:
             # Buscar los lotes FEFO que fueron consumidos para este detalle
@@ -816,7 +816,7 @@ class VentaService(AbstractService[VentaResponse, VentaRequest, None, int]):
                     # Determinar si el lote está vencido
                     lote_vencido = (
                         lote.estado_lote == EstadoLoteEnum.VENCIDO
-                        or (lote.fecha_vencimiento is not None and lote.fecha_vencimiento < ahora)
+                        or (lote.fecha_vencimiento is not None and lote.fecha_vencimiento < hoy)
                     )
 
                     if lote_vencido:

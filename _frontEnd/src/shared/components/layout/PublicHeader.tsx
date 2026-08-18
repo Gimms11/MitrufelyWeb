@@ -33,6 +33,7 @@ import { PublicNav } from './PublicNav'
 import { NotificationBell } from '@/features/notifications/components/NotificationBell'
 import { useOrdersQuery } from '@/features/orders/hooks/useOrders'
 import { useActiveProducts } from '@/features/products/hooks/useCatalogAdmin'
+import { useProfileData } from '@/features/auth/hooks/useProfile'
 import type { Producto } from '@/features/products/types'
 
 // ─── Props ────────────────────────────────────────────────────────────────
@@ -73,6 +74,14 @@ export function PublicHeader({
   const { pathname } = useLocation()
   const isAuthenticated = userName !== null
   const { user } = useAuthStore()
+  const { data: profileData } = useProfileData({ enabled: isAuthenticated })
+  const avatarUrl = profileData?.avatar_url || user?.avatarUrl || null
+  const [avatarError, setAvatarError] = useState(false)
+
+  useEffect(() => {
+    setAvatarError(false)
+  }, [avatarUrl])
+
   const isCartPage = pathname === '/carrito'
   const isPuntosPage = pathname === '/puntos'
   const isAccountPage = pathname.startsWith('/mi-cuenta')
@@ -400,8 +409,13 @@ export function PublicHeader({
                         : 'bg-white/15 border-white/25 text-white hover:bg-white/25'
                     }`}
                   >
-                    {user?.avatarUrl ? (
-                      <img src={user.avatarUrl} alt="Avatar" className="h-full w-full object-cover" />
+                    {avatarUrl && !avatarError ? (
+                      <img
+                        src={avatarUrl}
+                        alt="Avatar"
+                        className="h-full w-full object-cover"
+                        onError={() => setAvatarError(true)}
+                      />
                     ) : userName ? (
                       userName.charAt(0).toUpperCase()
                     ) : (
@@ -652,8 +666,13 @@ export function PublicHeader({
                   <>
                     <div className="flex items-center gap-3 p-3 bg-white border border-[#5c0f1b]/10 rounded-2xl shadow-xs">
                       <div className="h-10 w-10 rounded-lg bg-[#5c0f1b]/5 border border-[#5c0f1b]/10 flex items-center justify-center text-[#5c0f1b] font-black text-sm overflow-hidden">
-                        {user?.avatarUrl ? (
-                          <img src={user.avatarUrl} alt="Avatar" className="h-full w-full object-cover" />
+                        {avatarUrl && !avatarError ? (
+                          <img
+                            src={avatarUrl}
+                            alt="Avatar"
+                            className="h-full w-full object-cover"
+                            onError={() => setAvatarError(true)}
+                          />
                         ) : userName ? (
                           userName.charAt(0).toUpperCase()
                         ) : (

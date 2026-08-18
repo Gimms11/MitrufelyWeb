@@ -2,6 +2,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { X, Check } from 'lucide-react'
+import { daysUntil } from '@/lib/utils'
 import type { Producto } from '@/features/products/types'
 
 const registerLotSchema = z.object({
@@ -9,17 +10,16 @@ const registerLotSchema = z.object({
   cantidad_inicial: z.coerce.number().min(1, 'La cantidad debe ser mayor a 0'),
   fecha_vencimiento: z
     .string()
-    .transform((val) => (val === '' ? null : val))
-    .nullable()
     .optional()
+    .nullable()
     .refine(
       (val) => {
-        if (!val) return true
-        const selected = new Date(val)
-        return selected > new Date()
+        if (!val || val === '') return true
+        const days = daysUntil(val)
+        return days !== null && days > 0
       },
       {
-        message: 'La fecha de vencimiento debe ser posterior a la fecha y hora actual',
+        message: 'La fecha de vencimiento debe ser posterior a hoy',
       }
     ),
 })
@@ -44,21 +44,20 @@ export function RegisterLotModal({
     handleSubmit,
     formState: { errors },
   } = useForm<RegisterLotFormValues>({
-    resolver: zodResolver(registerLotSchema) as any,
+    resolver: zodResolver(registerLotSchema),
     defaultValues: {
       id_producto: 0,
       cantidad_inicial: 1,
-      fecha_vencimiento: null,
+      fecha_vencimiento: '',
     },
   })
 
   const handleFormSubmit = (values: RegisterLotFormValues) => {
-    // Normalise ISO string or send null
-    const isoDate = values.fecha_vencimiento ? new Date(values.fecha_vencimiento).toISOString() : null
+    // Send date string directly (YYYY-MM-DD) or null
     onSubmit({
       id_producto: values.id_producto,
       cantidad_inicial: values.cantidad_inicial,
-      fecha_vencimiento: isoDate,
+      fecha_vencimiento: values.fecha_vencimiento || null,
     })
   }
 
@@ -128,7 +127,7 @@ export function RegisterLotModal({
               Fecha de Vencimiento
             </label>
             <input
-              type="datetime-local"
+              type="date"
               {...register('fecha_vencimiento')}
               className="w-full px-3.5 py-2.5 text-sm bg-stone-50 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#5c0f1b]/20 focus:border-[#5c0f1b] transition-all text-[#2a1115] cursor-pointer"
             />

@@ -5,7 +5,7 @@ Pydantic Settings v2 with full type safety and validation
 
 from functools import lru_cache
 from pathlib import Path
-from typing import Literal
+from typing import Any, Literal
 
 from pydantic import Field, SecretStr, field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -55,18 +55,57 @@ class Settings(BaseSettings):
     REFRESH_TOKEN_EXPIRE_DAYS: int = 30
 
     # ── CORS ─────────────────────────────────────────────────────────────────
-    ALLOWED_ORIGINS: list[str] = ["http://localhost:3000", "http://localhost:5173"]
-    ALLOWED_METHODS: list[str] = ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]
+    ALLOWED_ORIGINS: list[str] | str = ["http://localhost:3000", "http://localhost:5173"]
+
+    @field_validator("ALLOWED_ORIGINS", mode="before")
+    @classmethod
+    def assemble_cors_origins(cls, v: Any) -> list[str]:
+        if isinstance(v, str):
+            v = v.strip()
+            if v.startswith("[") and v.endswith("]"):
+                import json
+                try:
+                    return json.loads(v.replace("'", '"'))
+                except Exception:
+                    pass
+            return [i.strip() for i in v.split(",") if i.strip()]
+        elif isinstance(v, (list, tuple)):
+            return list(v)
+        return v
+
+    ALLOWED_METHODS: list[str] | str = ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]
+
+    @field_validator("ALLOWED_METHODS", mode="before")
+    @classmethod
+    def assemble_cors_methods(cls, v: Any) -> list[str]:
+        if isinstance(v, str):
+            return [i.strip() for i in v.split(",") if i.strip()]
+        return list(v)
+
     # Lista explícita de headers permitidos (no usar "*" con allow_credentials=True)
-    ALLOWED_HEADERS: list[str] = ["Authorization", "Content-Type", "X-Request-ID", "Idempotency-Key"]
+    ALLOWED_HEADERS: list[str] | str = ["Authorization", "Content-Type", "X-Request-ID", "Idempotency-Key"]
+
+    @field_validator("ALLOWED_HEADERS", mode="before")
+    @classmethod
+    def assemble_cors_headers(cls, v: Any) -> list[str]:
+        if isinstance(v, str):
+            return [i.strip() for i in v.split(",") if i.strip()]
+        return list(v)
 
     # ── Redis ─────────────────────────────────────────────────────────────────
     REDIS_URL: str = "redis://redis:6399/0"
     REDIS_CACHE_TTL: int = 300
 
-    # ── Celery ────────────────────────────────────────────────────────────────
+    # ── Celery (dev local only) ───────────────────────────────────────────────
     CELERY_BROKER_URL: str = "redis://redis:6399/1"
     CELERY_RESULT_BACKEND: str = "redis://redis:6399/2"
+
+    # ── GCP Cloud Tasks / Cloud Run (producción) ──────────────────────────────
+    GCP_PROJECT_ID: str = ""
+    CLOUD_TASKS_QUEUE: str = "mifrufely-tasks"
+    CLOUD_TASKS_LOCATION: str = "us-central1"
+    CLOUD_RUN_SERVICE_URL: str = ""  # URL pública del propio Cloud Run service
+    CLOUD_TASKS_SERVICE_ACCOUNT_EMAIL: str = ""  # SA con permisos de invoker
 
     # ── Logging ───────────────────────────────────────────────────────────────
     LOG_LEVEL: Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"] = "INFO"

@@ -4,12 +4,12 @@ Contratos de validación de entrada/salida para lotes, ajustes de stock
 y conciliación de inventario.
 
 Reglas de validación:
-  - fecha_vencimiento: normalizada a UTC aware antes de comparar.
+  - fecha_vencimiento: tipo date (solo día, sin hora).
   - AjusteStockRequest.id_lote: obligatorio para TODOS los tipos de ajuste.
   - tipo_movimiento en AjusteStockRequest: solo AJUSTE_POSITIVO, AJUSTE_NEGATIVO o MERMA.
 """
 
-from datetime import datetime, UTC
+from datetime import date, datetime, UTC
 from decimal import Decimal
 from typing import Annotated
 
@@ -37,26 +37,22 @@ class LoteCreateRequest(BaseModel):
 
     id_producto: int = Field(..., gt=0, description="ID del producto físico")
     cantidad_inicial: int = Field(..., gt=0, description="Cantidad inicial del lote")
-    fecha_vencimiento: datetime | None = Field(
+    fecha_vencimiento: date | None = Field(
         None,
-        description="Fecha de vencimiento (UTC). Debe ser estrictamente futura.",
+        description="Fecha de vencimiento (solo día). Debe ser estrictamente futura.",
     )
 
     @field_validator("fecha_vencimiento", mode="after")
     @classmethod
-    def normalise_and_validate_future(cls, v: datetime | None) -> datetime | None:
-        """Normaliza la fecha a UTC aware y verifica que sea futura."""
+    def validate_future_date(cls, v: date | None) -> date | None:
+        """Verifica que la fecha de vencimiento sea futura."""
         if v is None:
             return v
-
-        # Normalizar a UTC aware
-        v_utc = v.astimezone(UTC) if v.tzinfo is not None else v.replace(tzinfo=UTC)
-
-        if v_utc <= datetime.now(UTC):
+        if v <= date.today():
             raise ValueError(
-                "La fecha de vencimiento debe ser estrictamente posterior a la fecha actual (UTC)."
+                "La fecha de vencimiento debe ser posterior a la fecha actual."
             )
-        return v_utc.replace(tzinfo=None)
+        return v
 
 
 class LoteResponse(BaseModel):
@@ -67,7 +63,7 @@ class LoteResponse(BaseModel):
     id_lote: int
     id_producto: int
     fecha_ingreso: datetime
-    fecha_vencimiento: datetime | None
+    fecha_vencimiento: date | None
     cantidad_inicial: int
     cantidad_disponible: int
     estado_lote: EstadoLoteEnum
@@ -168,6 +164,6 @@ class NextLotResponse(BaseModel):
 
     id_lote: int
     id_producto: int
-    fecha_vencimiento: datetime | None
+    fecha_vencimiento: date | None
     cantidad_disponible: int
     dias_restantes: int | None

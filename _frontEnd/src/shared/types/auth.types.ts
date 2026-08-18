@@ -5,7 +5,7 @@ export interface User {
   email: string
   name: string
   role: Role
-  avatarUrl?: string
+  avatarUrl?: string | null
   sweetCoinsBalance: number
   createdAt: string
   updatedAt: string

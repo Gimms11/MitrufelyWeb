@@ -7,11 +7,22 @@ import { authApi } from '../api/auth.api'
 export const FISCAL_QUERY_KEY = ['datos-fiscales'] as const
 export const PROFILE_QUERY_KEY = ['auth', 'me'] as const
 
-export function useProfileData() {
+export function useProfileData(options?: { enabled?: boolean }) {
   return useQuery({
     queryKey: PROFILE_QUERY_KEY,
-    queryFn: () => authApi.getMe(),
+    queryFn: async () => {
+      const data = await authApi.getMe()
+      if (data) {
+        const fullName = `${data.nombres} ${data.apellidos}`.trim()
+        useAuthStore.getState().updateUser({
+          avatarUrl: data.avatar_url ?? null,
+          ...(fullName ? { name: fullName } : {}),
+        })
+      }
+      return data
+    },
     staleTime: 60_000,
+    ...options,
   })
 }
 

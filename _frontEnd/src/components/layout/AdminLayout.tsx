@@ -214,8 +214,12 @@ export default function AdminLayout() {
         <div className="p-4 border-t border-[#5c0f1b]/10 bg-stone-50/50 flex flex-col gap-3">
           {!collapsed && (
             <div className="flex items-center gap-3 p-2 bg-white border border-[#5c0f1b]/10 rounded-xl shadow-2xs">
-              <div className="h-10 w-10 rounded-lg bg-[#5c0f1b]/5 border border-[#5c0f1b]/10 flex items-center justify-center text-[#5c0f1b]">
-                <User className="h-5 w-5" />
+              <div className="h-10 w-10 rounded-lg bg-[#5c0f1b]/5 border border-[#5c0f1b]/10 flex items-center justify-center text-[#5c0f1b] overflow-hidden shrink-0">
+                {user?.avatarUrl ? (
+                  <img src={user.avatarUrl} alt="Avatar" className="h-full w-full object-cover" />
+                ) : (
+                  <User className="h-5 w-5" />
+                )}
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-xs font-black text-[#2a1115] truncate leading-snug">{user.name}</p>
@@ -316,8 +320,12 @@ export default function AdminLayout() {
           {/* Info Usuario & Logout */}
           <div className="p-4 border-t border-[#5c0f1b]/10 bg-stone-50/50 flex flex-col gap-3">
             <div className="flex items-center gap-3 p-2 bg-white border border-[#5c0f1b]/10 rounded-xl shadow-2xs">
-              <div className="h-10 w-10 rounded-lg bg-[#5c0f1b]/5 border border-[#5c0f1b]/10 flex items-center justify-center text-[#5c0f1b]">
-                <User className="h-5 w-5" />
+              <div className="h-10 w-10 rounded-lg bg-[#5c0f1b]/5 border border-[#5c0f1b]/10 flex items-center justify-center text-[#5c0f1b] overflow-hidden shrink-0">
+                {user?.avatarUrl ? (
+                  <img src={user.avatarUrl} alt="Avatar" className="h-full w-full object-cover" />
+                ) : (
+                  <User className="h-5 w-5" />
+                )}
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-xs font-black text-[#2a1115] truncate leading-snug">{user.name}</p>
@@ -361,8 +369,14 @@ export default function AdminLayout() {
               <span className="text-xs font-black text-[#2a1115]">{user.name}</span>
               <span className="text-[9px] font-extrabold text-stone-500 uppercase tracking-wider">{roleInfo.label}</span>
             </div>
-            <div className="h-10 w-10 rounded-full bg-[#5c0f1b] border-2 border-[#faf8f5] flex items-center justify-center text-white font-black text-sm shadow-md">
-              {user?.name ? user.name[0]?.toUpperCase() : 'A'}
+            <div className="h-10 w-10 rounded-full bg-[#5c0f1b] border-2 border-[#faf8f5] flex items-center justify-center text-white font-black text-sm shadow-md overflow-hidden shrink-0">
+              {user?.avatarUrl ? (
+                <img src={user.avatarUrl} alt="Avatar" className="h-full w-full object-cover" />
+              ) : user?.name ? (
+                user.name[0]?.toUpperCase()
+              ) : (
+                'A'
+              )}
             </div>
           </div>
         </header>

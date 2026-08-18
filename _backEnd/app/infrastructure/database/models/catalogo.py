@@ -9,13 +9,14 @@ Tables:
   - movimientos_stock
 """
 
-from datetime import datetime
+from datetime import date, datetime
 from decimal import Decimal
 from typing import TYPE_CHECKING
 
 from sqlalchemy import (
     Boolean,
     CheckConstraint,
+    Date,
     DateTime,
     ForeignKey,
     Index,
@@ -233,7 +234,7 @@ class Lote(Base):
     fecha_ingreso: Mapped[datetime] = mapped_column(
         DateTime, nullable=False, server_default=func.now()
     )
-    fecha_vencimiento: Mapped[datetime | None] = mapped_column(DateTime, nullable=True, index=True)
+    fecha_vencimiento: Mapped[date | None] = mapped_column(Date, nullable=True, index=True)
     cantidad_inicial: Mapped[int] = mapped_column(Integer, nullable=False)
     cantidad_disponible: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     estado_lote: Mapped[EstadoLoteEnum] = mapped_column(

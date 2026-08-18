@@ -20,40 +20,16 @@ export function formatCurrency(amount: number): string {
   }).format(amount)
 }
 
-/**
- * Formatea una fecha ISO a formato legible en español.
- */
-export function formatDate(date: string | Date, options?: Intl.DateTimeFormatOptions): string {
-  return new Intl.DateTimeFormat('es-PE', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-    ...options,
-  }).format(new Date(date))
-}
-
-/**
- * Formatea una fecha ISO a formato largo con hora.
- */
-export function formatDateTime(date: string | Date): string {
-  return formatDate(date, {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  })
-}
-
-/**
- * Calcula días restantes hasta una fecha (útil para FEFO).
- */
-export function daysUntil(date: string | Date): number {
-  const now = new Date()
-  const target = new Date(date)
-  const diffMs = target.getTime() - now.getTime()
-  return Math.ceil(diffMs / (1000 * 60 * 60 * 24))
-}
+export {
+  parseDate,
+  formatDate,
+  formatDateShort,
+  formatDateTime,
+  daysUntil,
+  isDateExpired,
+  isDateExpiringSoon,
+  toDateInputValue,
+} from '@/shared/utils/date'
 
 /**
  * Genera iniciales de un nombre para avatares.

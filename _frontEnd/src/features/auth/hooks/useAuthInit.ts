@@ -23,6 +23,7 @@ import { useEffect, useRef } from 'react'
 import axios from 'axios'
 import { useAuthStore } from '@/app/store'
 import { setAccessToken } from '@/lib/axios'
+import { authApi } from '../api/auth.api'
 
 const BASE_URL = import.meta.env['VITE_API_BASE_URL'] ?? 'http://localhost:8000/api/v1'
 
@@ -66,10 +67,22 @@ export function useAuthInit() {
         { refresh_token: refreshToken },
         { withCredentials: true },
       )
-      .then(({ data }) => {
+      .then(async ({ data }) => {
         setAccessToken(data.access_token)
         if (data.refresh_token) {
           setRefreshToken(data.refresh_token)
+        }
+        try {
+          const profile = await authApi.getMe()
+          if (profile) {
+            const fullName = `${profile.nombres} ${profile.apellidos}`.trim()
+            useAuthStore.getState().updateUser({
+              avatarUrl: profile.avatar_url ?? null,
+              ...(fullName ? { name: fullName } : {}),
+            })
+          }
+        } catch {
+          // No bloquear si getMe falla momentáneamente
         }
         setInitialized(true)
       })

@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import type { ColumnDef } from '@tanstack/react-table'
 import { History, SlidersHorizontal, AlertTriangle } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { cn, formatDateShort, daysUntil, isDateExpired, isDateExpiringSoon } from '@/lib/utils'
 import type { Lote } from '../types'
 import type { Producto } from '@/features/products/types'
 import { AdminDataTable } from '@/features/products/components/AdminDataTable'
@@ -55,8 +55,7 @@ export function LotsTable({
         header: 'Fecha Ingreso',
         cell: ({ row }) => {
           const val = row.getValue('fecha_ingreso') as string
-          if (!val) return '-'
-          return <span className="text-xs">{new Date(val).toLocaleDateString()}</span>
+          return <span className="text-xs">{formatDateShort(val)}</span>
         },
       },
       {
@@ -66,32 +65,30 @@ export function LotsTable({
           const val = row.getValue('fecha_vencimiento') as string | null
           if (!val) return <span className="text-xs text-stone-400">Sin vencimiento</span>
 
-          const date = new Date(val)
-          const diffTime = date.getTime() - new Date().getTime()
-          const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-          const isExpiringSoon = diffDays > 0 && diffDays <= 7
-          const isExpired = diffDays <= 0
+          const expired = isDateExpired(val)
+          const expiringSoon = isDateExpiringSoon(val, 7)
+          const diffDays = daysUntil(val) ?? 0
 
           return (
             <div className="flex flex-col">
               <span
                 className={cn(
                   'text-xs font-bold',
-                  isExpired
+                  expired
                     ? 'text-red-600'
-                    : isExpiringSoon
+                    : expiringSoon
                     ? 'text-amber-600'
                     : 'text-stone-600'
                 )}
               >
-                {date.toLocaleDateString()}
+                {formatDateShort(val)}
               </span>
-              {isExpired && (
+              {expired && (
                 <span className="text-[10px] font-black text-red-600 uppercase tracking-wider mt-0.5">
                   Vencido
                 </span>
               )}
-              {!isExpired && isExpiringSoon && (
+              {!expired && expiringSoon && (
                 <span className="inline-flex items-center gap-1 text-[10px] font-black text-amber-600 uppercase tracking-wider mt-0.5">
                   <AlertTriangle className="h-3 w-3 animate-pulse" />
                   Vence en {diffDays} {diffDays === 1 ? 'día' : 'días'}

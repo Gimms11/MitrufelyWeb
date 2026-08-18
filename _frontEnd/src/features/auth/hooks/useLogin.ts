@@ -92,6 +92,20 @@ export function useLogin() {
 
       setUser(user, data.access_token, data.refresh_token)
 
+      // Cargar perfil completo (incluyendo avatar_url)
+      try {
+        const profile = await authApi.getMe()
+        if (profile) {
+          const fullName = `${profile.nombres} ${profile.apellidos}`.trim()
+          useAuthStore.getState().updateUser({
+            avatarUrl: profile.avatar_url ?? null,
+            ...(fullName ? { name: fullName } : {}),
+          })
+        }
+      } catch {
+        // Fallback silencioso a los datos del JWT
+      }
+
       // Sincronizar carrito de invitado (localStorage) → backend
       try {
         await syncGuestCartToBackend()
