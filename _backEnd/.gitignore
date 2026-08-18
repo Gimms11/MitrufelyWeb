@@ -30,6 +30,9 @@ MANIFEST
 .env.*
 !.env.example
 *.env
+gcp/env.yaml
+!gcp/env.yaml.example
+
 
 # Virtual environments
 .venv/

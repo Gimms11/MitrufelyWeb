@@ -77,6 +77,11 @@ dmypy.json
 !.env.example
 *.env
 *.local
+_backEnd/gcp/env.yaml
+gcp/env.yaml
+!_backEnd/gcp/env.yaml.example
+!gcp/env.yaml.example
+
 
 # Docker
 .docker/

@@ -365,11 +365,11 @@ Adicionalmente, el endpoint `/register` revela si un email ya existe (ver C-05),
 
 | Secret | Línea | Valor (parcial) |
 |--------|-------|-----------------|
-| DATABASE_URL (NeonDB) | 22 | `postgresql+asyncpg://neondb_owner:REDACTED_NEON_PASSWORD@...neon.tech/neondb` |
-| SMTP_PASSWORD (Gmail) | 68 | `REDACTED_GMAIL_PASSWORD` (app password de `abeltrufas@gmail.com`) |
-| CLOUDINARY_API_SECRET | 79 | `REDACTED_CLOUDINARY_SECRET` |
-| GOOGLE_CLIENT_ID | 74 | `264198079598-tt28nvaod4f740q778ivtvueubgi0iel...` |
-| SECRET_KEY (JWT dev) | 30 | `super-secret-key-for-local-testing-only-32chars` |
+| DATABASE_URL (NeonDB) | 22 | `postgresql+asyncpg://neondb_owner:npg_***@...neon.tech/neondb` |
+| SMTP_PASSWORD (Gmail) | 68 | `vc***kt` (app password) |
+| CLOUDINARY_API_SECRET | 79 | `mTN***cY` |
+| GOOGLE_CLIENT_ID | 74 | `264198079598-***.apps.googleusercontent.com` |
+| SECRET_KEY (JWT dev) | 30 | `super-secret-key-***` |
 
 #### Estado en git
 

@@ -8,14 +8,16 @@ Cambios:
 """
 
 import asyncio
+import os
 import ssl
+import sys
 import asyncpg
 
 
-DB_URL = (
-    "postgresql://neondb_owner:REDACTED_NEON_PASSWORD"
-    "@ep-wild-bonus-ape8fnzh-pooler.c-7.us-east-1.aws.neon.tech/neondb"
-)
+# Obtener URL de base de datos desde variables de entorno
+_raw_db_url = os.getenv("DATABASE_URL", "postgresql://postgres:postgres@localhost:5432/mifrufely_db")
+# Asegurar compatibilidad de protocolo para asyncpg (remover sufijo +asyncpg si existe)
+DB_URL = _raw_db_url.replace("postgresql+asyncpg://", "postgresql://")
 
 MIGRATION_SQL = [
     # 1. Hacer password_hash nullable
