@@ -30,7 +30,7 @@ logger = structlog.get_logger(__name__)
 limiter = Limiter(
     key_func=get_remote_address,
     default_limits=[settings.RATE_LIMIT_DEFAULT],
-    storage_uri=settings.REDIS_URL,
+    storage_uri=settings.rate_limit_storage_uri,
 )
 
 

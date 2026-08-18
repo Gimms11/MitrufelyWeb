@@ -38,7 +38,7 @@ router = APIRouter(prefix="/auth", tags=["Authentication"])
 # Limiter local para aplicar límites específicos a endpoints sensibles de auth.
 # El limiter global está registrado en main.py; aquí añadimos límites más
 # estrictos para register/google/refresh (superan el default).
-_limiter = Limiter(key_func=get_remote_address, storage_uri=settings.REDIS_URL)
+_limiter = Limiter(key_func=get_remote_address, storage_uri=settings.rate_limit_storage_uri)
 
 AuthServiceDep = Annotated[AuthService, Depends(get_auth_service)]
 RedisDep = Annotated[Redis, Depends(get_redis)]

@@ -21,7 +21,7 @@ router = APIRouter(prefix="/consultas", tags=["Consultas DNI/RUC"])
 
 # Limiter local: 10 consultas por minuto por IP.
 # Bajo pytest se utiliza almacenamiento en memoria para no requerir Redis levantado.
-_storage_uri = "memory://" if "pytest" in sys.modules else settings.REDIS_URL
+_storage_uri = "memory://" if "pytest" in sys.modules else settings.rate_limit_storage_uri
 _limiter = Limiter(key_func=get_remote_address, storage_uri=_storage_uri)
 
 

@@ -96,6 +96,15 @@ class Settings(BaseSettings):
     REDIS_URL: str = "redis://redis:6399/0"
     REDIS_CACHE_TTL: int = 300
 
+    @property
+    def rate_limit_storage_uri(self) -> str:
+        """Returns storage URI for slowapi rate limiter, falling back to memory:// in serverless production."""
+        if not self.REDIS_URL or self.REDIS_URL.startswith("memory://"):
+            return "memory://"
+        if self.APP_ENV == "production" and "redis:6399" in self.REDIS_URL:
+            return "memory://"
+        return self.REDIS_URL
+
     # ── Celery (dev local only) ───────────────────────────────────────────────
     CELERY_BROKER_URL: str = "redis://redis:6399/1"
     CELERY_RESULT_BACKEND: str = "redis://redis:6399/2"
