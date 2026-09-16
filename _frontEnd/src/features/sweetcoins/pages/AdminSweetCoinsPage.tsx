@@ -173,7 +173,7 @@ export default function AdminSweetCoinsPage() {
 
   const fetchCategorias = async () => {
     try {
-      const { data } = await api.get<any>('/categorias')
+      const { data } = await api.get<any>('/categorias/')
       setCategorias(data.items || [])
     } catch (err) {
       console.error('Error al cargar categorías', err)

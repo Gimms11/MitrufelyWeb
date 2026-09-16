@@ -104,3 +104,5 @@ lerna-debug.log*
 /tmp/
 *.tmp
 *.bak
+# Local Pi runtime state
+.atl/
