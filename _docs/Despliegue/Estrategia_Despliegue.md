@@ -1,100 +1,85 @@
 # 📋 Estrategia de Despliegue en la Nube — MitrufelyWeb
 
-Este documento describe la estrategia de despliegue en la nube del sistema **MitrufelyWeb**. La solución se publica bajo un modelo cloud-native desacoplado, distribuyendo cada componente (frontend, backend, workers y base de datos) en servicios especializados que se comunican entre sí mediante la red pública de Internet, respetando el principio de separación de responsabilidades de la arquitectura.
+Este documento describe la estrategia de despliegue en la nube del sistema **MitrufelyWeb**. La solución se publica bajo un modelo cloud-native desacoplado y **100% Serverless Scale-to-Zero**, distribuyendo cada componente (frontend, backend, tareas asíncronas, tareas programadas y base de datos) en servicios especializados que se comunican de forma segura mediante HTTPS y tokens OIDC.
 
 ---
 
 ## 1. 🌐 Topología de Despliegue Distribuida
 
-El sistema se despliega sobre servicios independientes, cada uno en un proveedor de cloud especializado en su función:
+El sistema se despliega sobre servicios independientes, optimizados para costo $0 en reposo y alta disponibilidad:
 
 | Componente | Tecnología | Plataforma de Despliegue | Función |
 |---|---|---|---|
-| **Frontend (SPA)** | React 19 + Vite (build estático) | **Vercel** | Servidor de archivos estáticos con CDN global. |
-| **Backend (API REST)** | FastAPI + Uvicorn | **Render (Web Service)** | Servidor de aplicación ASGI con escalado horizontal. |
-| **Workers asíncronos** | Celery (Worker + Beat) | **Render (Background Worker)** | Procesamiento en segundo plano (PDF, Excel, analítica, expiración). |
-| **Caché / Cola** | Redis | **Render (Redis)** | Broker de Celery + almacenamiento de carritos y blocklist de JWT. |
-| **Base de Datos** | PostgreSQL | **NeonDB (Serverless)** | Persistencia ACID transaccional con triggers y vistas. |
-| **Imágenes** | — | **Cloudinary** | CDN de medios (fotos de productos). |
+| **Frontend (SPA)** | React 19 + Vite (build estático) | **Vercel** | Servidor de archivos estáticos con CDN global Edge. |
+| **Backend (API REST)** | FastAPI + Uvicorn (Contenedor Docker) | **Google Cloud Run** | API RESTful Serverless con Scale-to-Zero (`0` a `10` instancias). |
+| **Tareas Asíncronas** | Google Cloud Tasks | **GCP Cloud Tasks (`mifrufely-tasks`)** | Cola serverless con reintentos y backoff exponencial (envío de emails). |
+| **Tareas Programadas** | Google Cloud Scheduler | **GCP Cloud Scheduler (OIDC Auth)** | 4 crons automáticos de expiración de lotes, cupones, ventas y analítica. |
+| **Caché / Rate Limit** | In-Memory TTL + Redis Local | **Resilient Cache Client** | Memoria local en Cloud Run / Redis en Docker dev. |
+| **Base de Datos** | PostgreSQL (NeonDB) | **NeonDB (Serverless)** | Persistencia ACID con auto-suspensión tras 5 min de inactividad. |
+| **Imágenes / CDN** | Cloudinary API | **Cloudinary** | Almacenamiento y optimización de medios (fotos de trufas/productos). |
 
-### Comunicación entre servicios:
-*   El **frontend** consume la API del backend mediante su URL pública (`VITE_API_BASE_URL`).
-*   El **backend** se conecta a NeonDB, Redis y Cloudinary mediante variables de entorno inyectadas en tiempo de ejecución.
-
-Esta topología permite que cada componente escale, se actualice y se monitoree de forma independiente.
+> 📌 **Documentación técnica detallada de GCP:** Ver [`Arquitectura_GCP_Serverless.md`](./Arquitectura_GCP_Serverless.md).
 
 ---
 
 ## 2. ⚡ Despliegue del Frontend en Vercel (Edge Network)
 
-El frontend es una *Single Page Application* (SPA) construida con Vite. El proceso de despliegue consiste en generar un bundle de archivos estáticos optimizados y publicarlos en la red de borde (CDN) global de Vercel.
+El frontend es una *Single Page Application* (SPA) construida con React 19 y Vite:
 
-*   **Build de producción:** El comando `npm run build` ejecuta la compilación de TypeScript (`tsc -b`) y luego el empaquetado de Vite, generando artefactos estáticos en `dist/` (con *tree-shaking*, *code-splitting* y minificación).
-*   **Publicación continua:** Vercel se integra directamente con el repositorio de GitHub. Cada push a la rama `master` desencadena automáticamente un nuevo build y despliegue (Continuous Deployment), sirviendo la última versión en una URL pública bajo el dominio `*.vercel.app`.
-*   **Edge Network:** Los archivos se replican en múltiples *Points of Presence* (PoP) del mundo, de modo que el usuario recibe el contenido desde el nodo geográficamente más cercano, minimizando la latencia de carga inicial.
-*   **Variables de entorno:** La URL del backend se inyecta en el bundle en tiempo de construcción mediante la variable `VITE_API_BASE_URL`, apuntando a la API desplegada en Render.
-
----
-
-## 3. 🐳 Despliegue del Backend en Render (Contenedores Docker)
-
-El backend se despliega como un *Web Service* en Render utilizando una imagen Docker multi-stage (`Dockerfile`), lo que garantiza que el entorno de producción sea idéntico al de desarrollo y evite el clásico problema de "en mi máquina funciona".
-
-### i. Estrategia de Imagen Multi-Stage
-El `Dockerfile` emplea tres etapas para optimizar el tamaño y la seguridad de la imagen final:
-1.  **Builder:** Instala las dependencias de `requirements.txt` en un prefijo aislado, sin arrastrar el compilador ni cachés al producto final.
-2.  **Development:** Incluye las herramientas de desarrollo (`requirements-dev.txt`) y se usa en local vía `docker-compose` con *hot-reload* (`--reload`).
-3.  **Production:** Imagen mínima basada en `python:3.11-slim` que solo copia las dependencias y el código, ejecutándose bajo un usuario no privilegiado (`appuser`) con un `HEALTHCHECK` propio, siguiendo las buenas prácticas de seguridad de contenedores.
-
-### ii. Orquestación en Producción (`render.yaml`)
-El despliegue se declara de forma declarativa e infraestructura-como-código mediante el archivo `render.yaml`:
-*   **Web Service (FastAPI):** Se ejecuta con `uvicorn app.main:app --host 0.0.0.0 --port $PORT --workers 2`, donde `$PORT` lo inyecta Render dinámicamente. Dispone de un Health Check en `/api/v1/health` que Render consulta periódicamente para determinar la disponibilidad del servicio.
-*   **Background Worker (Celery):** Ejecuta el worker y el beat scheduler en procesos independientes. Se encarga de las tareas pesadas (generación de reportes PDF/Excel, agregación de analítica, notificaciones y expiración automática de ventas pendientes), desacoplando estos procesos del hilo principal de la API.
-*   **Redis (broker/caché):** Servicio gestionado por Render, con política `allkeys-lru`, accesible únicamente desde la red interna de Render (`ipAllowList: []`), usado tanto como broker de Celery como para el almacenamiento del carrito persistente y la blocklist de tokens JWT.
-*   **Despliegue continuo:** Render se vincula con GitHub y reconstruye la imagen automáticamente ante cada commit en `master` (`autoDeploy: true`).
+* **URL de Producción:** [`https://mitrufely-web.vercel.app`](https://mitrufely-web.vercel.app)
+* **Build de Producción:** `npm run build` ejecuta la compilación de TypeScript (`tsc -b`) y empaquetado de Vite con *tree-shaking* y compresión GZip/Brotli.
+* **Integración Continua:** Vercel se integra con la rama `master` de GitHub, generando despliegues automáticos ante cada `git push`.
+* **Variables de Entorno en Vercel:**
+  * `VITE_API_BASE_URL`: `https://mifrufely-backend-zwy2wghfva-uc.a.run.app/api/v1`
+  * `VITE_GOOGLE_CLIENT_ID`: ID de cliente OAuth 2.0 para Google Identity Services.
 
 ---
 
-## 4. 🔑 Gestión de Configuración y Secretos
+## 3. 🚀 Despliegue del Backend en Google Cloud Run
 
-Ningún secreto vive en el repositorio. Toda la configuración sensible se administra mediante variables de entorno inyectadas en tiempo de ejecución desde el panel de cada proveedor:
+El backend se despliega como servicio contenedorizado sin servidor utilizando una imagen Docker multi-stage optimizada:
 
-| Variable | Propósito |
-|---|---|
-| `DATABASE_URL` | Cadena de conexión a PostgreSQL (NeonDB) — marcada como secret. |
-| `SECRET_KEY` | Clave de firma de los JWT — autogenerada por Render. |
-| `REDIS_URL` | Conexión al Redis interno — provista automáticamente por el servicio. |
-| `APP_ENV / DEBUG` | Modo de ejecución (`production` / `false`). |
-| `VITE_API_BASE_URL` | URL pública del backend, inyectada en el bundle del frontend. |
-| `CLOUDINARY_*` | Credenciales del CDN de imágenes. |
+### i. Estrategia de Contenedores (`Dockerfile`)
+1. **Builder Stage (`python:3.11-slim`):** Compila dependencias C/C++ (`libpq-dev`, `build-essential`) e instala paquetes en `/install`.
+2. **Production Stage:** Imagen limpia de solo 180MB que copia únicamente binarios sin herramientas de compilación, ejecutándose bajo el usuario sin privilegios `appuser` (UID no-root).
+3. **Contexto optimizado (`.dockerignore`):** Excluye `.venv`, cachés y `.git`, transfiriendo solo 4MB de contexto a Docker.
 
-En el backend, estas variables se leen de forma centralizada y tipada mediante *Pydantic Settings* (con el patrón Singleton vía `@lru_cache`), validando su presencia y formato al arrancar la aplicación y fallando de forma temprana (*fail-fast*) si alguna es inválida.
-
----
-
-## 5. 🚚 Gestión de Entregas
-
-El ciclo de vida del pedido (PENDIENTE → PAGADO → PREPARANDO → EN_CAMINO → ENTREGADO) se gestiona mediante una **máquina de estados** integrada en el backend principal. Las transiciones las ejecuta el administrador desde el panel de control.
-
-> **Nota histórica:** En versiones anteriores existía un microservicio independiente (`_deliveryService`) que simulaba el proceso de preparación y tránsito con retardos automáticos. Fue eliminado en favor de la máquina de estados del backend.
+### ii. Orquestación y Scale-to-Zero
+* El servicio escala automáticamente a **0 instancias** cuando no hay tráfico HTTP entrante.
+* Al recibir una petición, Cloud Run inicia una instancia en menos de 2 segundos.
+* Al no haber instancias activas ni peticiones a NeonDB, la base de datos se suspende automáticamente, garantizando consumo nulo de cuotas de cómputo.
 
 ---
 
-## 6. 🚀 Estrategia CI/CD y Pipeline de Liberación
+## 4. ⏰ Tareas Programadas y Asíncronas (Serverless)
 
-El proyecto adopta un flujo **GitOps** de despliegue continuo, donde el estado deseado del sistema vive en el propio repositorio:
+En lugar de mantener un worker Celery y Redis corriendo 24/7 (lo que impediría el Scale-to-Zero), se adoptaron componentes nativos de GCP:
 
-1.  **Commit en master:** Tras la revisión vía Pull Request, el código fusionado desencadena los webhooks de ambos proveedores.
-2.  **Build paralelo:** Vercel compila el frontend estático; Render construye la imagen Docker del backend.
-3.  **Health Check:** Render solo enruta tráfico al nuevo despliegue cuando el endpoint `/api/v1/health` responde correctamente, garantizando *zero-downtime*.
-4.  **Rollback:** Ambas plataformas conservan el historial de despliegues, permitiendo revertir a una versión anterior ante una regresión.
+1. **Cloud Tasks (`mifrufely-tasks`):**
+   * Desacopla el envío de correos SMTP transaccionales.
+   * Maneja reintentos con backoff exponencial sin bloquear la respuesta al usuario.
+2. **Cloud Scheduler:**
+   * Ejecuta crons diarios y periódicos disparando llamadas HTTP seguras con tokens OIDC firmados por la Service Account `mifrufely-backend-invoker@mitrufely.iam.gserviceaccount.com`.
 
 ---
 
-## 7. 📊 Consideraciones de los Planes Free y Escalabilidad
+## 5. 🔑 Gestión de Secretos y Configuración
 
-El despliegue se realiza sobre los planes gratuitos de Vercel y Render, lo que impone ciertas restricciones que la arquitectura mitiga deliberadamente:
-*   **Render Free (Web Service):** El servicio puede entrar en estado *idle* (suspensión) tras periodos de inactividad. La arquitectura asíncrona y los workers de Celery permiten que la primera petición tras reactivarse se sirva correctamente tras un breve arranque.
-*   **NeonDB (Serverless):** La base de datos también escala a cero en inactividad; el pool de conexiones de SQLAlchemy (`asyncpg`) maneja reconexiones transparentes.
-*   **Vercel Hobby:** Límite de ancho de banda adecuado para un alcance académico/demo, con CDN que reduce la carga sobre el origen.
-*   **Escalado horizontal futuro:** Al estar cada componente desacoplado (frontend estático, API stateless, workers independientes, Redis y base de datos gestionados), el sistema puede crecer vertical u horizontalmente sin refactorizar el código, simplemente ajustando el plan de cada servicio.
+Toda la configuración se encuentra externalizada mediante [`_backEnd/gcp/env.yaml`](file:///c:/Users/lordm/Desktop/Proyectos%20y%20clases/UTP%20CICLO%206/Integrador%20de%20Sistemas/proyecto/MitrufelyWeb/_backEnd/gcp/env.yaml) y leída mediante Pydantic Settings:
+
+* `DATABASE_URL`: Cadena segura con SSL hacia NeonDB AWS us-east-1 pooler.
+* `SECRET_KEY`: Llave de firmado criptográfico HS256 para JWT.
+* `ALLOWED_ORIGINS`: Lista estricta que permite exclusivamente `https://mitrufely-web.vercel.app` y `http://localhost:5173`.
+* `CLOUDINARY_*`: Credenciales de almacenamiento de imágenes.
+* `GOOGLE_CLIENT_ID`: Identificador de aplicación para validar ID Tokens de Google Sign-In.
+
+---
+
+## 6. 🔄 Pipeline de Despliegue Automatizado
+
+El despliegue se gestiona de forma reproducible con PowerShell:
+
+```powershell
+# Compilación, subida a Artifact Registry, despliegue en Cloud Run y configuración de Scheduler
+.\_backEnd\gcp\deploy.ps1
+```

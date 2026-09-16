@@ -14,7 +14,7 @@ graph TD
     F4 -->|✅ Completado| F5[Fase 5: Sistema de Pedidos y E-Commerce Extendido]
     F5 -->|✅ Completado| F6[Fase 6: Recompensas CriptoTrufas]
     F6 -->|✅ Completado| F7[Fase 7: Dashboard, Reportes PDF/Excel]
-    F7 --> F8[Fase 8: Pruebas, Optimización & Despliegue]
+    F7 -->|✅ Completado| F8[Fase 8: Migración FEFO, Capa de Fechas & Despliegue GCP]
 ```
 
 ---
@@ -105,16 +105,20 @@ graph TD
   - Botón de descarga de comprobante PDF en `CustomerOrderDetailPage`.
 - **Stack PDF:** `reportlab` (en lugar de WeasyPrint) por portabilidad en Windows.
 
-### 🔹 Fase 8: Pruebas, Optimización y Despliegue
+### 🔹 Fase 8: Migración FEFO, Capa de Fechas y Despliegue Serverless GCP ✅ IMPLEMENTADO
 
-- **Objetivo:** Optimizar el rendimiento de la aplicación, asegurar su robustez con cobertura de pruebas automatizadas y realizar el despliegue a producción.
-- **Backend (`FastAPI`):**
-  - Pruebas unitarias e integración de base de datos asíncronas usando `pytest` + `pytest-asyncio`.
-  - Caché de Redis de endpoints de catálogo con TTL inteligente.
-  - Instrumentación de logs JSON estructurados (`structlog`) y exposición de métricas Prometheus (`prometheus-fastapi-instrumentator`).
+- Ver detalle completo en [fase8_optimizacion_despliegue.md](./fase8_optimizacion_despliegue.md) y arquitectura en [Arquitectura_GCP_Serverless.md](../Despliegue/Arquitectura_GCP_Serverless.md).
+- **Objetivo:** Optimizar el modelo de fechas FEFO en base de datos, implementar la capa de parseo sin desface de zona horaria en frontend, asegurar 100% de pruebas unitarias y realizar el despliegue serverless en Google Cloud Platform.
+- **Backend (`FastAPI` + `GCP Serverless`):**
+  - Migración en NeonDB: `lotes.fecha_vencimiento` normalizado a tipo `DATE` y actualización de `sp_expirar_lotes_vencidos()`.
+  - Despliegue en **Google Cloud Run** con Scale-to-Zero (`min-instances: 0`, `max-instances: 10`).
+  - Reemplazo de Celery por **GCP Cloud Tasks** (`mifrufely-tasks`) para envío asíncrono de correos con reintentos exponenciales.
+  - Reemplazo de Celery Beat por **GCP Cloud Scheduler** (4 crons autenticados mediante tokens OIDC).
+  - Implementación de `ResilientRedisClient` con fallback transparente en memoria para Rate Limiting (`slowapi`) en entorno Serverless.
+  - Corrección de políticas CORS para consumo desde Vercel.
 - **Frontend (`React + TypeScript`):**
-  - Optimización automática de re-renders mediante `babel-plugin-react-compiler` de React 19.
-  - Gestión automatizada pre-commit mediante `husky` y `lint-staged`.
-- **Infraestructura:**
-  - Configuración completa de orquestación de contenedores en Docker.
-  - Despliegue automatizado de la API, worker de Celery y base de datos Neon en la nube con Render (`render.yaml`).
+  - Módulo de fechas robusto `date.ts` para zona horaria local (Perú UTC-5) sin desfaces ni *date rollovers*.
+  - Refactorización de componentes de inventario (`LotsTable`, `RegisterLotModal`, `AdjustStockModal`) y esquemas Zod.
+  - Suite de pruebas unitarias con Vitest (30/30 tests aprobados al 100%).
+  - Despliegue continuo en Vercel conectado a la API de Cloud Run.
+

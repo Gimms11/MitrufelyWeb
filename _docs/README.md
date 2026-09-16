@@ -44,7 +44,7 @@ _docs/
 | 5 — Pedidos y E-Commerce Extendido | ✅ | [fase5](./fases/fase5_pedidos_extendido.md) |
 | 6 — Fidelización CriptoTrufas | ✅ | [fase6](./fases/fase6_criptotrufas_cuponeria.md) |
 | 7 — Reportes, Dashboard y Comprobantes | ✅ | [fase7](./fases/fase7_reportes_dashboard.md) |
-| 8 — Pruebas, Optimización & Despliegue | ⏳ Pendiente | — |
+| 8 — Optimización, FEFO & Despliegue GCP | ✅ | [fase8](./fases/fase8_optimizacion_despliegue.md) \| [Despliegue GCP](./Despliegue/Arquitectura_GCP_Serverless.md) |
 
 Mapa estratégico completo en [plan_fases.md](./fases/plan_fases.md). Auditoría integral del estado actual del sistema en [AUDITORIA_SISTEMA_2026-07-08.md](./AUDITORIA_SISTEMA_2026-07-08.md).
 
